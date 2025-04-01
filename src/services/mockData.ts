@@ -1,552 +1,336 @@
 
-import { 
-  Case, 
-  Document, 
-  Task, 
-  Message, 
-  FinancialTransaction,
-  Organization,
-  Subscription,
-  SubscriptionFeature
-} from "@/types";
+import { User, Case, Task, Document, Message, FinancialTransaction } from "@/types";
 
+// Utilizadores simulados
+export const MOCK_USERS: User[] = [
+  {
+    id: "1",
+    email: "admin@legalflux.com",
+    name: "Admin Demo",
+    role: "admin",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    lastLogin: new Date().toISOString(),
+    hasTwoFactorEnabled: true,
+    organizationId: "1",
+  },
+  {
+    id: "2",
+    email: "lawyer@legalflux.com",
+    name: "Advogado Demo",
+    role: "lawyer",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    lastLogin: new Date().toISOString(),
+    hasTwoFactorEnabled: false,
+    organizationId: "1",
+  },
+  {
+    id: "3",
+    email: "client@legalflux.com",
+    name: "Cliente Demo",
+    role: "client",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    lastLogin: new Date().toISOString(),
+    hasTwoFactorEnabled: false,
+  },
+  {
+    id: "4",
+    email: "senior@legalflux.com",
+    name: "Advogado Sênior Demo",
+    role: "senior_lawyer",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    lastLogin: new Date().toISOString(),
+    hasTwoFactorEnabled: false,
+    organizationId: "1",
+  },
+  {
+    id: "5",
+    email: "assistant@legalflux.com",
+    name: "Assistente Demo",
+    role: "assistant",
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    lastLogin: new Date().toISOString(),
+    hasTwoFactorEnabled: false,
+    organizationId: "1",
+  },
+  {
+    id: "6",
+    email: "pedro@legalflux.com",
+    name: "Pedro Silva",
+    role: "lawyer",
+    isActive: true,
+    createdAt: "2023-01-15T10:30:00.000Z",
+    lastLogin: "2023-06-10T14:22:00.000Z",
+    hasTwoFactorEnabled: true,
+    organizationId: "1",
+    phone: "+351 912 345 678",
+  },
+  {
+    id: "7",
+    email: "maria@legalflux.com",
+    name: "Maria Fernandes",
+    role: "lawyer",
+    isActive: true,
+    createdAt: "2023-02-20T09:15:00.000Z",
+    lastLogin: "2023-06-12T11:05:00.000Z",
+    hasTwoFactorEnabled: false,
+    organizationId: "1",
+    phone: "+351 926 789 012",
+  },
+  {
+    id: "8",
+    email: "joao@legalflux.com",
+    name: "João Cardoso",
+    role: "client",
+    isActive: true,
+    createdAt: "2023-03-05T14:45:00.000Z",
+    lastLogin: "2023-06-09T16:30:00.000Z",
+    hasTwoFactorEnabled: false,
+    phone: "+351 935 678 901",
+  },
+  {
+    id: "9",
+    email: "teresa@legalflux.com",
+    name: "Teresa Almeida",
+    role: "client",
+    isActive: false,
+    createdAt: "2023-04-12T11:20:00.000Z",
+    lastLogin: "2023-05-20T10:10:00.000Z",
+    hasTwoFactorEnabled: false,
+    phone: "+351 968 012 345",
+  },
+  {
+    id: "10",
+    email: "carlos@legalflux.com",
+    name: "Carlos Santos",
+    role: "assistant",
+    isActive: true,
+    createdAt: "2023-05-01T08:50:00.000Z",
+    lastLogin: "2023-06-12T09:45:00.000Z",
+    hasTwoFactorEnabled: false,
+    organizationId: "1",
+    phone: "+351 917 890 123",
+  }
+];
+
+// Casos simulados
 export const MOCK_CASES: Case[] = [
   {
     id: "1",
     title: "Processo de Divórcio Silva",
-    clientId: "3",
-    clientName: "Cliente Demo",
+    clientId: "8",
+    clientName: "João Cardoso",
     assignedLawyerId: "2",
     assignedLawyerName: "Advogado Demo",
     status: "active",
-    createdAt: "2023-10-15T10:30:00Z",
-    updatedAt: "2023-10-25T14:20:00Z",
-    dueDate: "2023-12-30T23:59:59Z",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     priority: "high",
-    description: "Divórcio litigioso com disputa de guarda de menores.",
+    description: "Processo de divórcio litigioso com disputa de bens e guarda de filhos."
   },
   {
     id: "2",
-    title: "Contrato Imobiliário Martins",
+    title: "Contrato de Arrendamento Comercial",
     clientId: "3",
     clientName: "Cliente Demo",
-    assignedLawyerId: "2",
-    assignedLawyerName: "Advogado Demo",
+    assignedLawyerId: "4",
+    assignedLawyerName: "Advogado Sênior Demo",
     status: "pending",
-    createdAt: "2023-09-05T09:15:00Z",
-    updatedAt: "2023-09-20T11:45:00Z",
-    dueDate: "2023-11-15T23:59:59Z",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    dueDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
     priority: "medium",
-    description: "Revisão de contrato de compra e venda de imóvel residencial.",
+    description: "Revisão e negociação de termos para arrendamento de espaço comercial."
   },
   {
     id: "3",
-    title: "Processo Trabalhista Santos",
-    clientId: "6",
-    clientName: "Pedro Santos",
-    assignedLawyerId: "4",
-    assignedLawyerName: "Advogado Sênior Demo",
-    status: "active",
-    createdAt: "2023-08-20T14:00:00Z",
-    updatedAt: "2023-10-12T16:30:00Z",
-    dueDate: "2024-01-20T23:59:59Z",
-    priority: "high",
-    description: "Ação trabalhista por demissão sem justa causa.",
-  },
-  {
-    id: "4",
-    title: "Registro de Marca Costa",
-    clientId: "7",
-    clientName: "Mariana Costa",
-    assignedLawyerId: "2",
-    assignedLawyerName: "Advogado Demo",
+    title: "Disputa Trabalhista Ferreira",
+    clientId: "9",
+    clientName: "Teresa Almeida",
+    assignedLawyerId: "6",
+    assignedLawyerName: "Pedro Silva",
     status: "closed",
-    createdAt: "2023-05-10T11:00:00Z",
-    updatedAt: "2023-09-30T09:45:00Z",
+    createdAt: "2023-01-10T10:30:00.000Z",
+    updatedAt: "2023-05-15T14:20:00.000Z",
     priority: "low",
-    description: "Registro de marca comercial para empresa de cosméticos.",
-  },
-  {
-    id: "5",
-    title: "Recurso Tributário Oliveira",
-    clientId: "8",
-    clientName: "Empresa Oliveira Ltda.",
-    assignedLawyerId: "4",
-    assignedLawyerName: "Advogado Sênior Demo",
-    status: "active",
-    createdAt: "2023-07-25T16:20:00Z",
-    updatedAt: "2023-10-18T10:10:00Z",
-    dueDate: "2023-11-30T23:59:59Z",
-    priority: "high",
-    description: "Recurso contra autuação fiscal municipal.",
+    description: "Reclamação de horas extras não pagas e condições de trabalho inadequadas."
   }
 ];
 
+// Tarefas simuladas
+export const MOCK_TASKS: Task[] = [
+  {
+    id: "1",
+    title: "Preparar petição inicial",
+    description: "Redigir e revisar a petição inicial para o processo de divórcio",
+    caseId: "1",
+    caseName: "Processo de Divórcio Silva",
+    assignedToId: "2",
+    assignedToName: "Advogado Demo",
+    assignedById: "4",
+    assignedByName: "Advogado Sênior Demo",
+    status: "in_progress",
+    priority: "high",
+    dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: "2",
+    title: "Revisar cláusulas contratuais",
+    description: "Verificar e ajustar cláusulas do contrato comercial",
+    caseId: "2",
+    caseName: "Contrato de Arrendamento Comercial",
+    assignedToId: "5",
+    assignedToName: "Assistente Demo",
+    assignedById: "4",
+    assignedByName: "Advogado Sênior Demo",
+    status: "todo",
+    priority: "medium",
+    dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: "3",
+    title: "Contatar testemunhas",
+    description: "Entrar em contato com testemunhas para agendamento de depoimentos",
+    caseId: "3",
+    caseName: "Disputa Trabalhista Ferreira",
+    assignedToId: "10",
+    assignedToName: "Carlos Santos",
+    assignedById: "6",
+    assignedByName: "Pedro Silva",
+    status: "done",
+    priority: "low",
+    dueDate: "2023-05-10T14:00:00.000Z",
+    createdAt: "2023-04-20T09:15:00.000Z",
+    updatedAt: "2023-05-08T11:30:00.000Z"
+  }
+];
+
+// Documentos simulados
 export const MOCK_DOCUMENTS: Document[] = [
   {
     id: "1",
     name: "Petição Inicial - Divórcio Silva.pdf",
     caseId: "1",
-    createdAt: "2023-10-15T11:00:00Z",
-    updatedAt: "2023-10-15T11:00:00Z",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     createdBy: "2",
-    size: 2456789,
+    size: 1458672,
     type: "application/pdf",
-    url: "/documents/petition.pdf",
-    version: 1,
+    url: "/documents/peticao-inicial-divorcio.pdf",
+    version: 1
   },
   {
     id: "2",
-    name: "Certidão de Casamento - Silva.pdf",
-    caseId: "1",
-    createdAt: "2023-10-16T09:30:00Z",
-    updatedAt: "2023-10-16T09:30:00Z",
-    createdBy: "3",
-    size: 1234567,
-    type: "application/pdf",
-    url: "/documents/certificate.pdf",
-    version: 1,
-  },
-  {
-    id: "3",
-    name: "Contrato Imobiliário - Versão Final.docx",
+    name: "Contrato de Arrendamento Comercial - Rascunho.docx",
     caseId: "2",
-    createdAt: "2023-09-18T14:20:00Z",
-    updatedAt: "2023-09-19T10:15:00Z",
-    createdBy: "2",
-    size: 3567890,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    createdBy: "4",
+    size: 286720,
     type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    url: "/documents/contract.docx",
-    version: 3,
-  },
-  {
-    id: "4",
-    name: "Carteira de Trabalho - Santos.pdf",
-    caseId: "3",
-    createdAt: "2023-08-25T11:40:00Z",
-    updatedAt: "2023-08-25T11:40:00Z",
-    createdBy: "4",
-    size: 1987654,
-    type: "application/pdf",
-    url: "/documents/workcard.pdf",
-    version: 1,
-  },
-  {
-    id: "5",
-    name: "Procuração - Oliveira.pdf",
-    caseId: "5",
-    createdAt: "2023-07-26T09:10:00Z",
-    updatedAt: "2023-07-26T09:10:00Z",
-    createdBy: "4",
-    size: 987654,
-    type: "application/pdf",
-    url: "/documents/power_of_attorney.pdf",
-    version: 1,
-  }
-];
-
-export const MOCK_TASKS: Task[] = [
-  {
-    id: "1",
-    title: "Preparar petição inicial",
-    description: "Redigir a petição inicial do processo de divórcio Silva.",
-    caseId: "1",
-    caseName: "Processo de Divórcio Silva",
-    assignedToId: "2",
-    assignedToName: "Advogado Demo",
-    assignedById: "4",
-    assignedByName: "Advogado Sênior Demo",
-    status: "done",
-    priority: "high",
-    dueDate: "2023-10-20T23:59:59Z",
-    createdAt: "2023-10-16T09:00:00Z",
-    updatedAt: "2023-10-19T16:30:00Z",
-  },
-  {
-    id: "2",
-    title: "Coletar documentos do cliente",
-    description: "Solicitar e organizar todos os documentos necessários para o processo.",
-    caseId: "1",
-    caseName: "Processo de Divórcio Silva",
-    assignedToId: "5",
-    assignedToName: "Assistente Demo",
-    assignedById: "2",
-    assignedByName: "Advogado Demo",
-    status: "in_progress",
-    priority: "medium",
-    dueDate: "2023-10-25T23:59:59Z",
-    createdAt: "2023-10-16T09:15:00Z",
-    updatedAt: "2023-10-20T11:20:00Z",
+    url: "/documents/contrato-arrendamento-rascunho.docx",
+    version: 3
   },
   {
     id: "3",
-    title: "Revisar contrato imobiliário",
-    description: "Fazer uma revisão detalhada do contrato de compra e venda.",
-    caseId: "2",
-    caseName: "Contrato Imobiliário Martins",
-    assignedToId: "2",
-    assignedToName: "Advogado Demo",
-    assignedById: "4",
-    assignedByName: "Advogado Sênior Demo",
-    status: "todo",
-    priority: "medium",
-    dueDate: "2023-11-05T23:59:59Z",
-    createdAt: "2023-09-10T14:00:00Z",
-    updatedAt: "2023-09-10T14:00:00Z",
-  },
-  {
-    id: "4",
-    title: "Entrevistar testemunhas",
-    description: "Agendar e realizar entrevistas com as testemunhas do caso trabalhista.",
+    name: "Comprovantes de Pagamento - Caso Trabalhista.zip",
     caseId: "3",
-    caseName: "Processo Trabalhista Santos",
-    assignedToId: "4",
-    assignedToName: "Advogado Sênior Demo",
-    assignedById: "4",
-    assignedByName: "Advogado Sênior Demo",
-    status: "todo",
-    priority: "high",
-    dueDate: "2023-11-10T23:59:59Z",
-    createdAt: "2023-10-15T10:00:00Z",
-    updatedAt: "2023-10-15T10:00:00Z",
-  },
-  {
-    id: "5",
-    title: "Preparar recurso tributário",
-    description: "Elaborar o recurso contra a autuação fiscal.",
-    caseId: "5",
-    caseName: "Recurso Tributário Oliveira",
-    assignedToId: "4",
-    assignedToName: "Advogado Sênior Demo",
-    assignedById: "4",
-    assignedByName: "Advogado Sênior Demo",
-    status: "in_progress",
-    priority: "high",
-    dueDate: "2023-11-25T23:59:59Z",
-    createdAt: "2023-10-01T11:30:00Z",
-    updatedAt: "2023-10-18T15:45:00Z",
+    createdAt: "2023-03-15T10:30:00.000Z",
+    updatedAt: "2023-03-15T10:30:00.000Z",
+    createdBy: "6",
+    size: 3842048,
+    type: "application/zip",
+    url: "/documents/comprovantes-pagamento.zip",
+    version: 1
   }
 ];
 
+// Mensagens simuladas
 export const MOCK_MESSAGES: Message[] = [
   {
     id: "1",
-    content: "Preciso que você me envie os documentos do divórcio até amanhã.",
+    content: "Precisamos agendar uma reunião para discutir os próximos passos do seu processo.",
     senderId: "2",
     senderName: "Advogado Demo",
     senderRole: "lawyer",
-    receiverId: "3",
-    receiverName: "Cliente Demo",
+    receiverId: "8",
+    receiverName: "João Cardoso",
     caseId: "1",
-    readAt: "2023-10-17T15:10:00Z",
-    createdAt: "2023-10-17T14:30:00Z",
+    createdAt: new Date().toISOString()
   },
   {
     id: "2",
-    content: "Vou enviar os documentos ainda hoje. Tenho algumas dúvidas sobre o processo.",
-    senderId: "3",
-    senderName: "Cliente Demo",
-    senderRole: "client",
-    receiverId: "2",
-    receiverName: "Advogado Demo",
-    caseId: "1",
-    readAt: "2023-10-17T15:45:00Z",
-    createdAt: "2023-10-17T15:40:00Z",
-  },
-  {
-    id: "3",
-    content: "Podemos marcar uma reunião para discutir suas dúvidas?",
-    senderId: "2",
-    senderName: "Advogado Demo",
-    senderRole: "lawyer",
-    receiverId: "3",
-    receiverName: "Cliente Demo",
-    caseId: "1",
-    createdAt: "2023-10-17T16:00:00Z",
-  },
-  {
-    id: "4",
-    content: "Precisamos discutir a estratégia para o caso trabalhista.",
+    content: "Recebi os documentos enviados. Vou analisá-los e retorno com feedback em breve.",
     senderId: "4",
     senderName: "Advogado Sênior Demo",
     senderRole: "senior_lawyer",
-    receiverId: "2",
-    receiverName: "Advogado Demo",
-    caseId: "3",
-    readAt: "2023-10-18T09:15:00Z",
-    createdAt: "2023-10-18T09:00:00Z",
-  },
-  {
-    id: "5",
-    content: "A revisão do contrato imobiliário está quase finalizada. Enviarei até o final do dia.",
-    senderId: "2",
-    senderName: "Advogado Demo",
-    senderRole: "lawyer",
     receiverId: "3",
     receiverName: "Cliente Demo",
     caseId: "2",
-    createdAt: "2023-10-19T11:30:00Z",
+    readAt: new Date().toISOString(),
+    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+  },
+  {
+    id: "3",
+    content: "Agendamos a audiência para o dia 15/07. Por favor, confirme sua disponibilidade.",
+    senderId: "6",
+    senderName: "Pedro Silva",
+    senderRole: "lawyer",
+    receiverId: "9",
+    receiverName: "Teresa Almeida",
+    caseId: "3",
+    createdAt: "2023-05-10T14:30:00.000Z"
   }
 ];
 
-export const MOCK_TRANSACTIONS: FinancialTransaction[] = [
+// Transações financeiras simuladas
+export const MOCK_FINANCIAL_TRANSACTIONS: FinancialTransaction[] = [
   {
     id: "1",
-    clientId: "3",
-    clientName: "Cliente Demo",
+    clientId: "8",
+    clientName: "João Cardoso",
     caseId: "1",
     caseName: "Processo de Divórcio Silva",
-    amount: 2500,
+    amount: 1500,
     currency: "EUR",
     type: "invoice",
     status: "pending",
-    date: "2023-10-16T00:00:00Z",
-    description: "Honorários iniciais - Processo de divórcio",
+    date: new Date().toISOString(),
+    description: "Honorários iniciais para processo de divórcio"
   },
   {
     id: "2",
     clientId: "3",
     clientName: "Cliente Demo",
     caseId: "2",
-    caseName: "Contrato Imobiliário Martins",
-    amount: 1200,
+    caseName: "Contrato de Arrendamento Comercial",
+    amount: 750,
     currency: "EUR",
     type: "payment",
     status: "completed",
-    date: "2023-09-10T00:00:00Z",
-    description: "Pagamento de honorários - Revisão de contrato",
+    date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    description: "Pagamento parcial de honorários"
   },
   {
     id: "3",
-    clientId: "6",
-    clientName: "Pedro Santos",
+    clientId: "9",
+    clientName: "Teresa Almeida",
     caseId: "3",
-    caseName: "Processo Trabalhista Santos",
-    amount: 3000,
-    currency: "EUR",
-    type: "invoice",
-    status: "completed",
-    date: "2023-08-25T00:00:00Z",
-    description: "Honorários iniciais - Processo trabalhista",
-  },
-  {
-    id: "4",
-    clientId: "7",
-    clientName: "Mariana Costa",
-    caseId: "4",
-    caseName: "Registro de Marca Costa",
-    amount: 1500,
-    currency: "EUR",
-    type: "invoice",
-    status: "completed",
-    date: "2023-05-15T00:00:00Z",
-    description: "Honorários - Registro de marca",
-  },
-  {
-    id: "5",
-    clientId: "8",
-    clientName: "Empresa Oliveira Ltda.",
-    caseId: "5",
-    caseName: "Recurso Tributário Oliveira",
-    amount: 4500,
+    caseName: "Disputa Trabalhista Ferreira",
+    amount: 2200,
     currency: "EUR",
     type: "payment",
     status: "completed",
-    date: "2023-07-30T00:00:00Z",
-    description: "Pagamento de honorários - Recurso tributário",
-  },
-  {
-    id: "6",
-    clientId: "3",
-    clientName: "Cliente Demo",
-    amount: 49,
-    currency: "EUR",
-    type: "subscription",
-    status: "completed",
-    date: "2023-10-01T00:00:00Z",
-    description: "Assinatura mensal - Plano Basic",
+    date: "2023-05-20T10:15:00.000Z",
+    description: "Liquidação total de honorários"
   }
 ];
-
-export const MOCK_ORGANIZATIONS: Organization[] = [
-  {
-    id: "1",
-    name: "Escritório de Advocacia Demo",
-    plan: "enterprise",
-    isActive: true,
-    createdAt: "2023-01-15T10:00:00Z",
-    memberCount: 5,
-    ownerId: "4",
-  }
-];
-
-export const MOCK_SUBSCRIPTIONS: Subscription[] = [
-  {
-    id: "1",
-    plan: "enterprise",
-    status: "active",
-    currentPeriodEnd: "2023-11-30T23:59:59Z",
-    createdAt: "2023-01-15T10:00:00Z",
-    priceId: "price_enterprise",
-    price: 199,
-    currency: "EUR",
-    usersLimit: 10,
-    features: [
-      {
-        id: "1",
-        name: "Utilizadores",
-        description: "Até 10 utilizadores",
-        included: true,
-      },
-      {
-        id: "2",
-        name: "Gestão de Processos",
-        description: "Funcionalidades avançadas de gestão de processos",
-        included: true,
-      },
-      {
-        id: "3",
-        name: "Portal do Cliente",
-        description: "Portal personalizado para clientes",
-        included: true,
-      },
-      {
-        id: "4",
-        name: "Armazenamento",
-        description: "50GB de armazenamento para documentos",
-        included: true,
-      },
-      {
-        id: "5",
-        name: "Gestão de Tarefas",
-        description: "Ferramentas avançadas de gestão de tarefas",
-        included: true,
-      },
-      {
-        id: "6",
-        name: "Agendamento Online",
-        description: "Sistema de agendamento online para clientes",
-        included: true,
-      },
-      {
-        id: "7",
-        name: "Automatização",
-        description: "Ferramentas de automatização de documentos",
-        included: true,
-      },
-      {
-        id: "8",
-        name: "Relatórios",
-        description: "Relatórios e analytics avançados",
-        included: true,
-      },
-      {
-        id: "9",
-        name: "API",
-        description: "Acesso à API para integrações personalizadas",
-        included: true,
-      },
-    ]
-  }
-];
-
-// Helper function to filter cases by user
-export const getCasesByUser = (userId: string, userRole: string): Case[] => {
-  if (userRole === "admin" || userRole === "senior_lawyer") {
-    return MOCK_CASES;
-  } else if (userRole === "lawyer") {
-    return MOCK_CASES.filter(c => c.assignedLawyerId === userId);
-  } else if (userRole === "client") {
-    return MOCK_CASES.filter(c => c.clientId === userId);
-  } else if (userRole === "assistant") {
-    // Assistants can see cases assigned to the lawyer they support
-    // In a real app, this would be more complex with a relation between assistant and lawyer
-    return MOCK_CASES.filter(c => c.assignedLawyerId === "2"); // For demo, assume assisting Lawyer Demo
-  }
-  return [];
-};
-
-// Helper function to filter tasks by user
-export const getTasksByUser = (userId: string, userRole: string): Task[] => {
-  if (userRole === "admin" || userRole === "senior_lawyer") {
-    return MOCK_TASKS;
-  } else if (userRole === "lawyer" || userRole === "assistant") {
-    return MOCK_TASKS.filter(t => t.assignedToId === userId);
-  }
-  // Clients don't see tasks
-  return [];
-};
-
-// Helper function to filter documents by user and case
-export const getDocumentsByCase = (caseId: string): Document[] => {
-  return MOCK_DOCUMENTS.filter(d => d.caseId === caseId);
-};
-
-// Helper function to get documents accessible to a user
-export const getDocumentsByUser = (userId: string, userRole: string): Document[] => {
-  if (userRole === "admin" || userRole === "senior_lawyer") {
-    return MOCK_DOCUMENTS;
-  } else if (userRole === "lawyer" || userRole === "assistant") {
-    // Get cases assigned to this lawyer/assistant
-    const cases = getCasesByUser(userId, userRole);
-    const caseIds = cases.map(c => c.id);
-    return MOCK_DOCUMENTS.filter(d => d.caseId && caseIds.includes(d.caseId));
-  } else if (userRole === "client") {
-    // Get cases for this client
-    const cases = getCasesByUser(userId, userRole);
-    const caseIds = cases.map(c => c.id);
-    return MOCK_DOCUMENTS.filter(d => d.caseId && caseIds.includes(d.caseId));
-  }
-  return [];
-};
-
-// Helper function to get messages for a user
-export const getMessagesByUser = (userId: string): Message[] => {
-  return MOCK_MESSAGES.filter(m => 
-    m.senderId === userId || m.receiverId === userId
-  ).sort((a, b) => 
-    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
-};
-
-// Helper function to get messages for a specific case
-export const getMessagesByCase = (caseId: string): Message[] => {
-  return MOCK_MESSAGES.filter(m => m.caseId === caseId)
-    .sort((a, b) => 
-      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-    );
-};
-
-// Helper function to get financial transactions for a user
-export const getTransactionsByUser = (userId: string, userRole: string): FinancialTransaction[] => {
-  if (userRole === "admin" || userRole === "senior_lawyer") {
-    return MOCK_TRANSACTIONS;
-  } else if (userRole === "lawyer") {
-    // Get cases assigned to this lawyer
-    const cases = getCasesByUser(userId, userRole);
-    const caseIds = cases.map(c => c.id);
-    return MOCK_TRANSACTIONS.filter(t => !t.caseId || caseIds.includes(t.caseId));
-  } else if (userRole === "client") {
-    return MOCK_TRANSACTIONS.filter(t => t.clientId === userId);
-  }
-  // Assistants don't see financial info by default
-  return [];
-};
-
-// Helper function to get financial transactions for a specific case
-export const getTransactionsByCase = (caseId: string): FinancialTransaction[] => {
-  return MOCK_TRANSACTIONS.filter(t => t.caseId === caseId);
-};
-
-// Helper function to get organization by id
-export const getOrganizationById = (orgId: string): Organization | undefined => {
-  return MOCK_ORGANIZATIONS.find(o => o.id === orgId);
-};
-
-// Helper function to get subscription by organization id
-export const getSubscriptionByOrgId = (orgId: string): Subscription | undefined => {
-  const org = MOCK_ORGANIZATIONS.find(o => o.id === orgId);
-  if (!org) return undefined;
-  
-  return MOCK_SUBSCRIPTIONS.find(s => s.plan === org.plan);
-};

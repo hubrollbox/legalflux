@@ -12,6 +12,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import Subscriptions from "./pages/Subscriptions";
+import Users from "./pages/Users"; // Importar a nova página
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
             {/* Protected Routes */}
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/subscriptions" element={<Subscriptions />} />
+            <Route path="/users" element={<Users />} /> {/* Nova rota */}
             <Route path="/cases" element={<Navigate to="/dashboard" />} />
             <Route path="/tasks" element={<Navigate to="/dashboard" />} />
             <Route path="/documents" element={<Navigate to="/dashboard" />} />
@@ -41,7 +43,6 @@ const App = () => (
             <Route path="/calendar" element={<Navigate to="/dashboard" />} />
             <Route path="/messages" element={<Navigate to="/dashboard" />} />
             <Route path="/financial" element={<Navigate to="/dashboard" />} />
-            <Route path="/users" element={<Navigate to="/dashboard" />} />
             <Route path="/settings" element={<Navigate to="/dashboard" />} />
             <Route path="/profile" element={<Navigate to="/dashboard" />} />
 
