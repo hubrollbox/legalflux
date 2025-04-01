@@ -120,6 +120,7 @@ const Users = () => {
       role: data.role,
       isActive: data.isActive,
       createdAt: new Date().toISOString(),
+      lastLogin: new Date().toISOString(), // Adicionando lastLogin
       hasTwoFactorEnabled: data.hasTwoFactorEnabled,
       organizationId: data.organizationId,
       phone: data.phone,

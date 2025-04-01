@@ -16,6 +16,20 @@ export interface User {
   assignedToLawyerId?: string; // For assistants, who they're assigned to
 }
 
+// Permissions related types
+export interface Permission {
+  id: string;
+  name: string;
+  description: string;
+  module: string;
+  action: string;
+}
+
+export interface RolePermission {
+  roleId: string;
+  permissionId: string;
+}
+
 // Case related types
 export type CaseStatus = "active" | "pending" | "closed" | "archived";
 export type CasePriority = "low" | "medium" | "high";

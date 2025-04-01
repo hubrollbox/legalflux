@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User, UserRole } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
@@ -171,6 +170,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         role,
         isActive: true,
         createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
         hasTwoFactorEnabled: false,
       };
       
