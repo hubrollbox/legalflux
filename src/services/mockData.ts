@@ -1,5 +1,4 @@
-
-import { User, Case, Task, Document, Message, FinancialTransaction } from "@/types";
+import { User, Case, Task, Document, Message, FinancialTransaction, Organization, Subscription } from "@/types";
 
 // Utilizadores simulados
 export const MOCK_USERS: User[] = [
@@ -334,3 +333,168 @@ export const MOCK_FINANCIAL_TRANSACTIONS: FinancialTransaction[] = [
     description: "Liquidação total de honorários"
   }
 ];
+
+// Organizations
+export const MOCK_ORGANIZATIONS: Organization[] = [
+  {
+    id: "1",
+    name: "LegalFlux Advogados",
+    memberCount: 5,
+    createdAt: "2023-01-01T10:00:00.000Z",
+    address: "Av. da Liberdade 110, Lisboa",
+    phone: "+351 210 123 456",
+    email: "contato@legalflux.com"
+  },
+  {
+    id: "2",
+    name: "Silva & Associados",
+    memberCount: 3,
+    createdAt: "2023-02-15T14:30:00.000Z",
+    address: "Rua Augusta 25, Lisboa",
+    phone: "+351 210 987 654",
+    email: "contato@silvaassociados.com"
+  }
+];
+
+// Subscriptions
+export const MOCK_SUBSCRIPTIONS: Subscription[] = [
+  {
+    id: "1",
+    organizationId: "1",
+    plan: "enterprise",
+    status: "active",
+    price: 199,
+    currency: "EUR",
+    currentPeriodStart: "2023-06-01T00:00:00.000Z",
+    currentPeriodEnd: "2023-07-01T00:00:00.000Z",
+    cancelAtPeriodEnd: false
+  }
+];
+
+// Helper Functions
+
+// Fetch organization by ID
+export const getOrganizationById = (id: string): Organization | undefined => {
+  return MOCK_ORGANIZATIONS.find(org => org.id === id);
+};
+
+// Fetch subscription by organization ID
+export const getSubscriptionByOrgId = (orgId: string): Subscription | undefined => {
+  return MOCK_SUBSCRIPTIONS.find(sub => sub.organizationId === orgId);
+};
+
+// Fetch cases by user ID and role
+export const getCasesByUser = (userId: string, role: string): Case[] => {
+  if (role === "admin" || role === "senior_lawyer") {
+    return MOCK_CASES;
+  } else if (role === "lawyer") {
+    return MOCK_CASES.filter(c => c.assignedLawyerId === userId);
+  } else if (role === "client") {
+    return MOCK_CASES.filter(c => c.clientId === userId);
+  } else if (role === "assistant") {
+    // Assistants can only see cases they're specifically assigned to work with
+    const assignedLawyerId = MOCK_USERS.find(u => u.id === userId)?.assignedToLawyerId;
+    if (assignedLawyerId) {
+      return MOCK_CASES.filter(c => c.assignedLawyerId === assignedLawyerId);
+    }
+  }
+  return [];
+};
+
+// Fetch tasks by user ID and role
+export const getTasksByUser = (userId: string, role: string): Task[] => {
+  if (role === "admin" || role === "senior_lawyer") {
+    return MOCK_TASKS;
+  } else if (role === "lawyer" || role === "assistant") {
+    return MOCK_TASKS.filter(t => t.assignedToId === userId || t.assignedById === userId);
+  }
+  return [];
+};
+
+// Fetch messages by user ID
+export const getMessagesByUser = (userId: string): Message[] => {
+  return MOCK_MESSAGES.filter(m => m.senderId === userId || m.receiverId === userId);
+};
+
+// Fetch financial transactions by user ID and role
+export const getTransactionsByUser = (userId: string, role: string): FinancialTransaction[] => {
+  if (role === "admin" || role === "senior_lawyer") {
+    return MOCK_FINANCIAL_TRANSACTIONS;
+  } else if (role === "lawyer") {
+    // Lawyers can see transactions related to their cases
+    const assignedCaseIds = MOCK_CASES
+      .filter(c => c.assignedLawyerId === userId)
+      .map(c => c.id);
+    return MOCK_FINANCIAL_TRANSACTIONS.filter(t => 
+      assignedCaseIds.includes(t.caseId || "") || t.type === "subscription"
+    );
+  } else if (role === "client") {
+    return MOCK_FINANCIAL_TRANSACTIONS.filter(t => t.clientId === userId);
+  }
+  return [];
+};
+
+// Fetch documents by user ID and role
+export const getDocumentsByUser = (userId: string, role: string): Document[] => {
+  if (role === "admin" || role === "senior_lawyer") {
+    return MOCK_DOCUMENTS;
+  } else if (role === "lawyer" || role === "assistant") {
+    const assignedCaseIds = MOCK_CASES
+      .filter(c => c.assignedLawyerId === userId)
+      .map(c => c.id);
+    return MOCK_DOCUMENTS.filter(d => assignedCaseIds.includes(d.caseId || ""));
+  } else if (role === "client") {
+    const clientCaseIds = MOCK_CASES
+      .filter(c => c.clientId === userId)
+      .map(c => c.id);
+    return MOCK_DOCUMENTS.filter(d => clientCaseIds.includes(d.caseId || ""));
+  }
+  return [];
+};
+
+// Filter users by organization and role
+export const getUsersByOrganization = (orgId: string): User[] => {
+  return MOCK_USERS.filter(user => user.organizationId === orgId);
+};
+
+// Get user by ID
+export const getUserById = (id: string): User | undefined => {
+  return MOCK_USERS.find(user => user.id === id);
+};
+
+// Update user data
+export const updateUser = (id: string, userData: Partial<User>): User | undefined => {
+  const userIndex = MOCK_USERS.findIndex(user => user.id === id);
+  if (userIndex === -1) return undefined;
+  
+  // Update user data
+  MOCK_USERS[userIndex] = {
+    ...MOCK_USERS[userIndex],
+    ...userData,
+  };
+  
+  return MOCK_USERS[userIndex];
+};
+
+// Add a new user
+export const addUser = (userData: Omit<User, 'id' | 'createdAt'>): User => {
+  const newId = (MOCK_USERS.length + 1).toString();
+  const newUser: User = {
+    id: newId,
+    createdAt: new Date().toISOString(),
+    lastLogin: new Date().toISOString(),
+    ...userData,
+  };
+  
+  MOCK_USERS.push(newUser);
+  return newUser;
+};
+
+// Delete a user
+export const deleteUser = (id: string): boolean => {
+  const userIndex = MOCK_USERS.findIndex(user => user.id === id);
+  if (userIndex === -1) return false;
+  
+  MOCK_USERS.splice(userIndex, 1);
+  return true;
+};

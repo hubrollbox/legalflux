@@ -1,53 +1,24 @@
 
-export type UserRole = 'client' | 'lawyer' | 'senior_lawyer' | 'assistant' | 'admin';
+// User related types
+export type UserRole = "admin" | "lawyer" | "senior_lawyer" | "assistant" | "client";
 
 export interface User {
   id: string;
   email: string;
   name: string;
   role: UserRole;
-  avatar?: string;
   isActive: boolean;
   createdAt: string;
-  lastLogin?: string;
-  subscriptionId?: string;
+  lastLogin: string;
+  hasTwoFactorEnabled: boolean;
   organizationId?: string;
   phone?: string;
-  hasTwoFactorEnabled: boolean;
+  assignedToLawyerId?: string; // For assistants, who they're assigned to
 }
 
-export interface Organization {
-  id: string;
-  name: string;
-  plan: SubscriptionPlan;
-  isActive: boolean;
-  createdAt: string;
-  memberCount: number;
-  ownerId: string;
-}
-
-export type SubscriptionPlan = 'basic' | 'solo' | 'enterprise' | 'custom';
-
-export interface Subscription {
-  id: string;
-  plan: SubscriptionPlan;
-  status: 'active' | 'canceled' | 'past_due' | 'trial';
-  trialEndsAt?: string;
-  currentPeriodEnd: string;
-  createdAt: string;
-  priceId: string;
-  price: number;
-  currency: string;
-  usersLimit: number;
-  features: SubscriptionFeature[];
-}
-
-export interface SubscriptionFeature {
-  id: string;
-  name: string;
-  description: string;
-  included: boolean;
-}
+// Case related types
+export type CaseStatus = "active" | "pending" | "closed" | "archived";
+export type CasePriority = "low" | "medium" | "high";
 
 export interface Case {
   id: string;
@@ -56,14 +27,36 @@ export interface Case {
   clientName: string;
   assignedLawyerId: string;
   assignedLawyerName: string;
-  status: 'active' | 'closed' | 'pending';
+  status: CaseStatus;
   createdAt: string;
   updatedAt: string;
   dueDate?: string;
-  priority: 'low' | 'medium' | 'high';
+  priority: CasePriority;
   description?: string;
 }
 
+// Task related types
+export type TaskStatus = "todo" | "in_progress" | "done";
+export type TaskPriority = "low" | "medium" | "high";
+
+export interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  caseId: string;
+  caseName: string;
+  assignedToId: string;
+  assignedToName: string;
+  assignedById: string;
+  assignedByName: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  dueDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Document related types
 export interface Document {
   id: string;
   name: string;
@@ -77,29 +70,13 @@ export interface Document {
   version: number;
 }
 
-export interface Task {
-  id: string;
-  title: string;
-  description?: string;
-  caseId?: string;
-  caseName?: string;
-  assignedToId: string;
-  assignedToName: string;
-  assignedById: string;
-  assignedByName: string;
-  status: 'todo' | 'in_progress' | 'done';
-  priority: 'low' | 'medium' | 'high';
-  dueDate?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
+// Message related types
 export interface Message {
   id: string;
   content: string;
   senderId: string;
   senderName: string;
-  senderRole: UserRole;
+  senderRole: string;
   receiverId: string;
   receiverName: string;
   caseId?: string;
@@ -107,43 +84,47 @@ export interface Message {
   createdAt: string;
 }
 
-export interface Permission {
-  id: string;
-  name: string;
-  description: string;
-  module: 'cases' | 'documents' | 'tasks' | 'finance' | 'users' | 'settings';
-  action: 'create' | 'read' | 'update' | 'delete';
-}
-
-export interface RolePermission {
-  roleId: UserRole;
-  permissionId: string;
-  granted: boolean;
-}
-
-export interface Activity {
-  id: string;
-  userId: string;
-  userName: string;
-  action: string;
-  resourceType: string;
-  resourceId: string;
-  resourceName: string;
-  timestamp: string;
-  ipAddress: string;
-  metadata?: Record<string, any>;
-}
+// Financial related types
+export type TransactionType = "invoice" | "payment" | "subscription";
+export type TransactionStatus = "pending" | "completed" | "cancelled" | "failed";
 
 export interface FinancialTransaction {
   id: string;
-  clientId: string;
-  clientName: string;
+  clientId?: string;
+  clientName?: string;
   caseId?: string;
   caseName?: string;
   amount: number;
   currency: string;
-  type: 'invoice' | 'payment' | 'refund' | 'subscription';
-  status: 'pending' | 'completed' | 'failed';
+  type: TransactionType;
+  status: TransactionStatus;
   date: string;
   description?: string;
+}
+
+// Organization related types
+export interface Organization {
+  id: string;
+  name: string;
+  memberCount: number;
+  createdAt: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+}
+
+// Subscription related types
+export type SubscriptionPlan = "basic" | "solo" | "enterprise" | "custom";
+export type SubscriptionStatus = "active" | "trialing" | "cancelled" | "expired";
+
+export interface Subscription {
+  id: string;
+  organizationId: string;
+  plan: SubscriptionPlan;
+  status: SubscriptionStatus;
+  price: number;
+  currency: string;
+  currentPeriodStart: string;
+  currentPeriodEnd: string;
+  cancelAtPeriodEnd: boolean;
 }
