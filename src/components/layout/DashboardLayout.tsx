@@ -1,4 +1,3 @@
-
 import React, { ReactNode, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -25,6 +24,7 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserRole } from "@/types";
+import { LOGO } from "@/assets";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -148,6 +148,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
+          <img src={LOGO.DEFAULT} alt="LegalFlux Logo" className="h-24 mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-2">Acesso Negado</h1>
           <p className="mb-4">Você precisa fazer login para acessar esta página.</p>
           <Button onClick={() => navigate("/login")}>Fazer Login</Button>
@@ -157,12 +158,15 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   }
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-container flex h-screen bg-gray-100">
       {/* Desktop Sidebar */}
       <div className="hidden md:flex flex-col w-64 bg-primary-950 text-white">
-        <div className="p-4 border-b border-primary-900">
-          <h1 className="text-xl font-bold">LegalFlux</h1>
-          <p className="text-xs text-gray-400 mt-1">Gestão Jurídica</p>
+        <div className="p-4 border-b border-primary-900 flex items-center justify-center">
+          <img src={LOGO.SMALL} alt="LegalFlux Logo" className="h-8 mr-2" />
+          <div>
+            <h1 className="text-xl font-bold">LegalFlux</h1>
+            <p className="text-xs text-gray-400 mt-1">Gestão Jurídica</p>
+          </div>
         </div>
         <div className="flex-1 overflow-y-auto py-4">
           <nav className="px-2 space-y-1">
@@ -217,7 +221,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         }`}
       >
         <div className="flex justify-between items-center p-4 border-b border-primary-900">
-          <h1 className="text-xl font-bold">LegalFlux</h1>
+          <div className="flex items-center">
+            <img src={LOGO.SMALL} alt="LegalFlux Logo" className="h-6 mr-2" />
+            <h1 className="text-xl font-bold">LegalFlux</h1>
+          </div>
           <Button
             variant="ghost"
             size="icon"
@@ -269,7 +276,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* Header */}
         <header className="bg-white border-b py-2 px-4 flex items-center justify-between">
           <div className="flex items-center">
             <Button
@@ -344,7 +350,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           </div>
         </header>
 
-        {/* Page Content */}
         <main className="main-content">{children}</main>
       </div>
     </div>
