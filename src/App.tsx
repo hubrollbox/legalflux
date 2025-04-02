@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import Subscriptions from "./pages/Subscriptions";
 import Users from "./pages/Users";
 import NotFound from "./pages/NotFound";
+import Screenshots from "./pages/Screenshots"; // Updated import for the refactored component
 
 const queryClient = new QueryClient();
 
@@ -31,6 +31,7 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/screenshots" element={<Screenshots />} /> {/* Make sure this route is included */}
 
             {/* Protected Routes */}
             <Route path="/dashboard" element={<Dashboard />} />
