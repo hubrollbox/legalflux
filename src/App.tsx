@@ -5,14 +5,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
-import Index from "./pages/Index";
+import LandingPage from "./pages/landing"; // Updated import path
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import Subscriptions from "./pages/Subscriptions";
-import Users from "./pages/Users"; // Importar a nova página
+import Users from "./pages/Users";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,7 +26,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             {/* Public Routes */}
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -35,7 +35,7 @@ const App = () => (
             {/* Protected Routes */}
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/subscriptions" element={<Subscriptions />} />
-            <Route path="/users" element={<Users />} /> {/* Nova rota */}
+            <Route path="/users" element={<Users />} />
             <Route path="/cases" element={<Navigate to="/dashboard" />} />
             <Route path="/tasks" element={<Navigate to="/dashboard" />} />
             <Route path="/documents" element={<Navigate to="/dashboard" />} />
