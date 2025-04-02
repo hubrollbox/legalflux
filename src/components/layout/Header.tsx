@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Bell, Home, Menu, User } from "lucide-react";
+import { Bell, Home, Menu, PanelLeftClose, PanelLeftOpen, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getUserRoleName } from "@/lib/utils";
@@ -17,10 +17,18 @@ import {
 interface HeaderProps {
   user: any;
   toggleMobileSidebar: () => void;
+  toggleSidebar: () => void;
+  isSidebarCollapsed: boolean;
   logout: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ user, toggleMobileSidebar, logout }) => {
+const Header: React.FC<HeaderProps> = ({ 
+  user, 
+  toggleMobileSidebar, 
+  toggleSidebar,
+  isSidebarCollapsed,
+  logout 
+}) => {
   const navigate = useNavigate();
 
   const getInitials = (name: string) => {
@@ -41,6 +49,19 @@ const Header: React.FC<HeaderProps> = ({ user, toggleMobileSidebar, logout }) =>
           onClick={toggleMobileSidebar}
         >
           <Menu className="h-5 w-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hidden md:flex"
+          onClick={toggleSidebar}
+          title={isSidebarCollapsed ? "Expandir Menu" : "Recolher Menu"}
+        >
+          {isSidebarCollapsed ? (
+            <PanelLeftOpen className="h-5 w-5" />
+          ) : (
+            <PanelLeftClose className="h-5 w-5" />
+          )}
         </Button>
         <Button
           variant="ghost"
