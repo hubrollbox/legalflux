@@ -26,6 +26,7 @@ import StatusBadge from "@/components/dashboard/StatusBadge";
 import PriorityBadge from "@/components/dashboard/PriorityBadge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 import {
   BarChart,
   Bar,
