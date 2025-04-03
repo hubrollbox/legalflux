@@ -38,12 +38,14 @@ const HeroSection = () => {
         </div>
         <div className="md:w-1/2 flex justify-center">
           <div className="relative w-full max-w-md">
-            <div className="relative bg-white rounded-lg p-6 shadow-lg border border-gray-200">
-              <img 
-                src="/lovable-uploads/713f9dc1-3f6e-43d4-8a1d-28c4c79c1ef5.png" 
-                alt="LegalFlux Dashboard" 
-                className="w-full rounded shadow-md" 
-              />
+            <div className="relative bg-white rounded-lg p-4 shadow-lg border border-gray-200">
+              <iframe 
+                src="https://player.vimeo.com/video/1062960326?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&controls=0" 
+                className="w-full aspect-video rounded shadow-md" 
+                frameBorder="0" 
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
+                title="LegalFlux"
+              ></iframe>
             </div>
           </div>
         </div>

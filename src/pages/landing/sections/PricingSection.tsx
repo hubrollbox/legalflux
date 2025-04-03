@@ -11,6 +11,7 @@ const PricingSection = () => {
   const basicPlan = getPlanDetails("basic");
   const soloPlan = getPlanDetails("solo");
   const enterprisePlan = getPlanDetails("enterprise");
+  const customPlan = getPlanDetails("custom");
 
   return (
     <section className="py-24 bg-white" id="pricing">
@@ -23,7 +24,7 @@ const PricingSection = () => {
             Escolha o plano que melhor se adapta às necessidades do seu escritório.
           </p>
         </div>
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {/* Basic Plan */}
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
             <div className="p-8">
@@ -51,7 +52,7 @@ const PricingSection = () => {
           </div>
 
           {/* Solo Plan */}
-          <div className="bg-white rounded-xl shadow-xl border border-primary-300 overflow-hidden transform scale-105 relative z-10">
+          <div className="bg-white rounded-xl shadow-xl border border-highlight overflow-hidden transform scale-105 relative z-10">
             <div className="absolute top-0 right-0 bg-highlight text-white text-xs font-bold px-4 py-2 uppercase rounded-bl-lg">
               Popular
             </div>
@@ -104,18 +105,30 @@ const PricingSection = () => {
               </ul>
             </div>
           </div>
-        </div>
-        <div className="text-center mt-8">
-          <p className="text-gray-600">
-            Precisa de um plano personalizado?{" "}
-            <Button
-              variant="link"
-              className="text-primary-600 p-0 h-auto"
-              onClick={() => navigate("/register")}
-            >
-              Entre em contacto connosco
-            </Button>
-          </p>
+          {/* Custom Plan */}
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div className="p-8">
+              <h3 className="text-2xl font-bold mb-2 text-primary-900">{customPlan.name}</h3>
+              <div className="flex items-baseline mb-4">
+                <span className="text-lg font-bold text-primary-800">Contacte-nos</span>
+              </div>
+              <p className="text-gray-600 mb-6">{customPlan.description}</p>
+              <Button
+                className="w-full mb-6 bg-primary-600 hover:bg-primary-700"
+                onClick={() => navigate("/register")}
+              >
+                Solicitar Proposta
+              </Button>
+              <ul className="space-y-3">
+                {customPlan.features.map((feature, index) => (
+                  <li key={index} className="flex items-start">
+                    <CheckCircle2 className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
+                    <span className="text-gray-600">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>

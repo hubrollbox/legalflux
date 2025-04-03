@@ -10,16 +10,15 @@ const LandingNavbar = () => {
     <header className="bg-white sticky top-0 z-20 border-b border-gray-200 shadow-sm">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center">
-          <Link to="/" className="text-xl font-bold text-primary-900 flex items-center gap-2">
+          <Link to="/" className="flex items-center">
             <img 
               src="/lovable-uploads/5f9e9260-2a46-4bc3-a26b-93a0e41be3d6.png" 
               alt="LegalFlux Logo" 
               className="h-8 w-auto"
             />
-            LegalFlux
           </Link>
         </div>
-        <nav className="hidden md:flex items-center space-x-6">
+        <nav className="hidden md:flex items-center justify-center space-x-8 flex-1">
           <Link
             to="/#features"
             className="text-gray-600 hover:text-primary-900 transition-colors"
@@ -27,7 +26,7 @@ const LandingNavbar = () => {
             Funcionalidades
           </Link>
           <Link
-            to="/#pricing"
+            to="/subscriptions"
             className="text-gray-600 hover:text-primary-900 transition-colors"
           >
             Planos
@@ -38,6 +37,8 @@ const LandingNavbar = () => {
           >
             Screenshots
           </Link>
+        </nav>
+        <div className="hidden md:flex items-center space-x-4">
           <Link
             to="/login"
             className="text-gray-600 hover:text-primary-900 transition-colors"
@@ -46,18 +47,12 @@ const LandingNavbar = () => {
           </Link>
           <Button 
             onClick={() => navigate("/register")} 
-            className="bg-highlight text-white hover:bg-highlight/90 ml-2"
+            className="bg-highlight text-white hover:bg-highlight/90"
           >
-            Começar Grátis
+            Registo
           </Button>
-        </nav>
+        </div>
         <div className="md:hidden flex items-center gap-3">
-          <Link
-            to="/screenshots"
-            className="text-gray-600 hover:text-primary-900 transition-colors text-sm"
-          >
-            Screenshots
-          </Link>
           <Button 
             variant="outline" 
             onClick={() => navigate("/login")} 

@@ -12,19 +12,10 @@ const LandingFooter = () => {
             <p className="text-gray-600">
               Sistema completo de gestão jurídica para escritórios modernos.
             </p>
-            <div className="flex space-x-4 mt-6">
-              <a href="https://vimeo.com/user119294787" target="_blank" rel="noopener noreferrer" aria-label="Vimeo" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary-900 transition-colors">
-                <Video size={20} />
-              </a>
-              <a href="https://www.instagram.com/legalflux.pt/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary-900 transition-colors">
-                <Instagram size={20} />
-              </a>
-              <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary-900 transition-colors">
-                <Linkedin size={20} />
-              </a>
-              <a href="https://github.com/hubrollbox/legalflux" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary-900 transition-colors">
-                <Github size={20} />
-              </a>
+            <div className="mt-6">
+              <h5 className="text-sm font-semibold mb-3 text-primary-900">Aplicações</h5>
+              <p className="text-gray-600 text-sm">Disponível em breve para:</p>
+              <p className="text-gray-600 text-sm mt-1">Windows • MacOS • iOS • Android</p>
             </div>
           </div>
           <div>
@@ -48,17 +39,21 @@ const LandingFooter = () => {
             </ul>
           </div>
           <div>
-            <h4 className="text-lg font-semibold mb-5 text-primary-900">Aplicações</h4>
+            <h4 className="text-lg font-semibold mb-5 text-primary-900">Suporte</h4>
             <ul className="space-y-3">
               <li>
-                <span className="text-gray-600">Disponível em breve para:</span>
+                <Link to="/screenshots#support" className="text-gray-600 hover:text-highlight transition-colors">
+                  Centro de Ajuda
+                </Link>
               </li>
-              <li className="text-gray-600">
-                Windows • MacOS • iOS • Android
+              <li>
+                <Link to="/screenshots#faq" className="text-gray-600 hover:text-highlight transition-colors">
+                  FAQ
+                </Link>
               </li>
-              <li className="mt-5">
-                <Link to="/#pricing" className="text-highlight hover:text-primary-900 transition-colors">
-                  Saiba mais sobre os nossos planos
+              <li>
+                <Link to="/screenshots#contact" className="text-gray-600 hover:text-highlight transition-colors">
+                  Contacte-nos
                 </Link>
               </li>
             </ul>
