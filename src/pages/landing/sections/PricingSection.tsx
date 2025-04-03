@@ -17,7 +17,7 @@ const PricingSection = () => {
     <section className="py-24 bg-white" id="pricing">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary-900">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
             Planos de Assinatura Flexíveis
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -28,14 +28,14 @@ const PricingSection = () => {
           {/* Basic Plan */}
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
             <div className="p-8">
-              <h3 className="text-2xl font-bold mb-2 text-primary-900">{basicPlan.name}</h3>
+              <h3 className="text-2xl font-bold mb-2 text-gray-900">{basicPlan.name}</h3>
               <div className="flex items-baseline mb-4">
-                <span className="text-4xl font-bold text-primary-800">{basicPlan.price}€</span>
+                <span className="text-4xl font-bold text-gray-800">{basicPlan.price}€</span>
                 <span className="text-gray-500 ml-1">/mês</span>
               </div>
               <p className="text-gray-600 mb-6">{basicPlan.description}</p>
               <Button
-                className="w-full mb-6 bg-primary-600 hover:bg-primary-700"
+                className="w-full mb-6 bg-gray-800 hover:bg-gray-900"
                 onClick={() => navigate("/register")}
               >
                 Começar Agora
@@ -57,14 +57,14 @@ const PricingSection = () => {
               Popular
             </div>
             <div className="p-8">
-              <h3 className="text-2xl font-bold mb-2 text-primary-900">{soloPlan.name}</h3>
+              <h3 className="text-2xl font-bold mb-2 text-gray-900">{soloPlan.name}</h3>
               <div className="flex items-baseline mb-4">
-                <span className="text-4xl font-bold text-primary-800">{soloPlan.price}€</span>
+                <span className="text-4xl font-bold text-gray-800">{soloPlan.price}€</span>
                 <span className="text-gray-500 ml-1">/mês</span>
               </div>
               <p className="text-gray-600 mb-6">{soloPlan.description}</p>
               <Button
-                className="w-full mb-6 bg-highlight hover:bg-highlight/90 shadow-md hover:shadow-lg transition-all"
+                className="w-full mb-6 bg-gray-800 hover:bg-gray-900 shadow-md hover:shadow-lg transition-all"
                 onClick={() => navigate("/register")}
               >
                 Escolher Plano Solo
@@ -83,14 +83,14 @@ const PricingSection = () => {
           {/* Enterprise Plan */}
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
             <div className="p-8">
-              <h3 className="text-2xl font-bold mb-2 text-primary-900">{enterprisePlan.name}</h3>
+              <h3 className="text-2xl font-bold mb-2 text-gray-900">{enterprisePlan.name}</h3>
               <div className="flex items-baseline mb-4">
-                <span className="text-4xl font-bold text-primary-800">{enterprisePlan.price}€</span>
+                <span className="text-4xl font-bold text-gray-800">{enterprisePlan.price}€</span>
                 <span className="text-gray-500 ml-1">/mês</span>
               </div>
               <p className="text-gray-600 mb-6">{enterprisePlan.description}</p>
               <Button
-                className="w-full mb-6 bg-primary-600 hover:bg-primary-700"
+                className="w-full mb-6 bg-gray-800 hover:bg-gray-900"
                 onClick={() => navigate("/register")}
               >
                 Começar Agora
@@ -108,13 +108,13 @@ const PricingSection = () => {
           {/* Custom Plan */}
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
             <div className="p-8">
-              <h3 className="text-2xl font-bold mb-2 text-primary-900">{customPlan.name}</h3>
+              <h3 className="text-2xl font-bold mb-2 text-gray-900">{customPlan.name}</h3>
               <div className="flex items-baseline mb-4">
-                <span className="text-lg font-bold text-primary-800">Contacte-nos</span>
+                <span className="text-lg font-bold text-gray-800">Contacte-nos</span>
               </div>
               <p className="text-gray-600 mb-6">{customPlan.description}</p>
               <Button
-                className="w-full mb-6 bg-primary-600 hover:bg-primary-700"
+                className="w-full mb-6 bg-gray-800 hover:bg-gray-900"
                 onClick={() => navigate("/register")}
               >
                 Solicitar Proposta

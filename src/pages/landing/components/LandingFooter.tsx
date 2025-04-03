@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Video, Instagram, Linkedin, Mail, Phone, MapPin, Github } from "lucide-react";
+import { LOGO } from "@/assets";
 
 const LandingFooter = () => {
   return (
@@ -8,12 +9,12 @@ const LandingFooter = () => {
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8 md:gap-12">
           <div>
-            <h3 className="text-2xl font-bold mb-4 text-primary-900">LegalFlux</h3>
+            <img src={LOGO.DEFAULT} alt="LegalFlux" className="h-12 mb-4" />
             <p className="text-gray-600">
               Sistema completo de gestão jurídica para escritórios modernos.
             </p>
             <div className="mt-6">
-              <h5 className="text-sm font-semibold mb-3 text-primary-900">Aplicações</h5>
+              <h5 className="text-sm font-semibold mb-3 text-gray-900">Aplicações</h5>
               <p className="text-gray-600 text-sm">Disponível em breve para:</p>
               <p className="text-gray-600 text-sm mt-1">Windows • MacOS • iOS • Android</p>
             </div>
@@ -81,14 +82,17 @@ const LandingFooter = () => {
             &copy; {new Date().getFullYear()} LegalFlux. Todos os direitos reservados.
           </p>
           <div className="flex space-x-8">
-            <Link to="/" className="text-gray-600 hover:text-highlight transition-colors">
+            <Link to="/terms" className="text-gray-600 hover:text-highlight transition-colors">
               Termos
             </Link>
-            <Link to="/" className="text-gray-600 hover:text-highlight transition-colors">
+            <Link to="/privacy" className="text-gray-600 hover:text-highlight transition-colors">
               Privacidade
             </Link>
-            <Link to="/" className="text-gray-600 hover:text-highlight transition-colors">
+            <Link to="/cookies" className="text-gray-600 hover:text-highlight transition-colors">
               Cookies
+            </Link>
+            <Link to="/about" className="text-gray-600 hover:text-highlight transition-colors">
+              Sobre
             </Link>
           </div>
         </div>

@@ -1,4 +1,6 @@
 
+import { LOGO } from "@/assets";
+
 const TestimonialsSection = () => {
   return (
     <section className="py-24 bg-white">
@@ -14,8 +16,8 @@ const TestimonialsSection = () => {
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           <div className="bg-white p-8 rounded-xl border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center mb-6">
-              <div className="bg-gradient-to-br from-primary-400 to-highlight h-12 w-12 rounded-full flex items-center justify-center mr-4 shadow-lg">
-                <span className="text-white font-bold">MS</span>
+              <div className="h-12 w-12 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                <img src={LOGO.LIGHT} alt="LegalFlux" className="h-10 w-10" />
               </div>
               <div>
                 <h4 className="font-semibold text-primary-900 text-lg">Maria Silva</h4>
@@ -28,8 +30,8 @@ const TestimonialsSection = () => {
           </div>
           <div className="bg-white p-8 rounded-xl border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center mb-6">
-              <div className="bg-gradient-to-br from-primary-400 to-highlight h-12 w-12 rounded-full flex items-center justify-center mr-4 shadow-lg">
-                <span className="text-white font-bold">RC</span>
+              <div className="h-12 w-12 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                <img src={LOGO.LIGHT} alt="LegalFlux" className="h-10 w-10" />
               </div>
               <div>
                 <h4 className="font-semibold text-primary-900 text-lg">Ricardo Costa</h4>
@@ -42,8 +44,8 @@ const TestimonialsSection = () => {
           </div>
           <div className="bg-white p-8 rounded-xl border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center mb-6">
-              <div className="bg-gradient-to-br from-primary-400 to-highlight h-12 w-12 rounded-full flex items-center justify-center mr-4 shadow-lg">
-                <span className="text-white font-bold">AM</span>
+              <div className="h-12 w-12 rounded-full flex items-center justify-center mr-4 shadow-lg">
+                <img src={LOGO.LIGHT} alt="LegalFlux" className="h-10 w-10" />
               </div>
               <div>
                 <h4 className="font-semibold text-primary-900 text-lg">Ana Martins</h4>
