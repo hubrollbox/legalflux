@@ -17,6 +17,20 @@ export interface User {
   assignedToLawyerId?: string;
 }
 
+// Permission related types
+export interface Permission {
+  id: string;
+  name: string;
+  description: string;
+  module: string;
+  action: "read" | "create" | "update" | "delete";
+}
+
+export interface RolePermission {
+  roleId: string;
+  permissionId: string;
+}
+
 // Case status
 export type CaseStatus = "active" | "pending" | "closed" | "archived";
 

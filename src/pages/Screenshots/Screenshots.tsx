@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SectionHeader } from "@/components/layout/SectionHeader";
+import SectionHeader from "@/components/layout/SectionHeader";
 import ScreenshotsTab from "./ScreenshotsTab";
 import SupportTab from "./SupportTab";
 
