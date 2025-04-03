@@ -23,7 +23,7 @@ const LandingNavbar = () => {
             Funcionalidades
           </Link>
           <Link
-            to="/#pricing"
+            to="/subscriptions"
             className="text-gray-600 hover:text-highlight transition-colors"
           >
             Planos

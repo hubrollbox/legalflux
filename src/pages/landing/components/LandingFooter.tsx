@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Video, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Video, Instagram, Linkedin, Mail, Phone, MapPin, Github } from "lucide-react";
 
 const LandingFooter = () => {
   return (
@@ -22,6 +22,9 @@ const LandingFooter = () => {
               <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-gray-400 hover:text-white">
                 <Linkedin size={20} />
               </a>
+              <a href="https://github.com/hubrollbox/legalflux" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-gray-400 hover:text-white">
+                <Github size={20} />
+              </a>
             </div>
           </div>
           <div>
@@ -33,7 +36,7 @@ const LandingFooter = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/#pricing" className="text-gray-400 hover:text-white transition-colors">
+                <Link to="/subscriptions" className="text-gray-400 hover:text-white transition-colors">
                   Planos
                 </Link>
               </li>
@@ -45,26 +48,17 @@ const LandingFooter = () => {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-4">Transferências</h4>
+            <h4 className="font-semibold mb-4">Aplicações</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="#" className="text-gray-400 hover:text-white transition-colors">
-                  App para Windows
-                </Link>
+                <span className="text-gray-400">Disponível em breve para:</span>
               </li>
-              <li>
-                <Link to="#" className="text-gray-400 hover:text-white transition-colors">
-                  App para MacOS
-                </Link>
+              <li className="text-gray-400">
+                Windows • MacOS • iOS • Android
               </li>
-              <li>
-                <Link to="#" className="text-gray-400 hover:text-white transition-colors">
-                  App para iOS
-                </Link>
-              </li>
-              <li>
-                <Link to="#" className="text-gray-400 hover:text-white transition-colors">
-                  App para Android
+              <li className="mt-4">
+                <Link to="/subscriptions" className="text-primary-300 hover:text-white transition-colors">
+                  Saiba mais sobre os nossos planos
                 </Link>
               </li>
             </ul>
