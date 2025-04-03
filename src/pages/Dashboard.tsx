@@ -154,21 +154,21 @@ const getRecentTasks = (): RecentTask[] => [
     title: "Preparar petição inicial",
     assignedToName: "Advogado Demo",
     assignedToAvatar: "",
-    priority: "high",
+    priority: "high" as PriorityLevel,
   },
   {
     id: "2",
     title: "Revisar contrato",
     assignedToName: "Assistente Demo",
     assignedToAvatar: "",
-    priority: "medium",
+    priority: "medium" as PriorityLevel,
   },
   {
     id: "3",
     title: "Agendar audiência",
     assignedToName: "Carlos Santos",
     assignedToAvatar: "",
-    priority: "low",
+    priority: "low" as PriorityLevel,
   },
 ];
 
