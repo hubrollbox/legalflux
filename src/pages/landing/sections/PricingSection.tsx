@@ -13,10 +13,10 @@ const PricingSection = () => {
   const enterprisePlan = getPlanDetails("enterprise");
 
   return (
-    <section className="py-20" id="pricing">
+    <section className="py-24 bg-white" id="pricing">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary-900">
             Planos de Assinatura Flexíveis
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -25,16 +25,16 @@ const PricingSection = () => {
         </div>
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {/* Basic Plan */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-            <div className="p-6">
-              <h3 className="text-2xl font-bold mb-2">{basicPlan.name}</h3>
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div className="p-8">
+              <h3 className="text-2xl font-bold mb-2 text-primary-900">{basicPlan.name}</h3>
               <div className="flex items-baseline mb-4">
-                <span className="text-4xl font-bold">{basicPlan.price}€</span>
+                <span className="text-4xl font-bold text-primary-800">{basicPlan.price}€</span>
                 <span className="text-gray-500 ml-1">/mês</span>
               </div>
               <p className="text-gray-600 mb-6">{basicPlan.description}</p>
               <Button
-                className="w-full mb-6"
+                className="w-full mb-6 bg-primary-600 hover:bg-primary-700"
                 onClick={() => navigate("/register")}
               >
                 Começar Agora
@@ -51,19 +51,19 @@ const PricingSection = () => {
           </div>
 
           {/* Solo Plan */}
-          <div className="bg-white rounded-lg shadow-md border border-primary-200 overflow-hidden transform scale-105 relative">
-            <div className="absolute top-0 right-0 bg-accent-gold text-white text-xs font-bold px-3 py-1 uppercase">
+          <div className="bg-gradient-to-br from-white to-primary-50 rounded-xl shadow-xl border border-primary-300 overflow-hidden transform scale-105 relative z-10">
+            <div className="absolute top-0 right-0 bg-gradient-to-r from-highlight to-primary-500 text-white text-xs font-bold px-4 py-2 uppercase rounded-bl-lg">
               Popular
             </div>
-            <div className="p-6">
-              <h3 className="text-2xl font-bold mb-2">{soloPlan.name}</h3>
+            <div className="p-8">
+              <h3 className="text-2xl font-bold mb-2 text-primary-900">{soloPlan.name}</h3>
               <div className="flex items-baseline mb-4">
-                <span className="text-4xl font-bold">{soloPlan.price}€</span>
+                <span className="text-4xl font-bold text-primary-800">{soloPlan.price}€</span>
                 <span className="text-gray-500 ml-1">/mês</span>
               </div>
               <p className="text-gray-600 mb-6">{soloPlan.description}</p>
               <Button
-                className="w-full mb-6 bg-primary-600 hover:bg-primary-700"
+                className="w-full mb-6 bg-highlight hover:bg-highlight/90 shadow-md hover:shadow-lg transition-all"
                 onClick={() => navigate("/register")}
               >
                 Escolher Plano Solo
@@ -80,16 +80,16 @@ const PricingSection = () => {
           </div>
 
           {/* Enterprise Plan */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-            <div className="p-6">
-              <h3 className="text-2xl font-bold mb-2">{enterprisePlan.name}</h3>
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div className="p-8">
+              <h3 className="text-2xl font-bold mb-2 text-primary-900">{enterprisePlan.name}</h3>
               <div className="flex items-baseline mb-4">
-                <span className="text-4xl font-bold">{enterprisePlan.price}€</span>
+                <span className="text-4xl font-bold text-primary-800">{enterprisePlan.price}€</span>
                 <span className="text-gray-500 ml-1">/mês</span>
               </div>
               <p className="text-gray-600 mb-6">{enterprisePlan.description}</p>
               <Button
-                className="w-full mb-6"
+                className="w-full mb-6 bg-primary-600 hover:bg-primary-700"
                 onClick={() => navigate("/register")}
               >
                 Começar Agora
