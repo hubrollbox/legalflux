@@ -1,4 +1,3 @@
-
 import React from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
@@ -58,17 +57,18 @@ const Profile = () => {
               </div>
               <div>
                 <h4 className="text-sm font-medium text-gray-500">Número de Telefone</h4>
-                <p>Não definido</p>
+                <p>{user?.phone || "Não definido"}</p>
               </div>
               <div>
                 <h4 className="text-sm font-medium text-gray-500">Cargo</h4>
-                <p>Não definido</p>
+                <p>{user?.role || "Não definido"}</p>
               </div>
               <div>
                 <h4 className="text-sm font-medium text-gray-500">Escritório</h4>
-                <p>Não definido</p>
+                <p>{"Não definido"}</p>
               </div>
             </div>
+            <Button variant="outline" className="mt-4">Editar Detalhes</Button>
           </CardContent>
         </Card>
       </div>
