@@ -37,11 +37,12 @@ const HeroSection = () => {
           </div>
         </div>
         <div className="md:w-1/2 flex justify-center">
-          <div className="relative w-full max-w-md">
+          <div className="relative w-full max-w-xl">
             <div className="relative bg-white rounded-lg p-4 shadow-lg border border-gray-200">
               <iframe 
                 src="https://player.vimeo.com/video/1062960326?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&controls=0" 
                 className="w-full aspect-video rounded shadow-md" 
+                style={{ height: "300px" }}
                 frameBorder="0" 
                 allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
                 title="LegalFlux"
