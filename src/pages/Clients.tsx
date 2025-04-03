@@ -1,12 +1,14 @@
-
 import React from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import EmptyState from "@/components/ui/EmptyState"; // New reusable component
 
 const Clients = () => {
+  const clients = []; // Placeholder for client data
+
   return (
     <DashboardLayout>
       <div className="dashboard-header">
@@ -14,7 +16,10 @@ const Clients = () => {
           title="Clientes"
           description="Gerencie a sua carteira de clientes"
         />
-        <Button className="bg-highlight hover:bg-highlight/90">
+        <Button
+          className="bg-highlight hover:bg-highlight/90"
+          aria-label="Adicionar novo cliente"
+        >
           <UserPlus className="mr-2 h-4 w-4" /> Novo Cliente
         </Button>
       </div>
@@ -24,9 +29,13 @@ const Clients = () => {
           <CardTitle>Lista de Clientes</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-500">
-            Aqui serão listados todos os seus clientes. Utilize o botão acima para adicionar um novo cliente.
-          </p>
+          {clients.length === 0 ? (
+            <EmptyState message="Nenhum cliente encontrado. Utilize o botão acima para adicionar um novo cliente." />
+          ) : (
+            <p className="text-gray-500">
+              Aqui serão listados todos os seus clientes.
+            </p>
+          )}
         </CardContent>
       </Card>
     </DashboardLayout>
