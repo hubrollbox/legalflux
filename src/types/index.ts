@@ -15,6 +15,7 @@ export interface User {
   organizationId?: string;
   phone?: string;
   assignedToLawyerId?: string;
+  avatar?: string; // Adding the avatar property as optional
 }
 
 // Permission related types
