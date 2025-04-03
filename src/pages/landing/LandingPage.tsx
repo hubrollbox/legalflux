@@ -22,17 +22,16 @@ const LandingPage = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div className="flex flex-col min-h-screen relative">
-      {/* Vídeo de fundo com efeito de gradiente melhorado */}
-      <div className="absolute inset-0 z-0 w-full h-full overflow-hidden">
+    <div className="flex flex-col min-h-screen relative bg-primary">
+      {/* Vídeo promocional em loop */}
+      <div className="relative z-0 w-full max-w-4xl mx-auto py-12">
         <iframe 
-          src="https://player.vimeo.com/video/1062960326?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&background=1&autoplay=1&loop=1&muted=1" 
-          className="w-full h-screen object-cover absolute top-0 left-0" 
+          src="https://player.vimeo.com/video/1062960326?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1" 
+          className="w-full aspect-video rounded-lg shadow-xl" 
           frameBorder="0" 
           allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
           title="LegalFlux"
         ></iframe>
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-950/80 via-primary-900/70 to-primary-800/60"></div>
       </div>
 
       {/* Conteúdo sobreposto ao vídeo */}
