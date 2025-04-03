@@ -1,4 +1,3 @@
-
 // User related types
 export type UserRole = "admin" | "lawyer" | "senior_lawyer" | "assistant" | "client";
 
