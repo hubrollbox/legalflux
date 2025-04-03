@@ -7,7 +7,7 @@ import {
   MOCK_CASES as CasesData,
   MOCK_TASKS as TasksData
 } from "@/services/mockData"; 
-import { Case, Task, UserRole } from "@/types";
+import { Case, Task, UserRole, PriorityLevel } from "@/types";
 import MetricsCard from "@/components/dashboard/MetricsCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -26,7 +26,6 @@ import StatusBadge from "@/components/dashboard/StatusBadge";
 import PriorityBadge from "@/components/dashboard/PriorityBadge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 import {
   BarChart,
   Bar,
@@ -51,6 +50,23 @@ const getUserRoleName = (role: UserRole): string => {
   };
   return roleNames[role] || "Utilizador";
 };
+
+// Define types for the recent items to ensure proper type checking
+interface RecentCase {
+  id: string;
+  title: string;
+  clientName: string;
+  clientAvatar: string;
+  status: "active" | "pending" | "closed" | "archived";
+}
+
+interface RecentTask {
+  id: string;
+  title: string;
+  assignedToName: string;
+  assignedToAvatar: string;
+  priority: PriorityLevel;  // Using the PriorityLevel from our types
+}
 
 // Mock data functions that should be in mockData.ts
 const getChartData = () => [
@@ -107,7 +123,7 @@ const getStatisticsData = () => [
   },
 ];
 
-const getRecentCases = () => [
+const getRecentCases = (): RecentCase[] => [
   {
     id: "1",
     title: "Processo de Divórcio Silva",
@@ -131,7 +147,7 @@ const getRecentCases = () => [
   },
 ];
 
-const getRecentTasks = () => [
+const getRecentTasks = (): RecentTask[] => [
   {
     id: "1",
     title: "Preparar petição inicial",
