@@ -1,6 +1,6 @@
-import Navbar from "@/components/Navbar";
-import Features from "../components/Features";
-import Footer from "@/pages/Home/components/Footer";
+import Navbar from "@/pages/landing/components/LandingNavbar";
+import Features from "@/pages/landing/sections/FeaturesSection";
+import Footer from "@/pages/landing/components/LandingFooter";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
