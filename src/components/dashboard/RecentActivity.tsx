@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { TabsList, TabsTrigger, Tabs, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import SectionHeader from "@/components/layout/SectionHeader";
 import RecentCasesCard from "./RecentCasesCard";
 import RecentTasksCard from "./RecentTasksCard";
@@ -25,24 +25,24 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
 
   return (
     <>
-      <SectionHeader title="Atividades Recentes" description="Últimas atualizações">
-        <TabsList>
-          <TabsTrigger
-            value="overview"
-            onClick={() => setActiveTab("overview")}
-          >
-            Visão Geral
-          </TabsTrigger>
-          <TabsTrigger value="cases" onClick={() => setActiveTab("cases")}>
-            Casos
-          </TabsTrigger>
-          <TabsTrigger value="tasks" onClick={() => setActiveTab("tasks")}>
-            Tarefas
-          </TabsTrigger>
-        </TabsList>
-      </SectionHeader>
-
       <Tabs value={activeTab} className="space-y-8">
+        <SectionHeader title="Atividades Recentes" description="Últimas atualizações">
+          <TabsList>
+            <TabsTrigger
+              value="overview"
+              onClick={() => setActiveTab("overview")}
+            >
+              Visão Geral
+            </TabsTrigger>
+            <TabsTrigger value="cases" onClick={() => setActiveTab("cases")}>
+              Casos
+            </TabsTrigger>
+            <TabsTrigger value="tasks" onClick={() => setActiveTab("tasks")}>
+              Tarefas
+            </TabsTrigger>
+          </TabsList>
+        </SectionHeader>
+
         <TabsContent value="overview" className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <RecentCasesCard cases={recentCases} />
