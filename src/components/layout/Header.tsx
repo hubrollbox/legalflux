@@ -95,7 +95,7 @@ const Header: React.FC<HeaderProps> = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
+            <DropdownMenuLabel>A minha conta</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => navigate("/profile")}>
               Perfil

@@ -6,39 +6,39 @@ import { ScreenshotCard } from "./ScreenshotCard";
 
 const screenshots = [
   {
-    title: "Dashboard Principal",
+    title: "Painel de Controlo",
     description: "Visão geral da plataforma com todas as informações relevantes.",
-    imageSrc: "/placeholder.svg",
-    imageAlt: "Dashboard da Plataforma"
+    imageSrc: "/lovable-uploads/7d5dafdf-943b-4a8b-96ee-92d8df87460b.png",
+    imageAlt: "Painel de Controlo da Plataforma"
   },
   {
     title: "Gestão de Processos",
     description: "Interface intuitiva para gestão de todos os processos jurídicos.",
-    imageSrc: "/placeholder.svg",
+    imageSrc: "/lovable-uploads/7d5dafdf-943b-4a8b-96ee-92d8df87460b.png",
     imageAlt: "Gestão de Processos"
   },
   {
     title: "Gestão Documental",
     description: "Sistema completo para organização e controlo de documentos.",
-    imageSrc: "/placeholder.svg",
+    imageSrc: "/lovable-uploads/7d5dafdf-943b-4a8b-96ee-92d8df87460b.png",
     imageAlt: "Documentos"
   },
   {
     title: "Agenda e Prazos",
     description: "Calendário interativo para gestão de prazos processuais.",
-    imageSrc: "/placeholder.svg",
+    imageSrc: "/lovable-uploads/7d5dafdf-943b-4a8b-96ee-92d8df87460b.png",
     imageAlt: "Calendário"
   },
   {
     title: "Gestão de Utilizadores",
     description: "Controlo granular de permissões e perfis de acesso.",
-    imageSrc: "/placeholder.svg",
+    imageSrc: "/lovable-uploads/7d5dafdf-943b-4a8b-96ee-92d8df87460b.png",
     imageAlt: "Utilizadores"
   },
   {
     title: "Gestão Financeira",
     description: "Controlo completo das finanças do escritório.",
-    imageSrc: "/placeholder.svg",
+    imageSrc: "/lovable-uploads/7d5dafdf-943b-4a8b-96ee-92d8df87460b.png",
     imageAlt: "Financeiro"
   }
 ];
@@ -61,7 +61,7 @@ const ScreenshotsTab = () => {
       </div>
 
       <div className="mt-8 text-center">
-        <Button onClick={() => navigate("/register")} size="lg">
+        <Button onClick={() => navigate("/register")} size="lg" className="bg-highlight hover:bg-highlight/90">
           Experimente Gratuitamente
         </Button>
       </div>

@@ -19,7 +19,7 @@ const HeroSection = () => {
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Button
             size="lg"
-            className="bg-white text-primary-900 hover:bg-gray-100"
+            className="bg-highlight text-white hover:bg-highlight/90"
             onClick={() => navigate("/register")}
           >
             Comece Agora
@@ -31,7 +31,7 @@ const HeroSection = () => {
             className="bg-transparent text-white border-white hover:bg-white/10"
             onClick={() => navigate("/login")}
           >
-            Fazer Login
+            Iniciar Sessão
           </Button>
         </div>
       </div>

@@ -1,5 +1,6 @@
 
 import { Link } from "react-router-dom";
+import { Vimeo, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
 
 const LandingFooter = () => {
   return (
@@ -11,6 +12,17 @@ const LandingFooter = () => {
             <p className="text-gray-400">
               Sistema completo de gestão jurídica para escritórios modernos.
             </p>
+            <div className="flex space-x-4 mt-4">
+              <a href="https://vimeo.com/user119294787" target="_blank" rel="noopener noreferrer" aria-label="Vimeo" className="text-gray-400 hover:text-white">
+                <Vimeo size={20} />
+              </a>
+              <a href="https://www.instagram.com/legalflux.pt/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-400 hover:text-white">
+                <Instagram size={20} />
+              </a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-gray-400 hover:text-white">
+                <Linkedin size={20} />
+              </a>
+            </div>
           </div>
           <div>
             <h4 className="font-semibold mb-4">Produto</h4>
@@ -27,48 +39,50 @@ const LandingFooter = () => {
               </li>
               <li>
                 <Link to="/screenshots" className="text-gray-400 hover:text-white transition-colors">
-                  Screenshots
+                  Capturas de Ecrã
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-4">Suporte</h4>
+            <h4 className="font-semibold mb-4">Transferências</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/screenshots" className="text-gray-400 hover:text-white transition-colors">
-                  Central de Ajuda
+                <Link to="#" className="text-gray-400 hover:text-white transition-colors">
+                  App para Windows
                 </Link>
               </li>
               <li>
-                <Link to="/screenshots" className="text-gray-400 hover:text-white transition-colors">
-                  Contacto
+                <Link to="#" className="text-gray-400 hover:text-white transition-colors">
+                  App para MacOS
                 </Link>
               </li>
               <li>
-                <Link to="/screenshots" className="text-gray-400 hover:text-white transition-colors">
-                  Documentação
+                <Link to="#" className="text-gray-400 hover:text-white transition-colors">
+                  App para iOS
+                </Link>
+              </li>
+              <li>
+                <Link to="#" className="text-gray-400 hover:text-white transition-colors">
+                  App para Android
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-4">Empresa</h4>
+            <h4 className="font-semibold mb-4">Contactos</h4>
             <ul className="space-y-2">
-              <li>
-                <Link to="/" className="text-gray-400 hover:text-white transition-colors">
-                  Sobre nós
-                </Link>
+              <li className="flex items-center gap-2 text-gray-400">
+                <MapPin size={16} />
+                <span>Edifício Diplomata<br />Matosinhos - Portugal</span>
               </li>
-              <li>
-                <Link to="/" className="text-gray-400 hover:text-white transition-colors">
-                  Blog
-                </Link>
+              <li className="flex items-center gap-2 text-gray-400">
+                <Phone size={16} />
+                <span>+351 220 145 169</span>
               </li>
-              <li>
-                <Link to="/" className="text-gray-400 hover:text-white transition-colors">
-                  Carreiras
-                </Link>
+              <li className="flex items-center gap-2 text-gray-400">
+                <Mail size={16} />
+                <span>suporte@legalflux.pt</span>
               </li>
             </ul>
           </div>

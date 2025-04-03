@@ -9,6 +9,7 @@ import TestimonialsSection from "./sections/TestimonialsSection";
 import CTASection from "./sections/CTASection";
 import LandingNavbar from "./components/LandingNavbar";
 import LandingFooter from "./components/LandingFooter";
+import { LOGO } from "@/assets";
 
 const LandingPage = () => {
   const { user, isAuthenticated } = useAuth();
@@ -23,7 +24,12 @@ const LandingPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen relative">
-      {/* Vídeo de fundo */}
+      {/* Logotipo principal */}
+      <div className="absolute top-4 left-4 z-20">
+        <img src={LOGO.DEFAULT} alt="LegalFlux" className="h-16 w-auto" />
+      </div>
+      
+      {/* Vídeo de fundo com overlay mais escuro para melhor visibilidade */}
       <div className="absolute inset-0 z-0 w-full h-full overflow-hidden">
         <iframe 
           src="https://player.vimeo.com/video/1062960326?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&background=1&autoplay=1&loop=1&muted=1" 
@@ -32,7 +38,7 @@ const LandingPage = () => {
           allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
           title="LegalFlux"
         ></iframe>
-        <div className="absolute inset-0 bg-primary-950/70"></div>
+        <div className="absolute inset-0 bg-primary/80"></div>
       </div>
 
       {/* Conteúdo sobreposto ao vídeo */}
