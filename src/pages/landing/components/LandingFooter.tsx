@@ -37,6 +37,11 @@ const LandingFooter = () => {
                   Capturas de Ecrã
                 </Link>
               </li>
+              <li>
+                <Link to="/about" className="text-gray-600 hover:text-highlight transition-colors">
+                  Sobre
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
@@ -74,6 +79,23 @@ const LandingFooter = () => {
                 <Mail size={18} className="text-highlight flex-shrink-0" />
                 <span>suporte@legalflux.pt</span>
               </li>
+              <li className="mt-4">
+                <h5 className="text-sm font-semibold mb-3 text-gray-900">Redes Sociais</h5>
+                <div className="flex space-x-3">
+                  <a href="https://vimeo.com/user119294787" target="_blank" rel="noopener noreferrer" aria-label="Vimeo" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary transition-colors">
+                    <Video size={18} />
+                  </a>
+                  <a href="https://www.instagram.com/legalflux.pt/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary transition-colors">
+                    <Instagram size={18} />
+                  </a>
+                  <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary transition-colors">
+                    <Linkedin size={18} />
+                  </a>
+                  <a href="https://github.com/hubrollbox/legalflux" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary transition-colors">
+                    <Github size={18} />
+                  </a>
+                </div>
+              </li>
             </ul>
           </div>
         </div>
@@ -90,9 +112,6 @@ const LandingFooter = () => {
             </Link>
             <Link to="/cookies" className="text-gray-600 hover:text-highlight transition-colors">
               Cookies
-            </Link>
-            <Link to="/about" className="text-gray-600 hover:text-highlight transition-colors">
-              Sobre
             </Link>
           </div>
         </div>

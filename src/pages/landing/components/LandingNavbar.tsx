@@ -37,6 +37,12 @@ const LandingNavbar = () => {
           >
             Screenshots
           </Link>
+          <Link
+            to="/about"
+            className="text-gray-600 hover:text-primary-900 transition-colors"
+          >
+            Sobre
+          </Link>
         </nav>
         <div className="hidden md:flex items-center space-x-4">
           <Link
@@ -53,6 +59,45 @@ const LandingNavbar = () => {
           </Button>
         </div>
         <div className="md:hidden flex items-center gap-3">
+          <div className="relative group">
+            <Button 
+              variant="ghost" 
+              className="p-2"
+              aria-label="Menu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="4" x2="20" y1="12" y2="12"/>
+                <line x1="4" x2="20" y1="6" y2="6"/>
+                <line x1="4" x2="20" y1="18" y2="18"/>
+              </svg>
+            </Button>
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
+              <Link
+                to="/#features"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Funcionalidades
+              </Link>
+              <Link
+                to="/subscriptions"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Planos
+              </Link>
+              <Link
+                to="/screenshots"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Screenshots
+              </Link>
+              <Link
+                to="/about"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Sobre
+              </Link>
+            </div>
+          </div>
           <Button 
             variant="outline" 
             onClick={() => navigate("/login")} 
