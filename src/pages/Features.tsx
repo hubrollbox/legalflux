@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import Features from "@/components/Features";
+import Features from "../components/Features";
 import Footer from "@/pages/Home/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
