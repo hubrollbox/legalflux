@@ -1,8 +1,12 @@
+
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
-import { CasesData, TasksData } from "@/services/mockData"; 
+import { 
+  MOCK_CASES as CasesData,
+  MOCK_TASKS as TasksData
+} from "@/services/mockData"; 
 import { Case, Task, UserRole } from "@/types";
 import MetricsCard from "@/components/dashboard/MetricsCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,21 +32,13 @@ import {
   Bar,
   XAxis,
   YAxis,
-  Tooltip,
+  Tooltip as RechartsTooltip,
   CartesianGrid,
   ResponsiveContainer,
   LineChart,
   Line,
   Legend,
 } from "recharts";
-import {
-  getChartData,
-  getFinancialData,
-  getPerformanceData,
-  getRecentCases,
-  getRecentTasks,
-  getStatisticsData,
-} from "@/services/mockData";
 
 // Helper function to get user role name
 const getUserRoleName = (role: UserRole): string => {
@@ -55,6 +51,109 @@ const getUserRoleName = (role: UserRole): string => {
   };
   return roleNames[role] || "Utilizador";
 };
+
+// Mock data functions that should be in mockData.ts
+const getChartData = () => [
+  { name: "Jan", cases: 4 },
+  { name: "Fev", cases: 7 },
+  { name: "Mar", cases: 5 },
+  { name: "Abr", cases: 8 },
+  { name: "Mai", cases: 12 },
+  { name: "Jun", cases: 10 },
+];
+
+const getFinancialData = () => [
+  { name: "Jan", revenue: 2500, expenses: 1200 },
+  { name: "Fev", revenue: 3500, expenses: 1300 },
+  { name: "Mar", revenue: 4200, expenses: 1400 },
+  { name: "Abr", revenue: 3800, expenses: 1350 },
+  { name: "Mai", revenue: 5200, expenses: 1500 },
+  { name: "Jun", revenue: 6000, expenses: 1800 },
+];
+
+const getPerformanceData = () => [
+  { name: "Jan", completed: 10, pending: 5 },
+  { name: "Fev", completed: 15, pending: 8 },
+  { name: "Mar", completed: 20, pending: 6 },
+  { name: "Abr", completed: 25, pending: 4 },
+  { name: "Mai", completed: 30, pending: 5 },
+  { name: "Jun", completed: 35, pending: 3 },
+];
+
+const getStatisticsData = () => [
+  {
+    title: "Casos Ativos",
+    value: "12",
+    icon: Briefcase,
+    description: "+2 novos esta semana",
+  },
+  {
+    title: "Tarefas Pendentes",
+    value: "24",
+    icon: Clock,
+    description: "5 com prazo a vencer",
+  },
+  {
+    title: "Documentos",
+    value: "45",
+    icon: FileText,
+    description: "10 documentos recentes",
+  },
+  {
+    title: "Clientes",
+    value: "18",
+    icon: Users,
+    description: "3 novos este mês",
+  },
+];
+
+const getRecentCases = () => [
+  {
+    id: "1",
+    title: "Processo de Divórcio Silva",
+    clientName: "João Cardoso",
+    clientAvatar: "",
+    status: "active",
+  },
+  {
+    id: "2",
+    title: "Contrato de Arrendamento",
+    clientName: "Pedro Santos",
+    clientAvatar: "",
+    status: "pending",
+  },
+  {
+    id: "3",
+    title: "Disputa Trabalhista",
+    clientName: "Teresa Almeida",
+    clientAvatar: "",
+    status: "closed",
+  },
+];
+
+const getRecentTasks = () => [
+  {
+    id: "1",
+    title: "Preparar petição inicial",
+    assignedToName: "Advogado Demo",
+    assignedToAvatar: "",
+    priority: "high",
+  },
+  {
+    id: "2",
+    title: "Revisar contrato",
+    assignedToName: "Assistente Demo",
+    assignedToAvatar: "",
+    priority: "medium",
+  },
+  {
+    id: "3",
+    title: "Agendar audiência",
+    assignedToName: "Carlos Santos",
+    assignedToAvatar: "",
+    priority: "low",
+  },
+];
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -210,7 +309,7 @@ const Dashboard = () => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
-                <Tooltip />
+                <RechartsTooltip />
                 <Legend />
                 <Bar dataKey="cases" fill="#8884d8" />
               </BarChart>
@@ -231,7 +330,7 @@ const Dashboard = () => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
-                <Tooltip />
+                <RechartsTooltip />
                 <Legend />
                 <Line type="monotone" dataKey="completed" stroke="#82ca9d" />
                 <Line type="monotone" dataKey="pending" stroke="#8884d8" />
@@ -256,7 +355,7 @@ const Dashboard = () => {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
-              <Tooltip />
+              <RechartsTooltip />
               <Legend />
               <Bar dataKey="revenue" fill="#82ca9d" />
               <Bar dataKey="expenses" fill="#d88484" />

@@ -1,6 +1,8 @@
-// User related types
+
+// User roles
 export type UserRole = "admin" | "lawyer" | "senior_lawyer" | "assistant" | "client";
 
+// User types
 export interface User {
   id: string;
   email: string;
@@ -12,27 +14,16 @@ export interface User {
   hasTwoFactorEnabled: boolean;
   organizationId?: string;
   phone?: string;
-  assignedToLawyerId?: string; // For assistants, who they're assigned to
+  assignedToLawyerId?: string;
 }
 
-// Permissions related types
-export interface Permission {
-  id: string;
-  name: string;
-  description: string;
-  module: string;
-  action: string;
-}
-
-export interface RolePermission {
-  roleId: string;
-  permissionId: string;
-}
-
-// Case related types
+// Case status
 export type CaseStatus = "active" | "pending" | "closed" | "archived";
-export type CasePriority = "low" | "medium" | "high";
 
+// Priority types
+export type PriorityLevel = "low" | "medium" | "high";
+
+// Case types
 export interface Case {
   id: string;
   title: string;
@@ -44,14 +35,14 @@ export interface Case {
   createdAt: string;
   updatedAt: string;
   dueDate?: string;
-  priority: CasePriority;
+  priority: PriorityLevel;
   description?: string;
 }
 
-// Task related types
-export type TaskStatus = "todo" | "in_progress" | "done";
-export type TaskPriority = "low" | "medium" | "high";
+// Task status
+export type TaskStatus = "todo" | "in_progress" | "done" | "blocked";
 
+// Task types
 export interface Task {
   id: string;
   title: string;
@@ -63,13 +54,13 @@ export interface Task {
   assignedById: string;
   assignedByName: string;
   status: TaskStatus;
-  priority: TaskPriority;
+  priority: PriorityLevel;
   dueDate?: string;
   createdAt: string;
   updatedAt: string;
 }
 
-// Document related types
+// Document types
 export interface Document {
   id: string;
   name: string;
@@ -83,13 +74,13 @@ export interface Document {
   version: number;
 }
 
-// Message related types
+// Message types
 export interface Message {
   id: string;
   content: string;
   senderId: string;
   senderName: string;
-  senderRole: string;
+  senderRole: UserRole;
   receiverId: string;
   receiverName: string;
   caseId?: string;
@@ -97,9 +88,9 @@ export interface Message {
   createdAt: string;
 }
 
-// Financial related types
-export type TransactionType = "invoice" | "payment" | "subscription";
-export type TransactionStatus = "pending" | "completed" | "cancelled" | "failed";
+// Financial transaction types
+export type TransactionType = "invoice" | "payment" | "refund" | "subscription";
+export type TransactionStatus = "pending" | "completed" | "failed" | "canceled";
 
 export interface FinancialTransaction {
   id: string;
@@ -115,7 +106,7 @@ export interface FinancialTransaction {
   description?: string;
 }
 
-// Organization related types
+// Organization types
 export interface Organization {
   id: string;
   name: string;
@@ -126,9 +117,9 @@ export interface Organization {
   email?: string;
 }
 
-// Subscription related types
+// Subscription types
 export type SubscriptionPlan = "basic" | "solo" | "enterprise" | "custom";
-export type SubscriptionStatus = "active" | "trialing" | "cancelled" | "expired";
+export type SubscriptionStatus = "active" | "canceled" | "past_due" | "trialing";
 
 export interface Subscription {
   id: string;
