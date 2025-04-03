@@ -1,58 +1,34 @@
-# Welcome to your Lovable project
+# LegalFlux
 
-## Project info
+LegalFlux é uma plataforma de gestão jurídica para advogados e escritórios jurídicos, oferecendo ferramentas para gerir processos, comunicação e clientes de forma eficiente e segura.
 
-**URL**: https://lovable.dev/projects/3f2d470b-9222-44dc-bd34-73926e1e5e41
+## Funcionalidades Principais
 
-## How can I edit this code?
+- **Gestão de Processos:** Organização de casos, documentos, histórico e comunicação.
+- **Controlo de Permissões:** Sistema RBAC (Role-Based Access Control) para gestão granular de acessos.
+- **Portal do Cliente:** Acesso 24/7 a processos, documentos e comunicação com advogados.
+- **Comunicação Integrada:** Mensagens internas para interação entre advogados, assistentes e clientes.
+- **Relatórios Avançados:** Análise detalhada de desempenho, faturção e produtividade.
+- **Gestão de Prazos:** Sistema de alertas para acompanhamento de prazos processuais.
+- **Gestão de Documentos:** Editor colaborativo, modelos personalizáveis, assinatura digital e versionamento.
+- **Automatização de Processos:** Geração automática de documentos e fluxos de trabalho personalizados.
+- **Inteligência Artificial:** Pesquisa jurídica inteligente e sugestões estratégicas baseadas em IA.
+- **Integrações:** Conexão com e-mail, agenda (Google Workspace, Microsoft 365), ChatGPT (em fase de integração), Slack, Make.com e outras plataformas relevantes.
+- **Segurança:** Criptografia de dados, autenticação multifator (2FA) e monitorização de atividades.
 
-There are several ways of editing your application.
+## Modelos de Subscrição
 
-**Use Lovable**
+A plataforma oferece diferentes planos de subscrição adaptados às necessidades de advogados e escritórios jurídicos. Consulte a nossa plataforma para mais detalhes sobre planos e funcionalidades.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3f2d470b-9222-44dc-bd34-73926e1e5e41) and start prompting.
+## Métodos de Pagamento
 
-Changes made via Lovable will be committed automatically to this repo.
+- Transferência bancária
+- Débito direto
+- Bitcoin
 
-**Use your preferred IDE**
+## Tecnologias Utilizadas
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
+Este projeto é construído com:
 
 - Vite
 - TypeScript
@@ -60,14 +36,13 @@ This project is built with .
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
+## Suporte
 
-Simply open [Lovable](https://lovable.dev/projects/3f2d470b-9222-44dc-bd34-73926e1e5e41) and click on Share -> Publish.
+Para suporte, contacte-nos em [suporte@legalflux.pt](mailto:suporte@legalflux.pt).
 
-## Can I connect a custom domain to my Lovable project?
+## Direitos
 
-Yes it is!
+Todos os direitos reservados. 
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+LegalFlux também está disponível na versão **PWA (Progressive Web App)**, permitindo instalação em dispositivos móveis para um acesso rápido e conveniente.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)

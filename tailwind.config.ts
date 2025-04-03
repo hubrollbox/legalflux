@@ -26,7 +26,7 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
+					DEFAULT: '#293241',
 					foreground: 'hsl(var(--primary-foreground))',
 					50: '#f0f4ff',
 					100: '#e0e9ff',
@@ -37,8 +37,12 @@ export default {
 					600: '#3e4eec',
 					700: '#3139d5',
 					800: '#2c30ad',
-					900: '#2b308a',
-					950: '#1e3a8a',
+					900: '#293241',
+					950: '#1e2a36',
+				},
+				highlight: {
+					DEFAULT: '#996e02',
+					foreground: '#ffffff',
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -55,7 +59,7 @@ export default {
 				accent: {
 					DEFAULT: 'hsl(var(--accent))',
 					foreground: 'hsl(var(--accent-foreground))',
-					gold: '#fbbf24',
+					gold: '#996e02',
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
@@ -66,11 +70,11 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
+					DEFAULT: '#1e2a36',
 					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
+					primary: '#1e2a36',
 					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
+					accent: '#293241',
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'

@@ -72,7 +72,7 @@ const Register = () => {
     setIsLoading(true);
     
     try {
-      await register(email, password, name, role);
+      await register(email, password, name);
       navigate("/dashboard");
     } catch (error) {
       console.error("Registration error:", error);
