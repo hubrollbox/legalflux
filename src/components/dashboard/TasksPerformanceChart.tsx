@@ -1,0 +1,43 @@
+
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
+
+interface TasksPerformanceChartProps {
+  data: { name: string; completed: number; pending: number }[];
+}
+
+const TasksPerformanceChart: React.FC<TasksPerformanceChartProps> = ({
+  data,
+}) => {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Desempenho de Tarefas</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="completed" stroke="#82ca9d" />
+            <Line type="monotone" dataKey="pending" stroke="#8884d8" />
+          </LineChart>
+        </ResponsiveContainer>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default TasksPerformanceChart;
