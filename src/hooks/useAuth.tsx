@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User, UserRole } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
@@ -10,8 +11,7 @@ interface AuthContextType {
   register: (
     email: string, 
     password: string, 
-    name: string, 
-    role: UserRole
+    name: string
   ) => Promise<void>;
   requestPasswordReset: (email: string) => Promise<void>;
   resetPassword: (token: string, newPassword: string) => Promise<void>;
@@ -144,8 +144,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (
     email: string,
     password: string,
-    name: string,
-    role: UserRole
+    name: string
   ): Promise<void> => {
     setIsLoading(true);
     try {
@@ -161,6 +160,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         });
         return;
       }
+      
+      // Create new user with role defaulting to "client"
+      const role: UserRole = "client";
       
       // Create new user
       const newUser: User = {
