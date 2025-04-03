@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Vimeo, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Video, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
 
 const LandingFooter = () => {
   return (
@@ -14,7 +14,7 @@ const LandingFooter = () => {
             </p>
             <div className="flex space-x-4 mt-4">
               <a href="https://vimeo.com/user119294787" target="_blank" rel="noopener noreferrer" aria-label="Vimeo" className="text-gray-400 hover:text-white">
-                <Vimeo size={20} />
+                <Video size={20} />
               </a>
               <a href="https://www.instagram.com/legalflux.pt/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-400 hover:text-white">
                 <Instagram size={20} />
