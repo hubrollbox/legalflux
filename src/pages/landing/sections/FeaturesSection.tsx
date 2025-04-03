@@ -49,13 +49,13 @@ const features = [
 
 const FeaturesSection = () => {
   return (
-    <section className="py-24 bg-gradient-to-b from-primary-900 to-primary-950" id="features">
+    <section className="py-24 bg-white" id="features">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary-900">
             Funcionalidades Poderosas
           </h2>
-          <p className="text-xl text-gray-200 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Tudo o que necessita para gerir o seu escritório jurídico de forma eficiente.
           </p>
         </div>
@@ -63,13 +63,13 @@ const FeaturesSection = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:border-white/30 hover:bg-white/15 transition-all duration-300 group"
+              className="bg-white p-6 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-300 group"
             >
-              <div className="w-14 h-14 bg-gradient-to-br from-primary-400 to-highlight rounded-lg flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+              <div className="w-14 h-14 bg-primary-900 rounded-lg flex items-center justify-center mb-5 group-hover:bg-highlight transition-all duration-300">
                 <feature.icon className="h-7 w-7 text-white" />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-highlight transition-colors">{feature.title}</h3>
-              <p className="text-gray-300">{feature.description}</p>
+              <h3 className="text-xl font-semibold mb-3 text-primary-900 group-hover:text-highlight transition-colors">{feature.title}</h3>
+              <p className="text-gray-600">{feature.description}</p>
             </div>
           ))}
         </div>

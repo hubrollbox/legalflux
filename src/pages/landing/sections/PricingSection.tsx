@@ -51,8 +51,8 @@ const PricingSection = () => {
           </div>
 
           {/* Solo Plan */}
-          <div className="bg-gradient-to-br from-white to-primary-50 rounded-xl shadow-xl border border-primary-300 overflow-hidden transform scale-105 relative z-10">
-            <div className="absolute top-0 right-0 bg-gradient-to-r from-highlight to-primary-500 text-white text-xs font-bold px-4 py-2 uppercase rounded-bl-lg">
+          <div className="bg-white rounded-xl shadow-xl border border-primary-300 overflow-hidden transform scale-105 relative z-10">
+            <div className="absolute top-0 right-0 bg-highlight text-white text-xs font-bold px-4 py-2 uppercase rounded-bl-lg">
               Popular
             </div>
             <div className="p-8">
