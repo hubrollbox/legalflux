@@ -3,7 +3,7 @@ import React from "react";
 import { ExternalLink } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import { Card } from "@/components/ui/card";
-import DashboardLayout from "@/pages/Dashboard/layout/DashboardLayout";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 
 const LINKS_CATEGORIES = [
   {
