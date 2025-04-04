@@ -16,7 +16,7 @@ const ProtectedRoute = ({
   module = '', 
   action = 'read' 
 }: ProtectedRouteProps) => {
-  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { hasPermission, loading: permissionsLoading } = usePermissions();
   const location = useLocation();
   

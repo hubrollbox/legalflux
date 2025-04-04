@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Upload, FolderPlus, Search, Grid, List, FileText, FileCode, FilePdf, FileImage, MoreHorizontal } from "lucide-react";
+import { Upload, FolderPlus, Search, Grid, List, FileText, FileCode, File, FileImage, MoreHorizontal } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import PageTransition from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
@@ -105,7 +105,7 @@ const mockDocuments = [
 const getFileIcon = (type: string) => {
   switch (type) {
     case "pdf":
-      return <FilePdf className="h-10 w-10 text-red-500" />;
+      return <File className="h-10 w-10 text-red-500" />;
     case "docx":
       return <FileText className="h-10 w-10 text-blue-500" />;
     case "xlsx":
