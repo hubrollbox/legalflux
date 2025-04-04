@@ -1,6 +1,5 @@
-
 import React, { useState } from "react";
-import { Upload, FolderPlus, Search, Grid, List, FileText, FileCode, File, FileImage, MoreHorizontal } from "lucide-react";
+import { Upload, FolderPlus, Search, Grid, List, FileText, FileCode, File, FileImage, MoreHorizontal, Template } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import PageTransition from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
@@ -16,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { usePermissions } from "@/hooks/usePermissions";
+import { Badge } from "@/components/ui/badge";
 
 // Mock data for documents
 const mockDocuments = [
@@ -101,6 +101,64 @@ const mockDocuments = [
   }
 ];
 
+// Mock data for templates
+const mockTemplates = [
+  {
+    id: "temp1",
+    name: "Contrato de Arrendamento",
+    type: "docx",
+    size: "1.8 MB",
+    description: "Modelo padrão para contratos de arrendamento residencial",
+    updatedAt: "2023-10-15T14:30:00",
+    category: "Contratos"
+  },
+  {
+    id: "temp2",
+    name: "Procuração Geral",
+    type: "docx",
+    size: "1.2 MB",
+    description: "Procuração com poderes gerais para representação",
+    updatedAt: "2023-10-10T09:20:00",
+    category: "Procurações"
+  },
+  {
+    id: "temp3",
+    name: "Petição Inicial - Processo Civil",
+    type: "docx",
+    size: "2.5 MB",
+    description: "Modelo básico para petição inicial em processo civil",
+    updatedAt: "2023-09-28T11:45:00",
+    category: "Petições"
+  },
+  {
+    id: "temp4",
+    name: "Contestação",
+    type: "docx",
+    size: "2.1 MB",
+    description: "Modelo de contestação para processos cíveis",
+    updatedAt: "2023-09-15T16:20:00",
+    category: "Contestações"
+  },
+  {
+    id: "temp5",
+    name: "Contrato de Prestação de Serviços",
+    type: "docx",
+    size: "1.9 MB",
+    description: "Modelo para contrato de prestação de serviços",
+    updatedAt: "2023-09-05T10:10:00",
+    category: "Contratos"
+  },
+  {
+    id: "temp6",
+    name: "Declaração de Testemunha",
+    type: "docx",
+    size: "0.8 MB",
+    description: "Modelo para declarações de testemunhas em processos",
+    updatedAt: "2023-08-22T14:30:00",
+    category: "Declarações"
+  }
+];
+
 // Function to get the appropriate icon based on file type
 const getFileIcon = (type: string) => {
   switch (type) {
@@ -143,6 +201,13 @@ const Documents = () => {
       doc.process.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const filteredTemplates = mockTemplates.filter(
+    template => 
+      template.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      template.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      template.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <PageTransition>
       <DashboardLayout>
@@ -170,6 +235,12 @@ const Documents = () => {
             <div className="flex justify-between items-center">
               <TabsList>
                 <TabsTrigger value="all">Todos</TabsTrigger>
+                <TabsTrigger value="templates" className="relative">
+                  Templates
+                  <Badge variant="secondary" className="ml-1 bg-accent text-white absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs rounded-full">
+                    {mockTemplates.length}
+                  </Badge>
+                </TabsTrigger>
                 <TabsTrigger value="recent">Recentes</TabsTrigger>
                 <TabsTrigger value="shared">Partilhados</TabsTrigger>
                 <TabsTrigger value="deleted">Eliminados</TabsTrigger>
@@ -305,6 +376,117 @@ const Documents = () => {
                       {filteredDocuments.length === 0 && (
                         <div className="text-center py-8 text-muted-foreground">
                           Nenhum documento encontrado com os critérios de pesquisa atuais.
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="templates" className="mt-6">
+              <Card className="border-2 border-accent shadow-md">
+                <CardHeader className="bg-accent/5">
+                  <CardTitle className="flex items-center">
+                    <FileText className="mr-2 h-5 w-5 text-accent" />
+                    Templates de Documentos
+                  </CardTitle>
+                  <CardDescription>
+                    {filteredTemplates.length} template(s) disponível(is) para utilização
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  {viewMode === "grid" ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {filteredTemplates.map((template) => (
+                        <Card key={template.id} className="overflow-hidden border border-accent/20 hover:border-accent/50 transition-all">
+                          <CardContent className="p-0">
+                            <div className="p-4 flex flex-col items-center text-center">
+                              {getFileIcon(template.type)}
+                              <h3 className="mt-2 font-medium truncate w-full">{template.name}</h3>
+                              <p className="text-sm text-muted-foreground">{template.size}</p>
+                              <p className="text-xs mt-1 line-clamp-2 text-muted-foreground">
+                                {template.description}
+                              </p>
+                              <Badge variant="outline" className="mt-2">
+                                {template.category}
+                              </Badge>
+                            </div>
+                            <div className="bg-muted p-2 flex justify-between items-center">
+                              <span className="text-xs">Atualizado: {formatDate(template.updatedAt)}</span>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                                    <MoreHorizontal className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem>Ver</DropdownMenuItem>
+                                  <DropdownMenuItem>Usar Template</DropdownMenuItem>
+                                  <DropdownMenuItem>Descarregar</DropdownMenuItem>
+                                  <DropdownMenuItem>Editar</DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="border rounded-md overflow-hidden">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="bg-muted">
+                            <th className="text-left py-3 px-4">Nome</th>
+                            <th className="text-left py-3 px-4">Categoria</th>
+                            <th className="text-left py-3 px-4">Tamanho</th>
+                            <th className="text-left py-3 px-4">Atualizado</th>
+                            <th className="text-right py-3 px-4">Ações</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredTemplates.map((template) => (
+                            <tr key={template.id} className="border-t">
+                              <td className="py-3 px-4">
+                                <div className="flex items-center">
+                                  {getFileIcon(template.type)}
+                                  <div className="ml-2">
+                                    <div>{template.name}</div>
+                                    <div className="text-xs text-muted-foreground">{template.description}</div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="py-3 px-4">
+                                <Badge variant="outline">{template.category}</Badge>
+                              </td>
+                              <td className="py-3 px-4">{template.size}</td>
+                              <td className="py-3 px-4">{formatDate(template.updatedAt)}</td>
+                              <td className="py-3 px-4 text-right">
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                                      <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem>Ver</DropdownMenuItem>
+                                    <DropdownMenuItem>Usar Template</DropdownMenuItem>
+                                    <DropdownMenuItem>Descarregar</DropdownMenuItem>
+                                    <DropdownMenuItem>Editar</DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      {filteredTemplates.length === 0 && (
+                        <div className="text-center py-8 text-muted-foreground">
+                          Nenhum template encontrado com os critérios de pesquisa atuais.
                         </div>
                       )}
                     </div>
