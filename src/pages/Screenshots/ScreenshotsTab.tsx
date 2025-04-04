@@ -38,8 +38,8 @@ const screenshots = [
   {
     title: "Gestão Financeira",
     description: "Controlo completo das finanças do escritório.",
-    imageSrc: "/lovable-uploads/7d5dafdf-943b-4a8b-96ee-92d8df87460b.png",
-    imageAlt: "Financeiro"
+    imageSrc: "/lovable-uploads/5f9e9260-2a46-4bc3-a26b-93a0e41be3d6.png",
+    imageAlt: "Análise Financeira"
   }
 ];
 

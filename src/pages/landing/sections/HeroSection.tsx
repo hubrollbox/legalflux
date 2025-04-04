@@ -65,7 +65,7 @@ const HeroSection = () => {
         >
           <div className="overflow-hidden rounded-xl">
             <iframe 
-              src="https://player.vimeo.com/video/1062960326?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&loop=1&autoplay=1&muted=1" 
+              src="https://player.vimeo.com/video/1062960326?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&loop=1&autoplay=1&muted=1&controls=0" 
               width="100%" 
               height="100%" 
               className="w-full h-full object-cover rounded-xl aspect-video"
