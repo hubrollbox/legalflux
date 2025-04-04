@@ -6,7 +6,7 @@ import { type ReactElement } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import SectionHeader from '@/components/layout/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BarChart, TrendingUp, TrendingDown, ArrowUpRightFromSquare } from 'lucide-react';
 import { ResponsiveBar } from '@nivo/bar';
