@@ -2,10 +2,10 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SectionHeader from "@/components/layout/SectionHeader";
-import ScreenshotsTab from "./ScreenshotsTab"; // Ensure this path is correct
+import ScreenshotsTab from "./ScreenshotsTab"; // Adjust the path if necessary
 import SupportTab from "./SupportTab";
 import FaqsTab from "@/components/tabs/FaqsTab";
-import DocumentationTab from "./DocumentationTab"; // Ensure this path is correct
+import DocumentationTab from "./DocumentationTab"; // Adjust the path if necessary
 import TutorialsTab from "./TutorialsTab";
 import LandingNavbar from "../landing/components/LandingNavbar";
 import LandingFooter from "../landing/components/LandingFooter";
