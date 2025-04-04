@@ -1,113 +1,170 @@
 
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOGO } from "@/assets";
+import { motion } from "framer-motion";
+import { useAuth } from "@/hooks/useAuth";
 
 const LandingNavbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  
+  const location = useLocation();
+
+  // Verificar se a rota atual é a página inicial
+  const isHomePage = location.pathname === "/";
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
+    { label: "Início", href: "/" },
+    { label: "Funcionalidades", href: isHomePage ? "/#features" : "/features" },
+    { label: "Planos", href: "/subscriptions" },
+    { label: "Integrações", href: "/integrations" },
+    { label: "Segurança", href: "/security" },
+    { label: "Sobre", href: "/about" },
+  ];
+
   return (
-    <header className="bg-white sticky top-0 z-20 border-b border-gray-200 shadow-sm">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <div className="flex items-center">
-          <Link to="/" className="flex items-center">
-            <img 
-              src="/lovable-uploads/5f9e9260-2a46-4bc3-a26b-93a0e41be3d6.png" 
-              alt="LegalFlux Logo" 
-              className="h-8 w-auto"
-            />
-          </Link>
-        </div>
-        <nav className="hidden md:flex items-center justify-center space-x-8 flex-1">
-          <Link
-            to="/#features"
-            className="text-gray-600 hover:text-primary-900 transition-colors"
-          >
-            Funcionalidades
-          </Link>
-          <Link
-            to="/subscriptions"
-            className="text-gray-600 hover:text-primary-900 transition-colors"
-          >
-            Planos
-          </Link>
-          <Link
-            to="/screenshots"
-            className="text-gray-600 hover:text-primary-900 transition-colors"
-          >
-            Screenshots
-          </Link>
-          <Link
-            to="/about"
-            className="text-gray-600 hover:text-primary-900 transition-colors"
-          >
-            Sobre
-          </Link>
-        </nav>
-        <div className="hidden md:flex items-center space-x-4">
-          <Link
-            to="/login"
-            className="text-gray-600 hover:text-primary-900 transition-colors"
-          >
-            Login
-          </Link>
-          <Button 
-            onClick={() => navigate("/register")} 
-            className="bg-highlight text-white hover:bg-highlight/90"
-          >
-            Registo
-          </Button>
-        </div>
-        <div className="md:hidden flex items-center gap-3">
-          <div className="relative group">
-            <Button 
-              variant="ghost" 
-              className="p-2"
-              aria-label="Menu"
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.3 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? "bg-white shadow-md py-2" : "bg-transparent py-4"
+      }`}
+    >
+      <div className="container mx-auto px-4 flex justify-between items-center">
+        <Link to="/" className="flex items-center">
+          <img
+            src={LOGO.DEFAULT}
+            alt="LegalFlux Logo"
+            className="h-8 md:h-10"
+          />
+        </Link>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
+          {navLinks.map((link, index) => (
+            <Link
+              key={index}
+              to={link.href}
+              className={`px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 transition-colors ${
+                isScrolled ? "text-gray-700" : "text-gray-800"
+              }`}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="4" x2="20" y1="12" y2="12"/>
-                <line x1="4" x2="20" y1="6" y2="6"/>
-                <line x1="4" x2="20" y1="18" y2="18"/>
-              </svg>
+              {link.label}
+            </Link>
+          ))}
+        </div>
+
+        <div className="hidden md:flex items-center space-x-4">
+          {isAuthenticated ? (
+            <Button
+              onClick={() => navigate("/dashboard")}
+              className="bg-highlight hover:bg-highlight/90"
+            >
+              Painel de Controlo
             </Button>
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
-              <Link
-                to="/#features"
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+          ) : (
+            <>
+              <Button
+                variant="ghost"
+                onClick={() => navigate("/login")}
+                className="text-gray-700"
               >
-                Funcionalidades
-              </Link>
-              <Link
-                to="/subscriptions"
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                Iniciar Sessão
+              </Button>
+              <Button
+                onClick={() => navigate("/register")}
+                className="bg-highlight hover:bg-highlight/90"
               >
-                Planos
-              </Link>
-              <Link
-                to="/screenshots"
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-              >
-                Screenshots
-              </Link>
-              <Link
-                to="/about"
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-              >
-                Sobre
-              </Link>
-            </div>
-          </div>
-          <Button 
-            variant="outline" 
-            onClick={() => navigate("/login")} 
-            className="border-gray-300 text-primary-900 hover:bg-gray-100"
+                Registar
+              </Button>
+            </>
+          )}
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="md:hidden">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="text-gray-700"
           >
-            Login
+            {isMenuOpen ? <X /> : <Menu />}
           </Button>
         </div>
       </div>
-    </header>
+
+      {/* Mobile Navigation */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-white border-t mt-2">
+          <div className="container mx-auto px-4 py-2">
+            {navLinks.map((link, index) => (
+              <Link
+                key={index}
+                to={link.href}
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div className="mt-4 space-y-2">
+              {isAuthenticated ? (
+                <Button
+                  onClick={() => {
+                    navigate("/dashboard");
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full bg-highlight hover:bg-highlight/90"
+                >
+                  Painel de Controlo
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      navigate("/login");
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full"
+                  >
+                    Iniciar Sessão
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      navigate("/register");
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full bg-highlight hover:bg-highlight/90"
+                  >
+                    Registar
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </motion.nav>
   );
 };
 

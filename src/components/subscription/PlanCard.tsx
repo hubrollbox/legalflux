@@ -1,75 +1,94 @@
 
-import { Check } from "lucide-react";
+import React from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Check } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 interface PlanCardProps {
-  title: string;
-  price: number;
-  description: string;
-  features: string[];
-  popular?: boolean;
-  disabled?: boolean;
-  onClick?: () => void;
-  buttonText?: string;
-  current?: boolean;
+  plan: {
+    name: string;
+    price: string;
+    description: string;
+    features: string[];
+    highlight: boolean;
+    priceId: string;
+  };
+  isCurrentPlan?: boolean;
+  publicView?: boolean;
 }
 
-const PlanCard: React.FC<PlanCardProps> = ({
-  title,
-  price,
-  description,
-  features,
-  popular = false,
-  disabled = false,
-  onClick,
-  buttonText = "Escolher Plano",
-  current = false,
-}) => {
+const PlanCard: React.FC<PlanCardProps> = ({ plan, isCurrentPlan = false, publicView = false }) => {
+  const navigate = useNavigate();
+
+  const handleSelectPlan = () => {
+    if (publicView) {
+      navigate("/register", { state: { selectedPlan: plan.priceId } });
+    } else {
+      // Lógica para mudar de plano quando já está autenticado
+      console.log("Solicitação para mudar para o plano:", plan.priceId);
+    }
+  };
+
   return (
-    <Card className={cn(
-      "flex flex-col", 
-      popular && "border-primary-500 shadow-md relative",
-      disabled && "opacity-70"
-    )}>
-      {popular && (
-        <div className="absolute top-0 right-0 transform translate-x-2 -translate-y-2">
-          <span className="bg-accent-gold text-white text-xs px-2 py-1 rounded-md font-medium">
-            Popular
-          </span>
-        </div>
+    <Card
+      className={cn(
+        "flex flex-col h-full transition-all duration-200 hover:shadow-lg",
+        plan.highlight && "border-highlight/50 shadow-md",
+        isCurrentPlan && "border-2 border-primary"
       )}
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <div className="flex items-baseline mt-2">
-          <span className="text-3xl font-bold">{price === 0 ? "Sob consulta" : `${price}€`}</span>
-          {price > 0 && <span className="text-sm text-gray-500 ml-1">/mês</span>}
+    >
+      <CardHeader className={cn(
+        "pb-4",
+        plan.highlight && "bg-highlight/10"
+      )}>
+        <div className="flex justify-between items-start">
+          <CardTitle>{plan.name}</CardTitle>
+          {plan.highlight && (
+            <Badge className="bg-highlight text-white hover:bg-highlight/90">
+              Popular
+            </Badge>
+          )}
+          {isCurrentPlan && (
+            <Badge variant="outline" className="border-primary text-primary">
+              Atual
+            </Badge>
+          )}
         </div>
-        <CardDescription className="mt-2">{description}</CardDescription>
+        <div className="mt-2">
+          <span className="text-3xl font-bold">{plan.price}</span>
+          {plan.name !== "Personalizado" && <span className="text-muted-foreground">/mês</span>}
+        </div>
+        <CardDescription className="mt-2">{plan.description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex-1">
-        <ul className="space-y-2">
-          {features.map((feature, index) => (
+      <CardContent className="flex-grow flex flex-col">
+        <ul className="space-y-2 mb-6 flex-grow">
+          {plan.features.map((feature, index) => (
             <li key={index} className="flex items-start">
-              <span className="flex-shrink-0 h-5 w-5 text-primary-600">
-                <Check className="h-5 w-5" />
-              </span>
-              <span className="ml-2 text-sm">{feature}</span>
+              <Check className="h-5 w-5 text-green-500 mr-2 shrink-0" />
+              <span className="text-sm">{feature}</span>
             </li>
           ))}
         </ul>
-      </CardContent>
-      <CardFooter>
-        <Button 
-          className="w-full" 
-          onClick={onClick}
-          disabled={disabled || current}
-          variant={current ? "outline" : "default"}
+        <Button
+          className={cn(
+            "w-full mt-auto",
+            plan.highlight ? "bg-highlight hover:bg-highlight/90" : "",
+            plan.name === "Personalizado" ? "bg-primary hover:bg-primary/90" : ""
+          )}
+          variant={isCurrentPlan ? "outline" : "default"}
+          disabled={isCurrentPlan}
+          onClick={handleSelectPlan}
         >
-          {current ? "Plano Atual" : buttonText}
+          {isCurrentPlan
+            ? "Plano Atual"
+            : plan.name === "Personalizado"
+              ? "Contacte-nos"
+              : "Selecionar Plano"}
         </Button>
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 };

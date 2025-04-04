@@ -5,6 +5,8 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import { MOCK_CASES as CasesData, MOCK_TASKS as TasksData } from "@/services/mockData"; 
 import { Case, Task } from "@/types";
 import { Badge } from "@/components/ui/badge";
+import { useIsMobile } from "@/hooks/use-mobile";
+import PageTransition from "@/components/PageTransition";
 
 // Import refactored components
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
@@ -22,6 +24,7 @@ const Dashboard = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [organization] = useState(user?.organizationId ? { name: "Escritório Demo" } : undefined);
   const [userOrganization] = useState(user?.organizationId ? "Escritório Demo" : "Independente");
+  const isMobile = useIsMobile();
   
   const userName = user?.name || "Utilizador";
   const userRole = user?.role ? getUserRoleName(user.role) : "Utilizador";
@@ -53,22 +56,32 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
-      {/* Dashboard Header */}
-      <DashboardHeader userName={userName} userRole={userRole} />
-      
-      {/* Statistics Section */}
-      <StatisticsSection stats={statsData} userOrganization={userOrganization} />
-      
-      {/* Recent Activity Section */}
-      <RecentActivity 
-        recentCases={recentCases}
-        recentTasks={recentTasks}
-        chartData={chartData}
-        performanceData={performanceData}
-      />
-      
-      {/* Financial Section */}
-      <FinancialSection financialData={financialData} />
+      <PageTransition>
+        <div className="max-w-7xl mx-auto">
+          {/* Dashboard Header */}
+          <DashboardHeader userName={userName} userRole={userRole} />
+          
+          {/* Statistics Section */}
+          <div className="mb-8">
+            <StatisticsSection stats={statsData} userOrganization={userOrganization} />
+          </div>
+          
+          {/* Recent Activity Section */}
+          <div className="mb-8">
+            <RecentActivity 
+              recentCases={recentCases}
+              recentTasks={recentTasks}
+              chartData={chartData}
+              performanceData={performanceData}
+            />
+          </div>
+          
+          {/* Financial Section */}
+          <div className="mb-8">
+            <FinancialSection financialData={financialData} />
+          </div>
+        </div>
+      </PageTransition>
     </DashboardLayout>
   );
 };

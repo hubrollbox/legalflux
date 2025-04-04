@@ -26,6 +26,8 @@ import NotFound from "./pages/NotFound";
 import Screenshots from "./pages/Screenshots";
 import About from "./pages/About";
 import Features from "./pages/Features";
+import Integrations from "./pages/Integrations";
+import Security from "./pages/Security";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +46,10 @@ const App = () => (
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/screenshots" element={<Screenshots />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/security" element={<Security />} />
+            <Route path="/integrations" element={<Integrations />} />
 
             {/* Protected Routes */}
             <Route path="/dashboard" element={<Dashboard />} />
@@ -58,11 +64,10 @@ const App = () => (
             <Route path="/users" element={<Users />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/features" element={<Features />} />
 
             {/* Redirecionamentos */}
             <Route path="/cases" element={<Navigate to="/processes" />} />
+            <Route path="/plans" element={<Navigate to="/subscriptions" />} />
 
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />

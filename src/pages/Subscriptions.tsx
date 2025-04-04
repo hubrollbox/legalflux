@@ -1,331 +1,164 @@
-import { useState } from "react";
+
+import React from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import SectionHeader from "@/components/layout/SectionHeader";
 import PlanCard from "@/components/subscription/PlanCard";
-import { getPlanDetails } from "@/lib/utils";
-import { 
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { getOrganizationById, getSubscriptionByOrgId } from "@/services/mockData";
-import LandingNavbar from "./landing/components/LandingNavbar";
-import LandingFooter from "./landing/components/LandingFooter";
+import { ArrowLeft, ArrowRight, CreditCard } from "lucide-react";
+import PageTransition from "@/components/PageTransition";
+import LandingNavbar from "@/pages/landing/components/LandingNavbar";
+import LandingFooter from "@/pages/landing/components/LandingFooter";
 
-const SubscriptionsPage = () => {
-  const { user } = useAuth();
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [organization] = useState(user?.organizationId ? getOrganizationById(user.organizationId) : undefined);
-  const [subscription] = useState(organization ? getSubscriptionByOrgId(organization.id) : undefined);
-  
-  const { toast } = useToast();
-  const navigate = useNavigate();
+const plans = [
+  {
+    name: "Basic",
+    price: "49€",
+    description: "Para advogados individuais com funcionalidades básicas.",
+    features: [
+      "Gestão de casos",
+      "Calendário de prazos",
+      "Gestão de documentos",
+      "1 utilizador",
+      "Suporte por email"
+    ],
+    highlight: false,
+    priceId: "price_basic"
+  },
+  {
+    name: "Solo",
+    price: "99€",
+    description: "Para advogados independentes com funcionalidades adicionais.",
+    features: [
+      "Tudo do plano Basic",
+      "Comunicação com clientes",
+      "Modelos de documentos",
+      "Até 3 utilizadores",
+      "Suporte prioritário"
+    ],
+    highlight: true,
+    priceId: "price_solo"
+  },
+  {
+    name: "Enterprise",
+    price: "199€",
+    description: "Para escritórios com equipas e funcionalidades avançadas.",
+    features: [
+      "Tudo do plano Solo",
+      "Painel de análise financeira",
+      "Integração contábil",
+      "Até 10 utilizadores",
+      "Suporte dedicado"
+    ],
+    highlight: false,
+    priceId: "price_enterprise"
+  },
+  {
+    name: "Personalizado",
+    price: "Sob orçamento",
+    description: "Para grandes escritórios com necessidades específicas.",
+    features: [
+      "Tudo do plano Enterprise",
+      "Integrações personalizadas",
+      "Suporte VIP 24/7",
+      "Utilizadores ilimitados",
+      "Formação e implementação"
+    ],
+    highlight: false,
+    priceId: "price_custom"
+  }
+];
 
-  const basicPlan = getPlanDetails("basic");
-  const soloPlan = getPlanDetails("solo");
-  const enterprisePlan = getPlanDetails("enterprise");
-  const customPlan = getPlanDetails("custom");
+const Subscriptions = () => {
+  const { isAuthenticated, user } = useAuth();
 
-  const handleSelectPlan = (plan: string) => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-    
-    setSelectedPlan(plan);
-    setIsDialogOpen(true);
-  };
-
-  const handleConfirmPurchase = async () => {
-    setIsLoading(true);
-    
-    // Simulate API call to purchase subscription
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsDialogOpen(false);
-      
-      toast({
-        title: "Assinatura ativada",
-        description: `Sua assinatura do plano ${selectedPlan?.charAt(0).toUpperCase() + selectedPlan?.slice(1)} foi ativada com sucesso.`,
-      });
-    }, 2000);
-  };
-
-  if (user) {
-    return (
-      <DashboardLayout>
+  // Componente para exibir quando o usuário estiver autenticado
+  const AuthenticatedView = () => (
+    <DashboardLayout>
+      <PageTransition>
         <div className="dashboard-header">
-          <div>
-            <h1 className="page-title">Planos de Assinatura</h1>
-            <p className="text-gray-500">
-              Escolha o plano que melhor se adapta às necessidades do seu escritório.
+          <SectionHeader
+            title="Planos de Subscrição"
+            description="Escolha o plano ideal para o seu escritório"
+          />
+          <Button className="bg-highlight hover:bg-highlight/90">
+            <CreditCard className="mr-2 h-4 w-4" /> Gerir Pagamentos
+          </Button>
+        </div>
+
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {plans.map((plan, index) => (
+            <PlanCard
+              key={index}
+              plan={plan}
+              isCurrentPlan={plan.name === "Solo"} // Exemplo
+            />
+          ))}
+        </div>
+
+        <div className="mt-10 bg-muted p-6 rounded-lg">
+          <h3 className="text-lg font-medium mb-2">Plano Atual: Solo</h3>
+          <p className="text-muted-foreground mb-4">
+            A sua subscrição será renovada automaticamente em 15/05/2025.
+          </p>
+          <div className="flex gap-4">
+            <Button variant="outline">Cancelar Subscrição</Button>
+            <Button className="bg-highlight hover:bg-highlight/90">
+              Atualizar Plano
+            </Button>
+          </div>
+        </div>
+      </PageTransition>
+    </DashboardLayout>
+  );
+
+  // Componente para exibir quando o usuário não estiver autenticado
+  const UnauthenticatedView = () => (
+    <PageTransition>
+      <LandingNavbar />
+      <div className="pt-24 bg-gray-50">
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h1 className="text-4xl font-bold mb-4">Planos de Subscrição</h1>
+            <p className="text-lg text-gray-600">
+              Escolha o plano perfeito para o seu escritório de advocacia. Todos os planos incluem acesso completo às funcionalidades principais do LegalFlux.
             </p>
           </div>
-        </div>
 
-        {/* Current Plan Info */}
-        {subscription && (
-          <div className="bg-primary-50 border border-primary-100 rounded-lg p-6 mb-8">
-            <h2 className="text-lg font-semibold mb-2">Seu Plano Atual</h2>
-            <div className="flex flex-col md:flex-row md:items-center justify-between">
-              <div>
-                <p className="text-primary-900 font-medium">
-                  {getPlanDetails(subscription.plan).name} - {subscription.price}€/mês
-                </p>
-                <p className="text-sm text-gray-600 mt-1">
-                  Renovação em {new Date(subscription.currentPeriodEnd).toLocaleDateString("pt-PT")}
-                </p>
-              </div>
-              <div className="mt-4 md:mt-0">
-                <Button 
-                  variant="outline" 
-                  className="mr-2"
-                  onClick={() => {
-                    toast({
-                      title: "Fatura disponível",
-                      description: "Sua última fatura foi enviada para o seu email.",
-                    });
-                  }}
-                >
-                  Ver Fatura
-                </Button>
-                <Button 
-                  variant="default"
-                  onClick={() => {
-                    toast({
-                      title: "Gerenciar assinatura",
-                      description: "Para gerenciar sua assinatura, entre em contato com o suporte.",
-                    });
-                  }}
-                >
-                  Gerenciar Assinatura
-                </Button>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            {plans.map((plan, index) => (
+              <PlanCard
+                key={index}
+                plan={plan}
+                isCurrentPlan={false}
+                publicView={true}
+              />
+            ))}
           </div>
-        )}
 
-        {/* Plans Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <PlanCard
-            title={basicPlan.name}
-            price={basicPlan.price}
-            description={basicPlan.description}
-            features={basicPlan.features}
-            onClick={() => handleSelectPlan("basic")}
-            current={subscription?.plan === "basic"}
-          />
-          
-          <PlanCard
-            title={soloPlan.name}
-            price={soloPlan.price}
-            description={soloPlan.description}
-            features={soloPlan.features}
-            popular={true}
-            onClick={() => handleSelectPlan("solo")}
-            current={subscription?.plan === "solo"}
-          />
-          
-          <PlanCard
-            title={enterprisePlan.name}
-            price={enterprisePlan.price}
-            description={enterprisePlan.description}
-            features={enterprisePlan.features}
-            onClick={() => handleSelectPlan("enterprise")}
-            current={subscription?.plan === "enterprise"}
-          />
-          
-          <PlanCard
-            title={customPlan.name}
-            price={customPlan.price}
-            description={customPlan.description}
-            features={customPlan.features}
-            buttonText="Contate-nos"
-            onClick={() => {
-              toast({
-                title: "Plano Personalizado",
-                description: "Entre em contato com nossa equipe de vendas para criar um plano personalizado para seu escritório.",
-              });
-            }}
-            current={subscription?.plan === "custom"}
-          />
-        </div>
-
-        {/* Additional Info */}
-        <div className="bg-gray-50 rounded-lg p-6">
-          <h2 className="text-lg font-semibold mb-4">Perguntas Frequentes</h2>
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-medium mb-1">Como funciona a cobrança?</h3>
-              <p className="text-gray-600 text-sm">
-                A cobrança é realizada mensalmente. Você pode cancelar a qualquer momento antes do próximo ciclo de faturamento.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium mb-1">Posso mudar de plano?</h3>
-              <p className="text-gray-600 text-sm">
-                Sim, você pode fazer upgrade ou downgrade do seu plano a qualquer momento. As alterações entram em vigor imediatamente e o valor é ajustado proporcionalmente.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium mb-1">O que acontece se eu exceder o limite de usuários?</h3>
-              <p className="text-gray-600 text-sm">
-                Se você precisar de mais usuários do que seu plano permite, será necessário fazer upgrade para um plano superior ou contatar nossa equipe para um plano personalizado.
-              </p>
-            </div>
+          <div className="text-center mt-16 py-10 px-6 bg-primary text-white rounded-xl max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold mb-4">
+              Necessita de uma solução personalizada?
+            </h2>
+            <p className="mb-6">
+              Entre em contacto connosco para discutirmos as necessidades específicas do seu escritório e desenvolvermos uma proposta à medida.
+            </p>
+            <Button
+              size="lg"
+              className="bg-white text-primary hover:bg-white/90"
+              onClick={() => window.location.href = "/register"}
+            >
+              Contacte-nos <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
           </div>
         </div>
-
-        {/* Purchase Confirmation Dialog */}
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Confirmar Assinatura</DialogTitle>
-              <DialogDescription>
-                Você está prestes a assinar o plano {selectedPlan?.charAt(0).toUpperCase() + selectedPlan?.slice(1)}.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="py-4">
-              <p className="font-medium">Detalhes do Plano:</p>
-              <ul className="mt-2 space-y-1 text-sm">
-                {selectedPlan === "basic" && (
-                  <>
-                    <li>• Preço: {basicPlan.price}€/mês</li>
-                    <li>• Usuários: {basicPlan.usersLimit}</li>
-                    <li>• Faturamento: Mensal</li>
-                  </>
-                )}
-                {selectedPlan === "solo" && (
-                  <>
-                    <li>• Preço: {soloPlan.price}€/mês</li>
-                    <li>• Usuários: {soloPlan.usersLimit}</li>
-                    <li>• Faturamento: Mensal</li>
-                  </>
-                )}
-                {selectedPlan === "enterprise" && (
-                  <>
-                    <li>• Preço: {enterprisePlan.price}€/mês</li>
-                    <li>• Usuários: {enterprisePlan.usersLimit}</li>
-                    <li>• Faturamento: Mensal</li>
-                  </>
-                )}
-              </ul>
-              <p className="mt-4 text-sm text-gray-500">
-                Ao confirmar, você concorda com os termos de serviço e política de privacidade.
-              </p>
-            </div>
-            <DialogFooter>
-              <Button 
-                variant="outline" 
-                onClick={() => setIsDialogOpen(false)}
-                disabled={isLoading}
-              >
-                Cancelar
-              </Button>
-              <Button 
-                onClick={handleConfirmPurchase}
-                disabled={isLoading}
-              >
-                {isLoading ? "Processando..." : "Confirmar Compra"}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </DashboardLayout>
-    );
-  }
-
-  return (
-    <div className="flex flex-col min-h-screen">
-      <LandingNavbar />
-      
-      <main className="flex-1 container mx-auto py-12 px-4">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold mb-4">Planos de Assinatura</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Escolha o plano que melhor se adapta às necessidades do seu escritório jurídico. Todos os planos incluem suporte técnico e atualizações.
-          </p>
-        </div>
-
-        {/* Plans Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <PlanCard
-            title={basicPlan.name}
-            price={basicPlan.price}
-            description={basicPlan.description}
-            features={basicPlan.features}
-            onClick={() => handleSelectPlan("basic")}
-          />
-          
-          <PlanCard
-            title={soloPlan.name}
-            price={soloPlan.price}
-            description={soloPlan.description}
-            features={soloPlan.features}
-            popular={true}
-            onClick={() => handleSelectPlan("solo")}
-          />
-          
-          <PlanCard
-            title={enterprisePlan.name}
-            price={enterprisePlan.price}
-            description={enterprisePlan.description}
-            features={enterprisePlan.features}
-            onClick={() => handleSelectPlan("enterprise")}
-          />
-          
-          <PlanCard
-            title={customPlan.name}
-            price={customPlan.price}
-            description={customPlan.description}
-            features={customPlan.features}
-            buttonText="Contate-nos"
-            onClick={() => {
-              toast({
-                title: "Plano Personalizado",
-                description: "Entre em contato com nossa equipe de vendas para criar um plano personalizado para seu escritório.",
-              });
-            }}
-          />
-        </div>
-        
-        {/* FAQ Section */}
-        <div className="bg-gray-50 rounded-lg p-6 max-w-4xl mx-auto">
-          <h2 className="text-xl font-semibold mb-6">Perguntas Frequentes</h2>
-          <div className="space-y-6">
-            <div>
-              <h3 className="font-medium mb-2">Como funciona a cobrança?</h3>
-              <p className="text-gray-600">
-                A cobrança é realizada mensalmente. Você pode cancelar a qualquer momento antes do próximo ciclo de faturamento.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium mb-2">Posso mudar de plano?</h3>
-              <p className="text-gray-600">
-                Sim, você pode fazer upgrade ou downgrade do seu plano a qualquer momento. As alterações entram em vigor imediatamente e o valor é ajustado proporcionalmente.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium mb-2">O que acontece se eu exceder o limite de usuários?</h3>
-              <p className="text-gray-600">
-                Se você precisar de mais usuários do que seu plano permite, será necessário fazer upgrade para um plano superior ou contatar nossa equipe para um plano personalizado.
-              </p>
-            </div>
-          </div>
-        </div>
-      </main>
-      
+      </div>
       <LandingFooter />
-    </div>
+    </PageTransition>
   );
+
+  // Renderiza o componente apropriado com base no estado de autenticação
+  return isAuthenticated ? <AuthenticatedView /> : <UnauthenticatedView />;
 };
 
-export default SubscriptionsPage;
+export default Subscriptions;

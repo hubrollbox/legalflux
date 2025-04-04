@@ -1,57 +1,83 @@
 
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import React from "react";
 import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const HeroSection = () => {
-  const navigate = useNavigate();
-  
   return (
-    <section className="py-24 md:py-32 bg-white text-gray-800">
-      <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
-        <div className="md:w-1/2 text-center md:text-left mb-10 md:mb-0 md:pr-8">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-primary-900">
-            Sistema de Gestão Jurídica Completo
+    <div className="py-16 md:py-24">
+      <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="lg:w-1/2"
+        >
+          <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold mb-4 leading-tight text-gray-900">
+            Gestão jurídica simplificada para o seu escritório
           </h1>
-          <p className="text-xl md:text-2xl mb-10 text-gray-600 max-w-2xl">
-            Faça a gestão de utilizadores, permissões e assinaturas na sua plataforma jurídica 
-            com eficiência, segurança e conformidade.
+          <p className="text-xl mb-8 text-gray-600 max-w-lg">
+            Impulsione a eficiência do seu escritório com uma solução completa de gestão de processos, documentos e clientes.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-            <Button
-              size="lg"
-              className="bg-highlight text-white hover:bg-highlight/90 shadow-md hover:shadow-lg transition-all"
-              onClick={() => navigate("/register")}
-            >
-              Comece Agora
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-primary-900 text-primary-900 hover:bg-gray-100 transition-all"
-              onClick={() => navigate("/login")}
-            >
-              Iniciar Sessão
-            </Button>
+          <div className="flex flex-wrap gap-4">
+            <Link to="/register">
+              <Button size="lg" className="bg-highlight text-white hover:bg-highlight/90">
+                Comece agora <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link to="/features">
+              <Button size="lg" variant="outline">
+                Conheça as funcionalidades
+              </Button>
+            </Link>
           </div>
-        </div>
-        <div className="md:w-1/2 flex justify-center">
-          <div className="relative w-full max-w-xl">
-            <div className="relative bg-white rounded-lg p-4 shadow-lg border border-gray-200">
-              <iframe 
-                src="https://player.vimeo.com/video/1062960326?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&controls=0" 
-                className="w-full aspect-video rounded shadow-md" 
-                style={{ height: "300px" }}
-                frameBorder="0" 
-                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
-                title="LegalFlux"
-              ></iframe>
+          <div className="mt-8 flex items-center">
+            <div className="flex -space-x-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="w-8 h-8 rounded-full bg-gray-300 border-2 border-white overflow-hidden">
+                  <img 
+                    src={`/img/avatar${i}.jpg`} 
+                    alt="Usuario" 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "https://placehold.co/100x100?text=User";
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="ml-4">
+              <div className="flex items-center text-yellow-500">
+                ★★★★★ <span className="ml-1 text-gray-600">4.9/5</span>
+              </div>
+              <p className="text-sm text-gray-600">Avaliação de mais de 500 utilizadores</p>
             </div>
           </div>
-        </div>
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="lg:w-1/2 relative"
+        >
+          <div className="overflow-hidden rounded-xl">
+            <video 
+              autoPlay 
+              muted 
+              loop 
+              playsInline
+              className="w-full h-full object-cover rounded-xl"
+            >
+              <source src="/video/demo.mp4" type="video/mp4" />
+              Seu navegador não suporta vídeos.
+            </video>
+          </div>
+        </motion.div>
       </div>
-    </section>
+    </div>
   );
 };
 

@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Video, Instagram, Linkedin, Mail, Phone, MapPin, Github } from "lucide-react";
+import { Instagram, Linkedin, Mail, Phone, MapPin, Github } from "lucide-react";
 import { LOGO } from "@/assets";
 
 const LandingFooter = () => {
@@ -14,9 +14,19 @@ const LandingFooter = () => {
               Sistema completo de gestão jurídica para escritórios modernos.
             </p>
             <div className="mt-6">
-              <h5 className="text-sm font-semibold mb-3 text-gray-900">Aplicações</h5>
-              <p className="text-gray-600 text-sm">Disponível em breve para:</p>
-              <p className="text-gray-600 text-sm mt-1">Windows • MacOS • iOS • Android</p>
+              <h5 className="text-sm font-semibold mb-3 text-gray-900">Disponível para:</h5>
+              <div className="flex space-x-3 mt-2">
+                <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                  <img src="/img/app-store.svg" alt="App Store" className="h-8" onError={(e) => {
+                    (e.target as HTMLImageElement).src = "https://placehold.co/120x40?text=App+Store";
+                  }} />
+                </a>
+                <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
+                  <img src="/img/google-play.svg" alt="Google Play" className="h-8" onError={(e) => {
+                    (e.target as HTMLImageElement).src = "https://placehold.co/120x40?text=Google+Play";
+                  }} />
+                </a>
+              </div>
             </div>
           </div>
           <div>
@@ -28,7 +38,7 @@ const LandingFooter = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/#pricing" className="text-gray-600 hover:text-highlight transition-colors">
+                <Link to="/subscriptions" className="text-gray-600 hover:text-highlight transition-colors">
                   Planos
                 </Link>
               </li>
@@ -40,6 +50,16 @@ const LandingFooter = () => {
               <li>
                 <Link to="/about" className="text-gray-600 hover:text-highlight transition-colors">
                   Sobre
+                </Link>
+              </li>
+              <li>
+                <Link to="/integrations" className="text-gray-600 hover:text-highlight transition-colors">
+                  Integrações
+                </Link>
+              </li>
+              <li>
+                <Link to="/security" className="text-gray-600 hover:text-highlight transition-colors">
+                  Segurança
                 </Link>
               </li>
             </ul>
@@ -69,7 +89,7 @@ const LandingFooter = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-gray-600">
                 <MapPin size={18} className="text-highlight mt-1 flex-shrink-0" />
-                <span>Edifício Diplomata<br />Matosinhos - Portugal</span>
+                <span>Edifício Diplomata<br />Matosinhos, 4450-075 - Portugal</span>
               </li>
               <li className="flex items-center gap-3 text-gray-600">
                 <Phone size={18} className="text-highlight flex-shrink-0" />
@@ -79,22 +99,19 @@ const LandingFooter = () => {
                 <Mail size={18} className="text-highlight flex-shrink-0" />
                 <span>suporte@legalflux.pt</span>
               </li>
-              <li className="mt-4">
-                <h5 className="text-sm font-semibold mb-3 text-gray-900">Redes Sociais</h5>
-                <div className="flex space-x-3">
-                  <a href="https://vimeo.com/user119294787" target="_blank" rel="noopener noreferrer" aria-label="Vimeo" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary transition-colors">
-                    <Video size={18} />
-                  </a>
-                  <a href="https://www.instagram.com/legalflux.pt/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary transition-colors">
-                    <Instagram size={18} />
-                  </a>
-                  <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary transition-colors">
-                    <Linkedin size={18} />
-                  </a>
-                  <a href="https://github.com/hubrollbox/legalflux" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary transition-colors">
-                    <Github size={18} />
-                  </a>
-                </div>
+              <li className="mt-4 flex space-x-3">
+                <a href="https://vimeo.com/user119294787" target="_blank" rel="noopener noreferrer" aria-label="Vimeo" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                </a>
+                <a href="https://www.instagram.com/legalflux.pt/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary transition-colors">
+                  <Instagram size={18} />
+                </a>
+                <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary transition-colors">
+                  <Linkedin size={18} />
+                </a>
+                <a href="https://github.com/hubrollbox/legalflux" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 text-primary transition-colors">
+                  <Github size={18} />
+                </a>
               </li>
             </ul>
           </div>
