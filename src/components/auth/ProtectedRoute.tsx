@@ -17,7 +17,7 @@ const ProtectedRoute = ({
   action = 'read' 
 }: ProtectedRouteProps) => {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const { hasPermission, loading: permissionsLoading } = usePermissions();
+  const { hasPermission, isLoading: permissionsLoading } = usePermissions();
   const location = useLocation();
   
   // If still loading auth state, show nothing (or a loading spinner)
