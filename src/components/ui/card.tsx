@@ -19,7 +19,3 @@ export const CardDescription = ({ children, ...props }) => (
 export const CardContent = ({ children, ...props }) => (
   <div {...props}>{children}</div>
 );
-
-export const CardFooter = ({ children, ...props }) => (
-  <div {...props}>{children}</div>
-);
