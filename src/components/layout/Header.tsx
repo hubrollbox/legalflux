@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Bell, Home, Menu, PanelLeftClose, PanelLeftOpen, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getUserRoleName } from "@/lib/utils";
+import { getUserRoleName, cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import ThemeToggle from "@/components/ui/theme-toggle";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { motion } from "framer-motion";
 
 interface HeaderProps {
   user: any;
@@ -22,40 +25,79 @@ interface HeaderProps {
   logout: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ 
-  user, 
-  toggleMobileSidebar, 
+// Componente para o menu do usuário
+const UserNav: React.FC<{ user: any; onLogout: () => void }> = ({ user, onLogout }) => {
+  const navigate = useNavigate();
+  
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={user?.avatar} alt={user?.name} />
+            <AvatarFallback>{user?.name?.charAt(0) || "U"}</AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">{user?.name}</p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {user?.email}
+            </p>
+            <p className="text-xs leading-none text-muted-foreground mt-1">
+              {getUserRoleName(user?.role)}
+            </p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => navigate("/profile")}>
+          Perfil
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/settings")}>
+          Configurações
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={onLogout}>Sair</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+const Header: React.FC<HeaderProps> = ({
+  user,
+  toggleMobileSidebar,
   toggleSidebar,
   isSidebarCollapsed,
-  logout 
+  logout
 }) => {
-  const navigate = useNavigate();
-
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-  };
-
+  const isMobile = useIsMobile();
   return (
-    <header className="bg-white border-b py-2 px-4 flex items-center justify-between">
+    <motion.header 
+      className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-6"
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <div className="flex items-center">
         <Button
           variant="ghost"
           size="icon"
           className="md:hidden"
           onClick={toggleMobileSidebar}
+          aria-label="Abrir menu lateral"
         >
           <Menu className="h-5 w-5" />
         </Button>
+        
+        {/* Botão para colapsar sidebar em desktop */}
         <Button
           variant="ghost"
           size="icon"
           className="hidden md:flex"
           onClick={toggleSidebar}
-          title={isSidebarCollapsed ? "Expandir Menu" : "Recolher Menu"}
+          aria-label={isSidebarCollapsed ? "Expandir menu lateral" : "Colapsar menu lateral"}
         >
           {isSidebarCollapsed ? (
             <PanelLeftOpen className="h-5 w-5" />
@@ -63,69 +105,15 @@ const Header: React.FC<HeaderProps> = ({
             <PanelLeftClose className="h-5 w-5" />
           )}
         </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="ml-2 md:hidden"
-          onClick={() => navigate("/")}
-        >
-          <Home className="h-4 w-4 mr-2" />
-          Início
-        </Button>
       </div>
-      <div className="flex items-center">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>Notificações</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <div className="py-2 px-4 text-center text-sm text-gray-500">
-              Não há notificações novas.
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="ml-2">
-              <User className="h-5 w-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>A minha conta</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate("/profile")}>
-              Perfil
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate("/settings")}>
-              Configurações
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                logout();
-                navigate("/login");
-              }}
-            >
-              Sair
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <div className="hidden md:flex items-center ml-4">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
-          </Avatar>
-          <div className="ml-2">
-            <p className="text-sm font-medium">{user.name}</p>
-            <p className="text-xs text-gray-500">{getUserRoleName(user.role)}</p>
-          </div>
-        </div>
+      
+      <div className="flex-1" />
+      
+      <div className={cn("flex items-center gap-2", isMobile ? "gap-1" : "gap-3")}>
+        <ThemeToggle className="mr-2" />
+        <UserNav user={user} onLogout={logout} />
       </div>
-    </header>
+    </motion.header>
   );
 };
 

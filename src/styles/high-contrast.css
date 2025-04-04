@@ -1,0 +1,60 @@
+/* Tema de Alto Contraste para Acessibilidade */
+
+.high-contrast {
+  --background: #000000;
+  --foreground: #ffffff;
+  --primary: #ffff00;
+  --primary-foreground: #000000;
+  --secondary: #00ffff;
+  --secondary-foreground: #000000;
+  --accent: #ffffff;
+  --accent-foreground: #000000;
+  --muted: #333333;
+  --muted-foreground: #ffffff;
+  --card: #000000;
+  --card-foreground: #ffffff;
+  --popover: #000000;
+  --popover-foreground: #ffffff;
+  --border: #ffffff;
+  --input: #333333;
+  --ring: #ffff00;
+  
+  /* Sidebar específico */
+  --sidebar: #000000;
+  --sidebar-foreground: #ffffff;
+  --sidebar-accent: #333333;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #ffffff;
+  --sidebar-ring: #ffff00;
+}
+
+/* Aumentar contraste de elementos interativos */
+.high-contrast button,
+.high-contrast a,
+.high-contrast input,
+.high-contrast select,
+.high-contrast textarea {
+  border: 2px solid var(--border) !important;
+}
+
+/* Remover sombras e efeitos sutis que podem reduzir o contraste */
+.high-contrast * {
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+
+/* Aumentar tamanho de fonte para melhor legibilidade */
+.high-contrast {
+  font-size: 110%;
+}
+
+/* Aumentar espessura das bordas para melhor definição */
+.high-contrast .border {
+  border-width: 2px !important;
+}
+
+/* Destacar elementos focados */
+.high-contrast *:focus {
+  outline: 3px solid var(--ring) !important;
+  outline-offset: 2px !important;
+}
