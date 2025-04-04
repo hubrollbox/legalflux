@@ -1,5 +1,5 @@
 
-import React from "react";
+import React from 'react';
 import { FileText } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +7,7 @@ import DocumentsSearchBar from "./DocumentsSearchBar";
 import DocumentsViewMode from "./DocumentsViewMode";
 import DocumentsContent from "./DocumentsContent";
 import TemplatesContent from "./TemplatesContent";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 
 interface DocumentTabsProps {
   viewMode: "grid" | "list";
