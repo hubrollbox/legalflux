@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from "@/pages/landing/components/LandingNavbar";
-import Features from "@/pages/landing/sections/FeaturesSection";
+import FeaturesSection from "@/pages/landing/sections/FeaturesSection";
 import Footer from "@/pages/landing/components/LandingFooter";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -12,21 +12,7 @@ const FeaturesPage: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <div className="pt-20 flex-grow">
-        <div className="container mx-auto px-4 py-12 sm:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-3xl mx-auto text-center mb-12"
-          >
-            <h1 className="text-4xl font-bold mb-4">Funcionalidades</h1>
-            <p className="text-xl text-muted-foreground">
-              Conheça todos os recursos que o LegalFlux oferece para otimizar a gestão do seu escritório de advocacia.
-            </p>
-          </motion.div>
-        </div>
-        
-        <Features />
+        <FeaturesSection />
         
         <div className="container mx-auto px-4 py-16 sm:px-6 text-center">
           <motion.div
