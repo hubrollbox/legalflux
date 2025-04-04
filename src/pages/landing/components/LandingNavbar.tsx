@@ -31,8 +31,7 @@ const LandingNavbar = () => {
   }, []);
 
   const navLinks = [
-    { label: "Início", href: "/" },
-    { label: "Funcionalidades", href: isHomePage ? "/#features" : "/features" },
+    { label: "Funcionalidades", href: "/features" },
     { label: "Planos", href: "/subscriptions" },
     { label: "Integrações", href: "/integrations" },
     { label: "Segurança", href: "/security" },
