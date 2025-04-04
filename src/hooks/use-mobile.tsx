@@ -1,6 +1,6 @@
 import * as React from "react"
 
-// Breakpoints alinhados com o Tailwind CSS
+// Breakpoints aligned with Tailwind CSS
 const BREAKPOINTS = {
   sm: 640,   // Small devices
   md: 768,   // Medium devices (tablets)
@@ -12,51 +12,68 @@ const BREAKPOINTS = {
 type BreakpointKey = keyof typeof BREAKPOINTS
 
 /**
- * Hook para detectar se a tela está em um determinado breakpoint ou menor
- * @param breakpoint - O breakpoint a ser verificado (padrão: 'md')
- * @returns boolean indicando se a tela está no breakpoint especificado ou menor
+ * Hook to detect if the screen is at a certain breakpoint or smaller
+ * @param breakpoint - The breakpoint to check (default: 'md')
+ * @returns boolean indicating if the screen is at the specified breakpoint or smaller
  */
-export function useBreakpoint(breakpoint: BreakpointKey = 'md') {
-  const [isBelow, setIsBelow] = React.useState<boolean | undefined>(undefined)
+export function useBreakpoint(breakpoint: BreakpointKey = 'md'): boolean {
+  const [isBelow, setIsBelow] = React.useState<boolean>(false)
 
   React.useEffect(() => {
     const breakpointValue = BREAKPOINTS[breakpoint]
     const mql = window.matchMedia(`(max-width: ${breakpointValue - 1}px)`)
-    
+
     const onChange = () => {
       setIsBelow(window.innerWidth < breakpointValue)
     }
-    
-    mql.addEventListener("change", onChange)
+
+    // Debounce resize event handler
+    const debounceOnChange = debounce(onChange, 100)
+
+    mql.addEventListener("change", debounceOnChange)
     setIsBelow(window.innerWidth < breakpointValue)
-    
-    return () => mql.removeEventListener("change", onChange)
+
+    return () => mql.removeEventListener("change", debounceOnChange)
   }, [breakpoint])
 
-  return !!isBelow
+  return isBelow
 }
 
 /**
- * Hook para detectar se a tela está em tamanho mobile (< 768px)
- * @returns boolean indicando se a tela está em tamanho mobile
+ * Debounce function to limit the rate at which a function can fire.
+ * @param func - The function to debounce
+ * @param wait - The number of milliseconds to delay
+ * @returns debounced function
  */
-export function useIsMobile() {
+function debounce(func: () => void, wait: number) {
+  let timeout: NodeJS.Timeout
+  return function () {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => func(), wait)
+  }
+}
+
+/**
+ * Hook to detect if the screen is mobile size (< 768px)
+ * @returns boolean indicating if the screen is mobile size
+ */
+export function useIsMobile(): boolean {
   return useBreakpoint('md')
 }
 
 /**
- * Hook para detectar se a tela está em tamanho tablet (< 1024px)
- * @returns boolean indicando se a tela está em tamanho tablet
+ * Hook to detect if the screen is tablet size (< 1024px)
+ * @returns boolean indicating if the screen is tablet size
  */
-export function useIsTablet() {
+export function useIsTablet(): boolean {
   return useBreakpoint('lg')
 }
 
 /**
- * Hook para detectar se a tela está em tamanho desktop (>= 1024px)
- * @returns boolean indicando se a tela está em tamanho desktop
+ * Hook to detect if the screen is desktop size (>= 1024px)
+ * @returns boolean indicating if the screen is desktop size
  */
-export function useIsDesktop() {
+export function useIsDesktop(): boolean {
   const isTablet = useBreakpoint('lg')
   return !isTablet
 }
