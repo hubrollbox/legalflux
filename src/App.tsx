@@ -28,8 +28,17 @@ import About from "./pages/About";
 import Features from "./pages/Features";
 import Integrations from "./pages/Integrations";
 import Security from "./pages/Security";
+import UsefulLinks from "./pages/Usefullinks";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -64,10 +73,12 @@ const App = () => (
             <Route path="/users" element={<Users />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/useful-links" element={<UsefulLinks />} />
 
             {/* Redirecionamentos */}
             <Route path="/cases" element={<Navigate to="/processes" />} />
             <Route path="/plans" element={<Navigate to="/subscriptions" />} />
+            <Route path="/links" element={<Navigate to="/useful-links" />} />
 
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />

@@ -2,10 +2,16 @@
 {
   "name": "LegalFlux - Gestão Jurídica",
   "short_name": "LegalFlux",
+  "description": "Sistema de Gestão Jurídica para Escritórios Modernos",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#293241",
+  "orientation": "any",
+  "scope": "/",
+  "lang": "pt-PT",
+  "dir": "ltr",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/icons/icon-72x72.png",
@@ -55,5 +61,20 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/dashboard.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshots/mobile.png",
+      "sizes": "540x1080",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "categories": ["productivity", "legal", "business"]
 }
