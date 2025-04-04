@@ -30,14 +30,14 @@ const Profile = () => {
             <CardTitle>Informações Pessoais</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center">
-            <Avatar className="h-24 w-24 mb-4">
+            <Avatar className="h-24 w-24 mb-4 hover:shadow-lg transition-shadow duration-300">
               <AvatarImage src={user?.avatar} alt={user?.name} />
               <AvatarFallback className="text-xl">{user?.name ? getInitials(user.name) : "U"}</AvatarFallback>
             </Avatar>
             <h3 className="text-xl font-semibold mb-1">{user?.name || "Utilizador"}</h3>
             <p className="text-gray-500 mb-4">{user?.email || "email@exemplo.com"}</p>
-            <Button variant="outline" className="w-full mb-2">Alterar Foto</Button>
-            <Button variant="outline" className="w-full">Editar Perfil</Button>
+            <Button variant="outline" className="w-full mb-2 bg-blue-500 text-white hover:bg-blue-600">Alterar Foto</Button>
+            <Button variant="outline" className="w-full bg-blue-500 text-white hover:bg-blue-600">Editar Perfil</Button>
           </CardContent>
         </Card>
 
@@ -68,7 +68,7 @@ const Profile = () => {
                 <p>{"Não definido"}</p>
               </div>
             </div>
-            <Button variant="outline" className="mt-4">Editar Detalhes</Button>
+            <Button variant="outline" className="mt-4 bg-blue-500 text-white hover:bg-blue-600">Editar Detalhes</Button>
           </CardContent>
         </Card>
       </div>

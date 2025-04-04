@@ -49,8 +49,8 @@ const Financial = () => {
               <CardDescription>Gestão de faturamento e cobrança automatizada</CardDescription>
             </CardHeader>
             <CardContent className="flex justify-between items-center">
-              <Button>Gerar Nova Fatura</Button>
-              <Button variant="outline">Exportar Dados</Button>
+              <Button className="hover:bg-blue-600 transition-colors duration-300">Gerar Nova Fatura</Button>
+              <Button variant="outline" className="hover:bg-gray-200 transition-colors duration-300">Exportar Dados</Button>
             </CardContent>
           </Card>
         </TabsContent>
@@ -62,7 +62,7 @@ const Financial = () => {
               <CardDescription>Defina e monitorize honorários por processo, cliente ou tipo de serviço</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button>Configurar Honorários</Button>
+              <Button className="hover:bg-blue-600 transition-colors duration-300">Configurar Honorários</Button>
             </CardContent>
           </Card>
         </TabsContent>
