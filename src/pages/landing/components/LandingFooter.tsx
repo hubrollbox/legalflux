@@ -9,7 +9,10 @@ const LandingFooter = () => {
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8 md:gap-12">
           <div>
-            <img src={LOGO.DEFAULT} alt="LegalFlux" className="h-12 mb-4" />
+            <div className="flex items-center gap-2 mb-4">
+              <img src={LOGO.DEFAULT} alt="LegalFlux" className="h-12" />
+              <span className="text-2xl font-semibold text-primary-900">LegalFlux</span>
+            </div>
             <p className="text-gray-600">
               Sistema completo de gestão jurídica para escritórios modernos.
             </p>
@@ -33,28 +36,23 @@ const LandingFooter = () => {
             <h4 className="text-lg font-semibold mb-5 text-primary-900">Produto</h4>
             <ul className="space-y-3">
               <li>
-                <Link to="/#features" className="text-gray-600 hover:text-highlight transition-colors">
-                  Funcionalidades
-                </Link>
-              </li>
-              <li>
-                <Link to="/subscriptions" className="text-gray-600 hover:text-highlight transition-colors">
-                  Planos
-                </Link>
-              </li>
-              <li>
-                <Link to="/screenshots" className="text-gray-600 hover:text-highlight transition-colors">
-                  Capturas de Ecrã
-                </Link>
-              </li>
-              <li>
                 <Link to="/about" className="text-gray-600 hover:text-highlight transition-colors">
                   Sobre
                 </Link>
               </li>
               <li>
+                <Link to="/#features" className="text-gray-600 hover:text-highlight transition-colors">
+                  Funcionalidades
+                </Link>
+              </li>
+              <li>
                 <Link to="/integrations" className="text-gray-600 hover:text-highlight transition-colors">
                   Integrações
+                </Link>
+              </li>
+              <li>
+                <Link to="/subscriptions" className="text-gray-600 hover:text-highlight transition-colors">
+                  Planos
                 </Link>
               </li>
               <li>
@@ -65,11 +63,11 @@ const LandingFooter = () => {
             </ul>
           </div>
           <div>
-            <h4 className="text-lg font-semibold mb-5 text-primary-900">Suporte</h4>
+            <h4 className="text-lg font-semibold mb-5 text-primary-900">Central de Ajuda</h4>
             <ul className="space-y-3">
               <li>
-                <Link to="/screenshots#support" className="text-gray-600 hover:text-highlight transition-colors">
-                  Centro de Ajuda
+                <Link to="/screenshots#contact" className="text-gray-600 hover:text-highlight transition-colors">
+                  Contacte-nos
                 </Link>
               </li>
               <li>
@@ -78,8 +76,8 @@ const LandingFooter = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/screenshots#contact" className="text-gray-600 hover:text-highlight transition-colors">
-                  Contacte-nos
+                <Link to="/screenshots#support" className="text-gray-600 hover:text-highlight transition-colors">
+                  Suporte
                 </Link>
               </li>
             </ul>
@@ -89,7 +87,7 @@ const LandingFooter = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-gray-600">
                 <MapPin size={18} className="text-highlight mt-1 flex-shrink-0" />
-                <span>Edifício Diplomata<br />Matosinhos, 4450-075 - Portugal</span>
+                <span>Edifício Diplomata, 4450-075 Matosinhos - Portugal</span>
               </li>
               <li className="flex items-center gap-3 text-gray-600">
                 <Phone size={18} className="text-highlight flex-shrink-0" />
