@@ -25,7 +25,7 @@ import Financial from "./pages/Financial";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
-import Screenshots from "./pages/Screenshots";
+import Screenshots from "./pages/Central de Ajuda";
 import About from "./pages/About";
 import Features from "./pages/Features";
 import Integrations from "./pages/Integrations";
