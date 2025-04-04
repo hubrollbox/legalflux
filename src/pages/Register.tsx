@@ -20,8 +20,27 @@ import { validateEmail, isValidPassword } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
+interface RegisterFormData {
+  fullName: string;
+  email: string;
+  phone: string;
+  officeName: string;
+  taxId: string;
+  country: string;
+  city: string;
+  username: string;
+  password: string;
+  confirmPassword: string;
+  practiceArea: string;
+  teamSize: string;
+  currentTools: string;
+  acceptTerms: boolean;
+  acceptPilot: boolean;
+  acceptUpdates: boolean;
+}
+
 const Register = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterFormData>({
     fullName: "",
     email: "",
     phone: "",
@@ -57,7 +76,7 @@ const Register = () => {
     acceptPilot?: string;
   }>({});
 
-  const handleInputChange = (field: string, value: string | boolean) => {
+  const handleInputChange = (field: keyof RegisterFormData, value: string | boolean) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -65,8 +84,8 @@ const Register = () => {
 
     if (field === "email" || field === "fullName") {
       const username = field === "email" 
-        ? value.split("@")[0] 
-        : value.toLowerCase().replace(/\s+/g, ".");
+        ? (value as string).split("@")[0] 
+        : (value as string).toLowerCase().replace(/\s+/g, ".");
       setFormData(prev => ({ ...prev, username }));
     }
 
@@ -139,8 +158,9 @@ const Register = () => {
     setIsLoading(true);
     
     try {
-      await register(formData.email, formData.password, formData.fullName, role);
-      navigate("/dashboard");
+      await register(formData.email, formData.password, formData.fullName);
+      // Redirect based on user role
+      navigate(role === 'client' ? '/client-portal' : '/dashboard');
     } catch (error) {
       console.error("Registration error:", error);
     } finally {
@@ -297,8 +317,8 @@ const Register = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="lawyer">Advogado</SelectItem>
-                  <SelectItem value="assistant">Solicitador</SelectItem>
-                  <SelectItem value="client">Assessor</SelectItem>
+                  <SelectItem value="assistant">Solicitador/Assistente</SelectItem>
+                  <SelectItem value="client">Cliente (Acesso ao Portal)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
