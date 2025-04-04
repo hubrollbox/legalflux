@@ -31,6 +31,9 @@ import Features from "./pages/Features";
 import Integrations from "./pages/Integrations";
 import Security from "./pages/Security";
 import UsefulLinks from "./pages/Usefullinks";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
+import Cookies from "./pages/Cookies";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -62,6 +65,9 @@ const App = () => (
               <Route path="/features" element={<Features />} />
               <Route path="/security" element={<Security />} />
               <Route path="/integrations" element={<Integrations />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/cookies" element={<Cookies />} />
 
               {/* Protected Routes */}
               <Route path="/dashboard" element={
@@ -104,11 +110,7 @@ const App = () => (
                   <Financial />
                 </ProtectedRoute>
               } />
-              <Route path="/subscriptions" element={
-                <ProtectedRoute module="subscriptions">
-                  <Subscriptions />
-                </ProtectedRoute>
-              } />
+              <Route path="/subscriptions" element={<Subscriptions />} />
               <Route path="/users" element={
                 <ProtectedRoute module="users">
                   <Users />
