@@ -1,3 +1,4 @@
+import React from 'react';
 import Navbar from "@/pages/landing/components/LandingNavbar";
 import Features from "@/pages/landing/sections/FeaturesSection";
 import Footer from "@/pages/landing/components/LandingFooter";
@@ -6,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const FeaturesPage = () => {
+const FeaturesPage: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
