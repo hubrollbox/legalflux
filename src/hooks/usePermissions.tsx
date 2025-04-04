@@ -1,11 +1,10 @@
-
 import { useContext, createContext, useState, useEffect, ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Permission, RolePermission, UserPermission, UserRole } from "@/types/permissions";
 
 interface PermissionsContextType {
   hasPermission: (module: string, action: 'create' | 'read' | 'update' | 'delete') => boolean;
-  loading: boolean;
+  isLoading: boolean;
   userPermissions: UserPermission[];
   rolePermissions: RolePermission[];
   permissions: Permission[];
@@ -81,7 +80,7 @@ const MOCK_ROLE_PERMISSIONS: RolePermission[] = [
 
 export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [rolePermissions, setRolePermissions] = useState<RolePermission[]>([]);
   const [userPermissions, setUserPermissions] = useState<UserPermission[]>([]);
@@ -91,11 +90,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     setPermissions(MOCK_PERMISSIONS);
     setRolePermissions(MOCK_ROLE_PERMISSIONS);
     setUserPermissions([]); // Add user-specific permissions if needed
-    setLoading(false);
+    setIsLoading(false);
   }, [user]);
 
   const hasPermission = (module: string, action: 'create' | 'read' | 'update' | 'delete') => {
-    if (!user || loading) return false;
+    if (!user || isLoading) return false;
 
     // Check user-specific permissions first (overrides role permissions)
     const userPermission = userPermissions.find(
@@ -132,7 +131,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     <PermissionsContext.Provider
       value={{
         hasPermission,
-        loading,
+        isLoading,
         permissions,
         rolePermissions,
         userPermissions
