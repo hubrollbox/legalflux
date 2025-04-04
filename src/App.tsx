@@ -5,6 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import { PermissionsProvider } from "@/hooks/usePermissions";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import LandingPage from "./pages/landing"; 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -43,48 +45,102 @@ const queryClient = new QueryClient({
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/screenshots" element={<Screenshots />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/features" element={<Features />} />
-            <Route path="/security" element={<Security />} />
-            <Route path="/integrations" element={<Integrations />} />
+      <PermissionsProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/screenshots" element={<Screenshots />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/features" element={<Features />} />
+              <Route path="/security" element={<Security />} />
+              <Route path="/integrations" element={<Integrations />} />
 
-            {/* Protected Routes */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/processes" element={<Processes />} />
-            <Route path="/tasks" element={<Tasks />} />
-            <Route path="/documents" element={<Documents />} />
-            <Route path="/clients" element={<Clients />} />
-            <Route path="/calendar" element={<CalendarPage />} />
-            <Route path="/messages" element={<Messages />} />
-            <Route path="/financial" element={<Financial />} />
-            <Route path="/subscriptions" element={<Subscriptions />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/useful-links" element={<UsefulLinks />} />
+              {/* Protected Routes */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/processes" element={
+                <ProtectedRoute module="processes">
+                  <Processes />
+                </ProtectedRoute>
+              } />
+              <Route path="/tasks" element={
+                <ProtectedRoute module="tasks">
+                  <Tasks />
+                </ProtectedRoute>
+              } />
+              <Route path="/documents" element={
+                <ProtectedRoute module="documents">
+                  <Documents />
+                </ProtectedRoute>
+              } />
+              <Route path="/clients" element={
+                <ProtectedRoute module="clients">
+                  <Clients />
+                </ProtectedRoute>
+              } />
+              <Route path="/calendar" element={
+                <ProtectedRoute module="calendar">
+                  <CalendarPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/messages" element={
+                <ProtectedRoute module="messages">
+                  <Messages />
+                </ProtectedRoute>
+              } />
+              <Route path="/financial" element={
+                <ProtectedRoute module="financial">
+                  <Financial />
+                </ProtectedRoute>
+              } />
+              <Route path="/subscriptions" element={
+                <ProtectedRoute module="subscriptions">
+                  <Subscriptions />
+                </ProtectedRoute>
+              } />
+              <Route path="/users" element={
+                <ProtectedRoute module="users">
+                  <Users />
+                </ProtectedRoute>
+              } />
+              <Route path="/settings" element={
+                <ProtectedRoute module="settings">
+                  <Settings />
+                </ProtectedRoute>
+              } />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } />
+              <Route path="/useful-links" element={
+                <ProtectedRoute>
+                  <UsefulLinks />
+                </ProtectedRoute>
+              } />
 
-            {/* Redirecionamentos */}
-            <Route path="/cases" element={<Navigate to="/processes" />} />
-            <Route path="/plans" element={<Navigate to="/subscriptions" />} />
-            <Route path="/links" element={<Navigate to="/useful-links" />} />
+              {/* Redirecionamentos */}
+              <Route path="/cases" element={<Navigate to="/processes" />} />
+              <Route path="/plans" element={<Navigate to="/subscriptions" />} />
+              <Route path="/links" element={<Navigate to="/useful-links" />} />
 
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+              {/* Catch-all route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </PermissionsProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
