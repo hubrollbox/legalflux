@@ -64,16 +64,15 @@ const HeroSection = () => {
           className="lg:w-1/2 relative"
         >
           <div className="overflow-hidden rounded-xl">
-            <video 
-              autoPlay 
-              muted 
-              loop 
-              playsInline
-              className="w-full h-full object-cover rounded-xl"
-            >
-              <source src="/video/demo.mp4" type="video/mp4" />
-              Seu navegador não suporta vídeos.
-            </video>
+            <iframe 
+              src="https://player.vimeo.com/video/1062960326?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479&loop=1&autoplay=1&muted=1" 
+              width="100%" 
+              height="100%" 
+              className="w-full h-full object-cover rounded-xl aspect-video"
+              frameBorder="0" 
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
+              title="Legalflux"
+            ></iframe>
           </div>
         </motion.div>
       </div>
