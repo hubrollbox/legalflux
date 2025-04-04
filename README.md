@@ -2,8 +2,19 @@
 
 LegalFlux é uma plataforma de gestão jurídica para advogados e escritórios jurídicos, oferecendo ferramentas para gerir processos, comunicação e clientes de forma eficiente e segura.
 
-## Funcionalidades Principais
+## Table of Contents
+- [Overview](#overview)
+- [Main Features](#main-features)
+- [Subscription Plans](#subscription-plans)
+- [Payment Methods](#payment-methods)
+- [Technologies Used](#technologies-used)
+- [Support](#support)
+- [Rights](#rights)
 
+## Overview
+LegalFlux is a comprehensive legal management platform designed for lawyers and law firms. It offers a suite of tools to efficiently manage cases, communications, and clients while ensuring security and compliance.
+
+## Main Features
 - **Gestão de Processos:** Organização de casos, documentos, histórico e comunicação.
 - **Controlo de Permissões:** Sistema RBAC (Role-Based Access Control) para gestão granular de acessos.
 - **Portal do Cliente:** Acesso 24/7 a processos, documentos e comunicação com advogados.
@@ -16,33 +27,26 @@ LegalFlux é uma plataforma de gestão jurídica para advogados e escritórios j
 - **Integrações:** Conexão com e-mail, agenda (Google Workspace, Microsoft 365), ChatGPT (em fase de integração), Slack, Make.com e outras plataformas relevantes.
 - **Segurança:** Criptografia de dados, autenticação multifator (2FA) e monitorização de atividades.
 
-## Modelos de Subscrição
+## Subscription Plans
+LegalFlux offers various subscription plans tailored to the needs of lawyers and law firms. Visit our platform for detailed information about each plan and its features.
 
-A plataforma oferece diferentes planos de subscrição adaptados às necessidades de advogados e escritórios jurídicos. Consulte a nossa plataforma para mais detalhes sobre planos e funcionalidades.
-
-## Métodos de Pagamento
-
+## Payment Methods
 - Transferência bancária
 - Débito direto
 - Bitcoin
 
-## Tecnologias Utilizadas
-
-Este projeto é construído com:
-
+## Technologies Used
+This project is built with:
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
 
-## Suporte
+## Support
+For support, contact us at [suporte@legalflux.pt](mailto:suporte@legalflux.pt).
 
-Para suporte, contacte-nos em [suporte@legalflux.pt](mailto:suporte@legalflux.pt).
-
-## Direitos
-
-Todos os direitos reservados. 
+## Rights
+Todos os direitos reservados.
 
 LegalFlux também está disponível na versão **PWA (Progressive Web App)**, permitindo instalação em dispositivos móveis para um acesso rápido e conveniente.
-
