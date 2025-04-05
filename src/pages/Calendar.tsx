@@ -4,11 +4,33 @@ import SectionHeader from "@/components/layout/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Calendar from "react-calendar"; // Importando a biblioteca de calendário
-import "react-calendar/dist/Calendar.css"; // Estilos do calendário
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import { format } from "date-fns/format";
+import { parse } from "date-fns/parse";
+import { startOfWeek } from "date-fns/startOfWeek";
+import { getDay } from "date-fns/getDay";
+import { ptBR } from "date-fns/locale/pt-BR";
 
 const CalendarPage = () => {
-  const [date, setDate] = useState(new Date()); // Estado para gerenciar a data selecionada
+  const [date, setDate] = useState(new Date());
+  const [events, setEvents] = useState([]);
+  const [view, setView] = useState("month");
+  
+  const locales = {
+    'pt-BR': ptBR,
+  };
+  
+  const localizer = dateFnsLocalizer({
+    format,
+    parse,
+    startOfWeek,
+    getDay,
+    locales,
+  });
 
   return (
     <DashboardLayout>
@@ -28,11 +50,28 @@ const CalendarPage = () => {
         </CardHeader>
         <CardContent>
           {/* Substituindo o texto estático pelo componente de calendário */}
-          <Calendar
-            onChange={(value) => setDate(value instanceof Date ? value : value[0])}
-            value={date}
-            className="react-calendar"
-          />
+          <div className="flex gap-4">
+            <div className="w-1/2">
+              <Calendar
+                onChange={(value) => setDate(value instanceof Date ? value : value[0])}
+                value={date}
+                className="react-calendar"
+              />
+            </div>
+            <div className="w-1/2">
+              <BigCalendar
+                localizer={localizer}
+                events={events}
+                startAccessor="start"
+                endAccessor="end"
+                style={{ height: 500 }}
+                culture="pt-BR"
+                view={view}
+                onView={setView}
+                onSelectEvent={(event) => alert(event.title)}
+              />
+            </div>
+          </div>
         </CardContent>
       </Card>
     </DashboardLayout>

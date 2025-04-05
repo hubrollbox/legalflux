@@ -323,6 +323,9 @@ const Processes = () => {
                 </div>
               </CardContent>
             </Card>
+            <Button className="mt-4">
+              <Plus className="mr-2 h-4 w-4" /> Novo Processo
+            </Button>
         </div>
       </DashboardLayout>
     </PageTransition>
