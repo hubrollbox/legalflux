@@ -2,7 +2,8 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { Workbox } from 'workbox-window';
-import App from './App.tsx'
+import { RouterProvider } from 'react-router-dom'
+import router from './router.tsx'
 import './index.css'
 
 // Register service worker
@@ -20,4 +21,8 @@ if ('serviceWorker' in navigator) {
   wb.register();
 }
 
-createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
+);

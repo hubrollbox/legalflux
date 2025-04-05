@@ -3,8 +3,8 @@ import { Shield, Zap, Users } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import LandingNavbar from "@/pages/landing/components/LandingNavbar";
-import LandingFooter from "@/pages/landing/components/LandingFooter";
+import BaseLayout from "@/components/layout/BaseLayout";
+import LandingFooter from "@/components/LandingFooter";
 
 // Reusable StatisticCard component
 const StatisticCard = ({ percentage, description }) => (
@@ -17,14 +17,8 @@ const StatisticCard = ({ percentage, description }) => (
 const About = () => {
   return (
     <PageTransition>
-      <LandingNavbar />
-      <div className="container mx-auto px-4 py-12 max-w-6xl">
-        <div className="mb-16 text-center">
-          <h1 className="text-4xl font-bold mb-4">Sobre nós</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Transformando a gestão jurídica com tecnologia inovadora.
-          </p>
-        </div>
+      <BaseLayout title="Sobre nós" description="Transformando a gestão jurídica com tecnologia inovadora.">
+        <div className="container mx-auto px-4 py-12 max-w-6xl">
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
           <div>
