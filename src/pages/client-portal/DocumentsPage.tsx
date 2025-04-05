@@ -1,24 +1,13 @@
 
 import { useState, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Download, Eye, Upload, File, Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileUploader } from './components/FileUploader';
+import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { FileUploader } from './components/FileUploader';
 import DocumentPreviewModal from './components/DocumentPreviewModal';
-
-type Document = {
-  id: string;
-  name: string;
-  type: string;
-  size: string;
-  uploadDate: string;
-  status: 'pending' | 'approved' | 'rejected';
-  processNumber?: string;
-};
+import { DocumentsHeader } from './components/DocumentsHeader';
+import { DocumentsTabContent } from './components/DocumentsTabContent';
+import { Document } from './components/DocumentTable';
 
 const DocumentsPage = () => {
   const [documents, setDocuments] = useState<Document[]>([
@@ -96,27 +85,9 @@ const DocumentsPage = () => {
     setIsPreviewModalOpen(false);
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'approved':
-        return <Badge className="bg-green-500">Aprovado</Badge>;
-      case 'pending':
-        return <Badge className="bg-yellow-500">Pendente</Badge>;
-      case 'rejected':
-        return <Badge className="bg-red-500">Rejeitado</Badge>;
-      default:
-        return <Badge>Desconhecido</Badge>;
-    }
-  };
-
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Documentos</h1>
-        <p className="text-muted-foreground">
-          Gerencie todos os documentos relacionados aos seus processos jurídicos.
-        </p>
-      </div>
+      <DocumentsHeader />
 
       <FileUploader onFilesUploaded={handleFileUpload} disabled={uploading} />
 
@@ -135,150 +106,30 @@ const DocumentsPage = () => {
         </TabsList>
         
         <TabsContent value="all">
-          <Card>
-            <CardHeader>
-              <CardTitle>Todos os Documentos</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nome</TableHead>
-                    <TableHead>Processo</TableHead>
-                    <TableHead>Tipo</TableHead>
-                    <TableHead>Tamanho</TableHead>
-                    <TableHead>Data de Upload</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {documents.map((doc) => (
-                    <TableRow key={doc.id}>
-                      <TableCell className="font-medium">{doc.name}</TableCell>
-                      <TableCell>{doc.processNumber}</TableCell>
-                      <TableCell>{doc.type}</TableCell>
-                      <TableCell>{doc.size}</TableCell>
-                      <TableCell>{new Date(doc.uploadDate).toLocaleDateString('pt-PT')}</TableCell>
-                      <TableCell>{getStatusBadge(doc.status)}</TableCell>
-                      <TableCell>
-                        <div className="flex space-x-2">
-                          <Button 
-                            variant="outline" 
-                            size="icon"
-                            onClick={() => handlePreviewDocument(doc)}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button variant="outline" size="icon">
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+          <DocumentsTabContent 
+            title="Todos os Documentos" 
+            documents={documents}
+            onPreviewDocument={handlePreviewDocument}
+            statusFilter="all"
+          />
         </TabsContent>
         
         <TabsContent value="pending">
-          <Card>
-            <CardHeader>
-              <CardTitle>Documentos Pendentes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nome</TableHead>
-                    <TableHead>Processo</TableHead>
-                    <TableHead>Tipo</TableHead>
-                    <TableHead>Tamanho</TableHead>
-                    <TableHead>Data de Upload</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {documents.filter(doc => doc.status === 'pending').map((doc) => (
-                    <TableRow key={doc.id}>
-                      <TableCell className="font-medium">{doc.name}</TableCell>
-                      <TableCell>{doc.processNumber}</TableCell>
-                      <TableCell>{doc.type}</TableCell>
-                      <TableCell>{doc.size}</TableCell>
-                      <TableCell>{new Date(doc.uploadDate).toLocaleDateString('pt-PT')}</TableCell>
-                      <TableCell>{getStatusBadge(doc.status)}</TableCell>
-                      <TableCell>
-                        <div className="flex space-x-2">
-                          <Button 
-                            variant="outline" 
-                            size="icon"
-                            onClick={() => handlePreviewDocument(doc)}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button variant="outline" size="icon">
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+          <DocumentsTabContent 
+            title="Documentos Pendentes" 
+            documents={documents}
+            onPreviewDocument={handlePreviewDocument}
+            statusFilter="pending"
+          />
         </TabsContent>
         
         <TabsContent value="approved">
-          <Card>
-            <CardHeader>
-              <CardTitle>Documentos Aprovados</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nome</TableHead>
-                    <TableHead>Processo</TableHead>
-                    <TableHead>Tipo</TableHead>
-                    <TableHead>Tamanho</TableHead>
-                    <TableHead>Data de Upload</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {documents.filter(doc => doc.status === 'approved').map((doc) => (
-                    <TableRow key={doc.id}>
-                      <TableCell className="font-medium">{doc.name}</TableCell>
-                      <TableCell>{doc.processNumber}</TableCell>
-                      <TableCell>{doc.type}</TableCell>
-                      <TableCell>{doc.size}</TableCell>
-                      <TableCell>{new Date(doc.uploadDate).toLocaleDateString('pt-PT')}</TableCell>
-                      <TableCell>{getStatusBadge(doc.status)}</TableCell>
-                      <TableCell>
-                        <div className="flex space-x-2">
-                          <Button 
-                            variant="outline" 
-                            size="icon"
-                            onClick={() => handlePreviewDocument(doc)}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button variant="outline" size="icon">
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+          <DocumentsTabContent 
+            title="Documentos Aprovados" 
+            documents={documents}
+            onPreviewDocument={handlePreviewDocument}
+            statusFilter="approved"
+          />
         </TabsContent>
       </Tabs>
 

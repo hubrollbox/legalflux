@@ -3,16 +3,7 @@ import React from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Download, Printer, Share2 } from "lucide-react";
-
-interface Document {
-  id: string;
-  name: string;
-  type: string;
-  size: string;
-  uploadDate: string;
-  status: "pending" | "approved" | "rejected";
-  processNumber?: string;
-}
+import { Document } from "./DocumentTable";
 
 interface DocumentPreviewModalProps {
   isOpen: boolean;
