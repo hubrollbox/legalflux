@@ -323,7 +323,6 @@ const Processes = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
         </div>
       </DashboardLayout>
     </PageTransition>
