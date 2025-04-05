@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import ClientPortalSidebar from './components/ClientPortalSidebar';
 import PageTransition from '@/components/PageTransition';
+import { Toaster } from '@/components/ui/toaster';
 
 const ClientPortal = () => {
   const { user } = useAuth();
@@ -25,6 +26,7 @@ const ClientPortal = () => {
           <Outlet />
         </div>
       </div>
+      <Toaster />
     </PageTransition>
   );
 };

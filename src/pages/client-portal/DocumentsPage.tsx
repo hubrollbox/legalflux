@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Download, Eye, Upload } from 'lucide-react';
+import { Download, Eye, Upload, File, Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { FileUploader } from './components/FileUploader';
+import { toast } from 'sonner';
 
 type Document = {
   id: string;
@@ -17,7 +19,7 @@ type Document = {
 };
 
 const DocumentsPage = () => {
-  const [documents] = useState<Document[]>([
+  const [documents, setDocuments] = useState<Document[]>([
     {
       id: '1',
       name: 'Contrato de Prestação de Serviços.pdf',
@@ -55,6 +57,31 @@ const DocumentsPage = () => {
       processNumber: '2023/67890'
     },
   ]);
+  
+  const [uploading, setUploading] = useState<boolean>(false);
+
+  const handleFileUpload = useCallback((files: File[]) => {
+    setUploading(true);
+    
+    setTimeout(() => {
+      const newDocuments = files.map((file, index) => ({
+        id: `new-${Date.now()}-${index}`,
+        name: file.name,
+        type: file.name.split('.').pop()?.toUpperCase() || 'UNKNOWN',
+        size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+        uploadDate: new Date().toLocaleDateString('pt-PT'),
+        status: 'pending' as const,
+        processNumber: '2023/NOVO'
+      }));
+      
+      setDocuments(prev => [...newDocuments, ...prev]);
+      setUploading(false);
+      
+      toast.success('Documentos carregados com sucesso', {
+        description: `${files.length} documento(s) carregado(s) e aguardando aprovação.`
+      });
+    }, 1500);
+  }, []);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -78,12 +105,14 @@ const DocumentsPage = () => {
         </p>
       </div>
 
-      <div className="flex justify-end">
-        <Button className="flex items-center gap-2">
-          <Upload className="h-4 w-4" />
-          Enviar Documento
-        </Button>
-      </div>
+      <FileUploader onFilesUploaded={handleFileUpload} disabled={uploading} />
+
+      {uploading && (
+        <div className="flex items-center justify-center p-4 bg-muted rounded-md">
+          <Loader2 className="h-5 w-5 mr-2 animate-spin text-primary" />
+          <span>A carregar documentos...</span>
+        </div>
+      )}
 
       <Tabs defaultValue="all" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
