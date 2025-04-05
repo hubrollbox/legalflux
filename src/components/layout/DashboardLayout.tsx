@@ -1,5 +1,5 @@
 
-import React, { ReactNode, useState, useEffect } from "react";
+import React, { ReactNode, useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { LOGO } from "@/assets";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
+import { useMobile } from "@/hooks/use-mobile";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -15,8 +16,10 @@ interface DashboardLayoutProps {
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useMobile();
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
+  const [isHovering, setIsHovering] = useState(false);
 
   const toggleMobileSidebar = () => {
     setIsMobileSidebarOpen(!isMobileSidebarOpen);
@@ -29,6 +32,18 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
+
+  const handleMouseEnter = useCallback(() => {
+    if (!isMobile) {
+      setIsHovering(true);
+    }
+  }, [isMobile]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (!isMobile) {
+      setIsHovering(false);
+    }
+  }, [isMobile]);
 
   useEffect(() => {
     // Verifica se o usuário está autenticado
@@ -53,16 +68,22 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
     <SidebarProvider defaultOpen={!isSidebarCollapsed}>
       <div className="dashboard-container flex h-screen bg-gray-100 w-full">
-        <Sidebar 
-          user={user}
-          logout={logout}
-          isMobileSidebarOpen={isMobileSidebarOpen}
-          closeMobileSidebar={closeMobileSidebar}
-          isCollapsed={isSidebarCollapsed}
-        />
+        <div 
+          className="sidebar-container fixed left-0 top-0 h-screen z-20"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <Sidebar 
+            user={user}
+            logout={logout}
+            isMobileSidebarOpen={isMobileSidebarOpen}
+            closeMobileSidebar={closeMobileSidebar}
+            isCollapsed={isMobile ? false : (isSidebarCollapsed && !isHovering)}
+          />
+        </div>
 
         {/* Main Content */}
-        <div className={`flex-1 flex flex-col ${isSidebarCollapsed ? 'md:ml-16' : 'md:ml-64'} transition-all duration-300`}>
+        <div className={`flex-1 flex flex-col ${isSidebarCollapsed && !isHovering ? 'md:ml-16' : 'md:ml-64'} transition-all duration-300`}>
           <Header 
             user={user}
             toggleMobileSidebar={toggleMobileSidebar}

@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,8 +12,17 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { login, getRedirectPath } = useAuth();
+  const { login, getRedirectPath, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Verificar se o usuário já está autenticado e redirecionar se estiver
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const redirectPath = getRedirectPath();
+      navigate(redirectPath, { replace: true });
+    }
+  }, [isAuthenticated, user, navigate, getRedirectPath]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,9 +30,7 @@ const Login = () => {
     
     try {
       await login(email, password);
-      // Usar o caminho de redirecionamento baseado na função do utilizador
-      const redirectPath = getRedirectPath();
-      navigate(redirectPath);
+      // O redirecionamento será feito pelo useEffect quando o estado de autenticação mudar
     } catch (error) {
       console.error("Login error:", error);
     } finally {
