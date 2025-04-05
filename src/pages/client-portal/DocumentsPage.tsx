@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -7,6 +8,7 @@ import { Download, Eye, Upload, File, Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileUploader } from './components/FileUploader';
 import { toast } from 'sonner';
+import DocumentPreviewModal from './components/DocumentPreviewModal';
 
 type Document = {
   id: string;
@@ -59,6 +61,8 @@ const DocumentsPage = () => {
   ]);
   
   const [uploading, setUploading] = useState<boolean>(false);
+  const [previewDocument, setPreviewDocument] = useState<Document | null>(null);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState<boolean>(false);
 
   const handleFileUpload = useCallback((files: File[]) => {
     setUploading(true);
@@ -82,6 +86,15 @@ const DocumentsPage = () => {
       });
     }, 1500);
   }, []);
+
+  const handlePreviewDocument = (document: Document) => {
+    setPreviewDocument(document);
+    setIsPreviewModalOpen(true);
+  };
+
+  const closePreviewModal = () => {
+    setIsPreviewModalOpen(false);
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -150,7 +163,11 @@ const DocumentsPage = () => {
                       <TableCell>{getStatusBadge(doc.status)}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button variant="outline" size="icon">
+                          <Button 
+                            variant="outline" 
+                            size="icon"
+                            onClick={() => handlePreviewDocument(doc)}
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
                           <Button variant="outline" size="icon">
@@ -195,7 +212,11 @@ const DocumentsPage = () => {
                       <TableCell>{getStatusBadge(doc.status)}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button variant="outline" size="icon">
+                          <Button 
+                            variant="outline" 
+                            size="icon"
+                            onClick={() => handlePreviewDocument(doc)}
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
                           <Button variant="outline" size="icon">
@@ -240,7 +261,11 @@ const DocumentsPage = () => {
                       <TableCell>{getStatusBadge(doc.status)}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button variant="outline" size="icon">
+                          <Button 
+                            variant="outline" 
+                            size="icon"
+                            onClick={() => handlePreviewDocument(doc)}
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
                           <Button variant="outline" size="icon">
@@ -256,6 +281,12 @@ const DocumentsPage = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <DocumentPreviewModal
+        isOpen={isPreviewModalOpen}
+        onClose={closePreviewModal}
+        document={previewDocument}
+      />
     </div>
   );
 };
