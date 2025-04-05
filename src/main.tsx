@@ -6,6 +6,7 @@ import { RouterProvider } from 'react-router-dom'
 import router from './router.tsx'
 import './index.css'
 import { AuthProvider } from '@/hooks/useAuth'
+import { PermissionsProvider } from '@/hooks/usePermissions'
 
 // Register service worker
 if ('serviceWorker' in navigator) {
@@ -25,7 +26,9 @@ if ('serviceWorker' in navigator) {
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <PermissionsProvider>
+        <RouterProvider router={router} />
+      </PermissionsProvider>
     </AuthProvider>
   </React.StrictMode>
 );
