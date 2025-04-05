@@ -52,10 +52,12 @@ const Screenshots = () => {
               </div>
 
               <TabsContent value="faqs">
-                <FaqsTab />
+                {/* TODO: Import and implement FaqsTab component */}
+                <div>FAQs Content Coming Soon</div>
               </TabsContent>
               <TabsContent value="tutorials">
-                <TutorialsTab />
+{/* TODO: Import and implement TutorialsTab component */}
+<div>Tutorials Content Coming Soon</div>
               </TabsContent>
               <TabsContent value="documentation">
                 <DocumentationTab />
