@@ -66,17 +66,27 @@ const LandingFooter = () => {
             <h3 className="font-semibold mb-4">Central de Ajuda</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/Central de Ajuda#contact" className="text-muted-foreground hover:text-foreground">
-                  Contacte-nos
+                <Link to="/support#faq" className="text-muted-foreground hover:text-foreground">
+                  FAQs
                 </Link>
               </li>
               <li>
-                <Link to="/Central de Ajuda#faq" className="text-muted-foreground hover:text-foreground">
-                  FAQ
+                <Link to="/support#tutorials" className="text-muted-foreground hover:text-foreground">
+                  Tutoriais
                 </Link>
               </li>
               <li>
-                <Link to="/Central de Ajuda#support" className="text-muted-foreground hover:text-foreground">
+                <Link to="/support#documentation" className="text-muted-foreground hover:text-foreground">
+                  Documentação
+                </Link>
+              </li>
+              <li>
+                <Link to="/support#screenshots" className="text-muted-foreground hover:text-foreground">
+                  Screenshots
+                </Link>
+              </li>
+              <li>
+                <Link to="/support#support" className="text-muted-foreground hover:text-foreground">
                   Suporte
                 </Link>
               </li>

@@ -32,20 +32,37 @@ const Screenshots = () => {
               className="mb-12"
             >
               <div className="flex justify-center mb-8">
-                <TabsList className="bg-white border">
-                  <TabsTrigger value="screenshots" className="px-6">
-                    Capturas de Ecrã
+                <TabsList className="bg-white border grid grid-cols-5">
+                  <TabsTrigger value="faqs" className="px-4">
+                    FAQs
                   </TabsTrigger>
-                  <TabsTrigger value="support" id="support" className="px-6">
+                  <TabsTrigger value="tutorials" className="px-4">
+                    Tutoriais
+                  </TabsTrigger>
+                  <TabsTrigger value="documentation" className="px-4">
+                    Documentação
+                  </TabsTrigger>
+                  <TabsTrigger value="screenshots" className="px-4">
+                    Screenshots
+                  </TabsTrigger>
+                  <TabsTrigger value="support" className="px-4">
                     Suporte
                   </TabsTrigger>
                 </TabsList>
               </div>
 
+              <TabsContent value="faqs">
+                <FaqsTab />
+              </TabsContent>
+              <TabsContent value="tutorials">
+                <TutorialsTab />
+              </TabsContent>
+              <TabsContent value="documentation">
+                <DocumentationTab />
+              </TabsContent>
               <TabsContent value="screenshots">
                 <ScreenshotsTab />
               </TabsContent>
-
               <TabsContent value="support">
                 <SupportTab />
               </TabsContent>
