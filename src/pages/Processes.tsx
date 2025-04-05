@@ -147,13 +147,51 @@ const Processes = () => {
             )}
           </div>
 
-          <Card className="mb-6">
-            <CardHeader className="pb-3">
-              <CardTitle>Filtros de Pesquisa</CardTitle>
-              <CardDescription>
-                Refine a sua pesquisa utilizando diferentes critérios
-              </CardDescription>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Processos Ativos</CardTitle>
+              <CardDescription>Processos em andamento</CardDescription>
             </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold">
+                {processesMockData.filter(p => p.status === "Em Curso").length}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Processos em Espera</CardTitle>
+              <CardDescription>Processos aguardando ação</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold">
+                {processesMockData.filter(p => p.status === "Em Espera").length}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Processos Concluídos</CardTitle>
+              <CardDescription>Processos finalizados</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold">
+                {processesMockData.filter(p => p.status === "Concluído").length}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="mb-6">
+          <CardHeader className="pb-3">
+            <CardTitle>Filtros de Pesquisa</CardTitle>
+            <CardDescription>
+              Refine a sua pesquisa utilizando diferentes critérios
+            </CardDescription>
+          </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="relative">

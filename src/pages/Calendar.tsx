@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format } from "date-fns/format";
@@ -50,28 +50,17 @@ const CalendarPage = () => {
         </CardHeader>
         <CardContent>
           {/* Substituindo o texto estático pelo componente de calendário */}
-          <div className="flex gap-4">
-            <div className="w-1/2">
-              <Calendar
-                onChange={(value) => setDate(value instanceof Date ? value : value[0])}
-                value={date}
-                className="react-calendar"
-              />
-            </div>
-            <div className="w-1/2">
-              <BigCalendar
-                localizer={localizer}
-                events={events}
-                startAccessor="start"
-                endAccessor="end"
-                style={{ height: 500 }}
-                culture="pt-BR"
-                view={view}
-                onView={setView}
-                onSelectEvent={(event) => alert(event.title)}
-              />
-            </div>
-          </div>
+          <BigCalendar
+              localizer={localizer}
+              events={events}
+              startAccessor="start"
+              endAccessor="end"
+              style={{ height: 500 }}
+              culture="pt-BR"
+              view={view}
+              onView={setView}
+              onSelectEvent={(event) => console.log(event.title)}
+            />
         </CardContent>
       </Card>
     </DashboardLayout>

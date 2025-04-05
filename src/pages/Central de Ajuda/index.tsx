@@ -8,6 +8,9 @@ import LandingNavbar from "@/pages/landing/components/LandingNavbar";
 import LandingFooter from "@/pages/landing/components/LandingFooter";
 import ScreenshotsTab from "./ScreenshotsTab";
 import SupportTab from "./SupportTab";
+import FaqsTab from "./FaqsTab";
+import TutorialsTab from "./TutorialsTab";
+import DocumentationTab from "./DocumentationTab";
 
 const Screenshots = () => {
   const [activeTab, setActiveTab] = useState("screenshots");
@@ -52,16 +55,13 @@ const Screenshots = () => {
               </div>
 
               <TabsContent value="faqs">
-                {/* TODO: Import and implement FaqsTab component */}
-                <div>FAQs Content Coming Soon</div>
+                <FaqsTab />
               </TabsContent>
               <TabsContent value="tutorials">
-{/* TODO: Import and implement TutorialsTab component */}
-<div>Tutorials Content Coming Soon</div>
+                <TutorialsTab />
               </TabsContent>
               <TabsContent value="documentation">
-{/* TODO: Import and implement DocumentationTab component */}
-<div>Documentation Content Coming Soon</div>
+                <DocumentationTab />
               </TabsContent>
               <TabsContent value="screenshots">
                 <ScreenshotsTab />
