@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User, UserRole } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
+import { toast as sonnerToast } from "sonner";
 
 interface AuthContextType {
   user: User | null;
@@ -17,6 +18,7 @@ interface AuthContextType {
   resetPassword: (token: string, newPassword: string) => Promise<void>;
   updateProfile: (updatedUser: Partial<User>) => Promise<void>;
   isAuthenticated: boolean;
+  getRedirectPath: () => string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -93,6 +95,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(false);
   }, []);
 
+  // Função para determinar o caminho de redirecionamento com base na função do utilizador
+  const getRedirectPath = (): string => {
+    if (!user) return "/login";
+    
+    switch (user.role) {
+      case "client":
+        return "/client-portal";
+      case "admin":
+      case "lawyer":
+      case "senior_lawyer":
+      case "assistant":
+        return "/dashboard";
+      default:
+        return "/dashboard";
+    }
+  };
+
   const login = async (email: string, password: string): Promise<void> => {
     setIsLoading(true);
     try {
@@ -109,10 +128,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         foundUser.lastLogin = new Date().toISOString();
         setUser(foundUser);
         localStorage.setItem("legalflux-user", JSON.stringify(foundUser));
+        
+        // Mostrar mensagem personalizada com base no tipo de utilizador
+        const welcomeMessage = foundUser.role === "client" 
+          ? "Bem-vindo ao Portal do Cliente!" 
+          : `Bem-vindo de volta, ${foundUser.name}!`;
+        
         toast({
           title: "Login bem-sucedido",
-          description: `Bem-vindo de volta, ${foundUser.name}!`,
+          description: welcomeMessage,
         });
+        
+        // Também mostrar um toast via sonner para garantir que o utilizador vê a mensagem
+        sonnerToast.success(welcomeMessage);
       } else {
         toast({
           title: "Falha no login",
@@ -286,6 +314,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         resetPassword,
         updateProfile,
         isAuthenticated: !!user,
+        getRedirectPath,
       }}
     >
       {children}

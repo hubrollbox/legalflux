@@ -12,7 +12,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, getRedirectPath } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,7 +21,9 @@ const Login = () => {
     
     try {
       await login(email, password);
-      navigate("/dashboard");
+      // Usar o caminho de redirecionamento baseado na função do utilizador
+      const redirectPath = getRedirectPath();
+      navigate(redirectPath);
     } catch (error) {
       console.error("Login error:", error);
     } finally {
