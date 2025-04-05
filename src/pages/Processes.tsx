@@ -328,7 +328,6 @@ const Processes = () => {
       </DashboardLayout>
     </PageTransition>
   );
-
 };
 
 export default Processes;
