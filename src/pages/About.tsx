@@ -143,6 +143,7 @@ const About = () => {
         </div>
       </div>
       <LandingFooter />
+    </BaseLayout>
     </PageTransition>
   );
 };
