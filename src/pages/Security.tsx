@@ -146,8 +146,9 @@ const Security = () => {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Button 
+                  variant="outline"
                   size="lg"
-                  className="bg-white text-primary hover:bg-white/90"
+                  className="text-primary hover:bg-accent hover:text-accent-foreground bg-white"
                 >
                   Relatório de Segurança
                 </Button>

@@ -59,8 +59,9 @@ const Screenshots = () => {
                 Registe-se hoje para uma versão de avaliação gratuita e descubra como o LegalFlux pode transformar a gestão do seu escritório.
               </p>
               <Button
+                variant="outline"
                 size="lg"
-                className="bg-white text-primary hover:bg-white/90"
+                className="text-primary hover:bg-accent hover:text-accent-foreground"
                 onClick={() => window.location.href = "/register"}
               >
                 Comece Gratuitamente <ArrowRight className="ml-2 h-4 w-4" />

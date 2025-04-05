@@ -5,18 +5,38 @@ import { motion } from "framer-motion";
 import { Play, Clock, Film, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/layout/Footer";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Tutorials = () => {
+  const [activeTab, setActiveTab] = useState("tutorials");
+  
   return (
     <PageTransition>
       <Navbar />
-      <div className="tabs">
-        <div className="tab">Documentação</div>
-        <div className="tab">FAQs</div>
-        <div className="tab">Links Úteis</div>
-        <div className="tab">Tutoriais</div>
+      <div className="container mx-auto px-4 pt-24">
+        <Tabs
+          defaultValue="tutorials"
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full max-w-3xl mx-auto mb-8"
+        >
+          <TabsList className="grid grid-cols-4 w-full">
+            <TabsTrigger value="documentation" asChild>
+              <Link to="/docs">Documentação</Link>
+            </TabsTrigger>
+            <TabsTrigger value="faqs" asChild>
+              <Link to="/faqs">FAQs</Link>
+            </TabsTrigger>
+            <TabsTrigger value="links" asChild>
+              <Link to="/links">Links Úteis</Link>
+            </TabsTrigger>
+            <TabsTrigger value="tutorials">Tutoriais</TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
-      <main className="pt-20">
+      <main className="pt-10">
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4 sm:px-6">
             <motion.div
@@ -80,10 +100,9 @@ const Tutorials = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
-                  className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-md transition-shadow"
+                  className="overflow-hidden hover:shadow-md transition-shadow"
                 >
                   <div className={`relative h-48 ${tutorial.thumbnail} flex items-center justify-center`}>
-                    <img src="/path/to/new/image.png" alt="Análise de Gestão Financeira" className="absolute inset-0 object-cover w-full h-full" />
                     <div className="absolute inset-0 bg-black/20" />
                     <div className="relative z-10 h-16 w-16 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center cursor-pointer hover:bg-white/40 transition-colors">
                       <Play className="h-8 w-8 text-white fill-white" />
@@ -177,10 +196,9 @@ const Tutorials = () => {
           </div>
         </section>
       </main>
+      <Footer />
     </PageTransition>
   );
 };
 
 export default Tutorials;
-
-<Footer />

@@ -23,86 +23,81 @@ const LandingNavbar: React.FC = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <img
-              src={LOGO.DEFAULT}
-              alt="LegalFlux"
-              className="h-8 w-auto"
-            />
-            <span className="ml-2 text-xl font-bold text-gray-900">
-              LegalFlux
-            </span>
-          </Link>
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+      <div className="container flex h-16 items-center justify-between">
+        <Link to="/" className="flex items-center space-x-2">
+          <img
+            src={LOGO.DEFAULT}
+            alt="LegalFlux"
+            className="h-8 w-8"
+          />
+          <span className="font-bold">LegalFlux</span>
+        </Link>
 
-          {/* Navigation - Desktop */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className="text-gray-600 hover:text-primary transition-colors"
-              >
-                {link.title}
+        {/* Navigation - Desktop */}
+        <div className="hidden md:flex items-center space-x-6">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              className="text-sm font-medium hover:text-primary"
+            >
+              {link.title}
+            </Link>
+          ))}
+        </div>
+
+        {/* Auth Buttons or User Menu */}
+        <div className="flex items-center space-x-4">
+          {isAuthenticated ? (
+            <Link to={redirectPath}>
+              <Button>
+                {user?.role === "client" ? "Portal do Cliente" : "Dashboard"}
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button variant="ghost" size="sm">Iniciar Sessão</Button>
               </Link>
-            ))}
-          </nav>
+              <Link to="/register">
+                <Button size="sm">Registar</Button>
+              </Link>
+            </>
+          )}
 
-          {/* Auth Buttons or User Menu */}
-          <div className="flex items-center space-x-4">
-            {isAuthenticated ? (
-              <Link to={redirectPath}>
-                <Button>
-                  {user?.role === "client" ? "Portal do Cliente" : "Dashboard"}
+          {/* Mobile Menu */}
+          <div className="md:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-5 w-5" />
                 </Button>
-              </Link>
-            ) : (
-              <>
-                <Link to="/login" className="hidden md:block">
-                  <Button variant="ghost">Iniciar Sessão</Button>
-                </Link>
-                <Link to="/register">
-                  <Button>Registar</Button>
-                </Link>
-              </>
-            )}
-
-            {/* Mobile Menu */}
-            <div className="md:hidden">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <Menu className="h-6 w-6" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right">
-                  <nav className="flex flex-col space-y-4 mt-6">
-                    {navLinks.map((link) => (
-                      <Link
-                        key={link.href}
-                        to={link.href}
-                        className="text-gray-600 hover:text-primary transition-colors py-2"
-                      >
-                        {link.title}
-                      </Link>
-                    ))}
-                    {!isAuthenticated && (
-                      <Link to="/login" className="py-2">
-                        Iniciar Sessão
-                      </Link>
-                    )}
-                  </nav>
-                </SheetContent>
-              </Sheet>
-            </div>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <nav className="flex flex-col space-y-4 mt-6">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      to={link.href}
+                      className="text-sm font-medium hover:text-primary py-2"
+                    >
+                      {link.title}
+                    </Link>
+                  ))}
+                  {!isAuthenticated && (
+                    <Link to="/login" className="text-sm font-medium py-2">
+                      Iniciar Sessão
+                    </Link>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </div>
     </header>
   );
-};
+}
 
 export default LandingNavbar;
