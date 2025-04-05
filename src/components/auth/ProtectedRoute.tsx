@@ -41,7 +41,7 @@ const ProtectedRoute = ({
     
     // Redirecionar para a página apropriada com base na função do utilizador
     if (user.role === "client") {
-      return <Navigate to="/client-portal" replace />;
+      return <Navigate to="/client-portal/processes" replace />;
     } else {
       return <Navigate to="/dashboard" replace />;
     }

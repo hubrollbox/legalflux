@@ -35,6 +35,14 @@ import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Cookies from "./pages/Cookies";
 
+// Client Portal
+import ClientPortal from "./pages/client-portal/ClientPortal";
+import ProcessesPage from "./pages/client-portal/ProcessesPage";
+import CommunicationsPage from "./pages/client-portal/CommunicationsPage";
+import DocumentsPage from "./pages/client-portal/DocumentsPage";
+import BillingPage from "./pages/client-portal/BillingPage";
+import ProfilePage from "./pages/client-portal/ProfilePage";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -131,6 +139,20 @@ const App = () => (
                   <UsefulLinks />
                 </ProtectedRoute>
               } />
+
+              {/* Portal do Cliente */}
+              <Route path="/client-portal" element={
+                <ProtectedRoute allowedRoles={['client']}>
+                  <ClientPortal />
+                </ProtectedRoute>
+              }>
+                <Route path="processes" element={<ProcessesPage />} />
+                <Route path="communications" element={<CommunicationsPage />} />
+                <Route path="documents" element={<DocumentsPage />} />
+                <Route path="billing" element={<BillingPage />} />
+                <Route path="profile" element={<ProfilePage />} />
+                <Route index element={<Navigate to="processes" replace />} />
+              </Route>
 
               {/* Redirecionamentos */}
               <Route path="/cases" element={<Navigate to="/processes" />} />

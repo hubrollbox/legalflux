@@ -101,7 +101,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
     switch (user.role) {
       case "client":
-        return "/client-portal";
+        return "/client-portal/processes";
       case "admin":
       case "lawyer":
       case "senior_lawyer":
