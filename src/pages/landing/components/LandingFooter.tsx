@@ -5,8 +5,8 @@ import { LOGO } from "@/assets";
 
 const LandingFooter = () => {
   return (
-    <footer className="bg-background border-t border-border py-12 md:py-16">
-      <div className="container">
+    <footer className="bg-background border-t border-border py-12 md:py-16 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
         <div className="grid md:grid-cols-4 gap-8 md:gap-12">
           <div>
             <div className="flex items-center gap-2 mb-4">
@@ -66,17 +66,17 @@ const LandingFooter = () => {
             <h3 className="font-semibold mb-4">Central de Ajuda</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/screenshots#contact" className="text-muted-foreground hover:text-foreground">
+                <Link to="/support#contact" className="text-muted-foreground hover:text-foreground">
                   Contacte-nos
                 </Link>
               </li>
               <li>
-                <Link to="/screenshots#faq" className="text-muted-foreground hover:text-foreground">
+                <Link to="/support#faq" className="text-muted-foreground hover:text-foreground">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link to="/screenshots#support" className="text-muted-foreground hover:text-foreground">
+                <Link to="/support#support" className="text-muted-foreground hover:text-foreground">
                   Suporte
                 </Link>
               </li>
