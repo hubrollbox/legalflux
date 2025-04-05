@@ -5,8 +5,8 @@ import { LOGO } from "@/assets";
 
 const LandingFooter = () => {
   return (
-    <footer className="bg-background border-t border-border py-12 md:py-16 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+    <footer className="bg-background border-t border-border py-8 md:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-8 md:gap-12">
           <div>
             <div className="flex items-center gap-2 mb-4">
@@ -66,17 +66,17 @@ const LandingFooter = () => {
             <h3 className="font-semibold mb-4">Central de Ajuda</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/support#contact" className="text-muted-foreground hover:text-foreground">
+                <Link to="/Central de Ajuda#contact" className="text-muted-foreground hover:text-foreground">
                   Contacte-nos
                 </Link>
               </li>
               <li>
-                <Link to="/support#faq" className="text-muted-foreground hover:text-foreground">
+                <Link to="/Central de Ajuda#faq" className="text-muted-foreground hover:text-foreground">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link to="/support#support" className="text-muted-foreground hover:text-foreground">
+                <Link to="/Central de Ajuda#support" className="text-muted-foreground hover:text-foreground">
                   Suporte
                 </Link>
               </li>
@@ -114,7 +114,7 @@ const LandingFooter = () => {
             </ul>
           </div>
         </div>
-        <div className="border-t border-border mt-16 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <div className="border-t border-border mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-muted-foreground mb-4 md:mb-0">
             &copy; {new Date().getFullYear()} LegalFlux. Todos os direitos reservados.
           </p>

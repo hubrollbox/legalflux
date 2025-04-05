@@ -27,7 +27,12 @@ const NavItem = ({ to, icon, children }: NavItemProps) => (
   </NavLink>
 );
 
+import { useAuth } from '@/hooks/useAuth';
+import { LogOut } from 'lucide-react';
+
 const ClientPortalSidebar = () => {
+  const { logout } = useAuth();
+
   return (
     <aside className="w-64 h-screen bg-card border-r">
       <div className="p-4 flex flex-col h-full">
@@ -52,6 +57,16 @@ const ClientPortalSidebar = () => {
             Meu Perfil
           </NavItem>
         </nav>
+        <div className="mt-auto">
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start gap-2 text-destructive hover:text-destructive"
+            onClick={logout}
+          >
+            <LogOut className="h-4 w-4" />
+            Terminar Sessão
+          </Button>
+        </div>
       </div>
     </aside>
   );
