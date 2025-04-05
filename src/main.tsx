@@ -5,6 +5,7 @@ import { Workbox } from 'workbox-window';
 import { RouterProvider } from 'react-router-dom'
 import router from './router.tsx'
 import './index.css'
+import { AuthProvider } from '@/hooks/useAuth'
 
 // Register service worker
 if ('serviceWorker' in navigator) {
@@ -23,6 +24,8 @@ if ('serviceWorker' in navigator) {
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );
