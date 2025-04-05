@@ -15,7 +15,7 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
   value,
   description,
   icon,
-  className,
+  className = "",
 }) => {
   // Map of icon strings to their corresponding Lucide components
   const iconMap: Record<string, LucideIcon> = {
@@ -33,7 +33,7 @@ const MetricsCard: React.FC<MetricsCardProps> = ({
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         {IconComponent && <IconComponent className="h-4 w-4 text-muted-foreground" />}
       </CardHeader>
-      <CardContent>
+      <CardContent className="">
         <div className="text-2xl font-bold">{value}</div>
         {description && <p className="text-xs text-muted-foreground mt-1">{description}</p>}
       </CardContent>

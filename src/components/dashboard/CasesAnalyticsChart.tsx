@@ -17,11 +17,11 @@ interface CasesAnalyticsChartProps {
 
 const CasesAnalyticsChart: React.FC<CasesAnalyticsChartProps> = ({ data }) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Análise de Casos</CardTitle>
+    <Card className="">
+      <CardHeader className="">
+        <CardTitle className="">Análise de Casos</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="">
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />

@@ -19,11 +19,11 @@ const FinancialOverviewChart: React.FC<FinancialOverviewChartProps> = ({
   data,
 }) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Visão Geral Financeira</CardTitle>
+    <Card className="">
+      <CardHeader className="">
+        <CardTitle className="">Visão Geral Financeira</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="">
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />

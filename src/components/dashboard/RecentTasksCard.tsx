@@ -10,9 +10,9 @@ interface RecentTasksCardProps {
 
 const RecentTasksCard: React.FC<RecentTasksCardProps> = ({ tasks }) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Tarefas Recentes</CardTitle>
+    <Card className="">
+      <CardHeader className="">
+        <CardTitle className="">Tarefas Recentes</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
         <ul className="space-y-4">

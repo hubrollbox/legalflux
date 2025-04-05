@@ -19,11 +19,11 @@ const TasksPerformanceChart: React.FC<TasksPerformanceChartProps> = ({
   data,
 }) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Desempenho de Tarefas</CardTitle>
+    <Card className="">
+      <CardHeader className="">
+        <CardTitle className="">Desempenho de Tarefas</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="">
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />

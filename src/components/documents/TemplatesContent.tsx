@@ -26,7 +26,7 @@ const TemplatesContent: React.FC<TemplatesContentProps> = ({ templates, viewMode
           <FileText className="mr-2 h-5 w-5 text-accent" />
           Templates de Documentos
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="">
           {templates.length} template(s) disponível(is) para utilização
         </CardDescription>
       </CardHeader>

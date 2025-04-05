@@ -77,14 +77,14 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
       </TabsContent>
       
       <TabsContent value="recent">
-        <Card>
-          <CardHeader>
-            <CardTitle>Documentos Recentes</CardTitle>
-            <CardDescription>
+        <Card className="">
+          <CardHeader className="">
+            <CardTitle className="">Documentos Recentes</CardTitle>
+            <CardDescription className="">
               Documentos atualizados nas últimas 72 horas
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="">
             <div className="text-center py-8 text-muted-foreground">
               Esta secção mostrará os documentos mais recentemente modificados.
             </div>
@@ -93,14 +93,14 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
       </TabsContent>
       
       <TabsContent value="shared">
-        <Card>
-          <CardHeader>
-            <CardTitle>Documentos Partilhados</CardTitle>
-            <CardDescription>
+        <Card className="">
+          <CardHeader className="">
+            <CardTitle className="">Documentos Partilhados</CardTitle>
+            <CardDescription className="">
               Documentos partilhados consigo por outros utilizadores
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="">
             <div className="text-center py-8 text-muted-foreground">
               Esta secção mostrará os documentos partilhados com o utilizador.
             </div>
@@ -109,14 +109,14 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
       </TabsContent>
       
       <TabsContent value="deleted">
-        <Card>
-          <CardHeader>
-            <CardTitle>Documentos Eliminados</CardTitle>
-            <CardDescription>
+        <Card className="">
+          <CardHeader className="">
+            <CardTitle className="">Documentos Eliminados</CardTitle>
+            <CardDescription className="">
               Documentos na reciclagem (serão eliminados permanentemente após 30 dias)
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="">
             <div className="text-center py-8 text-muted-foreground">
               Esta secção mostrará os documentos que foram eliminados e podem ser recuperados.
             </div>

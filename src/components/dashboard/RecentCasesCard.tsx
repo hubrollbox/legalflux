@@ -10,9 +10,9 @@ interface RecentCasesCardProps {
 
 const RecentCasesCard: React.FC<RecentCasesCardProps> = ({ cases }) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Casos Recentes</CardTitle>
+    <Card className="">
+      <CardHeader className="">
+        <CardTitle className="">Casos Recentes</CardTitle>
       </CardHeader>
       <CardContent className="p-4">
         <ul className="space-y-4">

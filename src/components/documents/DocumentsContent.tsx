@@ -27,14 +27,14 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
   viewMode 
 }) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>
+    <Card className="">
+      <CardHeader className="">
+        <CardTitle className="">{title}</CardTitle>
+        <CardDescription className="">
           {description}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="">
         {viewMode === "grid" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {documents.map((doc) => (
