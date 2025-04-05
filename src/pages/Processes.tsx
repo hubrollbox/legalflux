@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Plus, Search, Filter, ArrowUpDown } from "lucide-react";
+import { Plus, Search, Filter, ArrowUpDown, Download, MoreHorizontal } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import PageTransition from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import {
   Table,
   TableBody,
@@ -109,15 +110,24 @@ const getPriorityColor = (priority: string) => {
 
 const Processes = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilter, setActiveFilter] = useState("all");
   const { hasPermission } = usePermissions();
   const canCreateProcess = hasPermission("processes", "create");
   
-  const filteredProcesses = processesMockData.filter(
-    process => 
+  const filteredProcesses = processesMockData.filter(process => {
+    const matchesSearch = 
       process.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
       process.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      process.id.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      process.id.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = activeFilter === "all" || process.status === activeFilter;
+    return matchesSearch && matchesFilter;
+  });
+  
+  const chartData = [
+    { name: "Em Curso", value: processesMockData.filter(p => p.status === "Em Curso").length },
+    { name: "Em Espera", value: processesMockData.filter(p => p.status === "Em Espera").length },
+    { name: "Concluído", value: processesMockData.filter(p => p.status === "Concluído").length },
+  ];
 
   return (
     <PageTransition>
@@ -194,10 +204,30 @@ const Processes = () => {
                 </div>
               </div>
             </CardContent>
-          </Card>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Estatísticas</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[300px]">
+                  <BarChart width={300} height={300} data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="value" fill="#8884d8" />
+                  </BarChart>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-          <Card>
-            <CardHeader className="pb-3">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-2">
+              <CardHeader className="pb-3">
               <CardTitle>Lista de Processos</CardTitle>
               <CardDescription>
                 {filteredProcesses.length} processos encontrados
@@ -274,11 +304,31 @@ const Processes = () => {
                 </Button>
               </div>
             </CardFooter>
-          </Card>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Estatísticas</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[300px]">
+                  <BarChart width={300} height={300} data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="value" fill="#8884d8" />
+                  </BarChart>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </DashboardLayout>
     </PageTransition>
   );
+
 };
 
 export default Processes;
