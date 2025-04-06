@@ -1,5 +1,6 @@
+
 import { NavLink } from 'react-router-dom';
-import { FileText, MessageSquare, FileArchive, CreditCard, User } from 'lucide-react';
+import { FileText, MessageSquare, FileArchive, CreditCard, User, FileSymlink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -49,6 +50,9 @@ const ClientPortalSidebar = () => {
           </NavItem>
           <NavItem to="/client-portal/documents" icon={<FileArchive className="h-4 w-4" />}>
             Documentos
+          </NavItem>
+          <NavItem to="/client-portal/document-types" icon={<FileSymlink className="h-4 w-4" />}>
+            Modelos
           </NavItem>
           <NavItem to="/client-portal/billing" icon={<CreditCard className="h-4 w-4" />}>
             Gestão Financeira

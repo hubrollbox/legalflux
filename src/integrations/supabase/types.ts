@@ -14,19 +14,19 @@ export type Database = {
           criado_em: string | null
           escritorio_id: string | null
           id: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           criado_em?: string | null
           escritorio_id?: string | null
           id?: string
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           criado_em?: string | null
           escritorio_id?: string | null
           id?: string
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -38,6 +38,20 @@ export type Database = {
           },
           {
             foreignKeyName: "advogados_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_advogado_escritorio"
+            columns: ["escritorio_id"]
+            isOneToOne: false
+            referencedRelation: "escritorios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_advogado_user"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
@@ -82,26 +96,40 @@ export type Database = {
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_assinatura_plano"
+            columns: ["plano_id"]
+            isOneToOne: false
+            referencedRelation: "planos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_assinatura_user"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
         ]
       }
       assistentes: {
         Row: {
-          advogado_id: string | null
+          advogado_id: string
           criado_em: string | null
           id: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
-          advogado_id?: string | null
+          advogado_id: string
           criado_em?: string | null
           id?: string
-          user_id?: string | null
+          user_id: string
         }
         Update: {
-          advogado_id?: string | null
+          advogado_id?: string
           criado_em?: string | null
           id?: string
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -113,6 +141,20 @@ export type Database = {
           },
           {
             foreignKeyName: "assistentes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_assistente_advogado"
+            columns: ["advogado_id"]
+            isOneToOne: false
+            referencedRelation: "advogados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_assistente_user"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
@@ -163,6 +205,20 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_caso_advogado"
+            columns: ["advogado_id"]
+            isOneToOne: false
+            referencedRelation: "advogados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_caso_cliente"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
         ]
       }
       clientes: {
@@ -170,19 +226,19 @@ export type Database = {
           advogado_id: string | null
           criado_em: string | null
           id: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           advogado_id?: string | null
           criado_em?: string | null
           id?: string
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           advogado_id?: string | null
           criado_em?: string | null
           id?: string
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -199,25 +255,39 @@ export type Database = {
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_cliente_advogado"
+            columns: ["advogado_id"]
+            isOneToOne: false
+            referencedRelation: "advogados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_cliente_user"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
         ]
       }
       documentos: {
         Row: {
-          caso_id: string | null
+          caso_id: string
           criado_em: string | null
           id: string
           nome: string
           url: string
         }
         Insert: {
-          caso_id?: string | null
+          caso_id: string
           criado_em?: string | null
           id?: string
           nome: string
           url: string
         }
         Update: {
-          caso_id?: string | null
+          caso_id?: string
           criado_em?: string | null
           id?: string
           nome?: string
@@ -226,6 +296,13 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "documentos_caso_id_fkey"
+            columns: ["caso_id"]
+            isOneToOne: false
+            referencedRelation: "casos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_documento_caso"
             columns: ["caso_id"]
             isOneToOne: false
             referencedRelation: "casos"
@@ -271,35 +348,6 @@ export type Database = {
           title?: string
         }
         Relationships: []
-      }
-      permissoes: {
-        Row: {
-          criado_em: string | null
-          id: string
-          tipo: string
-          user_id: string | null
-        }
-        Insert: {
-          criado_em?: string | null
-          id?: string
-          tipo: string
-          user_id?: string | null
-        }
-        Update: {
-          criado_em?: string | null
-          id?: string
-          tipo?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "permissoes_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       planos: {
         Row: {
