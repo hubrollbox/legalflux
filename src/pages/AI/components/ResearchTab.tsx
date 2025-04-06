@@ -9,6 +9,8 @@ import MessageList from './MessageList';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
+const { toast } = useToast();
+
 const ResearchTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const {

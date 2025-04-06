@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { Shield, Zap, Users } from "lucide-react";
-import PageTransition from "@/components/PageTransition";
+import PageTransition from "../components/PageTransition";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import BaseLayout from "@/components/layout/BaseLayout";
+import LandingNavbar from "@/pages/landing/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 
 // Reusable StatisticCard component
@@ -17,7 +17,8 @@ const StatisticCard = ({ percentage, description }) => (
 const About = () => {
   return (
     <PageTransition>
-      <BaseLayout title="Sobre nós" description="Transformando a gestão jurídica com tecnologia inovadora.">
+      <LandingNavbar />
+      <main className="pt-16">
         <div className="container mx-auto px-4 py-12 max-w-6xl">
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
@@ -142,8 +143,8 @@ const About = () => {
           </div>
         </div>
       </div>
+      </main>
       <LandingFooter />
-    </BaseLayout>
     </PageTransition>
   );
 };
