@@ -5,6 +5,7 @@ import ClientPortal from './pages/client-portal/ClientPortal';
 import ProcessesPage from './pages/client-portal/ProcessesPage';
 import CommunicationsPage from './pages/client-portal/CommunicationsPage';
 import DocumentsPage from './pages/client-portal/DocumentsPage';
+import DocumentTypes from './pages/client-portal/DocumentTypes';
 import BillingPage from './pages/client-portal/BillingPage';
 import ProfilePage from './pages/client-portal/ProfilePage';
 import Login from './pages/Login';
@@ -66,6 +67,7 @@ const router = createBrowserRouter([
       { path: 'processes', element: <ProcessesPage /> },
       { path: 'communications', element: <CommunicationsPage /> },
       { path: 'documents', element: <DocumentsPage /> },
+      { path: 'document-types', element: <DocumentTypes /> },
       { path: 'billing', element: <BillingPage /> },
       { path: 'profile', element: <ProfilePage /> },
       { index: true, element: <Navigate to="processes" replace /> }

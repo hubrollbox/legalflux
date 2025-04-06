@@ -40,6 +40,7 @@ import ClientPortal from "./pages/client-portal/ClientPortal";
 import ProcessesPage from "./pages/client-portal/ProcessesPage";
 import CommunicationsPage from "./pages/client-portal/CommunicationsPage";
 import DocumentsPage from "./pages/client-portal/DocumentsPage";
+import DocumentTypes from "./pages/client-portal/DocumentTypes";
 import BillingPage from "./pages/client-portal/BillingPage";
 import ProfilePage from "./pages/client-portal/ProfilePage";
 
@@ -149,6 +150,7 @@ const App = () => (
                 <Route path="processes" element={<ProcessesPage />} />
                 <Route path="communications" element={<CommunicationsPage />} />
                 <Route path="documents" element={<DocumentsPage />} />
+                <Route path="document-types" element={<DocumentTypes />} />
                 <Route path="billing" element={<BillingPage />} />
                 <Route path="profile" element={<ProfilePage />} />
                 <Route index element={<Navigate to="processes" replace />} />
