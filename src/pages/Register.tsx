@@ -31,6 +31,7 @@ interface RegisterFormData {
   username: string;
   password: string;
   confirmPassword: string;
+  accountType: "particular" | "profissional" | "empresa";
   practiceArea: string;
   teamSize: string;
   currentTools: string;
@@ -51,6 +52,7 @@ const Register = () => {
     username: "",
     password: "",
     confirmPassword: "",
+    accountType: "particular",
     practiceArea: "",
     teamSize: "",
     currentTools: "",
@@ -58,6 +60,9 @@ const Register = () => {
     acceptPilot: false,
     acceptUpdates: false
   });
+
+  const [currentStep, setCurrentStep] = useState(1);
+  const totalSteps = 4;
 
   const [role, setRole] = useState<UserRole>("client");
   const [isLoading, setIsLoading] = useState(false);
@@ -96,6 +101,64 @@ const Register = () => {
   
   const { register } = useAuth();
   const navigate = useNavigate();
+
+  const validateStep = (step: number) => {
+    const newErrors: Record<string, string> = {};
+    
+    switch (step) {
+      case 1:
+        if (formData.fullName.trim().length < 3) {
+          newErrors.fullName = "Nome deve ter pelo menos 3 caracteres";
+        }
+        if (!validateEmail(formData.email)) {
+          newErrors.email = "Email inválido";
+        }
+        if (!formData.phone) {
+          newErrors.phone = "Telefone é obrigatório";
+        }
+        break;
+
+      case 2:
+        if (!isValidPassword(formData.password)) {
+          newErrors.password = "A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial";
+        }
+        if (formData.password !== formData.confirmPassword) {
+          newErrors.confirmPassword = "As senhas não coincidem";
+        }
+        break;
+
+      case 3:
+        if (!formData.accountType) {
+          newErrors.accountType = "Tipo de conta é obrigatório";
+        }
+        if (!formData.practiceArea) {
+          newErrors.practiceArea = "Área de atuação é obrigatória";
+        }
+        break;
+
+      case 4:
+        if (!formData.acceptTerms) {
+          newErrors.acceptTerms = "Você deve aceitar os termos de uso";
+        }
+        if (!formData.acceptPilot) {
+          newErrors.acceptPilot = "Você deve aceitar o acordo do programa piloto";
+        }
+        break;
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNextStep = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(prev => Math.min(prev + 1, totalSteps));
+    }
+  };
+
+  const handlePrevStep = () => {
+    setCurrentStep(prev => Math.max(prev - 1, 1));
+  };
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -174,9 +237,26 @@ const Register = () => {
       subtitle="Registre-se para começar a usar a plataforma"
     >
       <form onSubmit={handleSubmit} className="space-y-6">
-        <Card>
+        <div className="flex justify-between mb-6">
+          {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
+            <div
+              key={step}
+              className={`flex items-center ${step > 1 ? 'ml-4' : ''}`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${currentStep === step ? 'bg-primary text-white' : currentStep > step ? 'bg-primary/20' : 'bg-gray-200'}`}
+              >
+                {step}
+              </div>
+              {step < totalSteps && (
+                <div className={`h-1 w-12 ml-2 ${currentStep > step ? 'bg-primary/20' : 'bg-gray-200'}`} />
+              )}
+            </div>
+          ))}
+        </div>
+        <Card className={currentStep !== 1 ? 'hidden' : ''}>
           <CardHeader>
-            <CardTitle>1. Dados Pessoais e Profissionais</CardTitle>
+            <CardTitle>1. Dados Pessoais</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -259,7 +339,7 @@ const Register = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className={currentStep !== 2 ? 'hidden' : ''}>
           <CardHeader>
             <CardTitle>2. Informações de Acesso</CardTitle>
           </CardHeader>
@@ -301,11 +381,27 @@ const Register = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className={currentStep !== 3 ? 'hidden' : ''}>
           <CardHeader>
             <CardTitle>3. Perfil Profissional</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="accountType">Tipo de Conta</Label>
+              <Select 
+                value={formData.accountType} 
+                onValueChange={(value) => handleInputChange("accountType", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o tipo de conta" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="particular">Particular</SelectItem>
+                  <SelectItem value="profissional">Profissional</SelectItem>
+                  <SelectItem value="empresa">Empresa</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="role">Tipo de Conta</Label>
               <Select 
@@ -375,7 +471,7 @@ const Register = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className={currentStep !== 4 ? 'hidden' : ''}>
           <CardHeader>
             <CardTitle>4. Consentimentos e Termos</CardTitle>
           </CardHeader>
@@ -418,11 +514,31 @@ const Register = () => {
           </CardContent>
         </Card>
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={isLoading}
-        >
+        <div className="flex justify-between space-x-4">
+          {currentStep > 1 && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handlePrevStep}
+              className="w-full"
+            >
+              Voltar
+            </Button>
+          )}
+          {currentStep < totalSteps ? (
+            <Button
+              type="button"
+              onClick={handleNextStep}
+              className="w-full"
+            >
+              Próximo
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isLoading}
+            >
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -432,7 +548,43 @@ const Register = () => {
             "Registrar"
           )}
         </Button>
-      </form>
+        {currentStep > 1 && (
+          )}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handlePrevStep}
+            className="w-full"
+          >
+            Voltar
+          </Button>
+        )}
+        {currentStep < totalSteps ? (
+          <Button
+            type="button"
+            onClick={handleNextStep}
+            className="w-full"
+          >
+            Próximo
+          </Button>
+        ) : (
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Criando conta...
+              </>
+            ) : (
+              "Registrar"
+            )}
+          </Button>
+        )}
+      </div>
+    </form>
 
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
