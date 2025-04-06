@@ -539,52 +539,18 @@ const Register = () => {
               className="w-full"
               disabled={isLoading}
             >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Criando conta...
-            </>
-          ) : (
-            "Registrar"
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Criando conta...
+                </>
+              ) : (
+                "Registrar"
+              )}
+            </Button>
           )}
-        </Button>
-        {currentStep > 1 && (
-          )}
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handlePrevStep}
-            className="w-full"
-          >
-            Voltar
-          </Button>
-        )}
-        {currentStep < totalSteps ? (
-          <Button
-            type="button"
-            onClick={handleNextStep}
-            className="w-full"
-          >
-            Próximo
-          </Button>
-        ) : (
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Criando conta...
-              </>
-            ) : (
-              "Registrar"
-            )}
-          </Button>
-        )}
-      </div>
-    </form>
+        </div>
+      </form>
 
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
@@ -599,6 +565,6 @@ const Register = () => {
       </div>
     </AuthLayout>
   );
-};
-
+}
+;
 export default Register;
