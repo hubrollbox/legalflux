@@ -90,7 +90,7 @@
 
 @layer base {
   * {
-    border-color: var(--border);
+    border-color: transparent; /* Remover bordas pretas */
   }
 
   body {

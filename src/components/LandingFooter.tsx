@@ -30,6 +30,12 @@ const LandingFooter = () => {
           </div>
           
           {/* ... other columns ... */}
+          <a href="#" className="text-muted-foreground hover:text-foreground">
+            <img src="/img/app-store.svg" alt="App Store" className="h-5 w-5" />
+          </a>
+          <a href="#" className="text-muted-foreground hover:text-foreground">
+            <img src="/img/google-play.svg" alt="Google Play" className="h-5 w-5" />
+          </a>
         </div>
       </div>
     </footer>

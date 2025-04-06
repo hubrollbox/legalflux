@@ -28,12 +28,11 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">Central de Ajuda</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/faqs" className="text-muted-foreground hover:text-foreground">FAQs</Link></li>
-              <li><Link to="/tutorials" className="text-muted-foreground hover:text-foreground">Tutoriais</Link></li>
               <li><Link to="/docs" className="text-muted-foreground hover:text-foreground">Documentação</Link></li>
+              <li><Link to="/faqs" className="text-muted-foreground hover:text-foreground">FAQs</Link></li>
               <li><Link to="/screenshots" className="text-muted-foreground hover:text-foreground">Screenshots</Link></li>
               <li><Link to="/support" className="text-muted-foreground hover:text-foreground">Suporte</Link></li>
-              <li><Link to="/links" className="text-muted-foreground hover:text-foreground">Links Úteis</Link></li>
+              <li><Link to="/tutorials" className="text-muted-foreground hover:text-foreground">Tutoriais</Link></li>
             </ul>
           </div>
 
@@ -44,17 +43,23 @@ export const Footer = () => {
               4450-075 Matosinhos - Portugal
             </address>
             <div className="flex space-x-4 mt-4">
-              <a href="#" className="text-muted-foreground hover:text-foreground">
+              <a href="https://www.facebook.com" className="text-muted-foreground hover:text-foreground">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground">
+              <a href="https://www.instagram.com" className="text-muted-foreground hover:text-foreground">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground">
+              <a href="https://www.twitter.com" className="text-muted-foreground hover:text-foreground">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground">
+              <a href="https://www.linkedin.com" className="text-muted-foreground hover:text-foreground">
                 <Linkedin className="h-5 w-5" />
+              </a>
+              <a href="/img/windows-store.svg" className="text-muted-foreground hover:text-foreground">
+                <img src="/img/windows-store.svg" alt="Windows Store" className="h-5 w-5" />
+              </a>
+              <a href="/img/google-play.svg" className="text-muted-foreground hover:text-foreground">
+              <img src="/img/google-play.svg" alt="Google Play" className="h-5 w-5" />
               </a>
             </div>
           </div>
@@ -62,4 +67,5 @@ export const Footer = () => {
       </div>
     </footer>
   );
-};
+}
+export default Footer;
