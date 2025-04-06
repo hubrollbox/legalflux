@@ -31,6 +31,7 @@ import Features from './pages/Features';
 import Integrations from './pages/Integrations';
 import Security from './pages/Security';
 import UsefulLinks from './pages/Usefullinks';
+import AuthProvider from './components/auth/AuthProvider';
 
 // Adicionando a rota para Links Úteis
 <Route path="/usefullinks" element={<UsefulLinks />} />
@@ -41,7 +42,7 @@ import LandingPage from './pages/landing';
 
 const router = createBrowserRouter([
   // Página inicial
-  { path: '/', element: <LandingPage /> },
+  { path: '/', element: <AuthProvider><LandingPage /></AuthProvider> },
   
   // Rotas públicas
   { path: '/login', element: <Login /> },
