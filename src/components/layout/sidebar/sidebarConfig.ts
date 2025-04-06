@@ -55,6 +55,12 @@ export const sidebarItems: SidebarItem[] = [
     href: "/financial",
     roles: ["admin", "lawyer", "senior_lawyer", "client"],
   },
+  {
+    label: "Links Úteis",
+    icon: FileText,
+    href: "/usefullinks",
+    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"],
+  },
 ];
 
 // Itens que aparecem no dropdown do usuário
