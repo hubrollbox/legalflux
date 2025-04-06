@@ -31,10 +31,7 @@ import Features from './pages/Features';
 import Integrations from './pages/Integrations';
 import Security from './pages/Security';
 import UsefulLinks from './pages/Usefullinks';
-import AuthProvider from './components/auth/AuthProvider'; // Verifiquei que o caminho de importação está correto.
-
-// Adicionando a rota para Links Úteis
-<Route path="/usefullinks" element={<UsefulLinks />} />
+import { AuthProvider } from '@/hooks/useAuth'; // Corrigido o caminho de importação para usar o AuthProvider correto
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Cookies from './pages/Cookies';
@@ -42,7 +39,7 @@ import LandingPage from './pages/landing';
 
 const router = createBrowserRouter([
   // Página inicial
-  { path: '/', element: <AuthProvider><LandingPage /></AuthProvider> }, // Certifiquei-me de que o AuthProvider está sendo utilizado corretamente.
+  { path: '/', element: <LandingPage /> }, // Removido o AuthProvider aqui pois já está sendo usado no main.tsx
   
   // Rotas públicas
   { path: '/login', element: <Login /> },
