@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { BookOpen, Loader2 } from 'lucide-react';
 import { useMessages } from '../hooks/useMessages';
 import MessageList from './MessageList';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const ResearchTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
