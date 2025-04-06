@@ -349,6 +349,35 @@ export type Database = {
         }
         Relationships: []
       }
+      permissoes: {
+        Row: {
+          criado_em: string | null
+          id: string
+          tipo: string
+          user_id: string | null
+        }
+        Insert: {
+          criado_em?: string | null
+          id?: string
+          tipo: string
+          user_id?: string | null
+        }
+        Update: {
+          criado_em?: string | null
+          id?: string
+          tipo?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_permissoes_user"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       planos: {
         Row: {
           criado_em: string | null

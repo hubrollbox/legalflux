@@ -16,7 +16,7 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, context, role } = await req.json();
+    const { prompt, context, role, model = 'gpt-4o-mini' } = await req.json();
     
     // Define o contexto do sistema com base no papel do usuário
     let systemPrompt = '';
@@ -44,7 +44,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: model,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: prompt }
