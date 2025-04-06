@@ -156,8 +156,8 @@ const Financial = () => {
             </CardHeader>
             <CardContent className="flex flex-col sm:flex-row justify-between items-center gap-4">
               <div className="space-y-2 w-full sm:w-auto">
-                <Button className="w-full sm:w-auto hover:bg-blue-600 transition-colors duration-300">Gerar Nova Fatura</Button>
-                <Button variant="outline" className="w-full sm:w-auto hover:bg-gray-200 transition-colors duration-300">Exportar Dados</Button>
+                <Button className="w-full sm:w-auto">Gerar Nova Fatura</Button>
+                <Button variant="outline" className="w-full sm:w-auto">Exportar Dados</Button>
               </div>
               
               <div className="w-full sm:w-1/2 mt-4 sm:mt-0">
@@ -216,7 +216,7 @@ const Financial = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button className="hover:bg-blue-600 transition-colors duration-300">Configurar Honorários</Button>
+                <Button>Configurar Honorários</Button>
                 <Button variant="outline">Ver Tabela de Honorários</Button>
               </div>
               

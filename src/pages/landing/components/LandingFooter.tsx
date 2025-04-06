@@ -5,9 +5,9 @@ import { LOGO } from "@/assets";
 
 const LandingFooter = () => {
   return (
-    <footer className="bg-background border-t border-border py-8 md:py-12 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-4 gap-8 md:gap-12">
+    <footer className="bg-background border-t border-border py-6 sm:py-8 md:py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 lg:gap-12">
           <div>
             <div className="flex items-center gap-2 mb-4">
               <img src={LOGO.DEFAULT} alt="LegalFlux" className="h-12" />
@@ -122,11 +122,11 @@ const LandingFooter = () => {
             </ul>
           </div>
         </div>
-        <div className="border-t border-border mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-muted-foreground mb-4 md:mb-0">
+        <div className="border-t border-border mt-6 sm:mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-muted-foreground text-center sm:text-left">
             &copy; {new Date().getFullYear()} LegalFlux. Todos os direitos reservados.
           </p>
-          <div className="flex space-x-8">
+          <div className="flex flex-wrap justify-center sm:justify-end gap-4 sm:gap-6">
             <Link to="/terms" className="text-muted-foreground hover:text-foreground">
               Termos
             </Link>
