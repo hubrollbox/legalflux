@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Bell, Home, Menu, PanelLeftClose, PanelLeftOpen, User, LogOut } from "lucide-react";
@@ -27,12 +26,10 @@ interface HeaderProps {
   logout: () => void;
 }
 
-// Componente para o menu do usuário
 const UserNav: React.FC<{ user: any; onLogout: () => void }> = ({ user, onLogout }) => {
   const navigate = useNavigate();
   const { user: authUser } = useAuth();
   
-  // Filtra os itens do menu com base nas permissões do usuário
   const filteredMenuItems = userMenuItems.filter(item =>
     item.roles.includes(authUser?.role)
   );
@@ -73,8 +70,6 @@ const UserNav: React.FC<{ user: any; onLogout: () => void }> = ({ user, onLogout
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onLogout} className="flex items-center">
           <LogOut className="mr-2 h-4 w-4" />
-
-
           Sair
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -108,7 +103,6 @@ const Header: React.FC<HeaderProps> = ({
           <Menu className="h-5 w-5" />
         </Button>
         
-        {/* Botão para colapsar sidebar em desktop */}
         <Button
           variant="ghost"
           size="icon"
