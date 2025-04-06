@@ -244,23 +244,7 @@ const Processes = () => {
             </CardContent>
             </Card>
             
-            <Card>
-              <CardHeader>
-                <CardTitle>Estatísticas</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px]">
-                  <BarChart width={300} height={300} data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="value" fill="#8884d8" />
-                  </BarChart>
-                </div>
-              </CardContent>
-            </Card>
+
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -344,26 +328,7 @@ const Processes = () => {
             </CardFooter>
             </Card>
             
-            <Card>
-              <CardHeader>
-                <CardTitle>Estatísticas</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px]">
-                  <BarChart width={300} height={300} data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="value" fill="#8884d8" />
-                  </BarChart>
-                </div>
-              </CardContent>
-            </Card>
-            <Button className="mt-4">
-              <Plus className="mr-2 h-4 w-4" /> Novo Processo
-            </Button>
+
         </div>
       </DashboardLayout>
     </PageTransition>

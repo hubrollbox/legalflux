@@ -7,8 +7,12 @@ import SectionHeader from '@/components/layout/SectionHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DatePickerWithRange } from '@/components/ui/date-range-picker';
 import { FinancialTransaction } from '@/types';
 import { MOCK_FINANCIAL_TRANSACTIONS, getTransactionsByUser } from '@/services/mockData';
+import { Download, Filter, Search, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 
 // Componentes financeiros
 import FinancialDashboard from '@/components/financial/FinancialDashboard';
@@ -39,6 +43,9 @@ const expenseData = [
 const Financial = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [transactions, setTransactions] = useState<FinancialTransaction[]>([]);
+  const [dateRange, setDateRange] = useState<{ from: Date; to: Date } | undefined>();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState('all');
 
   // Simular carregamento de transações
   useEffect(() => {
@@ -46,6 +53,21 @@ const Financial = () => {
     // Aqui estamos usando dados mockados
     setTransactions(MOCK_FINANCIAL_TRANSACTIONS);
   }, []);
+
+  // Filtrar transações
+  const filteredTransactions = transactions.filter(transaction => {
+    const matchesSearch = searchTerm === '' || 
+      transaction.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transaction.clientName?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesType = filterType === 'all' || transaction.type === filterType;
+
+    const matchesDate = !dateRange ||
+      (new Date(transaction.date) >= dateRange.from &&
+       new Date(transaction.date) <= dateRange.to);
+
+    return matchesSearch && matchesType && matchesDate;
+  });
 
   return (
     <DashboardLayout>
@@ -56,10 +78,40 @@ const Financial = () => {
         />
       </div>
 
+      <div className="flex flex-col md:flex-row gap-4 mb-6 mt-6">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Pesquisar transações..."
+            className="pl-8"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        
+        <Select value={filterType} onValueChange={setFilterType}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filtrar por tipo" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos os tipos</SelectItem>
+            <SelectItem value="payment">Pagamentos</SelectItem>
+            <SelectItem value="invoice">Faturas</SelectItem>
+            <SelectItem value="refund">Reembolsos</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <DatePickerWithRange
+          value={dateRange}
+          onChange={(value) => setDateRange(value as { from: Date; to: Date })}
+        />
+      </div>
+
       <Tabs 
         value={activeTab} 
         onValueChange={setActiveTab} 
-        className="w-full mt-6"
+        className="w-full"
       >
         <TabsList className="mb-4">
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
