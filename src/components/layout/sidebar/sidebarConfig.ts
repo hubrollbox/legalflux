@@ -58,7 +58,7 @@ export const sidebarItems: SidebarItem[] = [
   {
     label: "Links Úteis",
     icon: FileText,
-    href: "/usefullinks",
+    href: "/useful-links",
     roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"],
   },
 ];
