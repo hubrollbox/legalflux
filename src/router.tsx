@@ -31,6 +31,9 @@ import Features from './pages/Features';
 import Integrations from './pages/Integrations';
 import Security from './pages/Security';
 import UsefulLinks from './pages/Usefullinks';
+
+// Adicionando a rota para Links Úteis
+<Route path="/usefullinks" element={<UsefulLinks />} />
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Cookies from './pages/Cookies';
