@@ -16,6 +16,8 @@ import {
 import ThemeToggle from "@/components/ui/theme-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
+import { userMenuItems } from "./sidebar/sidebarConfig";
+import { useAuth } from "@/hooks/useAuth";
 
 interface HeaderProps {
   user: any;
@@ -28,7 +30,13 @@ interface HeaderProps {
 // Componente para o menu do usuário
 const UserNav: React.FC<{ user: any; onLogout: () => void }> = ({ user, onLogout }) => {
   const navigate = useNavigate();
+  const { user: authUser } = useAuth();
   
+  // Filtra os itens do menu com base nas permissões do usuário
+  const filteredMenuItems = userMenuItems.filter(item =>
+    item.roles.includes(authUser?.role)
+  );
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -52,14 +60,23 @@ const UserNav: React.FC<{ user: any; onLogout: () => void }> = ({ user, onLogout
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => navigate("/profile")}>
-          Perfil
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => navigate("/settings")}>
-          Configurações
-        </DropdownMenuItem>
+        {filteredMenuItems.map((item) => (
+          <DropdownMenuItem
+            key={item.href}
+            onClick={() => navigate(item.href)}
+            className="flex items-center"
+          >
+            <item.icon className="mr-2 h-4 w-4" />
+            {item.label}
+          </DropdownMenuItem>
+        ))}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={onLogout}>Sair</DropdownMenuItem>
+        <DropdownMenuItem onClick={onLogout} className="flex items-center">
+          <LogOut className="mr-2 h-4 w-4" />
+
+
+          Sair
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

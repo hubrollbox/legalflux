@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { SidebarItem } from "./SidebarItems";
 
+// Itens que aparecem no menu lateral
 export const sidebarItems: SidebarItem[] = [
   {
     label: "Painel",
@@ -54,6 +55,10 @@ export const sidebarItems: SidebarItem[] = [
     href: "/financial",
     roles: ["admin", "lawyer", "senior_lawyer", "client"],
   },
+];
+
+// Itens que aparecem no dropdown do usuário
+export const userMenuItems: SidebarItem[] = [
   {
     label: "Utilizadores",
     icon: UserPlus,
