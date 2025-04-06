@@ -113,12 +113,26 @@ const Register = () => {
         if (!validateEmail(formData.email)) {
           newErrors.email = "Email inválido";
         }
-        if (!formData.phone) {
-          newErrors.phone = "Telefone é obrigatório";
+        if (!formData.taxId) {
+          newErrors.taxId = "NIF é obrigatório";
         }
         break;
 
       case 2:
+        if (formData.accountType !== "particular") {
+          if (!formData.phone) {
+            newErrors.phone = "Telefone é obrigatório";
+          }
+          if (!formData.country) {
+            newErrors.country = "País é obrigatório";
+          }
+          if (!formData.city) {
+            newErrors.city = "Cidade é obrigatória";
+          }
+        }
+        break;
+
+      case 3:
         if (!isValidPassword(formData.password)) {
           newErrors.password = "A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial";
         }
@@ -127,16 +141,12 @@ const Register = () => {
         }
         break;
 
-      case 3:
-        if (!formData.accountType) {
-          newErrors.accountType = "Tipo de conta é obrigatório";
-        }
-        if (!formData.practiceArea) {
-          newErrors.practiceArea = "Área de atuação é obrigatória";
-        }
-        break;
-
       case 4:
+        if (formData.accountType !== "particular") {
+          if (!formData.practiceArea) {
+            newErrors.practiceArea = "Área de atuação é obrigatória";
+          }
+        }
         if (!formData.acceptTerms) {
           newErrors.acceptTerms = "Você deve aceitar os termos de uso";
         }
@@ -171,20 +181,26 @@ const Register = () => {
       newErrors.email = "Email inválido";
     }
     
-    if (!formData.phone) {
-      newErrors.phone = "Telefone é obrigatório";
-    }
-    
     if (!formData.taxId) {
       newErrors.taxId = "NIF é obrigatório";
     }
     
-    if (!formData.country) {
-      newErrors.country = "País é obrigatório";
-    }
-    
-    if (!formData.city) {
-      newErrors.city = "Cidade é obrigatória";
+    if (formData.accountType !== "particular") {
+      if (!formData.phone) {
+        newErrors.phone = "Telefone é obrigatório";
+      }
+      
+      if (!formData.country) {
+        newErrors.country = "País é obrigatório";
+      }
+      
+      if (!formData.city) {
+        newErrors.city = "Cidade é obrigatória";
+      }
+      
+      if (!formData.practiceArea) {
+        newErrors.practiceArea = "Área de atuação é obrigatória";
+      }
     }
     
     if (!isValidPassword(formData.password)) {
@@ -193,10 +209,6 @@ const Register = () => {
     
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "As senhas não coincidem";
-    }
-    
-    if (!formData.practiceArea) {
-      newErrors.practiceArea = "Área de atuação é obrigatória";
     }
     
     if (!formData.acceptTerms) {
@@ -256,9 +268,26 @@ const Register = () => {
         </div>
         <Card className={currentStep !== 1 ? 'hidden' : ''}>
           <CardHeader>
-            <CardTitle>1. Dados Pessoais</CardTitle>
+            <CardTitle>1. Tipo de Conta</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="accountType">Tipo de Conta</Label>
+              <Select 
+                value={formData.accountType} 
+                onValueChange={(value) => handleInputChange("accountType", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o tipo de conta" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="particular">Particular</SelectItem>
+                  <SelectItem value="profissional">Profissional</SelectItem>
+                  <SelectItem value="empresa">Empresa</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="fullName">Nome Completo</Label>
               <Input
@@ -283,27 +312,7 @@ const Register = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Telefone</Label>
-              <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
-                required
-              />
-              {errors.phone && <p className="text-red-500 text-xs">{errors.phone}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="officeName">Nome do Escritório ou Empresa</Label>
-              <Input
-                id="officeName"
-                value={formData.officeName}
-                onChange={(e) => handleInputChange("officeName", e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="taxId">Número de Identificação Fiscal</Label>
+              <Label htmlFor="taxId">Número de Identificação Fiscal (NIF)</Label>
               <Input
                 id="taxId"
                 value={formData.taxId}
@@ -312,38 +321,61 @@ const Register = () => {
               />
               {errors.taxId && <p className="text-red-500 text-xs">{errors.taxId}</p>}
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="country">País</Label>
-                <Input
-                  id="country"
-                  value={formData.country}
-                  onChange={(e) => handleInputChange("country", e.target.value)}
-                  required
-                />
-                {errors.country && <p className="text-red-500 text-xs">{errors.country}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="city">Cidade</Label>
-                <Input
-                  id="city"
-                  value={formData.city}
-                  onChange={(e) => handleInputChange("city", e.target.value)}
-                  required
-                />
-                {errors.city && <p className="text-red-500 text-xs">{errors.city}</p>}
-              </div>
-            </div>
           </CardContent>
         </Card>
 
         <Card className={currentStep !== 2 ? 'hidden' : ''}>
           <CardHeader>
-            <CardTitle>2. Informações de Acesso</CardTitle>
+            <CardTitle>2. {formData.accountType === "particular" ? "Informações de Acesso" : "Dados Adicionais"}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {formData.accountType !== "particular" && (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Telefone</Label>
+                  <Input
+                    id="phone"
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                    required
+                  />
+                  {errors.phone && <p className="text-red-500 text-xs">{errors.phone}</p>}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="officeName">Nome do Escritório ou Empresa</Label>
+                  <Input
+                    id="officeName"
+                    value={formData.officeName}
+                    onChange={(e) => handleInputChange("officeName", e.target.value)}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="country">País</Label>
+                    <Input
+                      id="country"
+                      value={formData.country}
+                      onChange={(e) => handleInputChange("country", e.target.value)}
+                      required
+                    />
+                    {errors.country && <p className="text-red-500 text-xs">{errors.country}</p>}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="city">Cidade</Label>
+                    <Input
+                      id="city"
+                      value={formData.city}
+                      onChange={(e) => handleInputChange("city", e.target.value)}
+                      required
+                    />
+                    {errors.city && <p className="text-red-500 text-xs">{errors.city}</p>}
+                  </div>
+                </div>
+              </>)
+            }
             <div className="space-y-2">
               <Label htmlFor="username">Nome de Utilizador</Label>
               <Input
@@ -383,25 +415,9 @@ const Register = () => {
 
         <Card className={currentStep !== 3 ? 'hidden' : ''}>
           <CardHeader>
-            <CardTitle>3. Perfil Profissional</CardTitle>
+            <CardTitle>3. {formData.accountType === "particular" ? "Perfil" : "Perfil Profissional"}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="accountType">Tipo de Conta</Label>
-              <Select 
-                value={formData.accountType} 
-                onValueChange={(value) => handleInputChange("accountType", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o tipo de conta" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="particular">Particular</SelectItem>
-                  <SelectItem value="profissional">Profissional</SelectItem>
-                  <SelectItem value="empresa">Empresa</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
             <div className="space-y-2">
               <Label htmlFor="role">Tipo de Conta</Label>
               <Select 

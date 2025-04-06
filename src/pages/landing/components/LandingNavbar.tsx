@@ -17,7 +17,7 @@ const LandingNavbar: React.FC = () => {
   
   const navLinks = [
     { title: "Recursos", href: "/features" },
-    { title: "Preços", href: "/subscriptions" },
+    { title: "Preços", href: "/#pricing" },
     { title: "Integrações", href: "/integrations" },
     { title: "Segurança", href: "/security" },
   ];

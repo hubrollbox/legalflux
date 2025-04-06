@@ -2,24 +2,26 @@
 
 LegalFlux é uma plataforma de gestão jurídica para advogados e escritórios jurídicos, oferecendo ferramentas para gerir processos, comunicação e clientes de forma eficiente e segura.
 
-## Table of Contents
-- [Overview](#overview)
-- [Main Features](#main-features)
-- [Subscription Plans](#subscription-plans)
-- [Payment Methods](#payment-methods)
-- [Technologies Used](#technologies-used)
-- [Support](#support)
-- [Rights](#rights)
+## Índice
+- [Visão Geral](#visao-geral)
+- [Principais Funcionalidades](#principais-funcionalidades)
+- [Planos de Assinatura](#planos-de-assinatura)
+- [Métodos de Pagamento](#metodos-de-pagamento)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Suporte](#suporte)
+- [Direitos](#direitos)
+- [Contribuição](#contribuicao)
+- [Exemplos de Uso](#exemplos-de-uso)
 
-## Overview
-LegalFlux is a comprehensive legal management platform designed for lawyers and law firms. It offers a suite of tools to efficiently manage cases, communications, and clients while ensuring security and compliance.
+## Visão Geral
+LegalFlux é uma plataforma abrangente de gestão jurídica projetada para advogados e escritórios de advocacia. Oferece um conjunto de ferramentas para gerenciar casos, comunicações e clientes de forma eficiente, garantindo segurança e conformidade.
 
-## Main Features
+## Principais Funcionalidades
 - **Gestão de Processos:** Organização de casos, documentos, histórico e comunicação.
 - **Controlo de Permissões:** Sistema RBAC (Role-Based Access Control) para gestão granular de acessos.
 - **Portal do Cliente:** Acesso 24/7 a processos, documentos e comunicação com advogados.
 - **Comunicação Integrada:** Mensagens internas para interação entre advogados, assistentes e clientes.
-- **Relatórios Avançados:** Análise detalhada de desempenho, faturção e produtividade.
+- **Relatórios Avançados:** Análise detalhada de desempenho, faturação e produtividade.
 - **Gestão de Prazos:** Sistema de alertas para acompanhamento de prazos processuais.
 - **Gestão de Documentos:** Editor colaborativo, modelos personalizáveis, assinatura digital e versionamento.
 - **Automatização de Processos:** Geração automática de documentos e fluxos de trabalho personalizados.
@@ -27,26 +29,35 @@ LegalFlux is a comprehensive legal management platform designed for lawyers and 
 - **Integrações:** Conexão com e-mail, agenda (Google Workspace, Microsoft 365), ChatGPT (em fase de integração), Slack, Make.com e outras plataformas relevantes.
 - **Segurança:** Criptografia de dados, autenticação multifator (2FA) e monitorização de atividades.
 
-## Subscription Plans
-LegalFlux offers various subscription plans tailored to the needs of lawyers and law firms. Visit our platform for detailed information about each plan and its features.
+## Planos de Assinatura
+LegalFlux oferece vários planos de assinatura adaptados às necessidades de advogados e escritórios de advocacia. Visite nossa plataforma para obter informações detalhadas sobre cada plano e suas funcionalidades.
 
-## Payment Methods
+## Métodos de Pagamento
 - Transferência bancária
 - Débito direto
 - Bitcoin
 
-## Technologies Used
-This project is built with:
+## Tecnologias Utilizadas
+Este projeto é construído com:
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
 
-## Support
-For support, contact us at [suporte@legalflux.pt](mailto:suporte@legalflux.pt).
+## Suporte
+Para suporte, entre em contato conosco em [suporte@legalflux.pt](mailto:suporte@legalflux.pt).
 
-## Rights
+## Direitos
 Todos os direitos reservados.
 
 LegalFlux também está disponível na versão **PWA (Progressive Web App)**, permitindo instalação em dispositivos móveis para um acesso rápido e conveniente.
+
+## Contribuição
+Contribuições são bem-vindas! Para contribuir, siga estas diretrizes:
+1. Faça um fork do repositório.
+2. Crie um branch para sua feature ou correção de bug.
+3. Envie um pull request com uma descrição clara das alterações.
+
+## Exemplos de Uso
+Para exemplos de uso e capturas de tela, visite nossa [documentação](#) ou entre em contato para mais informações.
