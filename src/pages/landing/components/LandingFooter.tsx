@@ -19,15 +19,11 @@ const LandingFooter = () => {
             <div className="mt-6">
               <h5 className="text-sm font-semibold mb-3">Disponível para:</h5>
               <div className="flex space-x-3 mt-2">
-                <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
-                  <img src="/img/app-store.svg" alt="App Store" className="h-8" onError={(e) => {
-                    (e.target as HTMLImageElement).src = "https://placehold.co/120x40?text=App+Store";
-                  }} />
+                <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
+                  <img src="/img/app-store.svg" alt="App Store" className="h-8" />
                 </a>
-                <a href="#" className="opacity-70 hover:opacity-100 transition-opacity">
-                  <img src="/img/google-play.svg" alt="Google Play" className="h-8" onError={(e) => {
-                    (e.target as HTMLImageElement).src = "https://placehold.co/120x40?text=Google+Play";
-                  }} />
+                <a href="https://play.google.com" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
+                  <img src="/img/google-play.svg" alt="Google Play" className="h-8" />
                 </a>
               </div>
             </div>
@@ -66,27 +62,27 @@ const LandingFooter = () => {
             <h3 className="font-semibold mb-4">Central de Ajuda</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/support#faqs" className="text-muted-foreground hover:text-foreground">
+                <Link to="/central-de-ajuda/faqs" className="text-muted-foreground hover:text-foreground">
                   FAQs
                 </Link>
               </li>
               <li>
-                <Link to="/support#tutorials" className="text-muted-foreground hover:text-foreground">
+                <Link to="/central-de-ajuda/tutoriais" className="text-muted-foreground hover:text-foreground">
                   Tutoriais
                 </Link>
               </li>
               <li>
-                <Link to="/support#documentation" className="text-muted-foreground hover:text-foreground">
+                <Link to="/central-de-ajuda/documentacao" className="text-muted-foreground hover:text-foreground">
                   Documentação
                 </Link>
               </li>
               <li>
-                <Link to="/support#screenshots" className="text-muted-foreground hover:text-foreground">
+                <Link to="/central-de-ajuda/screenshots" className="text-muted-foreground hover:text-foreground">
                   Screenshots
                 </Link>
               </li>
               <li>
-                <Link to="/support#support" className="text-muted-foreground hover:text-foreground">
+                <Link to="/central-de-ajuda/suporte" className="text-muted-foreground hover:text-foreground">
                   Suporte
                 </Link>
               </li>
@@ -97,7 +93,9 @@ const LandingFooter = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-muted-foreground">
                 <MapPin size={18} className="text-primary mt-1 flex-shrink-0" />
-                <span>Edifício Diplomata, 4450-075 Matosinhos - Portugal</span>
+                <span>Edifício Diplomata
+                  4450-075 Matosinhos
+                  PORTUGAL</span>
               </li>
               <li className="flex items-center gap-3 text-muted-foreground">
                 <Phone size={18} className="text-primary flex-shrink-0" />

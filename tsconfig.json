@@ -5,15 +5,27 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "baseUrl": ".",
+    "target": "es5",
+    "jsx": "react-jsx",
+    "module": "es6",
+    "moduleResolution": "node",
+    "rootDir": "./",
+    "baseUrl": "./src",
+    "noEmit": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "test/*": ["../test/*"]
     },
-    "noImplicitAny": false,
-    "noUnusedParameters": false,
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
     "skipLibCheck": true,
-    "allowJs": true,
-    "noUnusedLocals": false,
-    "strictNullChecks": false
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "types": ["@types/jest", "node"]
   }
 }
