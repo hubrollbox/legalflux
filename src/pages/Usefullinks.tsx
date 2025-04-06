@@ -4,6 +4,7 @@ import { ExternalLink } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import { Card } from "@/components/ui/card";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import { useState } from "react";
 
 const LINKS_CATEGORIES = [
   {
@@ -54,6 +55,19 @@ const LINKS_CATEGORIES = [
 ];
 
 const UsefulLinks = () => {
+  const [newLink, setNewLink] = useState({ name: "", url: "" });
+  const [links, setLinks] = useState(LINKS_CATEGORIES);
+
+  const handleAddLink = () => {
+    if (newLink.name && newLink.url) {
+      setLinks((prevLinks) => [
+        ...prevLinks,
+        { name: "Custom Links", links: [newLink] },
+      ]);
+      setNewLink({ name: "", url: "" });
+    }
+  };
+
   return (
     <PageTransition>
       <DashboardLayout>
@@ -64,9 +78,30 @@ const UsefulLinks = () => {
               Uma coleção de links para sites e recursos relacionados ao sistema judicial português.
             </p>
           </div>
-          
+          <div className="mb-8">
+            <input
+              type="text"
+              placeholder="Nome do Link"
+              value={newLink.name}
+              onChange={(e) => setNewLink({ ...newLink, name: e.target.value })}
+              className="border p-2 mb-2 w-full"
+            />
+            <input
+              type="url"
+              placeholder="URL do Link"
+              value={newLink.url}
+              onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+              className="border p-2 mb-2 w-full"
+            />
+            <button
+              onClick={handleAddLink}
+              className="bg-primary text-white p-2 w-full"
+            >
+              Adicionar Link
+            </button>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {LINKS_CATEGORIES.map((category) => (
+            {links.map((category) => (
               <Card key={category.name} className="p-5">
                 <h2 className="text-xl font-bold mb-4 pb-2 border-b">{category.name}</h2>
                 <ul className="space-y-3">

@@ -36,6 +36,7 @@ import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Cookies from './pages/Cookies';
 import LandingPage from './pages/landing';
+import Support from './pages/Central de Ajuda/Support';
 
 const router = createBrowserRouter([
   // Página inicial
@@ -187,6 +188,7 @@ const router = createBrowserRouter([
   { path: '/cases', element: <Navigate to="/processes" /> },
   { path: '/plans', element: <Navigate to="/subscriptions" /> },
   { path: '/links', element: <Navigate to="/useful-links" /> },
+  { path: '/support', element: <Support /> },
 
   // Rota de fallback
   { path: '*', element: <NotFound /> }
