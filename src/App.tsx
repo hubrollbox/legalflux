@@ -35,6 +35,9 @@ import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Cookies from "./pages/Cookies";
 
+// Pages relacionadas à IA
+import LawyerAssistant from "./pages/AI/LawyerAssistant";
+
 // Client Portal
 import ClientPortal from "./pages/client-portal/ClientPortal";
 import ProcessesPage from "./pages/client-portal/ProcessesPage";
@@ -43,6 +46,7 @@ import DocumentsPage from "./pages/client-portal/DocumentsPage";
 import DocumentTypes from "./pages/client-portal/DocumentTypes";
 import BillingPage from "./pages/client-portal/BillingPage";
 import ProfilePage from "./pages/client-portal/ProfilePage";
+import AIAssistant from "./pages/client-portal/AIAssistant";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -140,6 +144,13 @@ const App = () => (
                   <UsefulLinks />
                 </ProtectedRoute>
               } />
+              
+              {/* Rotas de IA */}
+              <Route path="/ai-assistant" element={
+                <ProtectedRoute allowedRoles={['lawyer', 'senior_lawyer', 'admin']}>
+                  <LawyerAssistant />
+                </ProtectedRoute>
+              } />
 
               {/* Portal do Cliente */}
               <Route path="/client-portal" element={
@@ -153,6 +164,7 @@ const App = () => (
                 <Route path="document-types" element={<DocumentTypes />} />
                 <Route path="billing" element={<BillingPage />} />
                 <Route path="profile" element={<ProfilePage />} />
+                <Route path="ai-assistant" element={<AIAssistant />} />
                 <Route index element={<Navigate to="processes" replace />} />
               </Route>
 
