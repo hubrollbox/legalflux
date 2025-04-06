@@ -20,10 +20,10 @@ const LandingFooter = () => {
               <h5 className="text-sm font-semibold mb-3">Disponível para:</h5>
               <div className="flex space-x-3 mt-2">
                 <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                  <img src="/img/app-store.svg" alt="App Store" className="h-8" />
+                  <img src="/public/img/app-store.svg" alt="App Store" className="h-8" />
                 </a>
                 <a href="https://play.google.com" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                  <img src="/img/google-play.svg" alt="Google Play" className="h-8" />
+                  <img src="/public/img/google-play.svg" alt="Google Play" className="h-8" />
                 </a>
               </div>
             </div>
