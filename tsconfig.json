@@ -26,6 +26,6 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": false,
-    "types": ["@types/jest", "node"]
+    "types": ["jest", "node"]
   }
 }

@@ -12,29 +12,19 @@ const LandingFooter = () => {
             <h3 className="text-lg font-semibold mb-4">Central de Ajuda</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/screenshots" className="hover:text-primary">
-                  Screenshots
-                </Link>
+                <Link href="/screenshots" className="hover:text-primary">Screenshots</Link>
               </li>
               <li>
-                <Link href="/documentation" className="hover:text-primary">
-                  Documentação
-                </Link>
+                <Link href="/docs" className="hover:text-primary">Documentação</Link>
               </li>
               <li>
-                <Link href="/tutorials" className="hover:text-primary">
-                  Tutoriais
-                </Link>
+                <Link href="/tutorials" className="hover:text-primary">Tutoriais</Link>
               </li>
               <li>
-                <Link href="/faqs" className="hover:text-primary">
-                  FAQs
-                </Link>
+                <Link href="/faqs" className="hover:text-primary">FAQs</Link>
               </li>
               <li>
-                <Link href="/support" className="hover:text-primary">
-                  Suporte
-                </Link>
+                <Link href="/support" className="hover:text-primary">Suporte</Link>
               </li>
             </ul>
           </div>
