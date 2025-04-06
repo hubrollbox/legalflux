@@ -93,8 +93,8 @@ const LandingFooter = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-muted-foreground">
                 <MapPin size={18} className="text-primary mt-1 flex-shrink-0" />
-                <span>Edifício Diplomata
-                  4450-075 Matosinhos
+                <span>Edifício Diplomata<br />
+                  4450-075 Matosinhos<br />
                   PORTUGAL</span>
               </li>
               <li className="flex items-center gap-3 text-muted-foreground">
