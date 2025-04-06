@@ -31,7 +31,7 @@ const Documents = () => {
   return (
     <PageTransition>
       <DashboardLayout>
-        <div className="container mx-auto p-4 sm:p-2 md:p-6 lg:p-8"> // Ajuste de padding para responsividade
+        <div className="container mx-auto p-4 sm:p-2 md:p-6 lg:p-8"> {/* Ajuste de padding para responsividade */}
           <DocumentsHeader canCreateDocument={canCreateDocument} />
           <DocumentTabs 
             viewMode={viewMode}
