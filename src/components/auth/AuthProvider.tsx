@@ -1,11 +1,10 @@
-// Placeholder content for AuthProvider component
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 interface AuthProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <div>
       {children}

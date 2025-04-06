@@ -31,7 +31,7 @@ import Features from './pages/Features';
 import Integrations from './pages/Integrations';
 import Security from './pages/Security';
 import UsefulLinks from './pages/Usefullinks';
-import { AuthProvider } from '@/hooks/useAuth'; // Corrigido o caminho de importação para usar o AuthProvider correto
+import { AuthProvider } from '@/components/auth/AuthProvider'; // Corrigido o caminho de importação para usar o AuthProvider correto
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Cookies from './pages/Cookies';
@@ -193,3 +193,7 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
+
+<AuthProvider>
+  <LandingPage />
+</AuthProvider>
