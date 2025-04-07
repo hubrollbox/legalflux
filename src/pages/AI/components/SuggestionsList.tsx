@@ -9,32 +9,41 @@ interface SuggestionsListProps {
 
 const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
   // Verifica se há sugestões válidas e completas antes de prosseguir
-  const validSuggestions = suggestions?.filter(suggestion => {
+  // Primeiro, garantimos que suggestions é um array
+  const suggestionsArray = Array.isArray(suggestions) ? suggestions : [];
+  
+  // Filtramos para garantir que cada sugestão é um objeto válido
+  const validSuggestions = suggestionsArray.filter(suggestion => {
     // Verificação completa para garantir que o objeto suggestion existe e tem todas as propriedades necessárias
     if (!suggestion || typeof suggestion !== 'object' || suggestion === null) return false;
     
+    // Criamos uma cópia segura da sugestão para não modificar o objeto original
+    const safeSuggestion = { ...suggestion };
+    
     // Ensure type safety by validating against LegalSuggestion interface
-    const suggestionType = suggestion?.type && ['action', 'document', 'precedent', 'strategy'].includes(suggestion.type)
-      ? suggestion.type
+    // Verificamos se type existe e é válido, caso contrário definimos um valor padrão
+    const suggestionType = safeSuggestion.type && typeof safeSuggestion.type === 'string' && 
+      ['action', 'document', 'precedent', 'strategy'].includes(safeSuggestion.type)
+      ? safeSuggestion.type
       : 'action';
-    const suggestionPriority = suggestion?.priority && ['high', 'medium', 'low'].includes(suggestion.priority)
-      ? suggestion.priority
+    
+    const suggestionPriority = safeSuggestion.priority && typeof safeSuggestion.priority === 'string' && 
+      ['high', 'medium', 'low'].includes(safeSuggestion.priority)
+      ? safeSuggestion.priority
       : 'medium';
     
     // Ensure all required properties exist with default values
-    suggestion.id = suggestion?.id || '';
-    suggestion.title = suggestion?.title || '';
-    suggestion.description = suggestion?.description || '';
-    suggestion.type = suggestionType;
-    suggestion.priority = suggestionPriority;
-    suggestion.relevance = suggestion?.relevance || 0;
+    safeSuggestion.id = safeSuggestion.id || '';
+    safeSuggestion.title = safeSuggestion.title || '';
+    safeSuggestion.description = safeSuggestion.description || '';
+    safeSuggestion.type = suggestionType;
+    safeSuggestion.priority = suggestionPriority;
+    safeSuggestion.relevance = typeof safeSuggestion.relevance === 'number' ? safeSuggestion.relevance : 0;
     
-    return typeof suggestion.id === 'string' &&
-      typeof suggestion.title === 'string' &&
-      typeof suggestion.description === 'string' &&
-      ['action', 'document', 'precedent', 'strategy'].includes(suggestionType) &&
-      ['high', 'medium', 'low'].includes(suggestionPriority) &&
-      typeof suggestion.relevance === 'number';
+    // Atualizamos o objeto original com os valores seguros
+    Object.assign(suggestion, safeSuggestion);
+    
+    return true;
   }) || [];
   if (validSuggestions.length === 0) return null;
 
@@ -103,10 +112,19 @@ const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
       
       {validSuggestions.map((suggestion) => {
         // Garantir que as propriedades existam, usando valores padrão se necessário
-        const { type = 'action', priority = 'medium', title = 'Sugestão', description = '', relevance = 0 } = suggestion || { type: 'action', priority: 'medium' };
+        // Usamos uma verificação mais robusta para garantir que suggestion é um objeto válido
+        const safeObj = suggestion && typeof suggestion === 'object' ? suggestion : {};
+        
+        // Extraímos as propriedades com valores padrão seguros
+        const type = safeObj.type && typeof safeObj.type === 'string' ? safeObj.type : 'action';
+        const priority = safeObj.priority && typeof safeObj.priority === 'string' ? safeObj.priority : 'medium';
+        const title = safeObj.title && typeof safeObj.title === 'string' ? safeObj.title : 'Sugestão';
+        const description = safeObj.description && typeof safeObj.description === 'string' ? safeObj.description : '';
+        const relevance = safeObj.relevance && typeof safeObj.relevance === 'number' ? safeObj.relevance : 0;
+        const id = safeObj.id && typeof safeObj.id === 'string' ? safeObj.id : `suggestion-${Math.random().toString(36).substr(2, 9)}`;
 
         return (
-          <Card key={suggestion.id} className="overflow-hidden">
+          <Card key={id} className="overflow-hidden">
             <div className="flex items-stretch">
               <div 
                 className={`w-1 flex-shrink-0 ${priority === 'high' ? 'bg-red-500' : priority === 'medium' ? 'bg-yellow-500' : 'bg-green-500'}`}
