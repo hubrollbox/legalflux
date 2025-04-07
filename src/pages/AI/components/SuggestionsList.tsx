@@ -14,10 +14,10 @@ const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
     if (!suggestion || typeof suggestion !== 'object' || suggestion === null) return false;
     
     // Ensure type safety by validating against LegalSuggestion interface
-    const suggestionType = ['action', 'document', 'precedent', 'strategy'].includes(suggestion?.type)
+    const suggestionType = suggestion?.type && ['action', 'document', 'precedent', 'strategy'].includes(suggestion.type)
       ? suggestion.type
       : 'action';
-    const suggestionPriority = ['high', 'medium', 'low'].includes(suggestion?.priority)
+    const suggestionPriority = suggestion?.priority && ['high', 'medium', 'low'].includes(suggestion.priority)
       ? suggestion.priority
       : 'medium';
     
@@ -103,7 +103,7 @@ const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
       
       {validSuggestions.map((suggestion) => {
         // Garantir que as propriedades existam, usando valores padrão se necessário
-        const { type = 'action', priority = 'medium', title = 'Sugestão', description = '', relevance = 0 } = suggestion || {};
+        const { type = 'action', priority = 'medium', title = 'Sugestão', description = '', relevance = 0 } = suggestion || { type: 'action', priority: 'medium' };
 
         return (
           <Card key={suggestion.id} className="overflow-hidden">
