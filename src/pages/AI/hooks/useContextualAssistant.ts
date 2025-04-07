@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMessages } from './useMessages';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface ContextualInfo {
@@ -56,7 +56,7 @@ export const useContextualAssistant = () => {
     }
   };
   
-  const handleSubmitWithContext = async (e: React.FormEvent) => {
+  const handleSubmitWithContext = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (!messagesHook.input.trim()) return;
@@ -90,6 +90,15 @@ export const useContextualAssistant = () => {
 
       if (error) throw error;
 
+      // Verificar se data existe e se possui a propriedade response
+      if (!data || typeof data !== 'object' || !('response' in data)) {
+        throw new Error('Resposta inválida do assistente de IA: estrutura de dados incorreta');
+      }
+      
+      if (typeof data.response !== 'string') {
+        throw new Error('Resposta inválida do assistente de IA: resposta deve ser uma string');
+      }
+
       // Adicionar resposta do assistente
       messagesHook.setMessages(prev => [
         ...prev, 
@@ -100,11 +109,11 @@ export const useContextualAssistant = () => {
           timestamp: new Date()
         }
       ]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao chamar o assistente de IA:', error);
       toast({
         title: 'Erro',
-        description: 'Não foi possível obter uma resposta. Por favor, tente novamente.',
+        description: error?.message || 'Não foi possível obter uma resposta. Por favor, tente novamente.',
         variant: 'destructive',
       });
     } finally {
@@ -118,6 +127,7 @@ export const useContextualAssistant = () => {
     updateContext,
     setContext,
     isContextSet,
-    handleSubmit: handleSubmitWithContext
+    handleSubmit: handleSubmitWithContext,
+    setLoading: messagesHook.setLoading
   };
 };

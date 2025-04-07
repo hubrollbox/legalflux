@@ -87,6 +87,7 @@ export const useMessages = (initialMessage?: string) => {
     messages,
     setMessages,
     loading,
+    setLoading,
     input,
     setInput,
     handleSubmit,

@@ -16,6 +16,7 @@ import { Download, Filter, Search, TrendingUp, TrendingDown, DollarSign } from '
 
 // Componentes financeiros
 import FinancialDashboard from '@/components/financial/FinancialDashboard';
+import ImprovedFinancialDashboard from '@/components/financial/ImprovedFinancialDashboard';
 import FinancialCharts from '@/components/financial/FinancialCharts';
 import TransactionsTable from '@/components/financial/TransactionsTable';
 import FinancialAlerts from '@/components/financial/FinancialAlerts';
@@ -123,18 +124,8 @@ const Financial = () => {
 
         {/* Dashboard Tab */}
         <TabsContent value="dashboard" className="space-y-6">
-          {/* Métricas Financeiras */}
-          <FinancialDashboard transactions={transactions} />
-          
-          {/* Alertas Financeiros */}
-          <FinancialAlerts transactions={transactions} />
-          
-          {/* Gráficos Financeiros */}
-          <FinancialCharts 
-            transactions={transactions}
-            revenueData={revenueData}
-            expenseData={expenseData}
-          />
+          {/* Dashboard Financeiro Melhorado */}
+          <ImprovedFinancialDashboard transactions={transactions} />
         </TabsContent>
 
         {/* Transactions Tab */}
