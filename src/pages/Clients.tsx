@@ -17,12 +17,40 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "rec
 const Clients = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
+  const [viewMode, setViewMode] = useState("list"); // 'list' or 'card'
   
   // Mock data for demonstration
   const clients = [
-    { id: 1, name: "Cliente A", status: "active", value: 5000 },
-    { id: 2, name: "Cliente B", status: "inactive", value: 3000 },
-    { id: 3, name: "Cliente C", status: "active", value: 7500 },
+    { 
+      id: 1, 
+      name: "Cliente A", 
+      status: "active", 
+      value: 5000,
+      email: "clientea@exemplo.com",
+      phone: "(11) 99999-9999",
+      documents: 5,
+      lastContact: "2023-10-15"
+    },
+    { 
+      id: 2, 
+      name: "Cliente B", 
+      status: "inactive", 
+      value: 3000,
+      email: "clienteb@exemplo.com",
+      phone: "(11) 88888-8888",
+      documents: 2,
+      lastContact: "2023-09-20"
+    },
+    { 
+      id: 3, 
+      name: "Cliente C", 
+      status: "active", 
+      value: 7500,
+      email: "clientec@exemplo.com",
+      phone: "(11) 77777-7777",
+      documents: 8,
+      lastContact: "2023-10-10"
+    },
   ];
   
   const filteredClients = clients.filter(client => {
@@ -85,20 +113,37 @@ const Clients = () => {
         <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Lista de Clientes</CardTitle>
-            <Button variant="ghost" size="sm">
-              <Download className="mr-2 h-4 w-4" /> Exportar
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant={viewMode === 'list' ? 'default' : 'ghost'} 
+                size="sm"
+                onClick={() => setViewMode('list')}
+              >
+                Lista
+              </Button>
+              <Button 
+                variant={viewMode === 'card' ? 'default' : 'ghost'} 
+                size="sm"
+                onClick={() => setViewMode('card')}
+              >
+                Cards
+              </Button>
+              <Button variant="ghost" size="sm">
+                <Download className="mr-2 h-4 w-4" /> Exportar
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             {filteredClients.length === 0 ? (
               <EmptyState message="Nenhum cliente encontrado com os filtros atuais." />
-            ) : (
+            ) : viewMode === 'list' ? (
               <div className="space-y-4">
                 {filteredClients.map(client => (
                   <div key={client.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
                     <div>
                       <h3 className="font-medium">{client.name}</h3>
                       <p className="text-sm text-gray-500">Status: {client.status === "active" ? "Ativo" : "Inativo"}</p>
+                      <p className="text-sm text-gray-500">Documentos: {client.documents}</p>
                     </div>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -110,9 +155,44 @@ const Clients = () => {
                         <DropdownMenuItem>Editar</DropdownMenuItem>
                         <DropdownMenuItem>Enviar mensagem</DropdownMenuItem>
                         <DropdownMenuItem>Ver documentos</DropdownMenuItem>
+                        <DropdownMenuItem>Ver histórico</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {filteredClients.map(client => (
+                  <Card key={client.id} className="hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg">{client.name}</CardTitle>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-xs px-2 py-1 rounded-full ${client.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                          {client.status === "active" ? "Ativo" : "Inativo"}
+                        </span>
+                        <span className="text-xs text-gray-500">{client.documents} documentos</span>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div className="flex items-center text-sm">
+                        <span className="text-gray-500 w-24">Email:</span>
+                        <span>{client.email}</span>
+                      </div>
+                      <div className="flex items-center text-sm">
+                        <span className="text-gray-500 w-24">Telefone:</span>
+                        <span>{client.phone}</span>
+                      </div>
+                      <div className="flex items-center text-sm">
+                        <span className="text-gray-500 w-24">Último contato:</span>
+                        <span>{client.lastContact}</span>
+                      </div>
+                      <div className="pt-2 flex justify-between">
+                        <Button variant="outline" size="sm">Ver documentos</Button>
+                        <Button variant="outline" size="sm">Histórico</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
             )}
