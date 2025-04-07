@@ -19,7 +19,7 @@ import Processes from './pages/Processes';
 import Tasks from './pages/Tasks';
 import Documents from './pages/Documents';
 import Clients from './pages/Clients';
-import CalendarPage from './pages/Calendar';
+import CalendarPage from './pages/ImprovedCalendar';
 import Messages from './pages/Messages';
 import Financial from './pages/Financial';
 import Analytics from './pages/Analytics';
