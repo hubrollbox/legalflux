@@ -6,6 +6,20 @@
 
 @layer base {
   :root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+
+    color-scheme: light;
+    color: rgba(0, 0, 0, 0.87);
+    background-color: #f8f9fa;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -94,6 +108,9 @@
   }
 
   body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -102,6 +119,15 @@
   h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     color: hsl(var(--primary-950));
+  }
+  
+  a {
+    font-weight: 500;
+    color: hsl(var(--primary));
+    text-decoration: inherit;
+  }
+  a:hover {
+    color: hsl(var(--primary) / 0.8);
   }
 }
 
@@ -164,6 +190,8 @@
     flex-direction: column;
     gap: 1rem;
     margin-bottom: 1.5rem;
+    border-bottom: 1px solid hsl(var(--border));
+    padding-bottom: 1rem;
 }
 
 @media (min-width: 768px) {
@@ -171,6 +199,51 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
+    }
+  }
+  
+  /* Tema escuro */
+  .dark {
+    color-scheme: dark;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+  
+  .dashboard-widget {
+    transition: all 0.3s ease;
+  }
+  
+  .dashboard-widget:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .dashboard-header {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .main-content {
+      padding: 0.5rem;
     }
   }
   
