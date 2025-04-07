@@ -54,6 +54,7 @@ const Clients = () => {
   ];
   
   const filteredClients = clients.filter(client => {
+    if (!client || !client.name) return false;
     const matchesSearch = client.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = activeFilter === "all" || client.status === activeFilter;
     return matchesSearch && matchesFilter;

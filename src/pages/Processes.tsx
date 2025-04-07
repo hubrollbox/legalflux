@@ -148,6 +148,50 @@ const Processes = () => {
             )}
           </div>
 
+          <Card className="mb-6">
+          <CardHeader className="pb-3">
+            <CardTitle>Filtros de Pesquisa</CardTitle>
+            <CardDescription>
+              Refine a sua pesquisa utilizando diferentes critérios
+            </CardDescription>
+          </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Buscar processos..."
+                    className="pl-8"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">
+                      <Filter className="mr-2 h-4 w-4" />
+                      Filtrar
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => setActiveFilter("all")}>
+                      Todos
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setActiveFilter("Em Curso")}>
+                      Em Curso
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setActiveFilter("Em Espera")}>
+                      Em Espera
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setActiveFilter("Concluído")}>
+                      Concluído
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <Card>
             <CardHeader>
