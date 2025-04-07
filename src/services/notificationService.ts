@@ -168,7 +168,7 @@ class NotificationWebSocket {
 export const notificationWS = new NotificationWebSocket();
 
 
-export async function notifyUsers(notification: { title: string; message: string; type: "document" | "action" | "precedent" | "strategy"; data: any; }) {
+export async function notifyUsers(notification: { title: string; message: string; type: "document" | "action" | "precedent" | "strategy" | "error"; data: any; }) {
   try {
     // Aqui você pode implementar a lógica para enviar notificações aos usuários
     console.log('Notificação enviada:', notification);
