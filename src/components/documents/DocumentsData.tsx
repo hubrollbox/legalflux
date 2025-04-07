@@ -9,7 +9,8 @@ export const mockDocuments = [
     updatedAt: "2023-12-05T10:30:00",
     owner: "Maria Costa",
     folder: "Contratos",
-    process: "2023/1234"
+    process: "2023/1234",
+    tags: ["contrato", "arrendamento"]
   },
   {
     id: "doc2",
@@ -19,7 +20,8 @@ export const mockDocuments = [
     updatedAt: "2023-12-04T14:15:00",
     owner: "João Silva",
     folder: "Escrituras",
-    process: "2023/1235"
+    process: "2023/1235",
+    tags: ["escritura", "compra-venda"]
   },
   {
     id: "doc3",
@@ -29,7 +31,8 @@ export const mockDocuments = [
     updatedAt: "2023-12-03T09:45:00",
     owner: "Pedro Santos",
     folder: "Procurações",
-    process: "2023/1236"
+    process: "2023/1236",
+    tags: ["procuração", "legal"]
   },
   {
     id: "doc4",
@@ -39,7 +42,8 @@ export const mockDocuments = [
     updatedAt: "2023-12-02T16:20:00",
     owner: "Ana Oliveira",
     folder: "Petições",
-    process: "2023/1234"
+    process: "2023/1234",
+    tags: ["petição", "inicial"]
   },
   {
     id: "doc5",
@@ -48,6 +52,7 @@ export const mockDocuments = [
     size: "4.2 MB",
     updatedAt: "2023-12-01T11:10:00",
     owner: "Carlos Lima",
+    tags: ["decisão", "tribunal"],
     folder: "Decisões",
     process: "2023/1237"
   },
