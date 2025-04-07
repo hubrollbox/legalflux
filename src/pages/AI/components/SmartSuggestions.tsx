@@ -68,8 +68,8 @@ const SmartSuggestions = ({ messages, contextInfo, isContextSet }: SmartSuggesti
                 <Loader2 className="h-6 w-6 animate-spin" />
                 <span className="ml-2">Gerando sugestões...</span>
               </div>
-            ) : suggestions.length > 0 ? (
-              <SuggestionsList suggestions={suggestions} />
+            ) : suggestions && suggestions.length > 0 ? (
+              <SuggestionsList suggestions={suggestions.filter(s => s && s.type)} />
             ) : (
               <div className="text-center py-4 text-muted-foreground">
                 Nenhuma sugestão disponível para o contexto atual.

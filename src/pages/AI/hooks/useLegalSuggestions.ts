@@ -69,7 +69,8 @@ export const useLegalSuggestions = () => {
       // Extrair tipo
       const typeMatch = content.match(/Tipo:?\s*(.+?)(?=\n|$)/i);
       let type = typeMatch ? typeMatch[1].toLowerCase().trim() : 'action';
-      if (!['action', 'document', 'precedent', 'strategy'].includes(type)) {
+      // Garantir que o tipo seja um dos valores válidos
+      if (!type || !['action', 'document', 'precedent', 'strategy'].includes(type)) {
         type = 'action';
       }
       

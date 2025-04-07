@@ -73,30 +73,41 @@ const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
     <div className="space-y-3">
       <h3 className="text-lg font-medium">Sugestões Jurídicas</h3>
       
-      {suggestions.map((suggestion) => (
-        <Card key={suggestion.id} className="overflow-hidden">
-          <div className="flex items-stretch">
-            <div 
-              className={`w-1 flex-shrink-0 ${suggestion.priority === 'high' ? 'bg-red-500' : suggestion.priority === 'medium' ? 'bg-yellow-500' : 'bg-green-500'}`}
-            />
-            <CardContent className="p-4 w-full">
-              <div className="flex justify-between items-start mb-2">
-                <div className="flex items-center">
-                  <div className="mr-2 text-primary">
-                    {getSuggestionIcon(suggestion.type)}
+      {suggestions.map((suggestion) => {
+        // Verificar se a sugestão existe e tem todas as propriedades necessárias
+        if (!suggestion) return null;
+        
+        // Garantir que as propriedades existam, usando valores padrão se necessário
+        const type = suggestion?.type || 'action';
+        const priority = suggestion?.priority || 'medium';
+        const title = suggestion?.title || 'Sugestão';
+        const description = suggestion?.description || '';
+        const relevance = suggestion?.relevance || 0;
+        
+        return (
+          <Card key={suggestion.id} className="overflow-hidden">
+            <div className="flex items-stretch">
+              <div 
+                className={`w-1 flex-shrink-0 ${priority === 'high' ? 'bg-red-500' : priority === 'medium' ? 'bg-yellow-500' : 'bg-green-500'}`}
+              />
+              <CardContent className="p-4 w-full">
+                <div className="flex justify-between items-start mb-2">
+                  <div className="flex items-center">
+                    <div className="mr-2 text-primary">
+                      {getSuggestionIcon(type)}
+                    </div>
+                    <h4 className="font-medium">{title}</h4>
                   </div>
-                  <h4 className="font-medium">{suggestion.title}</h4>
+                  <div className="flex space-x-2">
+                    <Badge variant="outline" className={getPriorityColor(priority)}>
+                      {translatePriority(priority)}
+                    </Badge>
+                    <Badge variant="outline">
+                      {translateType(type)}
+                    </Badge>
+                  </div>
                 </div>
-                <div className="flex space-x-2">
-                  <Badge variant="outline" className={getPriorityColor(suggestion.priority)}>
-                    {translatePriority(suggestion.priority)}
-                  </Badge>
-                  <Badge variant="outline">
-                    {translateType(suggestion.type)}
-                  </Badge>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground">{suggestion.description}</p>
+                <p className="text-sm text-muted-foreground">{description}</p>
               <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
                 <div 
                   className="bg-primary h-1.5 rounded-full" 
@@ -104,11 +115,11 @@ const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
                   title={`Relevância: ${suggestion.relevance}%`}
                 />
               </div>
-            </CardContent>
-          </div>
-        </Card>
-      ))}
-    </div>
+              </CardContent>
+            </div>
+          </Card>
+        ))}
+      </div>
   );
 };
 
