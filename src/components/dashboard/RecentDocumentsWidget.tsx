@@ -7,8 +7,7 @@ import DashboardWidget from './DashboardWidget';
 interface Document {
   id: string;
   name: string;
-- type: string;
-+ type: "document" | "action" | "precedent" | "strategy";
+  type: "document" | "action" | "precedent" | "strategy";
   updatedAt: string;
   status: 'draft' | 'review' | 'final' | 'archived';
 }
@@ -97,5 +96,4 @@ const RecentDocumentsWidget: React.FC<RecentDocumentsWidgetProps> = ({
   );
 };
 
-- export default RecentDocumentsWidget;
-+ export default RecentDocumentsWidget;
+export default RecentDocumentsWidget;
