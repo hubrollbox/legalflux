@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Bell, Calendar, MessageSquare, FileText, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { Bell, Calendar, MessageSquare, FileText, X, Settings2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Switch } from "@/components/ui/switch";
-import { toast } from "@/hooks/use-toast";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useNotificationStore } from '@/services/notificationService';
+import NotificationPreferences, { NotificationPreference } from './NotificationPreferences';
 
 export interface Notification {
   id: string;
@@ -17,82 +18,19 @@ export interface Notification {
   priority: 'high' | 'medium' | 'low';
 }
 
-interface NotificationPreferences {
-  deadlines: boolean;
-  messages: boolean;
-  processes: boolean;
-  sound: boolean;
-}
-
-const mockNotifications: Notification[] = [
-  {
-    id: '1',
-    type: 'deadline',
-    title: 'Prazo Processo 2023/789',
-    description: 'Prazo para recurso expira em 2 dias',
-    timestamp: new Date(Date.now() - 3600000),
-    read: false,
-    priority: 'high'
-  },
-  {
-    id: '2',
-    type: 'message',
-    title: 'Nova mensagem de Ana Silva',
-    description: 'Documentos recebidos, obrigado!',
-    timestamp: new Date(Date.now() - 7200000),
-    read: false,
-    priority: 'medium'
-  },
-  {
-    id: '3',
-    type: 'process',
-    title: 'Atualização de Processo',
-    description: 'Novo documento anexado ao processo 2023/456',
-    timestamp: new Date(Date.now() - 10800000),
-    read: true,
-    priority: 'low'
-  },
-];
-
 const NotificationSystem: React.FC = () => {
-  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [preferences, setPreferences] = useState<NotificationPreferences>({
-    deadlines: true,
-    messages: true,
-    processes: true,
-    sound: true,
-  });
+  const {
+    notifications,
+    preferences,
+    unreadCount,
+    markAsRead,
+    markAllAsRead,
+    updatePreferences,
+    removeNotification
+  } = useNotificationStore();
 
-  const unreadCount = notifications.filter(n => !n.read).length;
 
-  useEffect(() => {
-    // Em uma aplicação real, aqui você se inscreveria em eventos do servidor
-    // para receber notificações em tempo real
-    const checkForNewNotifications = () => {
-      // Simular uma nova notificação a cada 30 segundos
-      const interval = setInterval(() => {
-        const newNotification: Notification = {
-          id: Date.now().toString(),
-          type: 'deadline',
-          title: 'Novo Prazo Importante',
-          description: 'Audiência marcada para próxima semana',
-          timestamp: new Date(),
-          read: false,
-          priority: 'high'
-        };
-
-        if (preferences.deadlines) {
-          setNotifications(prev => [newNotification, ...prev]);
-          showNotificationToast(newNotification);
-        }
-      }, 30000);
-
-      return () => clearInterval(interval);
-    };
-
-    checkForNewNotifications();
-  }, [preferences]);
 
   const getNotificationIcon = (type: Notification['type']) => {
     switch (type) {
@@ -123,24 +61,8 @@ const NotificationSystem: React.FC = () => {
     );
   };
 
-  const markAsRead = (id: string) => {
-    setNotifications(notifications.map(n =>
-      n.id === id ? { ...n, read: true } : n
-    ));
-  };
-
-  const showNotificationToast = (notification: Notification) => {
-    if (preferences.sound) {
-      // Reproduzir som de notificação
-      const audio = new Audio('/notification-sound.mp3');
-      audio.play().catch(console.error);
-    }
-
-    toast({
-      title: notification.title,
-      description: notification.description,
-      duration: 5000,
-    });
+  const handlePreferencesChange = (newPreferences: NotificationPreference) => {
+    updatePreferences(newPreferences);
   };
 
   return (
@@ -166,13 +88,33 @@ const NotificationSystem: React.FC = () => {
         <Card className="absolute right-0 mt-2 w-80 z-50">
           <div className="p-4 border-b flex justify-between items-center">
             <h3 className="font-medium">Notificações</h3>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowNotifications(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Settings2 className="h-4 w-4" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="sm:max-w-2xl">
+                  <SheetHeader>
+                    <SheetTitle>Configurações de Notificações</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6">
+                    <NotificationPreferences
+                      preferences={preferences}
+                      onPreferencesChange={handlePreferencesChange}
+                    />
+                  </div>
+                </SheetContent>
+              </Sheet>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowNotifications(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           <ScrollArea className="h-[400px]">
@@ -182,6 +124,9 @@ const NotificationSystem: React.FC = () => {
                   key={notification.id}
                   className={`flex gap-3 p-3 rounded-lg transition-colors ${notification.read ? 'bg-muted/30' : 'bg-muted'}`}
                   onClick={() => markAsRead(notification.id)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyPress={(e) => e.key === 'Enter' && markAsRead(notification.id)}
                 >
                   <div className="flex-shrink-0">
                     {getNotificationIcon(notification.type)}
@@ -203,46 +148,15 @@ const NotificationSystem: React.FC = () => {
             </div>
           </ScrollArea>
 
-          <div className="p-4 border-t">
-            <h4 className="font-medium mb-3">Preferências de Notificação</h4>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <label className="text-sm">Prazos</label>
-                <Switch
-                  checked={preferences.deadlines}
-                  onCheckedChange={(checked) =>
-                    setPreferences(prev => ({ ...prev, deadlines: checked }))
-                  }
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <label className="text-sm">Mensagens</label>
-                <Switch
-                  checked={preferences.messages}
-                  onCheckedChange={(checked) =>
-                    setPreferences(prev => ({ ...prev, messages: checked }))
-                  }
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <label className="text-sm">Processos</label>
-                <Switch
-                  checked={preferences.processes}
-                  onCheckedChange={(checked) =>
-                    setPreferences(prev => ({ ...prev, processes: checked }))
-                  }
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <label className="text-sm">Som</label>
-                <Switch
-                  checked={preferences.sound}
-                  onCheckedChange={(checked) =>
-                    setPreferences(prev => ({ ...prev, sound: checked }))
-                  }
-                />
-              </div>
-            </div>
+          <div className="p-4 border-t flex justify-between items-center">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={markAllAsRead}
+              className="w-full"
+            >
+              Marcar todas como lidas
+            </Button>
           </div>
         </Card>
       )}
