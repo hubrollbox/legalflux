@@ -8,8 +8,16 @@ interface SuggestionsListProps {
 }
 
 const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
-  // Verifica se há sugestões válidas antes de prosseguir
-  const validSuggestions = suggestions?.filter(s => s) || [];
+  // Verifica se há sugestões válidas e completas antes de prosseguir
+  const validSuggestions = suggestions?.filter(suggestion => {
+    return suggestion &&
+      typeof suggestion.id === 'string' &&
+      typeof suggestion.title === 'string' &&
+      typeof suggestion.description === 'string' &&
+      ['action', 'document', 'precedent', 'strategy'].includes(suggestion.type) &&
+      ['high', 'medium', 'low'].includes(suggestion.priority) &&
+      typeof suggestion.relevance === 'number';
+  }) || [];
   if (validSuggestions.length === 0) return null;
 
   // Função para obter o ícone com base no tipo de sugestão
