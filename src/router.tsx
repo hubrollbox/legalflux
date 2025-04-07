@@ -22,6 +22,7 @@ import Clients from './pages/Clients';
 import CalendarPage from './pages/Calendar';
 import Messages from './pages/Messages';
 import Financial from './pages/Financial';
+import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
@@ -142,6 +143,10 @@ const router = createBrowserRouter([
         <Financial />
       </ProtectedRoute>
     )
+  },
+  {
+    path: '/analytics',
+    element: <Analytics />
   },
   {
     path: '/subscriptions',
