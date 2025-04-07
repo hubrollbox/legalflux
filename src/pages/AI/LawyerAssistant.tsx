@@ -2,9 +2,10 @@
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageTransition from '@/components/PageTransition';
-import AssistantTab from './components/AssistantTab';
+import ContextualAssistantTab from './components/ContextualAssistantTab';
 import ResearchTab from './components/ResearchTab';
 import DocumentTab from './components/DocumentTab';
+import AnalysisTab from './components/AnalysisTab';
 
 const LawyerAssistant = () => {
   const [activeTab, setActiveTab] = useState('assistant');
@@ -15,7 +16,7 @@ const LawyerAssistant = () => {
         <h1 className="text-2xl font-bold mb-6">Assistente Jurídico para Advogados</h1>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-3 mb-6">
+          <TabsList className="grid grid-cols-4 mb-6">
             <TabsTrigger value="assistant">
               Assistente
             </TabsTrigger>
@@ -25,10 +26,13 @@ const LawyerAssistant = () => {
             <TabsTrigger value="document">
               Redação de Documentos
             </TabsTrigger>
+            <TabsTrigger value="analysis">
+              Análise de Documentos
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="assistant" className="mt-0">
-            <AssistantTab />
+            <ContextualAssistantTab />
           </TabsContent>
           
           <TabsContent value="research" className="mt-0">
@@ -37,6 +41,10 @@ const LawyerAssistant = () => {
           
           <TabsContent value="document" className="mt-0">
             <DocumentTab />
+          </TabsContent>
+          
+          <TabsContent value="analysis" className="mt-0">
+            <AnalysisTab />
           </TabsContent>
         </Tabs>
       </div>

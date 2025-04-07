@@ -16,12 +16,33 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, context, role, model = 'gpt-4o-mini' } = await req.json();
+    const { prompt, context, role = 'lawyer', model = 'gpt-4o-mini', requestType = 'chat' } = await req.json();
     
-    // Define o contexto do sistema com base no papel do usuário
+    // Define o contexto do sistema com base no papel do usuário e tipo de solicitação
     let systemPrompt = '';
     
-    if (role === 'client') {
+    if (requestType === 'document_analysis') {
+      systemPrompt = `Você é um assistente jurídico especializado em análise de documentos legais.
+      Analise o documento fornecido e identifique elementos-chave como partes envolvidas, obrigações, datas importantes, riscos e implicações legais.
+      Forneça uma análise detalhada, estruturada e com recomendações práticas.
+      Use português de Portugal e terminologia jurídica portuguesa.
+      
+      Contexto: ${context || 'Documento para análise'}`;
+    } else if (requestType === 'information_extraction') {
+      systemPrompt = `Você é um assistente jurídico especializado em extrair informações estruturadas de documentos legais.
+      Extraia e organize as informações solicitadas do documento em um formato claro e estruturado.
+      Identifique metadados, cláusulas importantes, entidades, datas e outros elementos relevantes.
+      Use português de Portugal e terminologia jurídica portuguesa.
+      
+      Contexto: ${context || 'Documento para extração de informações'}`;
+    } else if (requestType === 'legal_suggestions') {
+      systemPrompt = `Você é um assistente jurídico especializado em fornecer sugestões e recomendações práticas.
+      Com base na consulta e contexto fornecidos, gere sugestões jurídicas específicas, acionáveis e relevantes.
+      Para cada sugestão, forneça título, descrição, tipo, prioridade e relevância.
+      Use português de Portugal e terminologia jurídica portuguesa.
+      
+      Contexto: ${context || 'Contexto para sugestões jurídicas'}`;
+    } else if (role === 'client') {
       systemPrompt = `Você é um assistente jurídico especializado em explicar casos jurídicos para clientes em linguagem simples e acessível. 
       Forneça respostas diretas, educativas e empáticas. Quando relevante, explique termos jurídicos. 
       Nunca dê conselhos jurídicos específicos - sempre encaminhe o cliente para falar com seu advogado para questões específicas do caso.
