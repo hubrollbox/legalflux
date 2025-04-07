@@ -111,6 +111,7 @@ const getPriorityColor = (priority: string) => {
 const Processes = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
+  const [selectedProcess, setSelectedProcess] = useState<string | null>(null);
   const { hasPermission } = usePermissions();
   const canCreateProcess = hasPermission("processes", "create");
   
@@ -247,7 +248,7 @@ const Processes = () => {
 
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <Card className="lg:col-span-2">
               <CardHeader className="pb-3">
               <CardTitle>Lista de Processos</CardTitle>
@@ -286,19 +287,39 @@ const Processes = () => {
                   </TableHeader>
                   <TableBody>
                     {filteredProcesses.map((process) => (
-                      <TableRow key={process.id}>
+                      <TableRow 
+                        key={process.id} 
+                        className={`cursor-pointer hover:bg-muted/50 ${selectedProcess === process.id ? 'bg-muted' : ''}`}
+                        onClick={() => setSelectedProcess(process.id)}
+                      >
                         <TableCell className="font-medium">{process.id}</TableCell>
-                        <TableCell>{process.title}</TableCell>
-                        <TableCell>{process.client}</TableCell>
-                        <TableCell>{process.type}</TableCell>
                         <TableCell>
-                          <Badge className={getStatusColor(process.status)}>
+                          <div className="flex flex-col">
+                            <span className="font-medium">{process.title}</span>
+                            <span className="text-sm text-muted-foreground">{process.client}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>{process.client}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="font-normal">
+                            {process.type}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={`${getStatusColor(process.status)} inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2`}>
+                            <span className="flex w-2 h-2 rounded-full mr-1 ${process.status === 'Em Curso' ? 'bg-blue-500' : process.status === 'Em Espera' ? 'bg-yellow-500' : 'bg-green-500'}"></span>
                             {process.status}
                           </Badge>
                         </TableCell>
-                        <TableCell>{new Date(process.lastUpdate).toLocaleDateString('pt-PT')}</TableCell>
                         <TableCell>
-                          <Badge className={getPriorityColor(process.priority)}>
+                          <div className="flex flex-col">
+                            <span>{new Date(process.lastUpdate).toLocaleDateString('pt-PT')}</span>
+                            <span className="text-xs text-muted-foreground">{new Date(process.lastUpdate).toLocaleTimeString('pt-PT')}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={`${getPriorityColor(process.priority)} inline-flex items-center gap-1`}>
+                            <span className="w-2 h-2 rounded-full ${process.priority === 'Alta' ? 'bg-red-500' : process.priority === 'Média' ? 'bg-orange-500' : 'bg-green-500'}"></span>
                             {process.priority}
                           </Badge>
                         </TableCell>
@@ -327,7 +348,65 @@ const Processes = () => {
               </div>
             </CardFooter>
             </Card>
-            
+
+            {selectedProcess && (
+              <Card className="lg:col-span-2">
+                <CardHeader>
+                  <CardTitle>Detalhes do Processo</CardTitle>
+                  <CardDescription>
+                    Informações detalhadas e timeline do processo
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    {/* Informações básicas */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <h4 className="text-sm font-medium text-muted-foreground">Processo</h4>
+                        <p className="text-lg font-semibold">{processesMockData.find(p => p.id === selectedProcess)?.title}</p>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-muted-foreground">Cliente</h4>
+                        <p className="text-lg font-semibold">{processesMockData.find(p => p.id === selectedProcess)?.client}</p>
+                      </div>
+                    </div>
+
+                    {/* Timeline */}
+                    <div className="relative space-y-4">
+                      <h4 className="text-sm font-medium text-muted-foreground mb-4">Timeline do Processo</h4>
+                      <div className="border-l-2 border-muted pl-4 space-y-6">
+                        <div className="relative">
+                          <div className="absolute -left-[21px] w-4 h-4 rounded-full bg-primary"></div>
+                          <div className="bg-muted/50 rounded-lg p-3">
+                            <p className="text-sm font-medium">Última Atualização</p>
+                            <p className="text-sm text-muted-foreground">
+                              {new Date(processesMockData.find(p => p.id === selectedProcess)?.lastUpdate || '').toLocaleDateString('pt-PT')}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="relative">
+                          <div className="absolute -left-[21px] w-4 h-4 rounded-full bg-muted"></div>
+                          <div className="bg-muted/50 rounded-lg p-3">
+                            <p className="text-sm font-medium">Criação do Processo</p>
+                            <p className="text-sm text-muted-foreground">01/01/2023</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Ações */}
+                    <div className="flex gap-2">
+                      <Button variant="outline" className="w-full">
+                        Ver Documentos
+                      </Button>
+                      <Button variant="outline" className="w-full">
+                        Adicionar Nota
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
         </div>
       </DashboardLayout>
