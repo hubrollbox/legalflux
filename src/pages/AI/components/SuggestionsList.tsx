@@ -8,7 +8,9 @@ interface SuggestionsListProps {
 }
 
 const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
-  if (!suggestions || suggestions.length === 0) return null;
+  // Verifica se há sugestões válidas antes de prosseguir
+  const validSuggestions = suggestions?.filter(s => s) || [];
+  if (validSuggestions.length === 0) return null;
 
   // Função para obter o ícone com base no tipo de sugestão
   const getSuggestionIcon = (type: string) => {
@@ -73,17 +75,10 @@ const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
     <div className="space-y-3">
       <h3 className="text-lg font-medium">Sugestões Jurídicas</h3>
       
-      {suggestions.map((suggestion) => {
-        // Verificar se a sugestão existe e tem todas as propriedades necessárias
-        if (!suggestion) return null;
-        
+      {validSuggestions.map((suggestion) => {
         // Garantir que as propriedades existam, usando valores padrão se necessário
-        const type = suggestion?.type || 'action';
-        const priority = suggestion?.priority || 'medium';
-        const title = suggestion?.title || 'Sugestão';
-        const description = suggestion?.description || '';
-        const relevance = suggestion?.relevance || 0;
-        
+        const { type = 'action', priority = 'medium', title = 'Sugestão', description = '', relevance = 0 } = suggestion;
+
         return (
           <Card key={suggestion.id} className="overflow-hidden">
             <div className="flex items-stretch">
@@ -111,16 +106,16 @@ const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
               <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
                 <div 
                   className="bg-primary h-1.5 rounded-full" 
-                  style={{ width: `${suggestion.relevance}%` }}
-                  title={`Relevância: ${suggestion.relevance}%`}
+                  style={{ width: `${relevance}%` }}
+                  title={`Relevância: ${relevance}%`}
                 />
               </div>
               </CardContent>
             </div>
           </Card>
-        )}        ))}
+        )})
       </div>
-  );
-};
+    );
+  };
 
-export default SuggestionsList;
+  export default SuggestionsList;
