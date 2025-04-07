@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, Phone, Video, MoreVertical, Paperclip, Search, Clock, Check, CheckCheck } from 'lucide-react';
+import NotificationSystem from '../notifications/NotificationSystem';
 
 interface Message {
   id: string;
@@ -307,7 +308,7 @@ const ChatInterface: React.FC = () => {
               </div>
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               <Button variant="ghost" size="icon">
                 <Phone className="h-5 w-5" />
               </Button>
@@ -317,6 +318,7 @@ const ChatInterface: React.FC = () => {
               <Button variant="ghost" size="icon">
                 <Search className="h-5 w-5" />
               </Button>
+              <NotificationSystem />
               <Button variant="ghost" size="icon">
                 <MoreVertical className="h-5 w-5" />
               </Button>
@@ -329,15 +331,15 @@ const ChatInterface: React.FC = () => {
               {mockMessages[activeContact.id]?.map(message => (
                 <div 
                   key={message.id} 
-                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${message?.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div 
-                    className={`max-w-[70%] rounded-lg p-3 ${message.sender === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}
+                    className={`max-w-[70%] rounded-lg p-3 ${message?.sender === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}
                   >
                     <p>{message.content}</p>
-                    <div className={`flex items-center justify-end gap-1 mt-1 text-xs ${message.sender === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
+                    <div className={`flex items-center justify-end gap-1 mt-1 text-xs ${message?.sender === 'user' ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                       <span>{formatTime(message.timestamp)}</span>
-                      {message.sender === 'user' && getStatusIcon(message.status)}
+                      {message?.sender === 'user' && getStatusIcon(message.status)}
                     </div>
                   </div>
                 </div>

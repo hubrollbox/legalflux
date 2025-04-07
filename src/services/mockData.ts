@@ -560,21 +560,21 @@ export const getRecentCases = () => [
     title: "Processo de Divórcio Silva",
     clientName: "João Cardoso",
     clientAvatar: "",
-    status: "active" as const,
+    status: "active",
   },
   {
     id: "2",
     title: "Contrato de Arrendamento",
     clientName: "Pedro Santos",
     clientAvatar: "",
-    status: "pending" as const,
+    status: "pending",
   },
   {
     id: "3",
     title: "Disputa Trabalhista",
     clientName: "Teresa Almeida",
     clientAvatar: "",
-    status: "closed" as const,
+    status: "closed",
   },
 ];
 
@@ -584,20 +584,48 @@ export const getRecentTasks = () => [
     title: "Preparar petição inicial",
     assignedToName: "Advogado Demo",
     assignedToAvatar: "",
-    priority: "high" as const,
+    priority: "high",
   },
   {
     id: "2",
     title: "Revisar contrato",
     assignedToName: "Assistente Demo",
     assignedToAvatar: "",
-    priority: "medium" as const,
+    priority: "medium",
   },
   {
     id: "3",
     title: "Agendar audiência",
     assignedToName: "Carlos Santos",
     assignedToAvatar: "",
-    priority: "low" as const,
+    priority: "low",
   },
 ];
+
+
+export const mockData = {
+  processes: [
+    { id: 1, caseNumber: 'PJ-2023-001', client: 'Maria Silva', status: 'ativo' },
+    { id: 2, caseNumber: 'CIV-2024-045', client: 'João Pereira', status: 'arquivado' },
+  ],
+  tasks: [
+    {
+      id: '1',
+      title: 'Revisar contrato',
+      description: 'Analisar cláusulas de confidencialidade',
+      dueDate: '2024-05-25',
+      priority: 'alta',
+      status: 'pendente',
+      relatedCase: 'PJ-2023-001'
+    },
+    {
+      id: '2',
+      title: 'Preparar petição inicial',
+      description: 'Elaborar documento para ação de indenização',
+      dueDate: '2024-05-28',
+      priority: 'media',
+      status: 'em-andamento',
+      relatedCase: 'CIV-2024-045'
+    },
+  ]
+};

@@ -92,6 +92,7 @@ export interface Document {
 // Message types
 export interface Message {
   id: string;
+  type?: 'text' | 'system' | 'warning';
   content: string;
   senderId: string;
   senderName: string;
