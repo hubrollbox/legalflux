@@ -32,7 +32,9 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
     priority: 'medium',
     client: '',
     process: '',
-    location: ''
+    location: '',
+    isRecurring: false,
+    recurrenceType: 'daily'
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -68,7 +70,7 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
           <Label htmlFor="category">Categoria <span className="text-red-500">*</span></Label>
           <Select
             value={formData.category}
-            onValueChange={(value) => setFormData({ ...formData, category: value })}
+            onValueChange={(value) => setFormData({ ...formData, category: value as 'meeting' | 'deadline' | 'task' | 'hearing' | 'trial' | 'client' | 'other' })}
           >
             <SelectTrigger id="category">
               <SelectValue placeholder="Selecione uma categoria" />
@@ -224,7 +226,7 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
           <Label htmlFor="recurrenceType">Tipo de Recorrência</Label>
           <Select
             value={formData.recurrenceType || 'daily'}
-            onValueChange={(value) => setFormData({ ...formData, recurrenceType: value })}
+            onValueChange={(value) => setFormData({ ...formData, recurrenceType: value as 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'yearly' })}
           >
             <SelectTrigger id="recurrenceType">
               <SelectValue placeholder="Selecione o tipo de recorrência" />

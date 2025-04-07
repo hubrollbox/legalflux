@@ -10,13 +10,17 @@ interface SuggestionsListProps {
 const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
   // Verifica se há sugestões válidas e completas antes de prosseguir
   const validSuggestions = suggestions?.filter(suggestion => {
-    const suggestionType = suggestion?.type || 'action';
-    return suggestion &&
-      typeof suggestion.id === 'string' &&
+    // Verificação completa para garantir que o objeto suggestion existe e tem todas as propriedades necessárias
+    if (!suggestion || typeof suggestion !== 'object') return false;
+    
+    // Verificar se a propriedade type existe e é válida
+    const suggestionType = suggestion.type ? suggestion.type.toString() : 'action';
+    
+    return typeof suggestion.id === 'string' &&
       typeof suggestion.title === 'string' &&
       typeof suggestion.description === 'string' &&
       ['action', 'document', 'precedent', 'strategy'].includes(suggestionType) &&
-      ['high', 'medium', 'low'].includes(suggestion.priority || 'medium') &&
+      ['high', 'medium', 'low'].includes(suggestion.priority?.toString() || 'medium') &&
       typeof suggestion.relevance === 'number';
   }) || [];
   if (validSuggestions.length === 0) return null;
@@ -122,9 +126,10 @@ const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
               </CardContent>
             </div>
           </Card>
-        )})
-      </div>
-    );
-  };
+        );
+      })}
+    </div>
+  );
+};
 
-  export default SuggestionsList;
+export default SuggestionsList;

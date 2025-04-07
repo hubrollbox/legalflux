@@ -10,12 +10,14 @@ export interface CalendarEvent {
   title: string;
   start: Date;
   end: Date;
-  category: string;
+  category: 'meeting' | 'deadline' | 'task' | 'hearing' | 'trial' | 'client' | 'other';
   description?: string;
   client?: string;
   process?: string;
   location?: string;
   priority?: 'high' | 'medium' | 'low';
+  isRecurring?: boolean;
+  recurrenceType?: 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'yearly';
 }
 
 interface DraggableEventProps {
