@@ -10,12 +10,13 @@ interface SuggestionsListProps {
 const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
   // Verifica se há sugestões válidas e completas antes de prosseguir
   const validSuggestions = suggestions?.filter(suggestion => {
+    const suggestionType = suggestion?.type || 'action';
     return suggestion &&
       typeof suggestion.id === 'string' &&
       typeof suggestion.title === 'string' &&
       typeof suggestion.description === 'string' &&
-      ['action', 'document', 'precedent', 'strategy'].includes(suggestion.type) &&
-      ['high', 'medium', 'low'].includes(suggestion.priority) &&
+      ['action', 'document', 'precedent', 'strategy'].includes(suggestionType) &&
+      ['high', 'medium', 'low'].includes(suggestion.priority || 'medium') &&
       typeof suggestion.relevance === 'number';
   }) || [];
   if (validSuggestions.length === 0) return null;
@@ -85,7 +86,7 @@ const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
       
       {validSuggestions.map((suggestion) => {
         // Garantir que as propriedades existam, usando valores padrão se necessário
-        const { type = 'action', priority = 'medium', title = 'Sugestão', description = '', relevance = 0 } = suggestion;
+        const { type = 'action', priority = 'medium', title = 'Sugestão', description = '', relevance = 0 } = suggestion || {};
 
         return (
           <Card key={suggestion.id} className="overflow-hidden">
