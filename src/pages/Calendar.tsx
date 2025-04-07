@@ -2,8 +2,9 @@ import React, { useState, useCallback } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Users, Clock, FileText, Calendar as CalendarIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { Calendar as BigCalendar, dateFnsLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
@@ -21,6 +22,25 @@ const CalendarPage = () => {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const { toast } = useToast();
+
+  const eventStyleGetter = (event: any) => {
+    const categoryColors = {
+      meeting: { bg: "bg-blue-100", text: "text-blue-700", icon: <Users className="h-4 w-4" /> },
+      deadline: { bg: "bg-red-100", text: "text-red-700", icon: <Clock className="h-4 w-4" /> },
+      task: { bg: "bg-green-100", text: "text-green-700", icon: <FileText className="h-4 w-4" /> },
+      other: { bg: "bg-gray-100", text: "text-gray-700", icon: <CalendarIcon className="h-4 w-4" /> }
+    };
+
+    const style = {
+      className: cn(
+        categoryColors[event.category]?.bg || "bg-gray-100",
+        categoryColors[event.category]?.text || "text-gray-700",
+        "rounded-md border border-transparent transition-colors hover:border-gray-300"
+      )
+    };
+
+    return { style };
+  };
 
   const locales = { 'pt-BR': ptBR };
   const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
@@ -109,6 +129,12 @@ const CalendarPage = () => {
               onNavigate={setDate}
               date={date}
               views={[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]}
+              eventPropGetter={eventStyleGetter}
+              dayPropGetter={(date) => ({
+                style: {
+                  backgroundColor: date.getDay() === 0 || date.getDay() === 6 ? "#f9fafb" : "transparent"
+                }
+              })}
               messages={{
                 month: "Mês",
                 week: "Semana",
