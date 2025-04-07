@@ -118,7 +118,7 @@ const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
               </CardContent>
             </div>
           </Card>
-        ))}
+        )}        ))}
       </div>
   );
 };
