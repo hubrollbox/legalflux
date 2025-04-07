@@ -14,7 +14,7 @@ interface DocumentsSearchBarProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
   filters: {
-    type: string;
+    type: "document" | "action" | "precedent" | "strategy";
     date: Date | undefined;
     tags: string[];
   };

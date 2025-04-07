@@ -9,6 +9,7 @@ interface DocumentPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   document: Document | null;
+  processId?: string;
 }
 
 const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({

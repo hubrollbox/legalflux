@@ -1,5 +1,6 @@
 import { Document } from '@/types';
 import { notifyUsers } from './notificationService';
+import { validateUUID } from '../lib/utils';
 
 interface DocumentVersion {
   id: string;
@@ -9,6 +10,8 @@ interface DocumentVersion {
   changes: string;
   createdBy: string;
   createdAt: Date;
+  clientId: string;
+  processId: string;
 }
 
 interface DocumentWithVersions extends Document {
@@ -19,12 +22,16 @@ interface DocumentWithVersions extends Document {
 }
 
 class DocumentService {
-  private documents: Map<string, DocumentWithVersions> = new Map();
-  private versions: Map<string, DocumentVersion[]> = new Map();
+  private documents: Map<string, DocumentWithVersions> = new Map();;
+  private versions: Map<string, DocumentVersion[]> = new Map();;
 
-  async createDocument(document: Partial<Document>, userId: string): Promise<Document> {
-    if (!document.name || !document.url || !document.clientId || !document.processId) {
+  28: async createDocument(document: Partial<Document>, userId: string): Promise<Document> {
+  29: if (!document.name || !document.url || !document.clientId || !document.processId) {
       throw new Error('Nome, URL, ID do cliente e ID do processo são obrigatórios');
+    }
+    
+    if (!validateUUID(userId) || !validateUUID(document.clientId) || !validateUUID(document.processId)) {
+      throw new Error('IDs inválidos');
     }
     
     const newDocument = {
@@ -33,12 +40,13 @@ class DocumentService {
       version: 1,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      name: document.name,
-      url: document.url,
+      name: document.name.trim(),
+      url: document.url.trim(),
       size: document.size || 0,
-      type: document.type || '',
-      createdBy: userId
-    } as Document;
+      type: (document.type || '').trim(),
+      createdBy: userId,
+      title: document.name.trim()
+    } as DocumentWithVersions;
 
     const version: DocumentVersion = {
       id: crypto.randomUUID(),
@@ -62,6 +70,18 @@ class DocumentService {
   }
 
   async updateDocument(id: string, updates: Partial<Document>, userId: string, changes: string): Promise<Document> {
+    if (!id || !validateUUID(id)) {
+      throw new Error('ID do documento inválido');
+    }
+    
+    if (!userId || !validateUUID(userId)) {
+      throw new Error('ID do usuário inválido');
+    }
+    
+    if (!changes?.trim()) {
+      throw new Error('Descrição das alterações é obrigatória');
+    }
+    
     const document = this.documents.get(id);
     if (!document) {
       throw new Error('Documento não encontrado');
@@ -71,7 +91,10 @@ class DocumentService {
       ...document,
       ...updates,
       version: document.version + 1,
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      name: updates.name ? updates.name.trim() : document.name,
+      url: updates.url ? updates.url.trim() : document.url,
+      type: updates.type ? updates.type.trim() : document.type
     };
 
     const version: DocumentVersion = {
@@ -101,6 +124,11 @@ class DocumentService {
   }
 
   async restoreVersion(documentId: string, versionId: string, userId: string): Promise<Document> {
+    if (!documentId || !versionId || !userId || 
+        !validateUUID(documentId) || !validateUUID(versionId) || !validateUUID(userId)) {
+      throw new Error('IDs inválidos');
+    }
+    
     const document = this.documents.get(documentId);
     const versions = this.versions.get(documentId);
 
@@ -113,6 +141,10 @@ class DocumentService {
       throw new Error('Versão não encontrada');
     }
 
+    if (!versionToRestore.fileUrl) {
+      throw new Error('URL do arquivo da versão não está disponível');
+    }
+
     return this.updateDocument(
       documentId,
       { fileUrl: versionToRestore.fileUrl },
@@ -121,27 +153,46 @@ class DocumentService {
     );
   }
 
+  private async getClientName(clientId: string): Promise<string> {
+    // TODO: Implement actual client name lookup
+    return `Client-${clientId.substring(0, 8)}`;
+  }
+
+  private async getProcessTitle(processId: string): Promise<string> {
+    // TODO: Implement actual process title lookup
+    return `Process-${processId.substring(0, 8)}`;
+  }
+
   private async notifyDocumentChange(document: Document, action: 'created' | 'updated') {
-    const clientName = await this.getClientName(document.clientId);
-    const processTitle = await this.getProcessTitle(document.processId);
+    if (!document?.id || !document.clientId || !document.processId) {
+      console.error('Dados do documento incompletos para notificação');
+      return;
+    }
     
-    const message = action === 'created'
-      ? `Novo documento criado para ${clientName} no processo ${processTitle}: ${document.name}`
-      : `Documento atualizado para ${clientName} no processo ${processTitle}: ${document.name} (Versão ${document.version})`;
+    try {
+      const clientName = await this.getClientName(document.clientId);
+      const processTitle = await this.getProcessTitle(document.processId);
+      
+      const message = action === 'created'
+        ? `Novo documento criado para ${clientName} no processo ${processTitle}: ${document.name}`
+        : `Documento atualizado para ${clientName} no processo ${processTitle}: ${document.name} (Versão ${document.version})`;
 
-    const notification = {
-      title: 'Atualização de Documento',
-      message,
-      type: 'document',
-      data: {
-        documentId: document.id,
-        version: document.version,
-        clientId: document.clientId,
-        processId: document.processId
-      }
-    };
+      const notification = {
+        title: 'Atualização de Documento',
+        message,
+        type: 'document',
+        data: {
+          documentId: document.id,
+          version: document.version,
+          clientId: document.clientId,
+          processId: document.processId
+        }
+      };
 
-    await notifyUsers(notification);
+      await notifyUsers(notification);
+    } catch (error) {
+      console.error('Falha ao enviar notificação:', error);
+    }
   }
 }
 

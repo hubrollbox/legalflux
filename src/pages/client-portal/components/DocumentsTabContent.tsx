@@ -7,6 +7,8 @@ interface DocumentsTabContentProps {
   title: string;
   documents: Document[];
   onPreviewDocument: (document: Document) => void;
+  // Adicione a propriedade processId se necessário
+  processId?: string;
   statusFilter?: 'pending' | 'approved' | 'all';
 }
 

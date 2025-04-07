@@ -10,9 +10,9 @@ interface DocumentsContentProps {
   documents: Array<{
     id: string;
     name: string;
-    type: string;
+    type: "document" | "action" | "precedent" | "strategy";
     size: string;
-    updatedAt: string;
+    updatedAt: Date;
     owner: string;
     folder: string;
     process: string;

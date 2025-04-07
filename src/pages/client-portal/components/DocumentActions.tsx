@@ -6,11 +6,9 @@ import { Eye, Download } from 'lucide-react';
 interface Document {
   id: string;
   name: string;
-  type: string;
-  size: string;
-  uploadDate: string;
-  status: 'pending' | 'approved' | 'rejected';
-  processNumber?: string;
+  type: 'document' | 'action' | 'precedent' | 'strategy';
+  size: number;
+  processId?: string;
 }
 
 interface DocumentActionsProps {

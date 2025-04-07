@@ -11,16 +11,29 @@ const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
   // Verifica se há sugestões válidas e completas antes de prosseguir
   const validSuggestions = suggestions?.filter(suggestion => {
     // Verificação completa para garantir que o objeto suggestion existe e tem todas as propriedades necessárias
-    if (!suggestion || typeof suggestion !== 'object') return false;
+    if (!suggestion || typeof suggestion !== 'object' || suggestion === null) return false;
     
-    // Verificar se a propriedade type existe e é válida
-    const suggestionType = suggestion.type ? suggestion.type.toString() : 'action';
+    // Ensure type safety by validating against LegalSuggestion interface
+    const suggestionType = ['action', 'document', 'precedent', 'strategy'].includes(suggestion?.type)
+      ? suggestion.type
+      : 'action';
+    const suggestionPriority = ['high', 'medium', 'low'].includes(suggestion?.priority)
+      ? suggestion.priority
+      : 'medium';
+    
+    // Ensure all required properties exist with default values
+    suggestion.id = suggestion?.id || '';
+    suggestion.title = suggestion?.title || '';
+    suggestion.description = suggestion?.description || '';
+    suggestion.type = suggestionType;
+    suggestion.priority = suggestionPriority;
+    suggestion.relevance = suggestion?.relevance || 0;
     
     return typeof suggestion.id === 'string' &&
       typeof suggestion.title === 'string' &&
       typeof suggestion.description === 'string' &&
       ['action', 'document', 'precedent', 'strategy'].includes(suggestionType) &&
-      ['high', 'medium', 'low'].includes(suggestion.priority?.toString() || 'medium') &&
+      ['high', 'medium', 'low'].includes(suggestionPriority) &&
       typeof suggestion.relevance === 'number';
   }) || [];
   if (validSuggestions.length === 0) return null;

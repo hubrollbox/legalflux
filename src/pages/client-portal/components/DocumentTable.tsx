@@ -7,7 +7,7 @@ import { DocumentActions } from './DocumentActions';
 export interface Document {
   id: string;
   name: string;
-  type: string;
+  type: "document" | "action" | "precedent" | "strategy";
   size: string;
   uploadDate: string;
   status: 'pending' | 'approved' | 'rejected';

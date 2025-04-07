@@ -33,7 +33,7 @@ export interface Document {
   title: string;
   description?: string;
   fileUrl: string;
-  fileType: string;
+  fileType: "document" | "action" | "precedent" | "strategy";
   clientId?: string;
   processId?: string;
   version: number;

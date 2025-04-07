@@ -9,7 +9,7 @@ interface TemplatesContentProps {
   templates: Array<{
     id: string;
     name: string;
-    type: string;
+    type: "document" | "action" | "precedent" | "strategy";
     size: string;
     description: string;
     updatedAt: string;

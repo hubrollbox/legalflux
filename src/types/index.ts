@@ -81,12 +81,15 @@ export interface Document {
   name: string;
   caseId?: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt: Date;
   createdBy: string;
   size: number;
-  type: string;
+  type: 'document' | 'action' | 'precedent' | 'strategy';
   url: string;
+  fileUrl: string;
   version: number;
+  processId?: string;
+  clientId?: string;
 }
 
 // Message types
