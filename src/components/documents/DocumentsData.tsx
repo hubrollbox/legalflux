@@ -64,7 +64,8 @@ export const mockDocuments = [
     updatedAt: "2023-11-30T13:50:00",
     owner: "Marta Ferreira",
     folder: "Listas",
-    process: "2023/1238"
+    process: "2023/1238",
+    tags: []
   },
   {
     id: "doc7",
@@ -74,7 +75,8 @@ export const mockDocuments = [
     updatedAt: "2023-11-29T15:30:00",
     owner: "Rui Vieira",
     folder: "Cálculos",
-    process: "2023/1234"
+    process: "2023/1234",
+    tags: []
   },
   {
     id: "doc8",
@@ -84,7 +86,8 @@ export const mockDocuments = [
     updatedAt: "2023-11-28T10:00:00",
     owner: "Sofia Martins",
     folder: "Pareceres",
-    process: "2023/1235"
+    process: "2023/1235",
+    tags: []
   }
 ];
 
