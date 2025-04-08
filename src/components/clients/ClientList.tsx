@@ -35,6 +35,7 @@ const ClientList: React.FC<ClientListProps> = ({
   onView,
 }) => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -53,7 +54,59 @@ const ClientList: React.FC<ClientListProps> = ({
     navigate(`/processes?clientId=${clientId}`);
   };
 
-  return (
+  // Renderiza a lista de clientes em formato de cards para dispositivos móveis
+  const renderMobileView = () => (
+    <div className="space-y-4">
+      {clients.length === 0 ? (
+        <div className="text-center py-6 text-muted-foreground">
+          Nenhum cliente encontrado
+        </div>
+      ) : (
+        clients.map((client) => (
+          <Card key={client.id} className="overflow-hidden">
+            <CardContent className="p-4">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h3 className="font-medium text-base">{client.name}</h3>
+                  <p className="text-sm text-muted-foreground">NIF: {client.nif}</p>
+                </div>
+                <div>{getStatusBadge(client.status)}</div>
+              </div>
+              
+              <div className="space-y-1 mb-3">
+                <div className="flex items-center text-sm">
+                  <Mail className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                  <span className="text-muted-foreground">{client.email}</span>
+                </div>
+                <div className="flex items-center text-sm">
+                  <Phone className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                  <span className="text-muted-foreground">{client.phone}</span>
+                </div>
+              </div>
+              
+              <div className="flex justify-between items-center pt-2 border-t">
+                <Button variant="ghost" size="sm" onClick={() => onView(client)}>
+                  <Eye className="h-4 w-4 mr-1" /> Ver
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => onEdit(client)}>
+                  <Edit className="h-4 w-4 mr-1" /> Editar
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => handleViewProcesses(client.id)}>
+                  <FileText className="h-4 w-4 mr-1" /> Processos
+                </Button>
+                <Button variant="ghost" size="sm" className="text-red-600" onClick={() => onDelete(client)}>
+                  <Trash2 className="h-4 w-4 mr-1" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))
+      )}
+    </div>
+  );
+
+  // Renderiza a tabela para dispositivos maiores
+  const renderTableView = () => (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
@@ -121,6 +174,8 @@ const ClientList: React.FC<ClientListProps> = ({
       </Table>
     </div>
   );
+
+  return isMobile ? renderMobileView() : renderTableView();
 };
 
 export default ClientList;
