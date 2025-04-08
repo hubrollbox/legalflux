@@ -162,7 +162,12 @@ const Register = () => {
 
   const handleNextStep = () => {
     if (validateStep(currentStep)) {
-      setCurrentStep(prev => Math.min(prev + 1, totalSteps));
+      // Se estiver no passo 2 e for conta particular, pular para o passo 4
+      if (currentStep === 2 && formData.accountType === "particular") {
+        setCurrentStep(4);
+      } else {
+        setCurrentStep(prev => Math.min(prev + 1, totalSteps));
+      }
     }
   };
 
