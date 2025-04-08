@@ -6,6 +6,7 @@ export interface CalendarProvider {
   icon: string;
   isConnected: boolean;
   lastSync?: Date;
+  exportEvent: (calendarId: string, event: CalendarEvent) => Promise<{ success: boolean; errors?: string[] }>;
 }
 
 export interface CalendarEvent {
@@ -20,6 +21,9 @@ export interface CalendarEvent {
   clientId?: string;
   externalId?: string;
   externalCalendarId?: string;
+  attendees?: string[];
+  notes?: string;
+  category?: string;
 }
 
 export interface SyncOptions {
@@ -56,21 +60,24 @@ class CalendarIntegrationService {
       id: 'google',
       name: 'Google Calendar',
       icon: '/img/integrations/google-calendar.svg',
-      isConnected: false
+      isConnected: false,
+      exportEvent: async (calendarId: string, event: CalendarEvent) => { return { success: true }; }
     });
 
     this.providers.set('outlook', {
       id: 'outlook',
       name: 'Microsoft Outlook',
       icon: '/img/integrations/outlook.svg',
-      isConnected: false
+      isConnected: false,
+      exportEvent: async (calendarId: string, event: CalendarEvent) => { return { success: true }; }
     });
 
     this.providers.set('apple', {
       id: 'apple',
       name: 'Apple Calendar',
       icon: '/img/integrations/apple-calendar.svg',
-      isConnected: false
+      isConnected: false,
+      exportEvent: async (calendarId: string, event: CalendarEvent) => { return { success: true }; }
     });
   }
 

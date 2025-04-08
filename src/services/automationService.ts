@@ -636,6 +636,12 @@ class AutomationService {
    */
   private async executeNotificationStep(step: WorkflowStep, context: Record<string, any>): Promise<boolean> {
     const { title, message, recipients, includeDocument, documentVariable } = step.parameters;
+
+    // Verificar se os parâmetros essenciais estão definidos
+    if (!title || !message || !recipients) {
+      console.error('Parâmetros de notificação ausentes:', { title, message, recipients });
+      return false;
+    }
     
     // Substituir placeholders no título e mensagem
     const processedTitle = this.replacePlaceholders(title, context);

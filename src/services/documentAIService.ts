@@ -1,4 +1,5 @@
 import { aiService, ClauseSuggestion, TextCorrection } from './aiService';
+import { randomUUID } from 'node:crypto';
 import { documentService } from './documentService';
 import { notifyUsers } from './notificationService';
 
@@ -60,7 +61,7 @@ class DocumentAIService {
     // Inicializar com alguns templates de exemplo
     const exampleTemplates: DocumentTemplate[] = [
       {
-        id: crypto.randomUUID(),
+        id: randomUUID(),
         name: 'Contrato de Prestação de Serviços Advocatícios',
         description: 'Template padrão para contratos de prestação de serviços advocatícios',
         content: 'CONTRATO DE PRESTAÇÃO DE SERVIÇOS ADVOCATÍCIOS\n\nPelo presente instrumento particular, de um lado [NOME_CLIENTE], [QUALIFICAÇÃO_CLIENTE], doravante denominado CONTRATANTE, e de outro lado [NOME_ADVOGADO], inscrito na OAB/[UF] sob o nº [NUMERO_OAB], com escritório em [ENDEREÇO_ESCRITÓRIO], doravante denominado CONTRATADO, têm entre si justo e contratado o seguinte:\n\nCLÁUSULA PRIMEIRA - DO OBJETO\nO presente contrato tem por objeto a prestação de serviços advocatícios pelo CONTRATADO ao CONTRATANTE, consistentes em [DESCRIÇÃO_SERVIÇOS].\n\nCLÁUSULA SEGUNDA - DOS HONORÁRIOS\nPelos serviços prestados, o CONTRATANTE pagará ao CONTRATADO o valor de R$ [VALOR] ([VALOR_POR_EXTENSO]), a ser pago da seguinte forma: [FORMA_PAGAMENTO].\n\nCLÁUSULA TERCEIRA - DAS OBRIGAÇÕES DO CONTRATADO\nO CONTRATADO se obriga a:\na) Prestar os serviços advocatícios com zelo e diligência;\nb) Manter o CONTRATANTE informado sobre o andamento dos serviços;\nc) Guardar sigilo sobre as informações recebidas do CONTRATANTE.\n\nCLÁUSULA QUARTA - DAS OBRIGAÇÕES DO CONTRATANTE\nO CONTRATANTE se obriga a:\na) Fornecer ao CONTRATADO todas as informações e documentos necessários à prestação dos serviços;\nb) Pagar os honorários advocatícios na forma e prazo estipulados;\nc) Arcar com as despesas processuais e outras necessárias ao bom andamento dos serviços.\n\nCLÁUSULA QUINTA - DA VIGÊNCIA\nO presente contrato terá vigência de [PRAZO], iniciando-se na data de sua assinatura.\n\nCLÁUSULA SEXTA - DA RESCISÃO\nO presente contrato poderá ser rescindido por qualquer das partes, mediante notificação prévia de 30 (trinta) dias.\n\nCLÁUSULA SÉTIMA - DO FORO\nFica eleito o foro da Comarca de [COMARCA] para dirimir quaisquer dúvidas oriundas do presente contrato.\n\nE, por estarem assim justos e contratados, firmam o presente instrumento em 2 (duas) vias de igual teor e forma, na presença de 2 (duas) testemunhas.\n\n[LOCAL], [DATA].\n\n_______________________\nCONTRATANTE\n\n_______________________\nCONTRATADO\n\nTestemunhas:\n\n1. _______________________\nNome:\nCPF:\n\n2. _______________________\nNome:\nCPF:',
@@ -72,7 +73,7 @@ class DocumentAIService {
         usageCount: 0
       },
       {
-        id: crypto.randomUUID(),
+        id: randomUUID(),
         name: 'Procuração Ad Judicia',
         description: 'Modelo de procuração para representação judicial',
         content: 'PROCURAÇÃO AD JUDICIA\n\n[NOME_OUTORGANTE], [NACIONALIDADE], [ESTADO_CIVIL], [PROFISSÃO], portador(a) do RG nº [RG], inscrito(a) no CPF sob o nº [CPF], residente e domiciliado(a) em [ENDEREÇO], nomeia e constitui como seu(sua) procurador(a) o(a) advogado(a) [NOME_ADVOGADO], inscrito(a) na OAB/[UF] sob o nº [NUMERO_OAB], com escritório profissional em [ENDEREÇO_ESCRITÓRIO], a quem confere amplos poderes para o foro em geral, com a cláusula ad judicia, em qualquer Juízo, Instância ou Tribunal, podendo propor contra quem de direito as ações competentes e defendê-lo(a) nas contrárias, seguindo umas e outras, até final decisão, usando os recursos legais e acompanhando-os, conferindo-lhe, ainda, poderes especiais para confessar, desistir, transigir, firmar compromissos ou acordos, receber e dar quitação, agindo em conjunto ou separadamente, podendo ainda substabelecer esta em outrem, com ou sem reservas de iguais poderes, dando tudo por bom, firme e valioso, especialmente para [FINALIDADE].\n\n[LOCAL], [DATA].\n\n_______________________\n[NOME_OUTORGANTE]',
@@ -92,7 +93,7 @@ class DocumentAIService {
     // Inicializar com algumas tarefas de automação de exemplo
     const exampleTasks: AutomationTask[] = [
       {
-        id: crypto.randomUUID(),
+        id: randomUUID(),
         name: 'Revisão Automática de Contratos',
         description: 'Revisa automaticamente novos contratos para identificar problemas e sugerir melhorias',
         documentType: 'Contrato',
@@ -117,7 +118,7 @@ class DocumentAIService {
         createdAt: new Date()
       },
       {
-        id: crypto.randomUUID(),
+        id: randomUUID(),
         name: 'Geração Mensal de Relatórios',
         description: 'Gera relatórios mensais de atividade processual para clientes',
         documentType: 'Relatório',
@@ -150,15 +151,9 @@ class DocumentAIService {
    */
   async analyzeDocument(documentText: string, documentType: string): Promise<DocumentAnalysisResult> {
     try {
-      // Obter correções de texto
-      const corrections = await aiService.correctLegalText(documentText, `Tipo de documento: ${documentType}`);
-      
-      // Obter sugestões de cláusulas
-      const suggestions = await aiService.suggestClauses(documentType, 'Análise de documento existente', documentText);
-      
-      // Analisar completude e áreas de risco do documento
+      const corrections: TextCorrection[] = await aiService.correctLegalText(documentText, `Tipo de documento: ${documentType}`);
+      const suggestions: ClauseSuggestion[] = await aiService.suggestClauses(documentType, 'Análise de documento existente', documentText);
       const analysisResult = await this.performDeepAnalysis(documentText, documentType);
-      
       return {
         corrections,
         suggestions,
@@ -338,7 +333,7 @@ class DocumentAIService {
   createTemplate(template: Omit<DocumentTemplate, 'id' | 'createdAt' | 'updatedAt' | 'usageCount'>): DocumentTemplate {
     const newTemplate: DocumentTemplate = {
       ...template,
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       createdAt: new Date(),
       updatedAt: new Date(),
       usageCount: 0
@@ -394,7 +389,7 @@ class DocumentAIService {
   createAutomationTask(task: Omit<AutomationTask, 'id' | 'createdAt'>): AutomationTask {
     const newTask: AutomationTask = {
       ...task,
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       createdAt: new Date()
     };
     
@@ -520,7 +515,17 @@ class DocumentAIService {
       default:
         console.log(`Tipo de ação não implementado: ${action.type}`);
     }
-  }
+  
+    }
+
+    private async correctText(documentText: string): Promise<TextCorrection[]> {
+        try {
+            return await aiService.correctLegalText(documentText, 'Correção de texto legal');
+        } catch (error) {
+            console.error('Erro ao corrigir texto:', error);
+            return [];
+        }
+    }
 }
 
 export const documentAIService = new DocumentAIService();

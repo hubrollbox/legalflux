@@ -439,3 +439,58 @@ class CalendarSyncService {
 }
 
 export const calendarSyncService = new CalendarSyncService();
+
+
+export async function syncDeadlinesWithExternalCalendar(calendarId: string, deadlines: Date[]): Promise<SyncResult> {
+  try {
+    const calendar = this.externalCalendars.get(calendarId);
+    if (!calendar || !calendar.syncEnabled) {
+      throw new Error('Calendário não encontrado ou sincronização desativada');
+    }
+
+    const provider = calendarIntegrationService.getProvider(calendar.providerId);
+    if (!provider || !provider.isConnected) {
+      throw new Error('Provedor não está conectado');
+    }
+
+    const syncResult: SyncResult = {
+      success: true,
+      provider: calendar.providerId,
+      calendarId,
+      eventsImported: 0,
+      eventsExported: 0,
+      errors: []
+    };
+
+    for (const deadline of deadlines) {
+      const event: CalendarEvent = {
+        id: crypto.randomUUID(),
+        title: 'Prazo Legal',
+        startDate: deadline,
+        endDate: deadline,
+        type: 'deadline',
+        attendees: [],
+        notes: 'Sincronizado automaticamente',
+        category: 'deadline',
+        processId: crypto.randomUUID(),
+        clientId: crypto.randomUUID()
+      };
+
+      const exportResult = await provider.exportEvent(calendarId, event);
+      if (!exportResult.success) {
+        syncResult.errors.push(...exportResult.errors);
+      } else {
+        syncResult.eventsExported++;
+      }
+    }
+
+    return syncResult;
+  } catch (error) {
+    console.error('Erro ao sincronizar prazos:', error);
+    return {
+      success: false,
+      provider: 'unknown',
+      errors: [error.message]
+    };
+  }
+}
