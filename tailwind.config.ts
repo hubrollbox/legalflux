@@ -70,14 +70,14 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				sidebar: {
-					DEFAULT: '#1e2a36',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: '#1e2a36',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+					DEFAULT: '#ffffff',
+					foreground: '#293241',
+					primary: '#ffffff',
+					'primary-foreground': '#293241',
 					accent: '#293241',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
+					'accent-foreground': '#ffffff',
+					border: 'hsl(var(--border))',
+					ring: 'hsl(var(--ring))'
 				}
 			},
 			borderRadius: {

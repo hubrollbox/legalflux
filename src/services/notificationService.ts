@@ -168,11 +168,35 @@ class NotificationWebSocket {
 export const notificationWS = new NotificationWebSocket();
 
 
-export async function notifyUsers(notification: { title: string; message: string; type: "document" | "action" | "precedent" | "strategy" | "error"; data: any; }) {
+export async function notifyUsers(notification: { title: string; message: string; type: "document" | "action" | "precedent" | "strategy" | "error" | "success" | "warning" | "info" | "approval"; recipients?: string[]; priority?: string; data: any; }) {
   try {
-    // Aqui você pode implementar a lógica para enviar notificações aos usuários
+    // Implementação da lógica para enviar notificações aos usuários
     console.log('Notificação enviada:', notification);
+    
+    // Adicionar notificação ao store local para exibição na interface
+    const notificationId = crypto.randomUUID();
+    const now = new Date();
+    
+    useNotificationStore.getState().addNotification({
+      id: notificationId,
+      title: notification.title,
+      message: notification.message,
+      timestamp: now.toISOString(),
+      read: false,
+      type: notification.type,
+      priority: notification.priority as 'high' | 'medium' | 'low' || 'medium',
+      data: notification.data
+    });
+    
+    // Em uma implementação real, aqui enviaríamos a notificação para os destinatários
+    // através de WebSockets, push notifications, e-mail, etc.
+    if (notification.recipients && notification.recipients.length > 0) {
+      console.log(`Enviando notificação para destinatários específicos: ${notification.recipients.join(', ')}`);
+    }
+    
+    return notificationId;
   } catch (error) {
     console.error('Erro ao enviar notificação:', error);
+    return null;
   }
 }

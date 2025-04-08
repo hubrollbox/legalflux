@@ -17,12 +17,13 @@ interface DocumentTabsProps {
   filteredDocuments: Array<{
     id: string;
     name: string;
-    type: "document" | "action" | "precedent" | "strategy";
+    type: string;
     size: string;
-    updatedAt: Date;
+    updatedAt: string | Date;
     owner: string;
     folder: string;
     process: string;
+    tags?: string[];
   }>;
   filteredTemplates: Array<{
     id: string;

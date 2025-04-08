@@ -47,9 +47,9 @@ interface DocumentCardProps {
   doc: {
     id: string;
     name: string;
-    type: "document" | "action" | "precedent" | "strategy";
+    type: string;
     size: string;
-    updatedAt: string;
+    updatedAt: string | Date;
     owner: string;
     folder: string;
     process: string;

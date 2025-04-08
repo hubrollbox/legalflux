@@ -45,7 +45,7 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
         <div className="flex items-center">
           <img src={LOGO.WHITE} alt="Logo" className="h-8 w-auto" />
           {!isCollapsed && (
-            <span className="ml-3 text-white font-bold text-lg">LegalFlux</span>
+            <span className="ml-3 text-sidebar-foreground font-bold text-lg">LegalFlux</span>
           )}
         </div>
       </div>
@@ -68,12 +68,12 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                   "w-full flex items-center p-2 rounded-md transition-colors text-sidebar-foreground text-left",
                   isActive
                     ? "bg-sidebar-accent text-white font-medium"
-                    : "hover:bg-sidebar-accent/80",
+                    : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                   isCollapsed ? "justify-center" : ""
                 )}
                 onClick={() => onNavigate(item.href)}
               >
-                <item.icon className={cn("flex-shrink-0 h-5 w-5", isActive ? "text-white" : "text-gray-400")} />
+                <item.icon className={cn("flex-shrink-0 h-5 w-5", isActive ? "text-white" : "text-gray-600")} />
                 {!isCollapsed && (
                   <span className="ml-3 truncate">{item.label}</span>
                 )}
@@ -94,10 +94,10 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
           </Avatar>
           {!isCollapsed && (
             <div className="ml-3 truncate">
-              <p className="text-sm font-medium text-white truncate">
+              <p className="text-sm font-medium text-sidebar-foreground truncate">
                 {user?.name || "Utilizador"}
               </p>
-              <p className="text-xs text-gray-400 truncate">
+              <p className="text-xs text-gray-600 truncate">
                 {user?.email || "email@exemplo.com"}
               </p>
             </div>
@@ -105,12 +105,12 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
         </div>
         <button
           className={cn(
-            "mt-3 w-full flex items-center p-2 rounded-md transition-colors text-sidebar-foreground text-left hover:bg-sidebar-accent/80",
+            "mt-3 w-full flex items-center p-2 rounded-md transition-colors text-sidebar-foreground text-left hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
             isCollapsed ? "justify-center" : ""
           )}
           onClick={onLogout}
         >
-          <LogOut className="flex-shrink-0 h-5 w-5 text-gray-400" />
+          <LogOut className="flex-shrink-0 h-5 w-5 text-gray-600" />
           {!isCollapsed && <span className="ml-3">Sair</span>}
         </button>
       </div>

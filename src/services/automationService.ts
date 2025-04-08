@@ -36,7 +36,7 @@ export interface WorkflowStep {
 export interface WorkflowExecution {
   id: string;
   workflowId: string;
-  status: 'running' | 'completed' | 'failed' | 'cancelled';
+  status: 'running' | 'completed' | 'failed' | 'cancelled' | 'waiting_approval';
   startedAt: Date;
   completedAt?: Date;
   currentStepId?: string;
@@ -77,6 +77,7 @@ class AutomationService {
   private workflows: Map<string, WorkflowDefinition> = new Map();
   private workflowExecutions: Map<string, WorkflowExecution> = new Map();
   private documentRules: Map<string, DocumentProcessingRule> = new Map();
+  private approvalTasks: Map<string, any> = new Map();
 
   constructor() {
     // Inicializar com alguns fluxos de trabalho de exemplo
@@ -293,36 +294,184 @@ class AutomationService {
 
   /**
    * Obtém todos os fluxos de trabalho
+   * @param useDatabase Se verdadeiro, busca do banco de dados; caso contrário, usa o cache local
    */
-  getWorkflows(): WorkflowDefinition[] {
-    return Array.from(this.workflows.values());
+  async getWorkflows(useDatabase = true): Promise<WorkflowDefinition[]> {
+    // Verificar primeiro no cache local
+    const cachedWorkflows = Array.from(this.workflows.values());
+    
+    if (!useDatabase) {
+      return cachedWorkflows;
+    }
+    
+    try {
+      // Importar o cliente Supabase
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      // Buscar os fluxos de trabalho no banco de dados
+      const { data, error } = await supabase
+        .from('workflows')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Erro ao buscar fluxos de trabalho:', error);
+        return cachedWorkflows; // Fallback para o cache local em caso de erro
+      }
+      
+      if (data && data.length > 0) {
+        // Converter o formato do banco de dados para o formato da aplicação
+        const workflows: WorkflowDefinition[] = data.map(item => ({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          triggerType: item.trigger_type,
+          triggerDetails: item.trigger_details,
+          steps: item.steps,
+          enabled: item.enabled,
+          createdBy: item.created_by,
+          createdAt: new Date(item.created_at),
+          lastRun: item.last_run ? new Date(item.last_run) : undefined
+        }));
+        
+        // Atualizar o cache local
+        workflows.forEach(workflow => {
+          this.workflows.set(workflow.id, workflow);
+        });
+        
+        return workflows;
+      }
+      
+      return cachedWorkflows;
+    } catch (error) {
+      console.error('Erro ao acessar o banco de dados:', error);
+      return cachedWorkflows; // Fallback para o cache local em caso de erro
+    }
   }
 
   /**
    * Obtém um fluxo de trabalho específico pelo ID
+   * @param workflowId ID do fluxo de trabalho
+   * @param useDatabase Se verdadeiro, busca do banco de dados; caso contrário, usa o cache local
    */
-  getWorkflow(workflowId: string): WorkflowDefinition | undefined {
-    return this.workflows.get(workflowId);
+  async getWorkflow(workflowId: string, useDatabase = true): Promise<WorkflowDefinition | undefined> {
+    // Verificar primeiro no cache local
+    const cachedWorkflow = this.workflows.get(workflowId);
+    
+    if (!useDatabase || !workflowId) {
+      return cachedWorkflow;
+    }
+    
+    try {
+      // Importar o cliente Supabase
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      // Buscar o fluxo de trabalho no banco de dados
+      const { data, error } = await supabase
+        .from('workflows')
+        .select('*')
+        .eq('id', workflowId)
+        .single();
+      
+      if (error) {
+        console.error('Erro ao buscar fluxo de trabalho:', error);
+        return cachedWorkflow; // Fallback para o cache local em caso de erro
+      }
+      
+      if (data) {
+        // Converter o formato do banco de dados para o formato da aplicação
+        const workflow: WorkflowDefinition = {
+          id: data.id,
+          name: data.name,
+          description: data.description,
+          triggerType: data.trigger_type,
+          triggerDetails: data.trigger_details,
+          steps: data.steps,
+          enabled: data.enabled,
+          createdBy: data.created_by,
+          createdAt: new Date(data.created_at),
+          lastRun: data.last_run ? new Date(data.last_run) : undefined
+        };
+        
+        // Atualizar o cache local
+        this.workflows.set(workflow.id, workflow);
+        
+        return workflow;
+      }
+      
+      return cachedWorkflow;
+    } catch (error) {
+      console.error('Erro ao acessar o banco de dados:', error);
+      return cachedWorkflow; // Fallback para o cache local em caso de erro
+    }
   }
 
   /**
    * Cria um novo fluxo de trabalho
+   * @param workflow Dados do fluxo de trabalho a ser criado
+   * @param persistToDatabase Se verdadeiro, persiste no banco de dados; caso contrário, apenas no cache local
    */
-  createWorkflow(workflow: Omit<WorkflowDefinition, 'id' | 'createdAt'>): WorkflowDefinition {
+  async createWorkflow(
+    workflow: Omit<WorkflowDefinition, 'id' | 'createdAt'>,
+    persistToDatabase = true
+  ): Promise<WorkflowDefinition> {
     const newWorkflow: WorkflowDefinition = {
       ...workflow,
       id: crypto.randomUUID(),
       createdAt: new Date()
     };
     
+    // Armazenar no cache local
     this.workflows.set(newWorkflow.id, newWorkflow);
+    
+    if (persistToDatabase) {
+      try {
+        // Importar o cliente Supabase
+        const { supabase } = await import('@/integrations/supabase/client');
+        
+        // Converter para o formato do banco de dados
+        const dbWorkflow = {
+          id: newWorkflow.id,
+          name: newWorkflow.name,
+          description: newWorkflow.description,
+          trigger_type: newWorkflow.triggerType,
+          trigger_details: newWorkflow.triggerDetails,
+          steps: newWorkflow.steps,
+          enabled: newWorkflow.enabled,
+          created_by: newWorkflow.createdBy,
+          created_at: newWorkflow.createdAt.toISOString(),
+          last_run: newWorkflow.lastRun ? newWorkflow.lastRun.toISOString() : null
+        };
+        
+        // Inserir no banco de dados
+        const { error } = await supabase
+          .from('workflows')
+          .insert(dbWorkflow);
+        
+        if (error) {
+          console.error('Erro ao persistir fluxo de trabalho:', error);
+          // Continuar mesmo com erro, pois já temos o fluxo no cache local
+        }
+      } catch (error) {
+        console.error('Erro ao acessar o banco de dados:', error);
+        // Continuar mesmo com erro, pois já temos o fluxo no cache local
+      }
+    }
+    
     return newWorkflow;
   }
 
   /**
    * Atualiza um fluxo de trabalho existente
+   * @param workflowId ID do fluxo de trabalho a ser atualizado
+   * @param updates Atualizações a serem aplicadas
+   * @param persistToDatabase Se verdadeiro, persiste no banco de dados; caso contrário, apenas no cache local
    */
-  updateWorkflow(workflowId: string, updates: Partial<Omit<WorkflowDefinition, 'id' | 'createdAt'>>): WorkflowDefinition {
+  async updateWorkflow(
+    workflowId: string,
+    updates: Partial<Omit<WorkflowDefinition, 'id' | 'createdAt'>>,
+    persistToDatabase = true
+  ): Promise<WorkflowDefinition> {
     const workflow = this.workflows.get(workflowId);
     if (!workflow) {
       throw new Error(`Fluxo de trabalho com ID ${workflowId} não encontrado`);
@@ -333,15 +482,75 @@ class AutomationService {
       ...updates
     };
     
+    // Atualizar no cache local
     this.workflows.set(workflowId, updatedWorkflow);
+    
+    if (persistToDatabase) {
+      try {
+        // Importar o cliente Supabase
+        const { supabase } = await import('@/integrations/supabase/client');
+        
+        // Converter para o formato do banco de dados
+        const dbUpdates: Record<string, any> = {};
+        
+        if (updates.name !== undefined) dbUpdates.name = updates.name;
+        if (updates.description !== undefined) dbUpdates.description = updates.description;
+        if (updates.triggerType !== undefined) dbUpdates.trigger_type = updates.triggerType;
+        if (updates.triggerDetails !== undefined) dbUpdates.trigger_details = updates.triggerDetails;
+        if (updates.steps !== undefined) dbUpdates.steps = updates.steps;
+        if (updates.enabled !== undefined) dbUpdates.enabled = updates.enabled;
+        if (updates.lastRun !== undefined) dbUpdates.last_run = updates.lastRun?.toISOString();
+        
+        // Atualizar no banco de dados
+        const { error } = await supabase
+          .from('workflows')
+          .update(dbUpdates)
+          .eq('id', workflowId);
+        
+        if (error) {
+          console.error('Erro ao atualizar fluxo de trabalho:', error);
+          // Continuar mesmo com erro, pois já temos o fluxo atualizado no cache local
+        }
+      } catch (error) {
+        console.error('Erro ao acessar o banco de dados:', error);
+        // Continuar mesmo com erro, pois já temos o fluxo atualizado no cache local
+      }
+    }
+    
     return updatedWorkflow;
   }
 
   /**
    * Exclui um fluxo de trabalho
+   * @param workflowId ID do fluxo de trabalho a ser excluído
+   * @param persistToDatabase Se verdadeiro, exclui do banco de dados; caso contrário, apenas do cache local
    */
-  deleteWorkflow(workflowId: string): boolean {
-    return this.workflows.delete(workflowId);
+  async deleteWorkflow(workflowId: string, persistToDatabase = true): Promise<boolean> {
+    // Remover do cache local
+    const deleted = this.workflows.delete(workflowId);
+    
+    if (persistToDatabase && deleted) {
+      try {
+        // Importar o cliente Supabase
+        const { supabase } = await import('@/integrations/supabase/client');
+        
+        // Excluir do banco de dados
+        const { error } = await supabase
+          .from('workflows')
+          .delete()
+          .eq('id', workflowId);
+        
+        if (error) {
+          console.error('Erro ao excluir fluxo de trabalho:', error);
+          // Continuar mesmo com erro, pois já removemos do cache local
+        }
+      } catch (error) {
+        console.error('Erro ao acessar o banco de dados:', error);
+        // Continuar mesmo com erro, pois já removemos do cache local
+      }
+    }
+    
+    return deleted;
   }
 
   /**
@@ -413,7 +622,7 @@ class AutomationService {
     } catch (error) {
       // Atualizar o registro de execução em caso de erro
       const updatedExecution = this.workflowExecutions.get(execution.id);
-      if (updatedExecution) {
+      if (updatedExecution) {ution) {
         updatedExecution.status = 'failed';
         updatedExecution.completedAt = new Date();
         this.workflowExecutions.set(execution.id, updatedExecution);
@@ -671,12 +880,168 @@ class AutomationService {
 
   /**
    * Executa um passo de aprovação
+   * Cria uma tarefa de aprovação no sistema e notifica os usuários responsáveis
    */
+
   private async executeApprovalStep(step: WorkflowStep, context: Record<string, any>): Promise<boolean> {
-    // Em uma implementação real, isso criaria uma tarefa de aprovação e aguardaria a resposta
-    // Para esta simulação, vamos apenas retornar sucesso
-    console.log(`Simulando aprovação para o passo ${step.id}`);
-    return true;
+    const { approvers, title, description, dueDate, priority = 'medium' } = step.parameters;
+    
+    if (!approvers || !Array.isArray(approvers) || approvers.length === 0) {
+      throw new Error('Nenhum aprovador especificado para o passo de aprovação');
+    }
+
+    const execution = this.workflowExecutions.get(context.executionId);
+    if (!execution) {
+      throw new Error(`Execução com ID ${context.executionId} não encontrada`);
+    }
+
+    const workflow = this.workflows.get(execution.workflowId);
+    if (!workflow) {
+      throw new Error(`Fluxo de trabalho com ID ${execution.workflowId} não encontrado`);
+    }
+
+    try {
+      // Processar os aprovadores (podem ser IDs diretos ou referências no contexto)
+      const resolvedApprovers = approvers.map(approver => {
+        if (typeof approver === 'string') {
+          // Verificar se é uma referência ao contexto
+          if (approver.startsWith('{{') && approver.endsWith('}}')) {
+            const path = approver.slice(2, -2).trim();
+            return this.getNestedValue(context, path);
+          }
+          return approver;
+        }
+        return approver;
+      }).filter(Boolean);
+
+      if (resolvedApprovers.length === 0) {
+        throw new Error('Nenhum aprovador válido encontrado após resolução de contexto');
+      }
+
+      // Resolver o título e descrição com variáveis do contexto
+      const resolvedTitle = this.replaceContextVariables(title || `Aprovação necessária: ${workflow.name}`, context);
+      const resolvedDescription = this.replaceContextVariables(
+        description || `Aprovação necessária para o passo "${step.name}" no fluxo de trabalho "${workflow.name}"`,
+        context
+      );
+
+      // Criar tarefas de aprovação para cada aprovador
+      const approvalTasks = [];
+      for (const approver of resolvedApprovers) {
+        // Obter informações do aprovador (em uma implementação real, isso viria do banco de dados)
+        const approverName = typeof approver === 'object' && approver.name ? approver.name : 'Aprovador';
+        const approverId = typeof approver === 'object' && approver.id ? approver.id : approver;
+
+        // Criar a tarefa de aprovação no Supabase
+        try {
+          // Importar o cliente Supabase
+          const { supabase } = await import('@/integrations/supabase/client');
+          
+          // Criar a tarefa no banco de dados
+          const { data, error } = await supabase
+            .from('workflow_tasks')
+            .insert({
+              workflow_id: workflow.id,
+              workflow_execution_id: execution.id,
+              step_id: step.id,
+              title: resolvedTitle,
+              description: resolvedDescription,
+              assigned_to_id: approverId,
+              assigned_to_name: approverName,
+              created_by_id: execution.initiatedBy,
+              created_by_name: 'Sistema', // Em uma implementação real, obter o nome do usuário
+              status: 'pending',
+              priority: priority,
+              due_date: dueDate ? new Date(dueDate).toISOString() : undefined,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              metadata: { context: JSON.stringify(context) }
+            })
+            .select();
+
+          if (error) {
+            console.error('Erro ao criar tarefa de aprovação:', error);
+            throw new Error(`Erro ao criar tarefa de aprovação: ${error.message}`);
+          }
+
+          if (data && data.length > 0) {
+            approvalTasks.push(data[0]);
+          }
+        } catch (dbError) {
+          console.error('Erro ao acessar o banco de dados:', dbError);
+          // Fallback para armazenamento em memória se o banco de dados falhar
+          const taskId = crypto.randomUUID();
+          const task = {
+            id: taskId,
+            workflow_id: workflow.id,
+            workflow_execution_id: execution.id,
+            step_id: step.id,
+            title: resolvedTitle,
+            description: resolvedDescription,
+            assigned_to_id: approverId,
+            assigned_to_name: approverName,
+            created_by_id: execution.initiatedBy,
+            created_by_name: 'Sistema',
+            status: 'pending',
+            priority: priority,
+            due_date: dueDate ? new Date(dueDate).toISOString() : undefined,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          };
+          
+          // Armazenar em um Map local (em uma implementação real, isso seria persistido)
+          if (!this.approvalTasks) {
+            this.approvalTasks = new Map();
+          }
+          this.approvalTasks.set(taskId, task);
+          approvalTasks.push(task);
+        }
+
+        // Notificar o aprovador
+        await notifyUsers({
+          title: resolvedTitle,
+          message: resolvedDescription,
+          type: 'approval',
+          recipients: [approverId],
+          priority: priority,
+          data: {
+            workflowId: workflow.id,
+            executionId: execution.id,
+            stepId: step.id,
+            taskId: approvalTasks[approvalTasks.length - 1]?.id
+          }
+        });
+      }
+
+      // Armazenar as tarefas de aprovação no contexto para referência futura
+      context.approvalTasks = approvalTasks;
+
+      // Em uma implementação real, aqui aguardaríamos a resposta da aprovação
+      // Para esta simulação, vamos apenas retornar sucesso
+      console.log(`Criadas ${approvalTasks.length} tarefas de aprovação para o passo ${step.id}`);
+      
+      // Atualizar o status da execução para aguardando aprovação
+      execution.status = 'waiting_approval';
+      this.workflowExecutions.set(execution.id, execution);
+      
+      // Retornar true para indicar que o passo foi iniciado com sucesso
+      // O fluxo de trabalho ficará em espera até que todas as aprovações sejam concluídas
+      return true;
+    } catch (error) {
+      console.error('Erro ao executar passo de aprovação:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Substitui variáveis de contexto em uma string
+   * Formato: {{variavel.caminho}}
+   */
+  private replaceContextVariables(text: string, context: Record<string, any>): string {
+    return text.replace(/\{\{([^}]+)\}\}/g, (match, path) => {
+      const value = this.getNestedValue(context, path.trim());
+      return value !== undefined ? String(value) : match;
+    });
   }
 
   /**
@@ -687,6 +1052,215 @@ class AutomationService {
     // Para esta simulação, vamos apenas retornar sucesso
     console.log(`Simulando integração externa para o passo ${step.id}`);
     return { success: true, message: 'Integração simulada com sucesso' };
+  }
+
+  /**
+   * Processa uma resposta de aprovação
+   * @param taskId ID da tarefa de aprovação
+   * @param approved Indica se a aprovação foi concedida ou negada
+   * @param comments Comentários opcionais sobre a decisão
+   * @param userId ID do usuário que respondeu à aprovação
+   */
+  async processApprovalResponse(taskId: string, approved: boolean, comments?: string, userId?: string): Promise<void> {
+    try {
+      // Importar o cliente Supabase
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      // Buscar a tarefa de aprovação
+      const { data: taskData, error: taskError } = await supabase
+        .from('workflow_tasks')
+        .select('*')
+        .eq('id', taskId)
+        .single();
+      
+      if (taskError) {
+        console.error('Erro ao buscar tarefa de aprovação:', taskError);
+        throw new Error(`Erro ao buscar tarefa de aprovação: ${taskError.message}`);
+      }
+      
+      if (!taskData) {
+        throw new Error(`Tarefa de aprovação com ID ${taskId} não encontrada`);
+      }
+      
+      // Verificar se a tarefa já foi concluída
+      if (taskData.status !== 'pending') {
+        throw new Error(`Tarefa de aprovação já foi ${taskData.status === 'approved' ? 'aprovada' : 'rejeitada'}`);
+      }
+      
+      // Atualizar o status da tarefa
+      const newStatus = approved ? 'approved' : 'rejected';
+      const { error: updateError } = await supabase
+        .from('workflow_tasks')
+        .update({
+          status: newStatus,
+          comments: comments,
+          completed_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', taskId);
+      
+      if (updateError) {
+        console.error('Erro ao atualizar tarefa de aprovação:', updateError);
+        throw new Error(`Erro ao atualizar tarefa de aprovação: ${updateError.message}`);
+      }
+      
+      // Verificar se todas as aprovações para este passo foram concluídas
+      const { data: relatedTasks, error: relatedError } = await supabase
+        .from('workflow_tasks')
+        .select('*')
+        .eq('workflow_execution_id', taskData.workflow_execution_id)
+        .eq('step_id', taskData.step_id);
+      
+      if (relatedError) {
+        console.error('Erro ao buscar tarefas relacionadas:', relatedError);
+        throw new Error(`Erro ao buscar tarefas relacionadas: ${relatedError.message}`);
+      }
+      
+      // Verificar se todas as tarefas foram concluídas (aprovadas ou rejeitadas)
+      const allTasksCompleted = relatedTasks.every(task => 
+        task.status === 'approved' || task.status === 'rejected'
+      );
+      
+      // Se todas as tarefas foram concluídas, continuar o fluxo de trabalho
+      if (allTasksCompleted) {
+        // Verificar se todas as aprovações foram concedidas
+        const allApproved = relatedTasks.every(task => task.status === 'approved');
+        
+        // Buscar a execução do fluxo de trabalho
+        const execution = this.workflowExecutions.get(taskData.workflow_execution_id);
+        if (!execution) {
+          throw new Error(`Execução com ID ${taskData.workflow_execution_id} não encontrada`);
+        }
+        
+        // Buscar o fluxo de trabalho
+        const workflow = this.workflows.get(taskData.workflow_id);
+        if (!workflow) {
+          throw new Error(`Fluxo de trabalho com ID ${taskData.workflow_id} não encontrado`);
+        }
+        
+        // Buscar o passo atual
+        const currentStep = workflow.steps.find(s => s.id === taskData.step_id);
+        if (!currentStep) {
+          throw new Error(`Passo com ID ${taskData.step_id} não encontrado no fluxo de trabalho`);
+        }
+        
+        // Atualizar o status da execução
+        execution.status = 'running';
+        
+        // Adicionar o resultado da aprovação ao contexto
+        execution.context.approvalResult = {
+          approved: allApproved,
+          tasks: relatedTasks,
+          completedAt: new Date().toISOString()
+        };
+        
+        this.workflowExecutions.set(execution.id, execution);
+        
+        // Notificar sobre o resultado da aprovação
+        await notifyUsers({
+          title: `Aprovação ${allApproved ? 'Concedida' : 'Negada'}: ${workflow.name}`,
+          message: `A aprovação para o passo "${currentStep.name}" foi ${allApproved ? 'concedida' : 'negada'}.`,
+          type: allApproved ? 'success' : 'warning',
+          recipients: [execution.initiatedBy],
+          data: {
+            workflowId: workflow.id,
+            executionId: execution.id,
+            stepId: currentStep.id,
+            approved: allApproved
+          }
+        });
+        
+        // Continuar o fluxo de trabalho com o próximo passo apropriado
+        if (allApproved && currentStep.nextStepOnSuccess) {
+          // Se aprovado, seguir para o próximo passo de sucesso
+          await this.executeWorkflowStep(execution.id, currentStep.nextStepOnSuccess);
+        } else if (!allApproved && currentStep.nextStepOnFailure) {
+          // Se rejeitado, seguir para o próximo passo de falha
+          await this.executeWorkflowStep(execution.id, currentStep.nextStepOnFailure);
+        } else {
+          // Se não houver próximo passo definido, concluir o fluxo de trabalho
+          execution.status = 'completed';
+          execution.completedAt = new Date();
+          this.workflowExecutions.set(execution.id, execution);
+          
+          // Atualizar o registro do fluxo de trabalho
+          workflow.lastRun = new Date();
+          this.workflows.set(workflow.id, workflow);
+          
+          // Notificar conclusão do fluxo de trabalho
+          await notifyUsers({
+            title: 'Fluxo de Trabalho Concluído',
+            message: `O fluxo de trabalho "${workflow.name}" foi concluído.`,
+            type: 'success',
+            recipients: [execution.initiatedBy],
+            data: {
+              workflowId: workflow.id,
+              executionId: execution.id
+            }
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao processar resposta de aprovação:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Verifica o status das tarefas de aprovação pendentes
+   * @param executionId ID da execução do fluxo de trabalho
+   */
+  async checkPendingApprovals(executionId: string): Promise<{
+    total: number;
+    pending: number;
+    approved: number;
+    rejected: number;
+    tasks: any[];
+  }> {
+    try {
+      // Importar o cliente Supabase
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      // Buscar todas as tarefas de aprovação para esta execução
+      const { data, error } = await supabase
+        .from('workflow_tasks')
+        .select('*')
+        .eq('workflow_execution_id', executionId);
+      
+      if (error) {
+        console.error('Erro ao buscar tarefas de aprovação:', error);
+        throw new Error(`Erro ao buscar tarefas de aprovação: ${error.message}`);
+      }
+      
+      // Contar tarefas por status
+      const result = {
+        total: data.length,
+        pending: data.filter(task => task.status === 'pending').length,
+        approved: data.filter(task => task.status === 'approved').length,
+        rejected: data.filter(task => task.status === 'rejected').length,
+        tasks: data
+      };
+      
+      return result;
+    } catch (error) {
+      console.error('Erro ao verificar aprovações pendentes:', error);
+      
+      // Fallback para armazenamento em memória
+      if (this.approvalTasks) {
+        const tasks = Array.from(this.approvalTasks.values())
+          .filter(task => task.workflow_execution_id === executionId);
+        
+        return {
+          total: tasks.length,
+          pending: tasks.filter(task => task.status === 'pending').length,
+          approved: tasks.filter(task => task.status === 'approved').length,
+          rejected: tasks.filter(task => task.status === 'rejected').length,
+          tasks
+        };
+      }
+      
+      return { total: 0, pending: 0, approved: 0, rejected: 0, tasks: [] };
+    }
   }
 
   /**
