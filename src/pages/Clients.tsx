@@ -50,7 +50,7 @@ const Clients = () => {
   useEffect(() => {
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession();
-      if (!data.session) {
+      if (!data || !data.session) {
         navigate('/login');
         toast({
           variant: "destructive",

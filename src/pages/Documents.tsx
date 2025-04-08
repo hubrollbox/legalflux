@@ -26,7 +26,7 @@ const Documents = () => {
         doc.folder.toLowerCase().includes(searchTerm.toLowerCase()) ||
         doc.process.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesType = filters.type === "todos" || doc.type.toLowerCase() === filters.type;
+      const matchesType = filters.type === "todos" || (doc.type && doc.type.toLowerCase() === filters.type);
       
       const matchesDate = !filters.date || 
         new Date(doc.updatedAt).toDateString() === filters.date.toDateString();
