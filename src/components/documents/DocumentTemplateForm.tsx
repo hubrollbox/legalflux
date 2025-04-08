@@ -307,11 +307,11 @@ Referente ao processo ${form.watch("processId") ? processes.find(p => p.id === f
                           {field.required && <span className="text-red-500">*</span>}
                         </FormLabel>
                         <FormControl>
-                          {field.type === "text" ? (
+                          {field?.type === "text" ? (
                             <Input {...formField} />
-                          ) : field.type === "textarea" ? (
+                          ) : field?.type === "textarea" ? (
                             <Textarea {...formField} />
-                          ) : field.type === "select" && field.options ? (
+                          ) : field?.type === "select" && field?.options ? (
                             <Select
                               onValueChange={formField.onChange}
                               defaultValue={formField.value}
