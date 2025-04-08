@@ -537,37 +537,10 @@ class DocumentAIService {
       default:
         console.log(`Tipo de ação não implementado: ${action.type}`);
     }
-  
     }
-}
+  }
 
-    private async correctText(documentText: string): Promise<TextCorrection[]> {
-        try {
-            return await aiService.correctLegalText(documentText, 'Correção de texto jurídico');
-        } catch (error) {
-            console.error('Erro na correção do texto:', error);
-            return [];
-        }
-    }
-        try {
-            return await aiService.correctLegalText(documentText, 'Correção de texto jurídico');
-        } catch (error) {
-            console.error('Erro na correção do texto:', error);
-            return [];
-        }
-    }
-}
-      return [];
-    }
-  }
-  private async correctText(text: string): Promise<TextCorrection[]> {
-    try {
-      return await aiService.correctLegalText(text, 'Correção de texto jurídico');
-    } catch (error) {
-      console.error('Erro na correção do texto:', error);
-      return [];
-    }
-  }
-}
+
+} // End of DocumentAIService class
 
 export const documentAIService = new DocumentAIService();
