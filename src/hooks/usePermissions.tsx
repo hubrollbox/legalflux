@@ -142,10 +142,29 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const usePermissions = () => {
-  const context = useContext(PermissionsContext);
-  if (context === undefined) {
-    throw new Error("usePermissions must be used within a PermissionsProvider");
+const permissions = {
+  admin: {
+    clients: ['create', 'read', 'update', 'delete'],
+    processes: ['create', 'read', 'update', 'delete'],
+    documents: ['create', 'read', 'update', 'delete'],
+  },
+  lawyer: {
+    clients: ['read', 'update'],
+    processes: ['create', 'read', 'update'],
+    documents: ['create', 'read', 'update'],
+  },
+  client: {
+    clients: ['read'],
+    processes: ['read'],
+    documents: ['read'],
   }
-  return context;
+};
+
+export const usePermissions = () => {
+  const hasPermission = (module, action) => {
+    const role = getUserRole(); // Assume this function gets the current user's role
+    return permissions[role]?.[module]?.includes(action);
+  };
+
+  return { hasPermission };
 };
