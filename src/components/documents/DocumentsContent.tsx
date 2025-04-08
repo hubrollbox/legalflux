@@ -38,7 +38,7 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
         {viewMode === "grid" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {documents.map((doc) => (
-              doc && <DocumentCard key={doc.id} doc={{ ...doc, updatedAt: doc.updatedAt.toISOString() }} />
+              <DocumentCard key={doc.id} doc={doc} />
             ))}
           </div>
         ) : (

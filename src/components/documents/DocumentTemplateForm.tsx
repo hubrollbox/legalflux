@@ -392,6 +392,67 @@ Referente ao processo ${form.watch("processId") ? processes.find(p => p.id === f
 
 export default DocumentTemplateForm;
 
+const DocumentTemplateForm = () => {
+  const [template, setTemplate] = useState("");
+  const [placeholders, setPlaceholders] = useState({
+    nome: "",
+    morada: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setPlaceholders((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleTemplateChange = (e) => {
+    setTemplate(e.target.value);
+  };
+
+  const renderTemplate = () => {
+    let rendered = template;
+    Object.keys(placeholders).forEach((key) => {
+      const regex = new RegExp(`{{${key}}}`, "g");
+      rendered = rendered.replace(regex, placeholders[key]);
+    });
+    return rendered;
+  };
+
+  return (
+    <div>
+      <h1>Editor de Documentos</h1>
+      <Textarea
+        placeholder="Digite o modelo de documento aqui..."
+        value={template}
+        onChange={handleTemplateChange}
+      />
+      <Input
+        placeholder="Nome"
+        name="nome"
+        value={placeholders.nome}
+        onChange={handleInputChange}
+      />
+      <Input
+        placeholder="Morada"
+        name="morada"
+        value={placeholders.morada}
+        onChange={handleInputChange}
+      />
+      <div>
+        <h2>Pré-visualização</h2>
+        <div>{renderTemplate()}</div>
+      </div>
+      <PDFDownloadLink
+        document={<MyDocument content={renderTemplate()} />}
+        fileName="documento.pdf"
+      >
+        {({ loading }) => (loading ? "Carregando documento..." : "Baixar PDF")}
+      </PDFDownloadLink>
+    </div>
+  );
+};
+
+export default DocumentTemplateForm;
+
 const handleExportPDF = async () => {
   try {
     const pdfContent = previewContent;
