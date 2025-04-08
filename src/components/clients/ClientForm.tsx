@@ -231,21 +231,16 @@ const ClientForm: React.FC<ClientFormProps> = ({
           )}
         />
 
-        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:space-x-2 mt-6">
+        <div className="flex justify-end space-x-2">
           <Button 
             type="button" 
             variant="outline" 
             onClick={() => form.reset()}
             disabled={isSubmitting}
-            className="w-full sm:w-auto"
           >
             Cancelar
           </Button>
-          <Button 
-            type="submit" 
-            disabled={isSubmitting}
-            className="w-full sm:w-auto"
-          >
+          <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

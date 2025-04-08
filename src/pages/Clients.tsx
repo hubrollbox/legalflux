@@ -262,8 +262,8 @@ const Clients = () => {
           </Select>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
-          <Card className="lg:col-span-2 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <Card className="lg:col-span-2">
             {isLoading ? (
               <CardContent className="flex items-center justify-center p-6">
                 <div className="flex flex-col items-center space-y-4">
@@ -305,18 +305,18 @@ const Clients = () => {
           </Card>
           
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg sm:text-xl">Estatísticas</CardTitle>
+            <CardHeader>
+              <CardTitle>Estatísticas</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-[250px] sm:h-[300px]">
+              <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                  <BarChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" fontSize={12} />
-                    <YAxis fontSize={12} />
+                    <XAxis dataKey="name" />
+                    <YAxis />
                     <Tooltip />
-                    <Legend wrapperStyle={{ fontSize: '12px' }} />
+                    <Legend />
                     <Bar dataKey="value" fill="#8884d8" />
                   </BarChart>
                 </ResponsiveContainer>
