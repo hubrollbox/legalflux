@@ -538,8 +538,7 @@ class DocumentAIService {
         console.log(`Tipo de ação não implementado: ${action.type}`);
     }
     }
-  }
-
+  
 
 } // End of DocumentAIService class
 
