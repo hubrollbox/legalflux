@@ -2,6 +2,7 @@ import React from 'react';
 import LandingNavbar from "@/pages/landing/components/LandingNavbar";
 import LandingFooter from "@/pages/landing/components/LandingFooter";
 import { Container } from "@/components/ui/container";
+import { Link } from "react-router-dom";
 
 const Support = () => {
   return (
@@ -28,6 +29,26 @@ const Support = () => {
                     <p className="text-sm text-muted-foreground mb-2">Para assistência imediata</p>
                     <p className="text-primary">+351 220 145 169</p>
                   </div>
+                </div>
+                <div className="mt-8">
+                  <h3 className="text-lg font-semibold mb-4">Central de Ajuda</h3>
+                  <ul className="space-y-2">
+                    <li>
+                      <Link to="/central-de-ajuda/docs" className="hover:text-primary">Documentação</Link>
+                    </li>
+                    <li>
+                      <Link to="/central-de-ajuda/faqs" className="hover:text-primary">FAQs</Link>
+                    </li>
+                    <li>
+                      <Link to="/central-de-ajuda/screenshots" className="hover:text-primary">Screenshots</Link>
+                    </li>
+                    <li>
+                      <Link to="/central-de-ajuda/support" className="hover:text-primary">Suporte</Link>
+                    </li>
+                    <li>
+                      <Link to="/central-de-ajuda/tutorials" className="hover:text-primary">Tutoriais</Link>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
