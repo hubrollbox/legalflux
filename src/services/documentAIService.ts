@@ -387,6 +387,13 @@ class DocumentAIService {
    * Cria uma nova tarefa de automação
    */
   createAutomationTask(task: Omit<AutomationTask, 'id' | 'createdAt'>): AutomationTask {
+    // Validar ações antes de criar
+    task.actions.forEach((action, index) => {
+      if (!action?.type) {
+        throw new Error(`Ação ${index + 1} inválida: tipo não definido`);
+      }
+    });
+
     const newTask: AutomationTask = {
       ...task,
       id: randomUUID(),
@@ -401,6 +408,14 @@ class DocumentAIService {
    * Atualiza uma tarefa de automação existente
    */
   updateAutomationTask(taskId: string, updates: Partial<Omit<AutomationTask, 'id' | 'createdAt'>>): AutomationTask {
+    if (updates.actions) {
+      updates.actions.forEach((action, index) => {
+        if (!action?.type) {
+          throw new Error(`Ação ${index + 1} inválida na atualização: tipo não definido`);
+        }
+      });
+    }
+
     const task = this.automationTasks.get(taskId);
     if (!task) {
       throw new Error(`Tarefa de automação com ID ${taskId} não encontrada`);
@@ -441,6 +456,10 @@ class DocumentAIService {
       
       // Executar ações da tarefa
       for (const action of task.actions) {
+        if (!action || !action.type) {
+          console.error(`Ação inválida na tarefa ${task.name}`);
+          continue;
+        }
         await this.executeAction(action, task);
       }
       
@@ -471,6 +490,10 @@ class DocumentAIService {
    * Executa uma ação específica de uma tarefa de automação
    */
   private async executeAction(action: AutomationTask['actions'][0], task: AutomationTask): Promise<void> {
+    if (!action || !action.type) {
+      throw new Error('Ação de automação inválida: tipo não definido');
+    }
+
     switch (action.type) {
       case 'generate':
         // Gerar documento a partir de template
@@ -497,7 +520,6 @@ class DocumentAIService {
         break;
         
       case 'notify':
-        // Enviar notificação
         await notifyUsers({
           title: action.parameters.title || 'Notificação Automática',
           message: action.parameters.message || `Notificação da tarefa "${task.name}"`,
@@ -517,15 +539,35 @@ class DocumentAIService {
     }
   
     }
+}
 
     private async correctText(documentText: string): Promise<TextCorrection[]> {
         try {
-            return await aiService.correctLegalText(documentText, 'Correção de texto legal');
+            return await aiService.correctLegalText(documentText, 'Correção de texto jurídico');
         } catch (error) {
-            console.error('Erro ao corrigir texto:', error);
+            console.error('Erro na correção do texto:', error);
             return [];
         }
     }
+        try {
+            return await aiService.correctLegalText(documentText, 'Correção de texto jurídico');
+        } catch (error) {
+            console.error('Erro na correção do texto:', error);
+            return [];
+        }
+    }
+}
+      return [];
+    }
+  }
+  private async correctText(text: string): Promise<TextCorrection[]> {
+    try {
+      return await aiService.correctLegalText(text, 'Correção de texto jurídico');
+    } catch (error) {
+      console.error('Erro na correção do texto:', error);
+      return [];
+    }
+  }
 }
 
 export const documentAIService = new DocumentAIService();

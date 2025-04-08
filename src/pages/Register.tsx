@@ -119,14 +119,16 @@ const Register = () => {
         break;
 
       case 2:
-        if (!formData.phone) {
-          newErrors.phone = "Telefone é obrigatório";
-        }
-        if (!formData.country) {
-          newErrors.country = "País é obrigatório";
-        }
-        if (!formData.city) {
-          newErrors.city = "Cidade é obrigatória";
+        if (formData.accountType !== 'particular') {
+          if (!formData.phone) {
+            newErrors.phone = 'Telefone é obrigatório';
+          }
+          if (!formData.country) {
+            newErrors.country = 'País é obrigatório';
+          }
+          if (!formData.city) {
+            newErrors.city = 'Cidade é obrigatória';
+          }
         }
         break;
 
