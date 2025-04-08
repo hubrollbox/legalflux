@@ -215,85 +215,182 @@ const Clients = () => {
       setIsSubmitting(false);
     }
   };
+  
+  // Dados para o gráfico de estatísticas
+  const chartData = [
+    { name: "Ativos", value: clients.filter(c => c.status === "active").length },
+    { name: "Inativos", value: clients.filter(c => c.status === "inactive").length },
+    { name: "Potenciais", value: clients.filter(c => c.status === "prospect").length },
+  ];
 
   return (
     <DashboardLayout>
-      <SectionHeader title="Clientes" description="Gerencie seus clientes e visualize informações importantes." />
       <Container>
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center space-x-2">
+        <SectionHeader
+          title="Clientes"
+          description="Gerencie seus clientes e visualize informações importantes."
+        >
+          <Button onClick={handleOpenCreateDialog}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Novo Cliente
+          </Button>
+        </SectionHeader>
+
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="relative flex-1">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar clientes..."
+              placeholder="Buscar por nome, email, NIF ou telefone..."
+              className="pl-8"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Filtrar por status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="active">Ativos</SelectItem>
-                <SelectItem value="inactive">Inativos</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
-          <Button onClick={handleOpenCreateDialog}>
-            <UserPlus className="mr-2 h-4 w-4" /> Novo Cliente
-          </Button>
+          <Select
+            value={statusFilter}
+            onValueChange={setStatusFilter}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filtrar por estado" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos os estados</SelectItem>
+              <SelectItem value="active">Ativos</SelectItem>
+              <SelectItem value="inactive">Inativos</SelectItem>
+              <SelectItem value="prospect">Potenciais</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
-        {isLoading ? (
-          <p>Carregando clientes...</p>
-        ) : error ? (
-          <div className="flex items-center space-x-2">
-            <AlertCircle className="text-red-500" />
-            <p className="text-red-500">{error}</p>
-          </div>
-        ) : filteredClients.length === 0 ? (
-          <EmptyState title="Nenhum cliente encontrado" description="Tente ajustar seus filtros ou adicionar novos clientes." />
-        ) : (
-          <ClientList clients={filteredClients} onEdit={handleOpenEditDialog} onView={handleOpenViewDialog} onDelete={handleOpenDeleteDialog} />
-        )}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
+          <Card className="lg:col-span-2 overflow-hidden">
+            {isLoading ? (
+              <CardContent className="flex items-center justify-center p-6">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <p>Carregando clientes...</p>
+                </div>
+              </CardContent>
+            ) : error ? (
+              <CardContent className="p-6">
+                <div className="flex flex-col items-center justify-center text-center space-y-4">
+                  <AlertCircle className="h-12 w-12 text-red-500" />
+                  <div>
+                    <h3 className="text-lg font-medium">Erro ao carregar clientes</h3>
+                    <p className="text-sm text-muted-foreground">{error}</p>
+                  </div>
+                  <Button onClick={loadClients}>Tentar novamente</Button>
+                </div>
+              </CardContent>
+            ) : filteredClients.length === 0 ? (
+              <CardContent className="p-6">
+                <EmptyState
+                  title="Nenhum cliente encontrado"
+                  description={searchTerm || statusFilter !== "all" ? "Tente ajustar os filtros de busca." : "Comece adicionando um novo cliente."}
+                  icon={UserPlus}
+                  action={{
+                    label: "Adicionar Cliente",
+                    onClick: handleOpenCreateDialog,
+                  }}
+                />
+              </CardContent>
+            ) : (
+              <ClientList
+                clients={filteredClients}
+                onEdit={handleOpenEditDialog}
+                onDelete={handleOpenDeleteDialog}
+                onView={handleOpenViewDialog}
+              />
+            )}
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg sm:text-xl">Estatísticas</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[250px] sm:h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" fontSize={12} />
+                    <YAxis fontSize={12} />
+                    <Tooltip />
+                    <Legend wrapperStyle={{ fontSize: '12px' }} />
+                    <Bar dataKey="value" fill="#8884d8" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
+        {/* Diálogo para criar cliente */}
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
               <DialogTitle>Novo Cliente</DialogTitle>
             </DialogHeader>
-            <ClientForm onSubmit={handleCreateClient} isSubmitting={isSubmitting} />
+            <ClientForm
+              onSubmit={handleCreateClient}
+              isSubmitting={isSubmitting}
+            />
           </DialogContent>
         </Dialog>
 
+        {/* Diálogo para editar cliente */}
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
               <DialogTitle>Editar Cliente</DialogTitle>
             </DialogHeader>
-            {selectedClient && <ClientForm client={selectedClient} onSubmit={handleUpdateClient} isSubmitting={isSubmitting} />}
+            {selectedClient && (
+              <ClientForm
+                initialData={selectedClient}
+                onSubmit={handleUpdateClient}
+                isSubmitting={isSubmitting}
+              />
+            )}
           </DialogContent>
         </Dialog>
 
+        {/* Diálogo para visualizar cliente */}
         <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
               <DialogTitle>Detalhes do Cliente</DialogTitle>
             </DialogHeader>
-            {selectedClient && <ClientDetails client={selectedClient} />}
+            {selectedClient && (
+              <ClientDetails
+                client={selectedClient}
+                onEdit={(client) => {
+                  setIsViewDialogOpen(false);
+                  handleOpenEditDialog(client);
+                }}
+                onDelete={handleOpenDeleteDialog}
+              />
+            )}
           </DialogContent>
         </Dialog>
 
+        {/* Diálogo de confirmação para excluir cliente */}
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Excluir Cliente</AlertDialogTitle>
               <AlertDialogDescription>
-                Tem certeza de que deseja excluir este cliente? Esta ação não pode ser desfeita.
+                Tem certeza que deseja excluir o cliente {selectedClient?.name}? Esta ação não pode ser desfeita.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteClient} disabled={isSubmitting}>Excluir</AlertDialogAction>
+              <AlertDialogAction
+                onClick={handleDeleteClient}
+                disabled={isSubmitting}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                {isSubmitting ? "Excluindo..." : "Excluir"}
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
