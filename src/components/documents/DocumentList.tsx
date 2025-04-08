@@ -41,38 +41,40 @@ const DocumentList: React.FC<DocumentListProps> = ({ documents }) => {
         </thead>
         <tbody>
           {documents.map((doc) => (
-            <tr key={doc.id} className="border-t">
-              <td className="py-3 px-4">
-                <div className="flex items-center">
-                  {getFileIcon(doc.type)}
-                  <span className="ml-2">{doc.name}</span>
-                </div>
-              </td>
-              <td className="py-3 px-4 uppercase">{doc.type}</td>
-              <td className="py-3 px-4">{doc.size}</td>
-              <td className="py-3 px-4">{formatDate(doc.updatedAt)}</td>
-              <td className="py-3 px-4">{doc.process}</td>
-              <td className="py-3 px-4 text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Ver</DropdownMenuItem>
-                    <DropdownMenuItem>Descarregar</DropdownMenuItem>
-                    <DropdownMenuItem>Partilhar</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="text-destructive">
-                      Eliminar
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </td>
-            </tr>
+            doc && (
+              <tr key={doc.id} className="border-t">
+                <td className="py-3 px-4">
+                  <div className="flex items-center">
+                    {getFileIcon(doc.type)}
+                    <span className="ml-2">{doc.name}</span>
+                  </div>
+                </td>
+                <td className="py-3 px-4 uppercase">{doc.type}</td>
+                <td className="py-3 px-4">{doc.size}</td>
+                <td className="py-3 px-4">{formatDate(doc.updatedAt)}</td>
+                <td className="py-3 px-4">{doc.process}</td>
+                <td className="py-3 px-4 text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>Ver</DropdownMenuItem>
+                      <DropdownMenuItem>Descarregar</DropdownMenuItem>
+                      <DropdownMenuItem>Partilhar</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem className="text-destructive">
+                        Eliminar
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </td>
+              </tr>
+            )
           ))}
         </tbody>
       </table>

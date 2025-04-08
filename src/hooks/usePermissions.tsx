@@ -162,7 +162,11 @@ const permissions = {
 
 export const usePermissions = () => {
   const hasPermission = (module, action) => {
-    const role = getUserRole(); // Assume this function gets the current user's role
+    const getUserRole = () => {
+      const { user } = useAuth();
+      return user ? user.role : UserRole.GUEST;
+    }
+
     return permissions[role]?.[module]?.includes(action);
   };
 
