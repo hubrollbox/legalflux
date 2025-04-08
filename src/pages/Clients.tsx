@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
 import { Button } from "@/components/ui/button";
-import { UserPlus, Search, Filter, Download, MoreHorizontal } from "lucide-react";
+import { UserPlus, Search, Filter, Download, MoreHorizontal, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import EmptyState from "@/components/ui/EmptyState";
 import {
@@ -12,212 +13,388 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import { useToast } from "@/components/ui/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import ClientForm from "@/components/clients/ClientForm";
+import ClientList from "@/components/clients/ClientList";
+import ClientDetails from "@/components/clients/ClientDetails";
+import { Client, ClientStatus, CreateClientDTO, UpdateClientDTO } from "@/types/client";
+import { clientService } from "@/services/clientService";
+import { Container } from "@/components/ui/container";
+import { supabase } from "@/integrations/supabase/client";
 
 const Clients = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  
+  // Estados para gerenciar os clientes e filtros
+  const [clients, setClients] = useState<Client[]>([]);
+  const [filteredClients, setFilteredClients] = useState<Client[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState("all");
-  const [viewMode, setViewMode] = useState("list"); // 'list' or 'card'
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [error, setError] = useState<string | null>(null);
   
-  // Mock data for demonstration
-  const clients = [
-    { 
-      id: 1, 
-      name: "Cliente A", 
-      status: "active", 
-      value: 5000,
-      email: "clientea@exemplo.com",
-      phone: "(11) 99999-9999",
-      documents: 5,
-      lastContact: "2023-10-15"
-    },
-    { 
-      id: 2, 
-      name: "Cliente B", 
-      status: "inactive", 
-      value: 3000,
-      email: "clienteb@exemplo.com",
-      phone: "(11) 88888-8888",
-      documents: 2,
-      lastContact: "2023-09-20"
-    },
-    { 
-      id: 3, 
-      name: "Cliente C", 
-      status: "active", 
-      value: 7500,
-      email: "clientec@exemplo.com",
-      phone: "(11) 77777-7777",
-      documents: 8,
-      lastContact: "2023-10-10"
-    },
-  ];
+  // Estados para gerenciar os diálogos
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Verificar autenticação e carregar clientes ao montar o componente
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
+        navigate('/login');
+        toast({
+          variant: "destructive",
+          title: "Não autenticado",
+          description: "Você precisa estar logado para acessar esta página.",
+        });
+        return;
+      }
+      loadClients();
+    };
+    
+    checkAuth();
+  }, [navigate]);
+
+  // Filtrar clientes quando o termo de busca ou filtro de status mudar
+  useEffect(() => {
+    filterClients();
+  }, [searchTerm, statusFilter, clients]);
+
+  // Função para carregar os clientes do serviço
+  const loadClients = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await clientService.getClients();
+      setClients(data);
+    } catch (error: any) {
+      console.error("Erro ao carregar clientes:", error);
+      setError(error.message || "Não foi possível carregar os clientes");
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: "Não foi possível carregar os clientes. Tente novamente.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Função para filtrar clientes com base no termo de busca e filtro de status
+  const filterClients = () => {
+    let filtered = [...clients];
+
+    // Aplicar filtro de busca
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (client) =>
+          client.name.toLowerCase().includes(term) ||
+          client.email.toLowerCase().includes(term) ||
+          client.nif.includes(term) ||
+          client.phone.includes(term)
+      );
+    }
+
+    // Aplicar filtro de status
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((client) => client.status === statusFilter);
+    }
+
+    setFilteredClients(filtered);
+  };
+
+  // Funções para gerenciar os diálogos
+  const handleOpenCreateDialog = () => {
+    setIsCreateDialogOpen(true);
+  };
+
+  const handleOpenEditDialog = (client: Client) => {
+    setSelectedClient(client);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleOpenViewDialog = (client: Client) => {
+    setSelectedClient(client);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleOpenDeleteDialog = (client: Client) => {
+    setSelectedClient(client);
+    setIsDeleteDialogOpen(true);
+  };
+
+  // Funções para criar, atualizar e excluir clientes
+  const handleCreateClient = async (data: CreateClientDTO) => {
+    setIsSubmitting(true);
+    try {
+      const newClient = await clientService.createClient(data);
+      toast({
+        title: "Cliente criado",
+        description: "Cliente criado com sucesso.",
+      });
+      setIsCreateDialogOpen(false);
+      // Atualiza a lista sem precisar recarregar todos os clientes
+      setClients(prevClients => [...prevClients, newClient]);
+    } catch (error: any) {
+      console.error("Erro ao criar cliente:", error);
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: error.message || "Não foi possível criar o cliente. Tente novamente.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleUpdateClient = async (data: UpdateClientDTO) => {
+    if (!selectedClient) return;
+
+    setIsSubmitting(true);
+    try {
+      const updatedClient = await clientService.updateClient(selectedClient.id, data);
+      toast({
+        title: "Cliente atualizado",
+        description: "Cliente atualizado com sucesso.",
+      });
+      setIsEditDialogOpen(false);
+      // Atualiza o cliente na lista sem precisar recarregar todos
+      setClients(prevClients => 
+        prevClients.map(client => 
+          client.id === selectedClient.id ? updatedClient : client
+        )
+      );
+      setSelectedClient(null);
+    } catch (error: any) {
+      console.error("Erro ao atualizar cliente:", error);
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: error.message || "Não foi possível atualizar o cliente. Tente novamente.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteClient = async () => {
+    if (!selectedClient) return;
+
+    setIsSubmitting(true);
+    try {
+      await clientService.deleteClient(selectedClient.id);
+      toast({
+        title: "Cliente excluído",
+        description: "Cliente excluído com sucesso.",
+      });
+      setIsDeleteDialogOpen(false);
+      // Remove o cliente da lista sem precisar recarregar todos
+      setClients(prevClients => 
+        prevClients.filter(client => client.id !== selectedClient.id)
+      );
+      setSelectedClient(null);
+    } catch (error: any) {
+      console.error("Erro ao excluir cliente:", error);
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: error.message || "Não foi possível excluir o cliente. Tente novamente.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   
-  const filteredClients = clients.filter(client => {
-    if (!client || !client.name) return false;
-    const matchesSearch = client.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = activeFilter === "all" || client.status === activeFilter;
-    return matchesSearch && matchesFilter;
-  });
-  
+  // Dados para o gráfico de estatísticas
   const chartData = [
     { name: "Ativos", value: clients.filter(c => c.status === "active").length },
     { name: "Inativos", value: clients.filter(c => c.status === "inactive").length },
+    { name: "Potenciais", value: clients.filter(c => c.status === "prospect").length },
   ];
 
   return (
     <DashboardLayout>
-      <div className="dashboard-header flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <Container>
         <SectionHeader
           title="Clientes"
-          description="Gerencie a sua carteira de clientes"
-        />
-        
-        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          description="Gerencie seus clientes e visualize informações importantes."
+        >
+          <Button onClick={handleOpenCreateDialog}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Novo Cliente
+          </Button>
+        </SectionHeader>
+
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar clientes..."
-              className="pl-10"
+              placeholder="Buscar por nome, email, NIF ou telefone..."
+              className="pl-8"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <Filter className="mr-2 h-4 w-4" />
-                Filtrar
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setActiveFilter("all")}>
-                Todos
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setActiveFilter("active")}>
-                Ativos
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setActiveFilter("inactive")}>
-                Inativos
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          
-          <Button className="bg-highlight hover:bg-highlight/90">
-            <UserPlus className="mr-2 h-4 w-4" /> Novo Cliente
-          </Button>
+          <Select
+            value={statusFilter}
+            onValueChange={setStatusFilter}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filtrar por estado" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos os estados</SelectItem>
+              <SelectItem value="active">Ativos</SelectItem>
+              <SelectItem value="inactive">Inativos</SelectItem>
+              <SelectItem value="prospect">Potenciais</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        <Card className="lg:col-span-2">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Lista de Clientes</CardTitle>
-            <div className="flex gap-2">
-              <Button 
-                variant={viewMode === 'list' ? 'default' : 'ghost'} 
-                size="sm"
-                onClick={() => setViewMode('list')}
-              >
-                Lista
-              </Button>
-              <Button 
-                variant={viewMode === 'card' ? 'default' : 'ghost'} 
-                size="sm"
-                onClick={() => setViewMode('card')}
-              >
-                Cards
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Download className="mr-2 h-4 w-4" /> Exportar
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {filteredClients.length === 0 ? (
-              <EmptyState message="Nenhum cliente encontrado com os filtros atuais." />
-            ) : viewMode === 'list' ? (
-              <div className="space-y-4">
-                {filteredClients.map(client => (
-                  <div key={client.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-                    <div>
-                      <h3 className="font-medium">{client.name}</h3>
-                      <p className="text-sm text-gray-500">Status: {client.status === "active" ? "Ativo" : "Inativo"}</p>
-                      <p className="text-sm text-gray-500">Documentos: {client.documents}</p>
-                    </div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem>Editar</DropdownMenuItem>
-                        <DropdownMenuItem>Enviar mensagem</DropdownMenuItem>
-                        <DropdownMenuItem>Ver documentos</DropdownMenuItem>
-                        <DropdownMenuItem>Ver histórico</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <Card className="lg:col-span-2">
+            {isLoading ? (
+              <CardContent className="flex items-center justify-center p-6">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <p>Carregando clientes...</p>
+                </div>
+              </CardContent>
+            ) : error ? (
+              <CardContent className="p-6">
+                <div className="flex flex-col items-center justify-center text-center space-y-4">
+                  <AlertCircle className="h-12 w-12 text-red-500" />
+                  <div>
+                    <h3 className="text-lg font-medium">Erro ao carregar clientes</h3>
+                    <p className="text-sm text-muted-foreground">{error}</p>
                   </div>
-                ))}
-              </div>
+                  <Button onClick={loadClients}>Tentar novamente</Button>
+                </div>
+              </CardContent>
+            ) : filteredClients.length === 0 ? (
+              <CardContent className="p-6">
+                <EmptyState
+                  title="Nenhum cliente encontrado"
+                  description={searchTerm || statusFilter !== "all" ? "Tente ajustar os filtros de busca." : "Comece adicionando um novo cliente."}
+                  icon={UserPlus}
+                  action={{
+                    label: "Adicionar Cliente",
+                    onClick: handleOpenCreateDialog,
+                  }}
+                />
+              </CardContent>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {filteredClients.map(client => (
-                  <Card key={client.id} className="hover:shadow-md transition-shadow">
-                    <CardHeader>
-                      <CardTitle className="text-lg">{client.name}</CardTitle>
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs px-2 py-1 rounded-full ${client.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                          {client.status === "active" ? "Ativo" : "Inativo"}
-                        </span>
-                        <span className="text-xs text-gray-500">{client.documents} documentos</span>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                      <div className="flex items-center text-sm">
-                        <span className="text-gray-500 w-24">Email:</span>
-                        <span>{client.email}</span>
-                      </div>
-                      <div className="flex items-center text-sm">
-                        <span className="text-gray-500 w-24">Telefone:</span>
-                        <span>{client.phone}</span>
-                      </div>
-                      <div className="flex items-center text-sm">
-                        <span className="text-gray-500 w-24">Último contato:</span>
-                        <span>{client.lastContact}</span>
-                      </div>
-                      <div className="pt-2 flex justify-between">
-                        <Button variant="outline" size="sm">Ver documentos</Button>
-                        <Button variant="outline" size="sm">Histórico</Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              <ClientList
+                clients={filteredClients}
+                onEdit={handleOpenEditDialog}
+                onDelete={handleOpenDeleteDialog}
+                onView={handleOpenViewDialog}
+              />
             )}
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Estatísticas</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <BarChart width={300} height={300} data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="value" fill="#8884d8" />
-              </BarChart>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Estatísticas</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="value" fill="#8884d8" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Diálogo para criar cliente */}
+        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>Novo Cliente</DialogTitle>
+            </DialogHeader>
+            <ClientForm
+              onSubmit={handleCreateClient}
+              isSubmitting={isSubmitting}
+            />
+          </DialogContent>
+        </Dialog>
+
+        {/* Diálogo para editar cliente */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>Editar Cliente</DialogTitle>
+            </DialogHeader>
+            {selectedClient && (
+              <ClientForm
+                initialData={selectedClient}
+                onSubmit={handleUpdateClient}
+                isSubmitting={isSubmitting}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Diálogo para visualizar cliente */}
+        <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>Detalhes do Cliente</DialogTitle>
+            </DialogHeader>
+            {selectedClient && (
+              <ClientDetails
+                client={selectedClient}
+                onEdit={(client) => {
+                  setIsViewDialogOpen(false);
+                  handleOpenEditDialog(client);
+                }}
+                onDelete={handleOpenDeleteDialog}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Diálogo de confirmação para excluir cliente */}
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Excluir Cliente</AlertDialogTitle>
+              <AlertDialogDescription>
+                Tem certeza que deseja excluir o cliente {selectedClient?.name}? Esta ação não pode ser desfeita.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDeleteClient}
+                disabled={isSubmitting}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                {isSubmitting ? "Excluindo..." : "Excluir"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </Container>
     </DashboardLayout>
   );
 };
