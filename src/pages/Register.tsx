@@ -178,6 +178,7 @@ const Register = () => {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     
+    // Validações básicas para todos os tipos de conta
     if (formData.fullName.trim().length < 3) {
       newErrors.fullName = "Nome deve ter pelo menos 3 caracteres";
     }
@@ -190,6 +191,25 @@ const Register = () => {
       newErrors.taxId = "NIF é obrigatório";
     }
     
+    // Validação de senha para todos os tipos de conta
+    if (!isValidPassword(formData.password)) {
+      newErrors.password = "A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial";
+    }
+    
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "As senhas não coincidem";
+    }
+    
+    // Validações de termos para todos os tipos de conta
+    if (!formData.acceptTerms) {
+      newErrors.acceptTerms = "Você deve aceitar os termos de uso";
+    }
+    
+    if (!formData.acceptPilot) {
+      newErrors.acceptPilot = "Você deve aceitar o acordo do programa piloto";
+    }
+    
+    // Validações específicas para contas não particulares
     if (formData.accountType !== "particular") {
       if (!formData.phone) {
         newErrors.phone = "Telefone é obrigatório";
@@ -208,22 +228,6 @@ const Register = () => {
       }
     }
     
-    if (!isValidPassword(formData.password)) {
-      newErrors.password = "A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial";
-    }
-    
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "As senhas não coincidem";
-    }
-    
-    if (!formData.acceptTerms) {
-      newErrors.acceptTerms = "Você deve aceitar os termos de uso";
-    }
-    
-    if (!formData.acceptPilot) {
-      newErrors.acceptPilot = "Você deve aceitar o acordo do programa piloto";
-    }
-    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -232,10 +236,17 @@ const Register = () => {
     e.preventDefault();
     
     if (!validateForm()) {
+      // Se houver erros, exibir mensagem e não prosseguir
+      console.log("Formulário com erros:", errors);
       return;
     }
     
     setIsLoading(true);
+    console.log("Iniciando registro com dados:", {
+      email: formData.email,
+      nome: formData.fullName,
+      role: role
+    });
     
     try {
       await register(formData.email, formData.password, formData.fullName);

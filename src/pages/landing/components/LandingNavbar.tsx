@@ -16,9 +16,9 @@ const LandingNavbar: React.FC = () => {
   const redirectPath = getRedirectPath();
   
   const navLinks = [
-    { title: "Recursos", href: "/features" },
-    { title: "Preços", href: "/subscriptions" },
+    { title: "Funcionalidades", href: "/features" },
     { title: "Integrações", href: "/integrations" },
+    { title: "Planos", href: "/subscriptions" },
     { title: "Segurança", href: "/security" },
     { title: "Suporte", href: "/support" },
   ];

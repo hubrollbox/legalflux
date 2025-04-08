@@ -20,10 +20,13 @@ const LandingFooter = () => {
               <h5 className="text-sm font-semibold mb-3">Disponível para:</h5>
               <div className="flex space-x-3 mt-2">
                 <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                  <img src="/public/img/app-store.svg" alt="App Store" className="h-8" />
+                  <img src="/img/app-store.svg" alt="App Store" className="h-8" />
                 </a>
                 <a href="https://play.google.com" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                  <img src="/public/img/google-play.svg" alt="Google Play" className="h-8" />
+                  <img src="/img/google-play.svg" alt="Google Play" className="h-8" />
+                </a>
+                <a href="https://www.microsoft.com/store/apps" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
+                  <img src="/img/windows-store.svg" alt="Windows Store" className="h-8" />
                 </a>
               </div>
             </div>
@@ -47,7 +50,7 @@ const LandingFooter = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/#pricing" className="text-muted-foreground hover:text-foreground">
+                <Link to="/subscriptions" className="text-muted-foreground hover:text-foreground">
                   Planos
                 </Link>
               </li>
@@ -62,22 +65,22 @@ const LandingFooter = () => {
             <h3 className="font-semibold mb-4">Central de Ajuda</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/faqs" className="text-muted-foreground hover:text-foreground">
+                <Link to="/central-de-ajuda?tab=faqs" className="text-muted-foreground hover:text-foreground">
                   FAQs
                 </Link>
               </li>
               <li>
-                <Link to="/tutorials" className="text-muted-foreground hover:text-foreground">
+                <Link to="/central-de-ajuda?tab=tutorials" className="text-muted-foreground hover:text-foreground">
                   Tutoriais
                 </Link>
               </li>
               <li>
-                <Link to="/documentation" className="text-muted-foreground hover:text-foreground">
+                <Link to="/central-de-ajuda?tab=documentation" className="text-muted-foreground hover:text-foreground">
                   Documentação
                 </Link>
               </li>
               <li>
-                <Link to="/screenshots" className="text-muted-foreground hover:text-foreground">
+                <Link to="/central-de-ajuda?tab=screenshots" className="text-muted-foreground hover:text-foreground">
                   Screenshots
                 </Link>
               </li>
