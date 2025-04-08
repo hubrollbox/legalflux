@@ -1,10 +1,11 @@
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { usePermissions } from "@/hooks/usePermissions";
 import { toast } from "sonner";
 import { UserRole } from "@/types";
+import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -25,7 +26,12 @@ const ProtectedRoute = ({
   
   // Se ainda estiver a carregar o estado de autenticação, mostra um loader
   if (authLoading || permissionsLoading) {
-    return <div className="flex items-center justify-center h-screen">A carregar...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+        <p className="text-muted-foreground">A carregar...</p>
+      </div>
+    );
   }
   
   // Se não estiver autenticado, redireciona para login

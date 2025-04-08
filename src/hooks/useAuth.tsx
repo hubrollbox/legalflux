@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import { User, UserRole } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
 import { toast as sonnerToast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AuthContextType {
   user: User | null;
@@ -12,7 +13,8 @@ interface AuthContextType {
   register: (
     email: string, 
     password: string, 
-    name: string
+    name: string,
+    role?: UserRole
   ) => Promise<void>;
   requestPasswordReset: (email: string) => Promise<void>;
   resetPassword: (token: string, newPassword: string) => Promise<void>;
@@ -23,76 +25,69 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock users for demo
-const MOCK_USERS: User[] = [
-  {
-    id: "1",
-    email: "admin@legalflux.com",
-    name: "Admin Demo",
-    role: "admin",
+// Função para mapear os dados do usuário do Supabase para o formato da aplicação
+const mapUserData = (userData: any): User => {
+  return {
+    id: userData.id,
+    email: userData.email,
+    name: userData.user_metadata?.name || userData.email.split('@')[0],
+    role: userData.user_metadata?.role || "client",
     isActive: true,
-    createdAt: new Date().toISOString(),
-    lastLogin: new Date().toISOString(),
-    hasTwoFactorEnabled: true,
-    organizationId: "1",
-  },
-  {
-    id: "2",
-    email: "lawyer@legalflux.com",
-    name: "Advogado Demo",
-    role: "lawyer",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    lastLogin: new Date().toISOString(),
-    hasTwoFactorEnabled: false,
-    organizationId: "1",
-  },
-  {
-    id: "3",
-    email: "client@legalflux.com",
-    name: "Cliente Demo",
-    role: "client",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    lastLogin: new Date().toISOString(),
-    hasTwoFactorEnabled: false,
-  },
-  {
-    id: "4",
-    email: "senior@legalflux.com",
-    name: "Advogado Sênior Demo",
-    role: "senior_lawyer",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    lastLogin: new Date().toISOString(),
-    hasTwoFactorEnabled: false,
-    organizationId: "1",
-  },
-  {
-    id: "5",
-    email: "assistant@legalflux.com",
-    name: "Assistente Demo",
-    role: "assistant",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-    lastLogin: new Date().toISOString(),
-    hasTwoFactorEnabled: false,
-    organizationId: "1",
-  }
-];
+    createdAt: userData.created_at,
+    lastLogin: userData.last_sign_in_at || userData.created_at,
+    hasTwoFactorEnabled: userData.user_metadata?.hasTwoFactorEnabled || false,
+    organizationId: userData.user_metadata?.organizationId,
+    phone: userData.user_metadata?.phone,
+    assignedToLawyerId: userData.user_metadata?.assignedToLawyerId,
+    avatar: userData.user_metadata?.avatar
+  };
+};
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { toast } = useToast();
 
+  // Verificar a sessão atual ao carregar o componente
   useEffect(() => {
-    // Check for stored user in localStorage on mount
-    const storedUser = localStorage.getItem("legalflux-user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
+    const checkSession = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error("Erro ao verificar sessão:", error);
+          return;
+        }
+        
+        if (data.session) {
+          const userData = data.session.user;
+          const mappedUser = mapUserData(userData);
+          setUser(mappedUser);
+        }
+      } catch (error) {
+        console.error("Erro ao verificar sessão:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    checkSession();
+    
+    // Configurar listener para mudanças de autenticação
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === "SIGNED_IN" && session) {
+          const mappedUser = mapUserData(session.user);
+          setUser(mappedUser);
+        } else if (event === "SIGNED_OUT") {
+          setUser(null);
+        }
+      }
+    );
+    
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
 
   // Função para determinar o caminho de redirecionamento com base na função do utilizador
@@ -115,24 +110,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string): Promise<void> => {
     setIsLoading(true);
     try {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       
-      // Find user by email (in a real app, this would be a server call)
-      const foundUser = MOCK_USERS.find(
-        (u) => u.email.toLowerCase() === email.toLowerCase()
-      );
+      if (error) {
+        throw error;
+      }
       
-      if (foundUser) {
-        // In a real app, you'd validate the password here
-        foundUser.lastLogin = new Date().toISOString();
-        setUser(foundUser);
-        localStorage.setItem("legalflux-user", JSON.stringify(foundUser));
+      if (data.user) {
+        const mappedUser = mapUserData(data.user);
+        setUser(mappedUser);
         
         // Mostrar mensagem personalizada com base no tipo de utilizador
-        const welcomeMessage = foundUser.role === "client" 
+        const welcomeMessage = mappedUser.role === "client" 
           ? "Bem-vindo ao Portal do Cliente!" 
-          : `Bem-vindo de volta, ${foundUser.name}!`;
+          : `Bem-vindo de volta, ${mappedUser.name}!`;
         
         toast({
           title: "Login bem-sucedido",
@@ -141,18 +135,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         // Também mostrar um toast via sonner para garantir que o utilizador vê a mensagem
         sonnerToast.success(welcomeMessage);
-      } else {
-        toast({
-          title: "Falha no login",
-          description: "Email ou senha incorretos.",
-          variant: "destructive",
-        });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login error:", error);
       toast({
-        title: "Erro",
-        description: "Ocorreu um erro ao tentar fazer login.",
+        title: "Falha no login",
+        description: error.message || "Email ou senha incorretos.",
         variant: "destructive",
       });
     } finally {
@@ -160,27 +148,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const logout = (): void => {
-    localStorage.removeItem("legalflux-user");
-    setUser(null);
-    toast({
-      title: "Logout bem-sucedido",
-      description: "Você saiu da sua conta.",
-    });
+  const logout = async (): Promise<void> => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        throw error;
+      }
+      
+      setUser(null);
+      toast({
+        title: "Logout bem-sucedido",
+        description: "Você saiu da sua conta.",
+      });
+    } catch (error: any) {
+      console.error("Logout error:", error);
+      toast({
+        title: "Erro ao sair",
+        description: error.message || "Ocorreu um erro ao tentar sair.",
+        variant: "destructive",
+      });
+    }
   };
 
   const register = async (
     email: string,
     password: string,
-    name: string
+    name: string,
+    role: UserRole = "client"
   ): Promise<void> => {
     setIsLoading(true);
     try {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Verificar se o email já está em uso
+      const { data: existingUser } = await supabase
+        .from('users')
+        .select('email')
+        .eq('email', email)
+        .single();
       
-      // Check if user already exists
-      if (MOCK_USERS.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+      if (existingUser) {
         toast({
           title: "Falha no registro",
           description: "Este email já está em uso.",
@@ -189,32 +195,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
       
-      // Create new user with role defaulting to "client"
-      const role: UserRole = "client";
-      
-      // Create new user
-      const newUser: User = {
-        id: String(MOCK_USERS.length + 1),
+      // Registrar o usuário no Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
         email,
-        name,
-        role,
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        lastLogin: new Date().toISOString(),
-        hasTwoFactorEnabled: false,
-      };
+        password,
+        options: {
+          data: {
+            name,
+            role,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            lastLogin: new Date().toISOString(),
+            hasTwoFactorEnabled: false,
+          }
+        }
+      });
       
-      // In a real app, you'd save this to a database
-      MOCK_USERS.push(newUser);
+      if (error) {
+        throw error;
+      }
       
       toast({
         title: "Registro bem-sucedido",
         description: "Sua conta foi criada com sucesso!",
       });
       
-      // Auto login
-      setUser(newUser);
-      localStorage.setItem("legalflux-user", JSON.stringify(newUser));
+      if (data.user) {
+        const mappedUser = mapUserData(data.user);
+        setUser(mappedUser);
+      }
     } catch (error) {
       console.error("Registration error:", error);
       toast({
@@ -229,29 +238,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const requestPasswordReset = async (email: string): Promise<void> => {
     try {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
       
-      const foundUser = MOCK_USERS.find(
-        (u) => u.email.toLowerCase() === email.toLowerCase()
-      );
-      
-      if (foundUser) {
-        toast({
-          title: "Email enviado",
-          description: "Verifique seu email para redefinir sua senha.",
-        });
-      } else {
-        toast({
-          title: "Email enviado",
-          description: "Se este email estiver registrado, você receberá instruções de redefinição.",
-        });
+      if (error) {
+        throw error;
       }
-    } catch (error) {
+      
+      toast({
+        title: "Email enviado",
+        description: "Verifique seu email para redefinir sua senha.",
+      });
+    } catch (error: any) {
       console.error("Password reset request error:", error);
       toast({
         title: "Erro",
-        description: "Ocorreu um erro ao solicitar a redefinição de senha.",
+        description: error.message || "Ocorreu um erro ao solicitar a redefinição de senha.",
         variant: "destructive",
       });
     }
@@ -259,18 +262,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const resetPassword = async (token: string, newPassword: string): Promise<void> => {
     try {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+      
+      if (error) {
+        throw error;
+      }
       
       toast({
         title: "Senha redefinida",
         description: "Sua senha foi redefinida com sucesso.",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Password reset error:", error);
       toast({
         title: "Erro",
-        description: "Ocorreu um erro ao redefinir sua senha.",
+        description: error.message || "Ocorreu um erro ao redefinir sua senha.",
         variant: "destructive",
       });
     }
@@ -280,27 +288,43 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       if (!user) return;
       
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Atualizar os metadados do usuário no Supabase
+      const { error } = await supabase.auth.updateUser({
+        data: {
+          name: updatedUser.name || user.name,
+          role: updatedUser.role || user.role,
+          phone: updatedUser.phone || user.phone,
+          hasTwoFactorEnabled: updatedUser.hasTwoFactorEnabled !== undefined 
+            ? updatedUser.hasTwoFactorEnabled 
+            : user.hasTwoFactorEnabled,
+          organizationId: updatedUser.organizationId || user.organizationId,
+          avatar: updatedUser.avatar || user.avatar,
+          assignedToLawyerId: updatedUser.assignedToLawyerId || user.assignedToLawyerId
+        }
+      });
       
-      // Update user data
+      if (error) {
+        throw error;
+      }
+      
+      // Atualizar o estado local
       const newUserData = { ...user, ...updatedUser };
       setUser(newUserData);
-      localStorage.setItem("legalflux-user", JSON.stringify(newUserData));
       
       toast({
         title: "Perfil atualizado",
         description: "Suas informações foram atualizadas com sucesso.",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Profile update error:", error);
       toast({
         title: "Erro",
-        description: "Ocorreu um erro ao atualizar seu perfil.",
+        description: error.message || "Ocorreu um erro ao atualizar seu perfil.",
         variant: "destructive",
       });
     }
   };
+
 
   return (
     <AuthContext.Provider
