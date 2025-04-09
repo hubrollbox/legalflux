@@ -184,11 +184,11 @@ class DocumentService {
       const message = action === 'created'
         ? `Novo documento criado para ${clientName} no processo ${processTitle}: ${document.name}`
         : `Documento atualizado para ${clientName} no processo ${processTitle}: ${document.name} (Versão ${document.version})`;
-
+  
       const notification = {
         title: 'Atualização de Documento',
         message,
-        type: 'document' as 'document', // Explicitly type as literal 'document'
+        type: 'process' as "process", // Changed from 'document' to 'process'
         data: {
           documentId: document.id,
           version: document.version,
@@ -196,7 +196,7 @@ class DocumentService {
           processId: document.processId
         }
       };
-
+  
       await notifyUsers(notification);
     } catch (error) {
       console.error('Falha ao enviar notificação:', error);

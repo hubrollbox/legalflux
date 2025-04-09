@@ -1,6 +1,20 @@
 import { create } from 'zustand';
-import { Notification } from '@/components/notifications/NotificationSystem';
+// Fix the import by using the type directly instead of trying to import it
+// Remove this line:
+// import { Notification } from '@/components/notifications/NotificationSystem';
 import { NotificationPreference } from '@/components/notifications/NotificationPreferences';
+
+// Define the Notification interface directly in this file
+interface Notification {
+  id: string;
+  title: string;
+  content: string;
+  type: "message" | "deadline" | "process";
+  priority: 'high' | 'medium' | 'low';
+  timestamp: Date;
+  read: boolean;
+  data?: any;
+}
 
 interface NotificationState {
   notifications: Notification[];
@@ -173,23 +187,26 @@ class NotificationWebSocket {
 export const notificationWS = new NotificationWebSocket();
 
 
-export async function notifyUsers(notification: { title: string; message: string; type: "document" | "action" | "precedent" | "strategy" | "error" | "success" | "warning" | "info" | "approval"; recipients?: string[]; priority?: string; data: any; }) {
+export async function notifyUsers(notification: {
+  title: string;
+  message: string;
+  type: "message" | "deadline" | "process";
+  recipients?: string[];
+  priority?: "high" | "medium" | "low";
+  data: any;
+}) {
   try {
-    // Implementação da lógica para enviar notificações aos usuários
-    console.log('Notificação enviada:', notification);
-    
-    // Adicionar notificação ao store local para exibição na interface
     const notificationId = crypto.randomUUID();
     const now = new Date();
     
     useNotificationStore.getState().addNotification({
       id: notificationId,
       title: notification.title,
-      message: notification.message,
-      timestamp: now.toISOString(),
-      read: false,
+      content: notification.message, // Change property name from 'message' to 'content'
       type: notification.type,
-      priority: notification.priority as 'high' | 'medium' | 'low' || 'medium',
+      priority: notification.priority || 'medium',
+      timestamp: now,
+      read: false,
       data: notification.data
     });
     

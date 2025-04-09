@@ -9,7 +9,7 @@ import DocumentTabs from "@/components/documents/DocumentTabs";
 import { mockDocuments, mockTemplates } from "@/components/documents/DocumentsData";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import DocumentCard from '@/components/documents/DocumentCard';
+import { Badge } from "@/components/ui/badge";
 
 const Documents = () => {
   const [filterSigned, setFilterSigned] = useState<'all' | 'signed' | 'unsigned'>('all');
@@ -83,7 +83,32 @@ const Documents = () => {
           {/* Add document list rendering */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredDocuments?.map((doc) => (
-              <DocumentCard key={doc.id} document={doc} />
+              <Card key={doc.id} className="overflow-hidden">
+                <CardHeader className="p-4 pb-2">
+                  <CardTitle className="text-lg font-medium truncate">{doc.name}</CardTitle>
+                  <CardDescription className="text-sm text-muted-foreground">
+                    {doc.folder} • {doc.process}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-4 pt-2">
+                  <div className="flex justify-between items-center text-sm text-muted-foreground">
+                    <span>{doc.type}</span>
+                    <span>{doc.size}</span>
+                  </div>
+                  {doc.tags && doc.tags.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {doc.tags.map((tag, i) => (
+                        <Badge key={i} variant="outline" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                  <div className="mt-3 text-xs text-muted-foreground">
+                    Atualizado em: {new Date(doc.updatedAt).toLocaleDateString()}
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>

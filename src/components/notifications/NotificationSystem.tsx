@@ -8,14 +8,15 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { useNotificationStore } from '@/services/notificationService';
 import NotificationPreferences, { NotificationPreference } from './NotificationPreferences';
 
-export interface Notification {
+interface Notification {
   id: string;
-  type: 'deadline' | 'message' | 'process';
   title: string;
-  description: string;
+  content: string;  // Should be 'content' instead of 'message'
+  type: string;
+  priority: 'high' | 'medium' | 'low';
   timestamp: Date;
   read: boolean;
-  priority: 'high' | 'medium' | 'low';
+  data?: any;
 }
 
 const NotificationSystem: React.FC = () => {
@@ -137,7 +138,7 @@ const NotificationSystem: React.FC = () => {
                       <div className={`h-2 w-2 rounded-full ${getPriorityColor(notification.priority)}`} />
                     </div>
                     <p className="text-sm text-muted-foreground truncate">
-                      {notification.description}
+                      {notification.content}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
                       {formatTime(notification.timestamp)}
