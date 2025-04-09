@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from 'next/router';
+import { validateEmail, validatePassword, validateNIF } from '@/utils/validation';
 
 // This is the form component that handles the multi-step registration process
 const RegisterForm = () => {
@@ -112,21 +113,18 @@ const RegisterForm = () => {
   };
   
   const validateStep2 = () => {
-    // Validar dados pessoais
     if (formData.userType === 'particular' || formData.userType === 'professional') {
       if (!formData.name || !formData.nif || !formData.email) {
         setError('Por favor, preencha todos os campos obrigatórios: Nome, NIF e Email');
         return false;
       }
       
-      // Validar formato de email
-      if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      if (!validateEmail(formData.email)) {
         setError('Por favor, forneça um email válido');
         return false;
       }
       
-      // Validar NIF português (9 dígitos)
-      if (!/^\d{9}$/.test(formData.nif)) {
+      if (!validateNIF(formData.nif)) {
         setError('O NIF deve conter 9 dígitos');
         return false;
       }
@@ -184,8 +182,8 @@ const RegisterForm = () => {
       return false;
     }
     
-    if (formData.password.length < 8) {
-      setError('A senha deve ter pelo menos 8 caracteres');
+    if (!validatePassword(formData.password)) {
+      setError('A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, um número e um caractere especial');
       return false;
     }
     

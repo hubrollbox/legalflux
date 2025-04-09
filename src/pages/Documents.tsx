@@ -9,7 +9,7 @@ import DocumentTabs from "@/components/documents/DocumentTabs";
 import { mockDocuments, mockTemplates } from "@/components/documents/DocumentsData";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
+import DocumentCard from '@/components/documents/DocumentCard';
 
 const Documents = () => {
   const [filterSigned, setFilterSigned] = useState<'all' | 'signed' | 'unsigned'>('all');
@@ -56,21 +56,6 @@ const Documents = () => {
       <DashboardLayout>
         <div className="container mx-auto p-4 sm:p-2 md:p-6 lg:p-8">
           <DocumentsHeader canCreateDocument={canCreateDocument} />
-          
-          {/* Add filter section here */}
-          <div className="mb-4 flex gap-2">
-            <Select onValueChange={(v) => setFilterSigned(v as any)}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Estado de Assinatura" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="signed">Assinados</SelectItem>
-                <SelectItem value="unsigned">Por assinar</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
           <DocumentTabs 
             viewMode={viewMode}
             setViewMode={setViewMode}
@@ -79,38 +64,6 @@ const Documents = () => {
             filteredDocuments={filteredDocuments}
             filteredTemplates={filteredTemplates}
           />
-
-          {/* Add document list rendering */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredDocuments?.map((doc) => (
-              <Card key={doc.id} className="overflow-hidden">
-                <CardHeader className="p-4 pb-2">
-                  <CardTitle className="text-lg font-medium truncate">{doc.name}</CardTitle>
-                  <CardDescription className="text-sm text-muted-foreground">
-                    {doc.folder} • {doc.process}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-4 pt-2">
-                  <div className="flex justify-between items-center text-sm text-muted-foreground">
-                    <span>{doc.type}</span>
-                    <span>{doc.size}</span>
-                  </div>
-                  {doc.tags && doc.tags.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {doc.tags.map((tag, i) => (
-                        <Badge key={i} variant="outline" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-                  <div className="mt-3 text-xs text-muted-foreground">
-                    Atualizado em: {new Date(doc.updatedAt).toLocaleDateString()}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
         </div>
       </DashboardLayout>
     </PageTransition>
@@ -118,3 +71,20 @@ const Documents = () => {
 };
 
 export default Documents;
+
+// Adicionar filtro na seção de documentos
+<div className="mb-4 flex gap-2">
+  <Select onValueChange={(v) => setFilterSigned(v as any)}>
+    <SelectTrigger className="w-[180px]">
+      <SelectValue placeholder="Estado de Assinatura" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">Todos</SelectItem>
+      <SelectItem value="signed">Assinados</SelectItem>
+      <SelectItem value="unsigned">Por assinar</SelectItem>
+    </SelectContent>
+  </Select>
+</div>
+{filteredDocuments.map((doc) => (
+  <DocumentCard key={doc.id} doc={doc} />
+))}

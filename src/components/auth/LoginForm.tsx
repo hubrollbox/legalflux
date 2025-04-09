@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useAuth } from '@/hooks/useAuth';
+import { validateEmail, validatePassword, getErrorMessage } from '@/utils/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,18 +12,33 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
+  const { login, getRedirectPath } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+    setErrorMessage(""); // Reset error message
+
+    if (!validateEmail(email)) {
+      setErrorMessage(getErrorMessage("invalidEmail"));
+      setIsLoading(false);
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setErrorMessage(getErrorMessage("invalidPassword"));
+      setIsLoading(false);
+      return;
+    }
+
     try {
       await login(email, password);
-      navigate('/dashboard'); // Redirect to dashboard after successful login
+      const redirectPath = getRedirectPath();
+      router.push(redirectPath); // Use router.push for navigation
     } catch (error) {
-      console.error("Login error:", error);
+      setErrorMessage(getErrorMessage("loginError"));
     } finally {
       setIsLoading(false);
     }
@@ -29,6 +46,11 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {errorMessage && (
+        <div className="bg-red-50 border border-red-200 text-red-700 p-3 rounded">
+          {errorMessage}
+        </div>
+      )}
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input
@@ -43,11 +65,10 @@ const LoginForm = () => {
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label htmlFor="password">Palavra-passe</Label>
-          <Link
-            to="/forgot-password"
-            className="text-sm text-primary hover:text-highlight"
-          >
-            Esqueceu a palavra-passe?
+          <Link href="/forgot-password">
+            <a className="text-sm text-primary hover:text-highlight">
+              Esqueceu a palavra-passe?
+            </a>
           </Link>
         </div>
         <Input

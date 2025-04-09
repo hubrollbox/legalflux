@@ -1,33 +1,23 @@
 import React from 'react';
 import RegisterForm from '@/components/auth/RegisterForm';
-import { Container } from '@/components/ui/container';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import AuthLayout from '@/components/layout/AuthLayout';
 
 const RegisterPage = () => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Container>
-        <div className="py-12">
-          <div className="max-w-md mx-auto">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold">Criar Conta</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <RegisterForm />
-                
-                <div className="mt-4 text-center text-sm">
-                  Já tem uma conta?{' '}
-                  <a href="/auth/login" className="text-primary hover:underline">
-                    Entrar
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </Container>
-    </div>
+    <AuthLayout title="Register LegalFlux" subtitle="Create your account">
+      <RegisterForm />
+      
+      <div className="mt-6 text-center">
+        <p className="text-sm text-gray-600">
+          Already have an account?{" "}
+          <Link href="/login">
+            <a className="text-primary hover:text-highlight font-medium">
+              Log in
+            </a>
+          </Link>
+        </p>
+      </div>
+    </AuthLayout>
   );
 };
 
