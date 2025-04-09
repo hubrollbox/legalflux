@@ -2,7 +2,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Process, CreateProcessDTO, UpdateProcessDTO, ProcessStatus } from "@/types/process";
 
 export const processService = {
-  async createProcess(processData: Omit<Process, 'id' | 'createdAt' | 'status'>, userId: string, organizationId: string) {
+  async createProcess(processData: CreateProcessDTO, userId: string, organizationId: string): Promise<Process> {
     const { data, error } = await supabase
       .from('processes')
       .insert({
@@ -17,7 +17,7 @@ export const processService = {
     return data[0];
   },
 
-  async getProcess(id: string) {
+  async getProcess(id: string): Promise<Process> {
     const { data, error } = await supabase
       .from('processes')
       .select('*, client:client_id(*)')
@@ -28,7 +28,7 @@ export const processService = {
     return data;
   },
 
-  async updateProcess(id: string, processData: Partial<Process>) {
+  async updateProcess(id: string, processData: UpdateProcessDTO): Promise<Process> {
     const { data, error } = await supabase
       .from('processes')
       .update(processData)
@@ -39,7 +39,7 @@ export const processService = {
     return data[0];
   },
 
-  async deleteProcess(id: string) {
+  async deleteProcess(id: string): Promise<void> {
     const { error } = await supabase
       .from('processes')
       .delete()
@@ -48,7 +48,7 @@ export const processService = {
     if (error) throw error;
   },
 
-  async listProcesses(userRole?: string, organizationId?: string) {
+  async listProcesses(userRole?: string, organizationId?: string): Promise<Process[]> {
     const query = supabase
       .from('processes')
       .select('*, client:client_id(*)')
@@ -64,7 +64,7 @@ export const processService = {
     return data;
   },
 
-  async getProcessesByStatus(status: string, userRole?: string, organizationId?: string) {
+  async getProcessesByStatus(status: ProcessStatus, userRole?: string, organizationId?: string): Promise<Process[]> {
     const query = supabase
       .from('processes')
       .select('*, client:client_id(*)')
@@ -80,7 +80,7 @@ export const processService = {
     return data;
   },
 
-  async getProcessesByClientId(clientId: string) {
+  async getProcessesByClientId(clientId: string): Promise<Process[]> {
     const { data, error } = await supabase
       .from('processes')
       .select('*')
@@ -91,4 +91,6 @@ export const processService = {
     return data;
   }
 };
+
+export default processService;
 export const getProcesses = processService.listProcesses;

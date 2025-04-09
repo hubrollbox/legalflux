@@ -9,6 +9,7 @@ import DocumentTabs from "@/components/documents/DocumentTabs";
 import { mockDocuments, mockTemplates } from "@/components/documents/DocumentsData";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import DocumentCard from '@/components/documents/DocumentCard';
 
 const Documents = () => {
   const [filterSigned, setFilterSigned] = useState<'all' | 'signed' | 'unsigned'>('all');

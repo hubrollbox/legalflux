@@ -195,8 +195,10 @@ class DocumentService {
     }
   }
 
-  async getDocuments(): Promise<Document[]> {
+  export async function getDocuments(): Promise<Document[]> {
       return Array.from(this.documents.values());
     }
 
+;
 export const documentService = new DocumentService();
+export { documentService };
