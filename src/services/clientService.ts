@@ -5,17 +5,22 @@ import { supabase } from '@/integrations/supabase/client';
 // Export a single clientService object that uses the existing ClientService methods
 export const clientService = {
   async createClient(clientData: Omit<Client, 'id' | 'createdAt'>, userId: string, organizationId?: string) {
-    const { data, error } = await supabase
-      .from('clientes')
-      .insert({
-        ...clientData,
-        user_id: userId,           // Changed from created_by to user_id
-        advogado_id: organizationId // Changed from organization_id to advogado_id
-      })
-      .select();
+    try {
+      const { data, error } = await supabase
+        .from('clientes')
+        .insert({
+          ...clientData,
+          user_id: userId,
+          advogado_id: organizationId
+        })
+        .select();
 
-    if (error) throw error;
-    return data[0];
+      if (error) throw error;
+      return data[0];
+    } catch (err) {
+      console.error('Erro ao criar cliente:', err);
+      throw err;
+    }
   },
 
   async getClient(id: string) {
