@@ -7,8 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import DocumentsHeader from "@/components/documents/DocumentsHeader";
 import DocumentTabs from "@/components/documents/DocumentTabs";
 import { mockDocuments, mockTemplates } from "@/components/documents/DocumentsData";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Documents = () => {
+  const [filterSigned, setFilterSigned] = useState<'all' | 'signed' | 'unsigned'>('all');
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
@@ -45,6 +48,13 @@ const Documents = () => {
       template.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const filteredDocuments = documents.filter(doc => {
+    const isSigned = !!localStorage.getItem(`doc-signed-${doc.id}`);
+    return filterSigned === 'all' || 
+          (filterSigned === 'signed' && isSigned) ||
+          (filterSigned === 'unsigned' && !isSigned);
+  });
+
   return (
     <PageTransition>
       <DashboardLayout>
@@ -65,3 +75,20 @@ const Documents = () => {
 };
 
 export default Documents;
+
+// Adicionar filtro na seção de documentos
+<div className="mb-4 flex gap-2">
+  <Select onValueChange={(v) => setFilterSigned(v as any)}>
+    <SelectTrigger className="w-[180px]">
+      <SelectValue placeholder="Estado de Assinatura" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">Todos</SelectItem>
+      <SelectItem value="signed">Assinados</SelectItem>
+      <SelectItem value="unsigned">Por assinar</SelectItem>
+    </SelectContent>
+  </Select>
+</div>
+{filteredDocuments.map((doc) => (
+  <DocumentCard key={doc.id} doc={doc} />
+))}

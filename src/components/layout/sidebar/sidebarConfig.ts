@@ -1,7 +1,7 @@
 
 import { 
   LayoutDashboard, Briefcase, Users, Calendar, MessageSquare, 
-  Settings, DollarSign, CheckSquare, UserPlus, CreditCard, FileText, User, BarChart2
+  Settings, DollarSign, CheckSquare, UserPlus, CreditCard, FileText, User, BarChart2, BookOpen
 } from "lucide-react";
 import { SidebarItem } from "./SidebarItems";
 
@@ -29,6 +29,12 @@ export const sidebarItems: SidebarItem[] = [
     label: "Documentos",
     icon: FileText,
     href: "/documents",
+    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"],
+  },
+  {
+    label: "Onboarding",
+    icon: BookOpen,
+    href: "/onboarding",
     roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"],
   },
   {

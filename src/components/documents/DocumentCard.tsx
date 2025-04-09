@@ -1,5 +1,5 @@
 
-import React from "react";
+// React is already imported in the combined import statement below
 import { FileText, FileImage, FileArchive, File, FileCode, MoreHorizontal, Eye, Download, Share2, Trash2, Tag } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import React, { useEffect, useState } from "react";
 
 // Function to get the appropriate icon based on file type
 export const getFileIcon = (type: "pdf" | "docx" | "xlsx" | "jpg" | "png" | string) => {
@@ -59,8 +60,32 @@ interface DocumentCardProps {
 }
 
 const DocumentCard: React.FC<DocumentCardProps> = ({ doc }) => {
+  const [isSigned, setIsSigned] = useState(false);
+  const [signedAt, setSignedAt] = useState<string | null>(null);
+
+  useEffect(() => {
+    const savedSignature = localStorage.getItem(`doc-signed-${doc.id}`);
+    if (savedSignature) {
+      setIsSigned(true);
+      setSignedAt(savedSignature);
+    }
+  }, [doc.id]);
+
+  const handleSign = () => {
+    const newSignedState = !isSigned;
+    setIsSigned(newSignedState);
+    if (newSignedState) {
+      const timestamp = new Date().toISOString();
+      setSignedAt(timestamp);
+      localStorage.setItem(`doc-signed-${doc.id}`, timestamp);
+    } else {
+      setSignedAt(null);
+      localStorage.removeItem(`doc-signed-${doc.id}`);
+    }
+  };
+
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
+    <Card className={`group hover:shadow-lg transition-all duration-300 overflow-hidden ${isSigned ? 'border-green-500' : 'border-transparent'} border-2`}>
       <CardHeader className="p-4 space-y-2">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-2">
@@ -107,6 +132,23 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ doc }) => {
       </CardHeader>
       
       <CardContent className="p-4 pt-0">
+        <div className="flex justify-between items-start mb-2">
+          <Button
+            onClick={handleSign}
+            variant={isSigned ? 'outline' : 'default'}
+            size="sm"
+            className="gap-2"
+          >
+            {isSigned ? (
+              <>
+                <CheckCircle2 className="h-4 w-4" />
+                Assinado
+              </>
+            ) : (
+              'Assinar Documento'
+            )}
+          </Button>
+        </div>
         {doc.preview && (
           <div className="relative aspect-video rounded-md overflow-hidden mb-3 bg-muted">
             <img 
@@ -124,6 +166,11 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ doc }) => {
             <span>Processo: {doc.process}</span>
           </div>
         </div>
+        {signedAt && (
+          <div className="text-xs text-muted-foreground mt-2">
+            Assinado em: {formatDate(signedAt)}
+          </div>
+        )}
       </CardContent>
 
       <CardFooter className="p-4 pt-0">

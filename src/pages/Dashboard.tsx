@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { MOCK_CASES as CasesData, MOCK_TASKS as TasksData } from "@/services/mockData"; 
-import { Case, Task } from "@/types";
+import { Process, Document } from "@/types";
+import { getProcesses } from "@/services/processService";
+import { getDocuments } from "@/services/documentService";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import PageTransition from "@/components/PageTransition";
@@ -29,8 +32,16 @@ import { getRecentCases, getRecentTasks } from "@/services/mockData";
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [cases, setCases] = useState<Case[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [processes, setProcesses] = useState<Process[]>([]);
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [filters, setFilters] = useState({
+    startDate: '',
+    endDate: '',
+    status: '',
+    docType: ''
+  });
   const [organization] = useState(user?.organizationId ? { name: "Escritório Demo" } : undefined);
   const [userOrganization] = useState(user?.organizationId ? "Escritório Demo" : "Independente");
   const isMobile = useIsMobile();
@@ -45,7 +56,12 @@ const Dashboard = () => {
   const chartData = getChartData();
   const financialData = getFinancialData();
   const performanceData = getPerformanceData();
-  const statsData = getStatisticsData();
+  const statsData = {
+    activeProcesses: processes.filter(p => p.status === 'active').length,
+    pendingDocuments: documents.filter(d => d.status === 'pending').length,
+    completedCases: processes.filter(p => p.status === 'closed').length,
+    averageResolutionTime: 45
+  };
   
   // Mock data para os novos widgets
   const [recentDocuments, setRecentDocuments] = useState([
@@ -79,16 +95,32 @@ const Dashboard = () => {
   const recentTasks = getRecentTasks();
 
   useEffect(() => {
-    // Simulate API call to fetch cases and tasks
     const loadData = async () => {
       try {
-        // Fetch cases and tasks (using mock data for now)
-        setCases(CasesData);
-        setTasks(TasksData);
-      } catch (error) {
-        console.error("Error loading dashboard data:", error);
+        const [processesData, documentsData] = await Promise.all([
+          getProcesses(filters),
+          getDocuments(filters)
+        ]);
+        setProcesses(processesData);
+        setDocuments(documentsData);
+        setError('');
+      } catch (err) {
+        setError('Erro ao carregar dados. Tente recarregar a página.');
+      } finally {
+        setLoading(false);
       }
     };
+
+  useEffect(() => {
+    loadData();
+  }, [filters]);
+
+  const handleFilterChange = (field: string, value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
 
     loadData();
   }, []);
@@ -127,8 +159,27 @@ const Dashboard = () => {
             {/* Widgets de coluna única */}
             {activeWidgets.includes("recentDocs") && (
               <div className="md:col-span-1">
+                <div className="mb-4 flex gap-2">
+                  <Select onValueChange={(v) => handleFilterChange('docType', v)}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Tipo de Documento" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="contract">Contrato</SelectItem>
+                      <SelectItem value="petition">Petição</SelectItem>
+                      <SelectItem value="power_of_attorney">Procuração</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input
+                    type="date"
+                    onChange={(e) => handleFilterChange('startDate', e.target.value)}
+                    className="max-w-[150px]"
+                  />
+                </div>
                 <RecentDocumentsWidget 
-                  documents={recentDocuments}
+                  documents={documents}
+                  loading={loading}
+                  error={error}
                   onViewAll={() => navigate("/documents")}
                 />
               </div>

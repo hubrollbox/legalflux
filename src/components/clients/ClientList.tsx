@@ -22,18 +22,33 @@ import { MoreHorizontal, Eye, Edit, Trash2, FileText } from "lucide-react";
 import { Client } from "@/types/client";
 
 interface ClientListProps {
-  clients: Client[];
   onEdit: (client: Client) => void;
   onDelete: (client: Client) => void;
   onView: (client: Client) => void;
 }
 
-const ClientList: React.FC<ClientListProps> = ({
-  clients,
-  onEdit,
-  onDelete,
-  onView,
-}) => {
+const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => {
+  const [clients, setClients] = useState<Client[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const loadClients = async () => {
+      try {
+        const data = await ClientService.listClients();
+        setClients(data);
+      } catch (error) {
+        toast({
+          title: 'Erro',
+          description: 'Falha ao carregar clientes',
+          variant: 'destructive',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadClients();
+  }, []);
   const navigate = useNavigate();
 
   const getStatusBadge = (status: string) => {

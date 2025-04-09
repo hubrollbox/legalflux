@@ -26,6 +26,8 @@ import { clientService } from "@/services/clientService";
 import { processService } from "@/services/processService";
 import { Card, CardContent } from "@/components/ui/card";
 import { FileText, Download } from "lucide-react";
+import { FileUpload } from "@/components/documents/FileUpload";
+import { PDFDownloadLink, Document, Page, Text } from '@react-pdf/renderer';
 
 // Schema de validação para o formulário de documento
 const documentTemplateFormSchema = z.object({
@@ -63,6 +65,29 @@ interface DocumentTemplateFormProps {
 }
 
 const DocumentTemplateForm: React.FC<DocumentTemplateFormProps> = ({
+  onSubmit,
+  isSubmitting = false,
+  templates,
+}) => {
+  const [templateContent, setTemplateContent] = useState('');
+  const [previewContent, setPreviewContent] = useState('');
+  const [activePlaceholders, setActivePlaceholders] = useState<string[]>([]);
+
+  const predefinedPlaceholders = [
+    'nome_cliente',
+    'nif',
+    'numero_processo',
+    'data_actual',
+    'morada',
+  ];
+
+  const handleInsertPlaceholder = (placeholder: string) => {
+    const newContent = `${templateContent}{{${placeholder}}}`;
+    setTemplateContent(newContent);
+    if (!activePlaceholders.includes(placeholder)) {
+      setActivePlaceholders([...activePlaceholders, placeholder]);
+    }
+  };
   onSubmit,
   isSubmitting = false,
   templates,
@@ -125,6 +150,27 @@ const DocumentTemplateForm: React.FC<DocumentTemplateFormProps> = ({
 
   // Gerar visualização do documento com os campos preenchidos
   const generatePreview = () => {
+    let content = templateContent;
+    const clientData = clientService.getCurrentClient();
+    const processData = processService.getCurrentProcess();
+
+    activePlaceholders.forEach(placeholder => {
+      const value = {
+        nome_cliente: clientData?.name || '[Nome do Cliente]',
+        nif: clientData?.nif || '[NIF]',
+        numero_processo: processData?.number || '[Número do Processo]',
+        data_actual: new Date().toLocaleDateString('pt-PT'),
+        morada: clientData?.address || '[Morada]',
+      }[placeholder];
+
+      content = content.replace(
+        new RegExp(`{{${placeholder}}}`, 'g'),
+        `<span class="font-medium text-blue-600">${value}</span>`
+      );
+    });
+
+    setPreviewContent(content);
+  };
     if (!selectedTemplate) return "";
 
     // Aqui você teria o conteúdo do template com placeholders
@@ -149,7 +195,65 @@ Referente ao processo ${form.watch("processId") ? processes.find(p => p.id === f
     const subscription = form.watch(() => {
       setPreviewContent(generatePreview());
     });
-    return () => subscription.unsubscribe();
+    return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <div>
+            <Label>Conteúdo do Documento</Label>
+            <Textarea
+              value={templateContent}
+              onChange={(e) => setTemplateContent(e.target.value)}
+              className="min-h-[300px] font-mono"
+              placeholder="Insira seu texto aqui..."
+            />
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {predefinedPlaceholders.map(placeholder => (
+              <Button
+                key={placeholder}
+                variant="outline"
+                size="sm"
+                onClick={() => handleInsertPlaceholder(placeholder)}
+              >
+                {`{{${placeholder}}`}
+              </Button>
+            ))}
+          </div>
+
+          <Button onClick={generatePreview} className="mt-4">
+            Atualizar Pré-visualização
+          </Button>
+        </div>
+
+        <div className="space-y-4">
+          <Label>Pré-visualização</Label>
+          <Card>
+            <CardContent className="p-4 prose max-w-none">
+              <div dangerouslySetInnerHTML={{ __html: previewContent }} />
+            </CardContent>
+          </Card>
+
+          <PDFDownloadLink
+            document={(
+              <Document>
+                <Page style={{ padding: 20 }}>
+                  <Text>{previewContent.replace(/<[^>]+>/g, '')}</Text>
+                </Page>
+              </Document>
+            )}
+            fileName="documento_gerado.pdf"
+          >
+            {({ loading }) => (
+              <Button className="w-full" disabled={loading}>
+                <Download className="mr-2 h-4 w-4" />
+                {loading ? 'Gerando PDF...' : 'Exportar Documento'}
+              </Button>
+            )}
+          </PDFDownloadLink>
+        </div>
+      </div>) => subscription.unsubscribe();
   }, [form.watch, selectedTemplate]);
 
   const handleSubmit = (values: DocumentTemplateFormValues) => {
@@ -163,6 +267,64 @@ Referente ao processo ${form.watch("processId") ? processes.find(p => p.id === f
   };
 
   return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <div>
+            <Label>Conteúdo do Documento</Label>
+            <Textarea
+              value={templateContent}
+              onChange={(e) => setTemplateContent(e.target.value)}
+              className="min-h-[300px] font-mono"
+              placeholder="Insira seu texto aqui..."
+            />
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {predefinedPlaceholders.map(placeholder => (
+              <Button
+                key={placeholder}
+                variant="outline"
+                size="sm"
+                onClick={() => handleInsertPlaceholder(placeholder)}
+              >
+                {`{{${placeholder}}`}
+              </Button>
+            ))}
+          </div>
+
+          <Button onClick={generatePreview} className="mt-4">
+            Atualizar Pré-visualização
+          </Button>
+        </div>
+
+        <div className="space-y-4">
+          <Label>Pré-visualização</Label>
+          <Card>
+            <CardContent className="p-4 prose max-w-none">
+              <div dangerouslySetInnerHTML={{ __html: previewContent }} />
+            </CardContent>
+          </Card>
+
+          <PDFDownloadLink
+            document={(
+              <Document>
+                <Page style={{ padding: 20 }}>
+                  <Text>{previewContent.replace(/<[^>]+>/g, '')}</Text>
+                </Page>
+              </Document>
+            )}
+            fileName="documento_gerado.pdf"
+          >
+            {({ loading }) => (
+              <Button className="w-full" disabled={loading}>
+                <Download className="mr-2 h-4 w-4" />
+                {loading ? 'Gerando PDF...' : 'Exportar Documento'}
+              </Button>
+            )}
+          </PDFDownloadLink>
+        </div>
+      </div>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <Form {...form}>
@@ -294,6 +456,10 @@ Referente ao processo ${form.watch("processId") ? processes.find(p => p.id === f
 
             {selectedTemplate && selectedTemplate.fields.length > 0 && (
               <div className="space-y-4">
+                <FileUpload
+                  processId={form.watch("processId")}
+                  onUploadSuccess={(files) => console.log('Arquivos enviados:', files)}
+                />
                 <h3 className="font-medium">Campos Personalizados</h3>
                 {selectedTemplate.fields.map((field) => (
                   <FormField
@@ -377,7 +543,7 @@ Referente ao processo ${form.watch("processId") ? processes.find(p => p.id === f
               </div>
             ) : (
               <div className="text-center py-12 text-muted-foreground">
-                <FileText className="h-12 w-12 mx-auto mb-4 opacity-20" />
+<FileText className="h-12 w-12 mx-auto mb-4 opacity-20" aria-hidden="true" />
                 <p>Selecione um modelo para visualizar o documento.</p>
               </div>
             )}

@@ -52,17 +52,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const { data, error } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
           console.error("Erro ao verificar sessão:", error);
+          toast({
+            title: "Erro de autenticação",
+            description: "Houve um problema ao verificar sua sessão. Por favor, faça login novamente.",
+            variant: "destructive"
+          });
           return;
         }
         
-        if (data.session) {
-          const userData = data.session.user;
-          const mappedUser = mapUserData(userData);
+        if (session) {
+          const mappedUser = mapUserData(session.user);
           setUser(mappedUser);
+          
+          // Verificar se a sessão está próxima de expirar
+          const expiresAt = new Date(session.expires_at * 1000);
+          const now = new Date();
+          const timeUntilExpiry = expiresAt.getTime() - now.getTime();
+          
+          if (timeUntilExpiry < 300000) { // 5 minutos
+            toast({
+              title: "Sessão expirando",
+              description: "Sua sessão irá expirar em breve. Por favor, faça login novamente.",
+              variant: "destructive"
+            });
+          }
         }
       } catch (error) {
         console.error("Erro ao verificar sessão:", error);
@@ -76,11 +93,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Configurar listener para mudanças de autenticação
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        if (event === "SIGNED_IN" && session) {
-          const mappedUser = mapUserData(session.user);
-          setUser(mappedUser);
-        } else if (event === "SIGNED_OUT") {
-          setUser(null);
+        switch (event) {
+          case "SIGNED_IN":
+            if (session) {
+              const mappedUser = mapUserData(session.user);
+              setUser(mappedUser);
+              sonnerToast.success("Login realizado com sucesso");
+            }
+            break;
+          case "SIGNED_OUT":
+            setUser(null);
+            sonnerToast.success("Logout realizado com sucesso");
+            break;
+          case "TOKEN_REFRESHED":
+            if (session) {
+              const mappedUser = mapUserData(session.user);
+              setUser(mappedUser);
+            }
+            break;
+          case "USER_UPDATED":
+            if (session) {
+              const mappedUser = mapUserData(session.user);
+              setUser(mappedUser);
+              sonnerToast.success("Perfil atualizado com sucesso");
+            }
+            break;
         }
       }
     );
@@ -171,46 +208,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (
-    email: string,
-    password: string,
-    name: string,
-    role: UserRole = "client"
-  ): Promise<void> => {
+  const register = async (email: string, password: string, name: string, role?: UserRole): Promise<void> => {
     setIsLoading(true);
     try {
-      // Verificar se o email já está em uso
-      const { data: existingUser } = await supabase
-        .from('users')
-        .select('email')
-        .eq('email', email)
-        .single();
-      
-      if (existingUser) {
-        toast({
-          title: "Falha no registro",
-          description: "Este email já está em uso.",
-          variant: "destructive",
-        });
-        return;
+      // Validar permissões RBAC para registro
+      if (role && user?.role !== 'admin') {
+        throw new Error('Apenas administradores podem criar contas com roles específicas');
       }
-      
-      // Registrar o usuário no Supabase Auth
+  
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
             name,
-            role,
-            isActive: true,
-            createdAt: new Date().toISOString(),
-            lastLogin: new Date().toISOString(),
-            hasTwoFactorEnabled: false,
+            role: role || 'client', // Default para client
+            organizationId: user?.organizationId
           }
         }
       });
-      
+  
       if (error) {
         throw error;
       }
@@ -285,24 +302,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateProfile = async (updatedUser: Partial<User>): Promise<void> => {
+    setIsLoading(true);
     try {
-      if (!user) return;
-      
-      // Atualizar os metadados do usuário no Supabase
+      // Validar alterações de role
+      if (updatedUser.role && user?.role !== 'admin') {
+        throw new Error('Apenas administradores podem alterar roles');
+      }
+  
       const { error } = await supabase.auth.updateUser({
-        data: {
-          name: updatedUser.name || user.name,
-          role: updatedUser.role || user.role,
-          phone: updatedUser.phone || user.phone,
-          hasTwoFactorEnabled: updatedUser.hasTwoFactorEnabled !== undefined 
-            ? updatedUser.hasTwoFactorEnabled 
-            : user.hasTwoFactorEnabled,
-          organizationId: updatedUser.organizationId || user.organizationId,
-          avatar: updatedUser.avatar || user.avatar,
-          assignedToLawyerId: updatedUser.assignedToLawyerId || user.assignedToLawyerId
-        }
+        data: updatedUser
       });
-      
+  
       if (error) {
         throw error;
       }
@@ -315,13 +325,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         title: "Perfil atualizado",
         description: "Suas informações foram atualizadas com sucesso.",
       });
-    } catch (error: any) {
-      console.error("Profile update error:", error);
-      toast({
-        title: "Erro",
-        description: error.message || "Ocorreu um erro ao atualizar seu perfil.",
-        variant: "destructive",
-      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
