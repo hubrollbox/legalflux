@@ -91,3 +91,5 @@ export const processService = {
     return data;
   }
 };
+
+export const getProcesses = processService.listProcesses;
