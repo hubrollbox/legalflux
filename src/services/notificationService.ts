@@ -115,7 +115,12 @@ class NotificationWebSocket {
 
   private connect() {
     try {
-      this.ws = new WebSocket(process.env.VITE_WS_URL || 'ws://localhost:3001/notifications');
+      // Change WebSocket connection URL to use environment variable
+      const socket = new WebSocket(
+        process.env.NODE_ENV === 'production' 
+          ? 'wss://your-production-url.com/notifications'
+          : 'ws://localhost:3001/notifications'
+      );
 
       this.ws.onopen = () => {
         useNotificationStore.getState().setConnectionStatus(true);

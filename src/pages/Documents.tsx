@@ -56,6 +56,21 @@ const Documents = () => {
       <DashboardLayout>
         <div className="container mx-auto p-4 sm:p-2 md:p-6 lg:p-8">
           <DocumentsHeader canCreateDocument={canCreateDocument} />
+          
+          {/* Add filter section here */}
+          <div className="mb-4 flex gap-2">
+            <Select onValueChange={(v) => setFilterSigned(v as any)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Estado de Assinatura" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="signed">Assinados</SelectItem>
+                <SelectItem value="unsigned">Por assinar</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <DocumentTabs 
             viewMode={viewMode}
             setViewMode={setViewMode}
@@ -64,6 +79,13 @@ const Documents = () => {
             filteredDocuments={filteredDocuments}
             filteredTemplates={filteredTemplates}
           />
+
+          {/* Add document list rendering */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredDocuments?.map((doc) => (
+              <DocumentCard key={doc.id} document={doc} />
+            ))}
+          </div>
         </div>
       </DashboardLayout>
     </PageTransition>
@@ -71,20 +93,3 @@ const Documents = () => {
 };
 
 export default Documents;
-
-// Adicionar filtro na seção de documentos
-<div className="mb-4 flex gap-2">
-  <Select onValueChange={(v) => setFilterSigned(v as any)}>
-    <SelectTrigger className="w-[180px]">
-      <SelectValue placeholder="Estado de Assinatura" />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectItem value="all">Todos</SelectItem>
-      <SelectItem value="signed">Assinados</SelectItem>
-      <SelectItem value="unsigned">Por assinar</SelectItem>
-    </SelectContent>
-  </Select>
-</div>
-{filteredDocuments.map((doc) => (
-  <DocumentCard key={doc.id} doc={doc} />
-))}
