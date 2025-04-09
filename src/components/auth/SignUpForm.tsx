@@ -6,7 +6,8 @@ type UserType = 'particular' | 'profissional' | 'empresa';
 export const SignUpForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [userType, setUserType] = useState<UserType>();
-  const { signUp } = useAuth();
+  const [error, setError] = useState('');
+  const { signUp, checkEmailExists } = useAuth();
 
   const handleUserTypeSelect = (type: UserType) => {
     setUserType(type);
@@ -17,6 +18,7 @@ export const SignUpForm = () => {
     nome: '',
     nif: '',
     email: '',
+    password: '',
     telemovel: '',
     morada: '',
     cedulaProfissional: '',
@@ -33,7 +35,7 @@ export const SignUpForm = () => {
 
   const handleSubmitPersonalData = () => {
     // Validação básica
-    if (!formData.nome || !formData.nif || !formData.email) {
+    if (!formData.nome || !formData.nif || !formData.email || !formData.password) {
       alert('Preencha os campos obrigatórios!');
       return;
     }
@@ -42,16 +44,32 @@ export const SignUpForm = () => {
       setCurrentStep(3); // Próximo passo: dados profissionais
     } else {
       // Enviar dados para API
-      signUp(formData);
+      const emailExists = await checkEmailExists(formData.email);
+      if (emailExists) {
+        setError('Este email já está registrado');
+        return;
+      }
+      await signUp({ ...formData, password: formData.password });
     }
   };
 
-  const handleSubmitCompanyData = () => {
+  const handleSubmitCompanyData = async () => {
+    setError('');
+    try {
+      const emailExists = await checkEmailExists(formData.empresaEmail);
+      if (emailExists) {
+        setError('Este email corporativo já está registrado');
+        return;
+      }
     if (!formData.empresaNome || !formData.empresaNIF || !formData.empresaCAE || !formData.empresaEmail) {
       alert('Preencha os campos obrigatórios da empresa!');
       return;
     }
-    signUp(formData);
+    try {
+      await signUp(formData);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -114,6 +132,7 @@ export const SignUpForm = () => {
             </>
           )}
 
+          {error && <div style={{ color: 'red', margin: '10px 0' }}>{error}</div>}
           <button onClick={handleSubmitPersonalData}>
             {userType === 'profissional' ? 'Continuar' : 'Registar'}
           </button>
@@ -201,6 +220,7 @@ export const SignUpForm = () => {
             onChange={handleInputChange}
           />
 
+          {error && <div style={{ color: 'red', margin: '10px 0' }}>{error}</div>}
           <button onClick={handleSubmitCompanyData}>
             Registar
           </button>

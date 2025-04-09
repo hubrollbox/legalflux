@@ -36,7 +36,35 @@ const useAuth = () => {
     router.push('/login');
   };
 
-  return { user, isAuthenticated, login, logout };
+  const checkEmailExists = async (email: string) => {
+    const { count, error } = await supabase
+      .from('users')
+      .select('*', { count: 'exact' })
+      .eq('email', email);
+
+    if (error) throw error;
+    return count && count > 0;
+  };
+
+  const signUp = async (formData: any) => {
+    const emailExists = await checkEmailExists(formData.email);
+    if (emailExists) throw new Error('Email já registrado');
+
+    const { data, error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          ...formData
+        }
+      }
+    });
+
+    if (error) throw error;
+    return data;
+  };
+
+  return { user, isAuthenticated, login, logout, signUp, checkEmailExists };
 };
 
 export default useAuth;
