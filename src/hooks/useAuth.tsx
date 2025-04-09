@@ -26,15 +26,17 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Função para mapear os dados do usuário do Supabase para o formato da aplicação
+// Fix the mapUserData function
 const mapUserData = (userData: any): User => {
   return {
     id: userData.id,
     email: userData.email,
-    name: userData.user_metadata?.name || userData.email.split('@')[0],
-    role: userData.user_metadata?.role || "client",
-    isActive: true,
+    name: userData.nome_completo || userData.email.split('@')[0], // Changed from user_metadata.name
+    role: (userData.funcao || "client") as UserRole, // Changed from user_metadata.role
+    isActive: userData.is_active,
     createdAt: userData.created_at,
-    lastLogin: userData.last_sign_in_at || userData.created_at,
+    lastLogin: userData.last_sign_in_at,
+    organizationId: userData.escritorio_id, // Changed from organizationId
     hasTwoFactorEnabled: userData.user_metadata?.hasTwoFactorEnabled || false,
     organizationId: userData.user_metadata?.organizationId,
     phone: userData.user_metadata?.phone,
@@ -351,42 +353,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// Remove the duplicate useAuth implementation at the bottom of the file
+// Only keep the context-based useAuth:
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const supabase = createClient();
-
-  useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (session?.user) {
-          // Get full user data from profiles table
-          const { data: profileData, error } = await supabase
-            .from('usuarios') // Changed from 'users' to 'usuarios'
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
-
-          if (profileData) {
-            setUser({
-              id: profileData.id,
-              email: profileData.email,
-              name: profileData.nome_completo, // Changed from 'name'
-              role: profileData.funcao as UserRole, // Changed from 'role' to 'funcao'
-              organizationId: profileData.escritorio_id, // Changed from 'organizationId'
-              phone: userData.user_metadata?.phone,
-              assignedToLawyerId: userData.user_metadata?.assignedToLawyerId,
-              avatar: userData.user_metadata?.avatar
-            });
-          }
-        } else {
-          setUser(null);
-        }
-      }
-    );
-
-    return () => authListener?.subscription.unsubscribe();
-  }, []);
-
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
