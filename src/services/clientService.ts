@@ -1,18 +1,16 @@
 import { createClient } from '@/integrations/supabase/client';
 import { Client } from '@/types/client';
-import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
-export const ClientService = {
-  async createClient(clientData: Omit<Client, 'id' | 'createdAt'>) {
-    const supabase = createClient();
-    const { user } = useAuth();
-
+// Export a single clientService object that uses the existing ClientService methods
+export const clientService = {
+  async createClient(clientData: Omit<Client, 'id' | 'createdAt'>, userId: string, organizationId?: string) {
     const { data, error } = await supabase
-      .from('clients')
+      .from('clientes')
       .insert({
         ...clientData,
-        created_by: user?.id,
-        organization_id: user?.organizationId
+        user_id: userId,           // Changed from created_by to user_id
+        advogado_id: organizationId // Changed from organization_id to advogado_id
       })
       .select();
 
@@ -21,9 +19,8 @@ export const ClientService = {
   },
 
   async getClient(id: string) {
-    const supabase = createClient();
     const { data, error } = await supabase
-      .from('clients')
+      .from('clientes')  // Changed from 'clients' to 'clientes'
       .select('*')
       .eq('id', id)
       .single();
@@ -33,9 +30,8 @@ export const ClientService = {
   },
 
   async updateClient(id: string, clientData: Partial<Client>) {
-    const supabase = createClient();
     const { data, error } = await supabase
-      .from('clients')
+      .from('clientes')  // Changed from 'clients' to 'clientes'
       .update(clientData)
       .eq('id', id)
       .select();
@@ -45,26 +41,22 @@ export const ClientService = {
   },
 
   async deleteClient(id: string) {
-    const supabase = createClient();
     const { error } = await supabase
-      .from('clients')
+      .from('clientes')  // Changed from 'clients' to 'clientes'
       .delete()
       .eq('id', id);
 
     if (error) throw error;
   },
 
-  async listClients() {
-    const supabase = createClient();
-    const { user } = useAuth();
-
+  async listClients(userId?: string, userRole?: string, organizationId?: string) {
     const query = supabase
-      .from('clients')
+      .from('clientes')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('criado_em', { ascending: false }); // Changed from created_at to criado_em
 
-    if (user?.role !== 'admin') {
-      query.eq('organization_id', user?.organizationId);
+    if (userRole !== 'admin' && organizationId) {
+      query.eq('advogado_id', organizationId); // Changed from organization_id to advogado_id
     }
 
     const { data, error } = await query;
