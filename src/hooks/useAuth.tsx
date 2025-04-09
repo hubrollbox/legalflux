@@ -342,6 +342,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           title: "Perfil atualizado",
           description: "Suas informações foram atualizadas com sucesso.",
         });
+      } catch (error) {  // Add missing catch block
+        console.error("Update error:", error);
       } finally {
         setIsLoading(false);
       }
