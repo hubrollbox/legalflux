@@ -1,8 +1,7 @@
-import { createClient } from '@/integrations/supabase/client';
-import { Client } from '@/types/client';
 import { supabase } from '@/integrations/supabase/client';
+import { Client } from '@/types/client';
 
-// Export the clientService with the original structure but fixed types
+// Export the clientService with minimal changes to fix the type issues
 export const clientService = {
   async createClient(clientData: Omit<Client, 'id' | 'criado_em'>, userId: string, advogadoId?: string) {
     const { data, error } = await supabase
