@@ -351,7 +351,42 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuth = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (session?.user) {
+          // Get full user data from profiles table
+          const { data: profileData, error } = await supabase
+            .from('usuarios') // Changed from 'users' to 'usuarios'
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+
+          if (profileData) {
+            setUser({
+              id: profileData.id,
+              email: profileData.email,
+              name: profileData.nome_completo, // Changed from 'name'
+              role: profileData.funcao as UserRole, // Changed from 'role' to 'funcao'
+              organizationId: profileData.escritorio_id, // Changed from 'organizationId'
+              phone: userData.user_metadata?.phone,
+              assignedToLawyerId: userData.user_metadata?.assignedToLawyerId,
+              avatar: userData.user_metadata?.avatar
+            });
+          }
+        } else {
+          setUser(null);
+        }
+      }
+    );
+
+    return () => authListener?.subscription.unsubscribe();
+  }, []);
+
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
