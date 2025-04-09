@@ -7,31 +7,32 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from 'next/router';
 
+// This is the form component that handles the multi-step registration process
 const RegisterForm = () => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [error, setError] = useState<string>('');
   
-  // Formulário com todos os campos possíveis
+  // Form state with all possible fields
   const [formData, setFormData] = useState({
-    // Passo 1: Tipo de utilizador
+    // Step 1: User type
     userType: '', // 'particular', 'professional', 'company'
     
-    // Passo 2: Dados pessoais (para Particular e Profissional)
+    // Step 2: Personal data
     name: '',
     nif: '',
     email: '',
-    phone: '', // Opcional
-    address: '', // Opcional
+    phone: '', // Optional
+    address: '', // Optional
     
-    // Passo 3: Dados profissionais (apenas para Profissional)
+    // Step 3: Professional data
     professionalId: '',
     professionalAddress: '',
     professionalEmail: '',
     professionalOrder: '',
     linkedToCompany: false,
     
-    // Passo 4: Dados da empresa (para Empresa e Profissionais vinculados)
+    // Step 4: Company data
     companyName: '',
     companyNif: '',
     companyCae: '',
@@ -39,16 +40,17 @@ const RegisterForm = () => {
     companyPhone: '',
     companyAddress: '',
     
-    // Senha e confirmação
+    // Password
     password: '',
     confirmPassword: '',
     
-    // Termos e condições
+    // Terms
     terms: false,
   });
   
-  // Determina o próximo passo com base no tipo de usuário e estado atual
+  // Form navigation logic
   const handleNextStep = () => {
+    // Validation and navigation logic
     if (currentStep === 1) {
       // Validar seleção do tipo de usuário
       if (!validateStep1()) return;
@@ -110,7 +112,7 @@ const RegisterForm = () => {
   };
   
   const validateStep2 = () => {
-    // Validar dados pessoais (para Particular e Profissional)
+    // Validar dados pessoais
     if (formData.userType === 'particular' || formData.userType === 'professional') {
       if (!formData.name || !formData.nif || !formData.email) {
         setError('Por favor, preencha todos os campos obrigatórios: Nome, NIF e Email');
@@ -594,12 +596,14 @@ const RegisterForm = () => {
   
   return (
     <div className="space-y-6 max-w-md mx-auto">
+      {/* Error display */}
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 p-3 rounded">
           {error}
         </div>
       )}
       
+      {/* Render the current step */}
       {currentStep === 1 && renderStep1()}
       {currentStep === 2 && renderStep2()}
       {currentStep === 3 && renderStep3()}
@@ -607,6 +611,7 @@ const RegisterForm = () => {
       {currentStep === 5 && renderStep5()}
       {currentStep === 6 && renderStep6()}
       
+      {/* Step indicator */}
       <div className="text-center text-sm text-muted-foreground">
         <p>Passo {currentStep} de {formData.userType === 'particular' ? 4 : (formData.userType === 'professional' && !formData.linkedToCompany) ? 5 : 6}</p>
       </div>
