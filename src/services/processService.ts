@@ -1,22 +1,15 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Process, CreateProcessDTO, UpdateProcessDTO, ProcessStatus } from "@/types/process";
 
-import { createClient } from '@/integrations/supabase/client';
-import { Process } from '@/types/process';
-import { useAuth } from '@/hooks/useAuth';
-
 export const processService = {
-  async createProcess(processData: Omit<Process, 'id' | 'createdAt' | 'status'>) {
-    const supabase = createClient();
-    const { user } = useAuth();
-
+  async createProcess(processData: Omit<Process, 'id' | 'createdAt' | 'status'>, userId: string, organizationId: string) {
     const { data, error } = await supabase
       .from('processes')
       .insert({
         ...processData,
         status: 'aberto',
-        created_by: user?.id,
-        organization_id: user?.organizationId
+        created_by: userId,
+        organization_id: organizationId
       })
       .select();
 
@@ -25,7 +18,6 @@ export const processService = {
   },
 
   async getProcess(id: string) {
-    const supabase = createClient();
     const { data, error } = await supabase
       .from('processes')
       .select('*, client:client_id(*)')
@@ -37,7 +29,6 @@ export const processService = {
   },
 
   async updateProcess(id: string, processData: Partial<Process>) {
-    const supabase = createClient();
     const { data, error } = await supabase
       .from('processes')
       .update(processData)
@@ -49,7 +40,6 @@ export const processService = {
   },
 
   async deleteProcess(id: string) {
-    const supabase = createClient();
     const { error } = await supabase
       .from('processes')
       .delete()
@@ -58,17 +48,14 @@ export const processService = {
     if (error) throw error;
   },
 
-  async listProcesses() {
-    const supabase = createClient();
-    const { user } = useAuth();
-
+  async listProcesses(userRole?: string, organizationId?: string) {
     const query = supabase
       .from('processes')
       .select('*, client:client_id(*)')
       .order('created_at', { ascending: false });
 
-    if (user?.role !== 'admin') {
-      query.eq('organization_id', user?.organizationId);
+    if (userRole !== 'admin' && organizationId) {
+      query.eq('organization_id', organizationId);
     }
 
     const { data, error } = await query;
@@ -77,17 +64,14 @@ export const processService = {
     return data;
   },
 
-  async getProcessesByStatus(status: string) {
-    const supabase = createClient();
-    const { user } = useAuth();
-
+  async getProcessesByStatus(status: string, userRole?: string, organizationId?: string) {
     const query = supabase
       .from('processes')
       .select('*, client:client_id(*)')
       .eq('status', status);
 
-    if (user?.role !== 'admin') {
-      query.eq('organization_id', user?.organizationId);
+    if (userRole !== 'admin' && organizationId) {
+      query.eq('organization_id', organizationId);
     }
 
     const { data, error } = await query;
@@ -97,7 +81,6 @@ export const processService = {
   },
 
   async getProcessesByClientId(clientId: string) {
-    const supabase = createClient();
     const { data, error } = await supabase
       .from('processes')
       .select('*')
