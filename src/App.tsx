@@ -184,3 +184,16 @@ const App = () => (
 );
 
 export default App;
+
+// Typical issue pattern
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        {/* Missing default route */}
+      </Routes>
+    </Router>
+  );
+}
