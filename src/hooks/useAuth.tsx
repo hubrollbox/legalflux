@@ -366,7 +366,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         {children}
       </AuthContext.Provider>
     );
-  }; // Add this closing brace for the AuthProvider component
+  }; // Add this closing brace
   
   export const useAuth = () => {
     const context = useContext(AuthContext);
