@@ -351,14 +351,3 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-// Remove the duplicate useAuth implementation at the bottom of the file
-// Only keep the context-based useAuth:
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
