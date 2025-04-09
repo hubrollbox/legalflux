@@ -209,3 +209,8 @@ class DocumentService {
 }
 
 export const documentService = new DocumentService();
+
+// Add a named export for getDocuments that uses the instance method
+export const getDocuments = (): Promise<Document[]> => {
+  return documentService.getDocuments();
+};
