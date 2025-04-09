@@ -22,11 +22,11 @@ interface DocumentWithVersions extends Document {
 }
 
 class DocumentService {
-  private documents: Map<string, DocumentWithVersions> = new Map();;
-  private versions: Map<string, DocumentVersion[]> = new Map();;
+  private documents: Map<string, DocumentWithVersions> = new Map();
+  private versions: Map<string, DocumentVersion[]> = new Map();
 
-  28: async createDocument(document: Partial<Document>, userId: string): Promise<Document> {
-  29: if (!document.name || !document.url || !document.clientId || !document.processId) {
+  async createDocument(document: Partial<Document>, userId: string): Promise<Document> {
+    if (!document.name || !document.url || !document.clientId || !document.processId) {
       throw new Error('Nome, URL, ID do cliente e ID do processo são obrigatórios');
     }
     

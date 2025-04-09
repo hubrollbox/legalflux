@@ -48,12 +48,7 @@ const Documents = () => {
       template.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredDocuments = documents.filter(doc => {
-    const isSigned = !!localStorage.getItem(`doc-signed-${doc.id}`);
-    return filterSigned === 'all' || 
-          (filterSigned === 'signed' && isSigned) ||
-          (filterSigned === 'unsigned' && !isSigned);
-  });
+
 
   return (
     <PageTransition>
