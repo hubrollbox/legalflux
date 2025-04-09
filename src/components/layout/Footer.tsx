@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 
 export const Footer = () => {
@@ -19,20 +19,20 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">Produto</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/features" className="text-muted-foreground hover:text-foreground">Recursos</Link></li>
-              <li><Link to="/subscriptions" className="text-muted-foreground hover:text-foreground">Preços</Link></li>
-              <li><Link to="/about" className="text-muted-foreground hover:text-foreground">Sobre</Link></li>
+              <li><Link href="/features" className="text-muted-foreground hover:text-foreground">Recursos</Link></li>
+              <li><Link href="/subscriptions" className="text-muted-foreground hover:text-foreground">Preços</Link></li>
+              <li><Link href="/about" className="text-muted-foreground hover:text-foreground">Sobre</Link></li>
             </ul>
           </div>
 
           <div>
             <h3 className="font-semibold mb-4">Central de Ajuda</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/docs" className="text-muted-foreground hover:text-foreground">Documentação</Link></li>
-              <li><Link to="/faqs" className="text-muted-foreground hover:text-foreground">FAQs</Link></li>
-              <li><Link to="/screenshots" className="text-muted-foreground hover:text-foreground">Screenshots</Link></li>
-              <li><Link to="/support" className="text-muted-foreground hover:text-foreground">Suporte</Link></li>
-              <li><Link to="/tutorials" className="text-muted-foreground hover:text-foreground">Tutoriais</Link></li>
+              <li><Link href="/help/docs" className="text-muted-foreground hover:text-foreground">Documentação</Link></li>
+              <li><Link href="/help/faqs" className="text-muted-foreground hover:text-foreground">FAQs</Link></li>
+              <li><Link href="/help/screenshots" className="text-muted-foreground hover:text-foreground">Screenshots</Link></li>
+              <li><Link href="/help/support" className="text-muted-foreground hover:text-foreground">Suporte</Link></li>
+              <li><Link href="/help/tutorials" className="text-muted-foreground hover:text-foreground">Tutoriais</Link></li>
             </ul>
           </div>
 
