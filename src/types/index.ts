@@ -80,7 +80,7 @@ export interface Document {
   id: string;
   name: string;
   caseId?: string;
-  createdAt: string;
+  createdAt: Date;
   updatedAt: Date;
   createdBy: string;
   size: number;
@@ -88,8 +88,8 @@ export interface Document {
   url: string;
   fileUrl: string;
   version: number;
-  processId?: string;
-  clientId?: string;
+  processId: string; // Changed from optional to required
+  clientId: string;  // Changed from optional to required
 }
 
 // Message types

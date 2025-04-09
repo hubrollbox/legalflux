@@ -34,19 +34,24 @@ class DocumentService {
       throw new Error('IDs inválidos');
     }
     
-    const newDocument = {
-      ...document,
+    const newDocument: DocumentWithVersions = {
       id: crypto.randomUUID(),
       version: 1,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
       name: document.name.trim(),
       url: document.url.trim(),
       size: document.size || 0,
-      type: (document.type || '').trim(),
+      type: ((document.type || 'document') as "document" | "action" | "precedent" | "strategy"),
       createdBy: userId,
-      title: document.name.trim()
-    } as DocumentWithVersions;
+      title: document.name.trim(),
+      versions: [],
+      // Explicitly assign these required properties
+      clientId: document.clientId,
+      processId: document.processId,
+      // Include any other required properties from Document
+      fileUrl: document.fileUrl || document.url.trim()
+    };
 
     const version: DocumentVersion = {
       id: crypto.randomUUID(),
@@ -87,14 +92,17 @@ class DocumentService {
       throw new Error('Documento não encontrado');
     }
 
+    // In updateDocument method
     const updatedDocument = {
       ...document,
       ...updates,
       version: document.version + 1,
-      updatedAt: new Date(),
+      updatedAt: new Date(), // Changed back to Date object
       name: updates.name ? updates.name.trim() : document.name,
       url: updates.url ? updates.url.trim() : document.url,
-      type: updates.type ? updates.type.trim() : document.type
+      type: updates.type ? 
+        (updates.type as "document" | "action" | "precedent" | "strategy") : 
+        document.type
     };
 
     const version: DocumentVersion = {
@@ -180,7 +188,7 @@ class DocumentService {
       const notification = {
         title: 'Atualização de Documento',
         message,
-        type: 'document',
+        type: 'document' as 'document', // Explicitly type as literal 'document'
         data: {
           documentId: document.id,
           version: document.version,
@@ -195,10 +203,9 @@ class DocumentService {
     }
   }
 
-  export async function getDocuments(): Promise<Document[]> {
-      return Array.from(this.documents.values());
-    }
+  async getDocuments(): Promise<Document[]> {
+    return Array.from(this.documents.values());
+  }
+}
 
-;
 export const documentService = new DocumentService();
-export { documentService };
