@@ -21,8 +21,7 @@ export const clientService = {
       console.error('Erro ao criar cliente:', err);
       throw err;
     }
-  },
-
+  }
   async getClient(id: string) {
     const { data, error } = await supabase
       .from('clientes')  // Changed from 'clients' to 'clientes'
