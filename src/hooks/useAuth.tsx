@@ -26,7 +26,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Função para mapear os dados do usuário do Supabase para o formato da aplicação
-// Fix the mapUserData function
+//Fix the mapUserData function
 const mapUserData = (userData: any): User => {
   return {
     id: userData.id,
@@ -351,3 +351,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
+}; // Add this closing brace for the AuthProvider component
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
