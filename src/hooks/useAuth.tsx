@@ -368,8 +368,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         {children}
       </AuthContext.Provider>
     );
-  }; // Add this closing brace
-  
+  }; // Remove the trailing semicolon here
+
   export const useAuth = () => {
     const context = useContext(AuthContext);
     if (context === undefined) {
