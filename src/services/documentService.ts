@@ -194,6 +194,9 @@ class DocumentService {
       console.error('Falha ao enviar notificação:', error);
     }
   }
-}
+
+  async getDocuments(): Promise<Document[]> {
+      return Array.from(this.documents.values());
+    }
 
 export const documentService = new DocumentService();
