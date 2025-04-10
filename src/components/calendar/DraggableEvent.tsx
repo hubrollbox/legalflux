@@ -37,6 +37,7 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
   showTime = true,
   showDetails = false
 }) => {
+  // @ts-ignore - Ignorando erro de tipagem do react-dnd
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'EVENT',
     item: { id: event.id, event },
@@ -102,7 +103,7 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
 
   return (
     <div
-      ref={drag}
+      ref={(node) => drag(node as any)}
       className={cn(
         'p-2 rounded-md cursor-pointer transition-all',
         getCategoryColor(event.category),

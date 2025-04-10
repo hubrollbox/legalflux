@@ -21,7 +21,9 @@ interface CalendarSidebarProps {
   onCategoryFilter: (category: string | null) => void;
 }
 
-const categoryConfig = {
+type CategoryKey = 'meeting' | 'deadline' | 'task' | 'other';
+
+const categoryConfig: Record<CategoryKey, { label: string; color: string; icon: React.ReactNode }> = {
   meeting: { label: "Reuniões", color: "bg-blue-100 text-blue-700", icon: <Users className="h-4 w-4" /> },
   deadline: { label: "Prazos", color: "bg-red-100 text-red-700", icon: <Clock className="h-4 w-4" /> },
   task: { label: "Tarefas", color: "bg-green-100 text-green-700", icon: <FileText className="h-4 w-4" /> },
@@ -52,7 +54,7 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
     .sort((a, b) => a.start.getTime() - b.start.getTime())
     .slice(0, 5);
 
-  const eventsByCategory = events.reduce((acc, event) => {
+  const eventsByCategory = events.reduce<Record<string, number>>((acc, event) => {
     const category = event.category || 'other';
     acc[category] = (acc[category] || 0) + 1;
     return acc;
@@ -129,11 +131,11 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
                   key={event.id}
                   className={cn(
                     'p-3 rounded-lg',
-                    categoryConfig[event.category]?.color || categoryConfig.other.color
+                    (categoryConfig[event.category as CategoryKey] || categoryConfig.other).color
                   )}
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    {categoryConfig[event.category]?.icon || categoryConfig.other.icon}
+                    {(categoryConfig[event.category as CategoryKey] || categoryConfig.other).icon}
                     <h4 className="font-medium">{event.title}</h4>
                   </div>
                   <p className="text-sm opacity-80">

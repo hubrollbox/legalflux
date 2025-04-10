@@ -23,7 +23,14 @@ export const SignUpForm = () => {
     morada: '',
     cedulaProfissional: '',
     ordemProfissional: '',
-    empresaVinculada: false
+    empresaVinculada: false,
+    // Dados da empresa
+    empresaNome: '',
+    empresaNIF: '',
+    empresaCAE: '',
+    empresaEmail: '',
+    empresaTelefone: '',
+    empresaMorada: ''
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

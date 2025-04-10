@@ -1,33 +1,52 @@
 // Tipos de usuário para o sistema de registro
-export type UserType = 'particular' | 'profissional' | 'empresa';
+export type UserType = 'individual' | 'professional' | 'company';
 
-// Dados pessoais (para Particular e Profissional)
+// Funções de usuário no sistema
+export type UserRole = 'admin' | 'lawyer' | 'senior_lawyer' | 'assistant' | 'client';
+
+// Interface do usuário
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  isActive: boolean;
+  createdAt: string;
+  lastLogin?: string;
+  organizationId?: string;
+  hasTwoFactorEnabled?: boolean;
+  phone?: string;
+  assignedToLawyerId?: string;
+  avatar?: string;
+}
+
+// Dados pessoais (para Individual e Professional)
 export interface PersonalData {
   fullName: string;  // Nome completo
   nif: string;       // NIF (obrigatório)
   email: string;     // Email (obrigatório)
-  telefone?: string; // Telemóvel (opcional)
-  morada?: string;   // Morada (opcional)
+  phone?: string;    // Telemóvel (opcional)
+  address?: string;  // Morada (opcional)
   password: string;  // Senha
 }
 
-// Dados profissionais (apenas para Profissional)
+// Dados profissionais (apenas para Professional)
 export interface ProfessionalData {
-  numero_cedula: string;      // Número da Cédula Profissional (obrigatório)
-  email_profissional: string; // Email Profissional (obrigatório, deve ser igual ao email pessoal)
-  morada_profissional: string; // Morada Profissional (obrigatório)
-  ordem_id: string;           // Identificação da Ordem Profissional (obrigatório)
-  vinculado_empresa: boolean;  // Se está vinculado a uma empresa
+  licenseNumber: string;     // Número da Cédula Profissional (obrigatório)
+  professionalEmail: string; // Email Profissional (obrigatório)
+  professionalAddress: string; // Morada Profissional (obrigatório)
+  barAssociationId: string;  // Identificação da Ordem Profissional (obrigatório)
+  companyAffiliated: boolean; // Se está vinculado a uma empresa
 }
 
-// Dados da empresa (para Empresa e Profissional vinculado a empresa)
+// Dados da empresa (para Company e Professional vinculado a empresa)
 export interface CompanyData {
-  nome: string;      // Nome da Empresa (obrigatório)
+  name: string;      // Nome da Empresa (obrigatório)
   nif: string;       // NIF (obrigatório)
   cae: string;       // CAE (obrigatório)
   email: string;     // Email (obrigatório)
-  telefone: string;  // Telefone ou Telemóvel (obrigatório)
-  morada: string;    // Morada (obrigatório)
+  phone: string;     // Telefone ou Telemóvel (obrigatório)
+  address: string;   // Morada (obrigatório)
 }
 
 // Dados completos do registro
@@ -37,4 +56,18 @@ export interface RegisterData {
   professionalData?: ProfessionalData;
   companyData?: CompanyData;
   acceptTerms: boolean;
+}
+
+// Interface para o contexto de autenticação
+export interface AuthContextData {
+  user: User | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (data: RegisterData) => Promise<void>;
+  signOut: () => Promise<void>;
+  checkEmailExists: (email: string) => Promise<boolean>;
+  updateProfile: (data: Partial<User>) => Promise<void>;
+  requestPasswordReset: (email: string) => Promise<void>;
+  resetPassword: (token: string, newPassword: string) => Promise<void>;
 }

@@ -39,8 +39,7 @@ const mapUserData = (userData: any): User => {
     isActive: userData.is_active,
     createdAt: userData.created_at,
     lastLogin: userData.last_sign_in_at,
-    organizationId: userData.escritorio_id, // Only keep this line
-    // Remove the duplicate organizationId below
+    organizationId: userData.escritorio_id,
     hasTwoFactorEnabled: userData.user_metadata?.hasTwoFactorEnabled || false,
     phone: userData.user_metadata?.phone,
     assignedToLawyerId: userData.user_metadata?.assignedToLawyerId,
@@ -341,7 +340,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         title: "Perfil atualizado",
         description: "Suas informações foram atualizadas com sucesso.",
       });
-    } catch (error) {  // Add missing catch block
+    } catch (error) {
       console.error("Update error:", error);
     } finally {
       setIsLoading(false);
@@ -353,77 +352,90 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const checkEmailExists = async (email: string): Promise<boolean> => {
     try {
       const { data, error } = await supabase
-        .from('profiles')
+        .from('users')
         .select('email')
         .eq('email', email)
         .single();
-      
-      if (error && error.code !== 'PGRST116') {
-        console.error("Erro ao verificar email:", error);
-        throw error;
+
+      if (error) {
+        console.error('Erro ao verificar email:', error);
+        return false;
       }
-      
-      return !!data; // Retorna true se o email existir
+
+      return !!data;
     } catch (error) {
-      console.error("Erro ao verificar email:", error);
+      console.error('Erro ao verificar email:', error);
       return false;
     }
   };
 
-  // Função de registro para o fluxo multi-etapas
-  const signUp = async (userData: any): Promise<void> => {
+  const signUp = async (userData: {
+    email: string;
+    password: string;
+    name: string;
+    role: UserRole;
+    phone?: string;
+    organizationId?: string;
+    userType: 'individual' | 'professional' | 'company';
+  }): Promise<void> => {
     setIsLoading(true);
     try {
+      // Verificar se o email já existe
+      const emailExists = await checkEmailExists(userData.email);
+      if (emailExists) {
+        throw new Error('Este email já está em uso.');
+      }
+
       // Registrar o usuário no Supabase Auth
-      const { data, error } = await supabase.auth.signUp({
+      const { data: authData, error: authError } = await supabase.auth.signUp({
         email: userData.email,
         password: userData.password,
         options: {
           data: {
-            nome_completo: userData.nome,
-            nif: userData.nif,
-            telefone: userData.telemovel,
-            morada: userData.morada,
-            user_type: userData.userType,
-            // Dados profissionais, se aplicável
-            ...(userData.cedulaProfissional && {
-              cedula_profissional: userData.cedulaProfissional,
-              ordem_profissional: userData.ordemProfissional,
-            }),
-            // Dados da empresa, se aplicável
-            ...(userData.empresaNome && {
-              empresa_nome: userData.empresaNome,
-              empresa_nif: userData.empresaNIF,
-              empresa_cae: userData.empresaCAE,
-              empresa_email: userData.empresaEmail,
-              empresa_telefone: userData.empresaTelefone,
-              empresa_morada: userData.empresaMorada,
-            }),
+            nome_completo: userData.name,
+            funcao: userData.role,
+            phone: userData.phone,
+            escritorio_id: userData.organizationId,
+            user_type: userData.userType
           }
         }
       });
 
-      if (error) {
-        throw error;
-      }
-      
-      toast({
-        title: "Registro bem-sucedido",
-        description: "Sua conta foi criada com sucesso! Verifique seu email para confirmar o registro.",
-      });
-      
-      if (data.user) {
-        const mappedUser = mapUserData(data.user);
-        setUser(mappedUser);
+      if (authError) throw authError;
+
+      if (authData.user) {
+        // Criar registro na tabela de usuários
+        const { error: profileError } = await supabase
+          .from('users')
+          .insert([
+            {
+              id: authData.user.id,
+              email: userData.email,
+              nome_completo: userData.name,
+              funcao: userData.role,
+              phone: userData.phone,
+              escritorio_id: userData.organizationId,
+              user_type: userData.userType,
+              is_active: true
+            }
+          ]);
+
+        if (profileError) throw profileError;
+
+        toast({
+          title: 'Registro realizado com sucesso',
+          description: 'Por favor, verifique seu email para confirmar o cadastro.',
+        });
+
+        sonnerToast.success('Registro realizado! Verifique seu email.');
       }
     } catch (error: any) {
-      console.error("Erro no registro:", error);
+      console.error('Erro no registro:', error);
       toast({
-        title: "Erro no registro",
-        description: error.message || "Ocorreu um erro ao tentar criar sua conta.",
-        variant: "destructive",
+        title: 'Erro no registro',
+        description: error.message || 'Ocorreu um erro ao criar sua conta.',
+        variant: 'destructive',
       });
-      throw error;
     } finally {
       setIsLoading(false);
     }
