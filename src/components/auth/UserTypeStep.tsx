@@ -1,43 +1,80 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { useRouter } from 'next/navigation';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Check } from 'lucide-react';
 
 type Props = {
-  onSelect: (type: 'particular' | 'professional' | 'empresa') => void;
+  onSelect: (type: 'particular' | 'profissional' | 'empresa') => void;
   onNext: () => void;
 };
 
 export default function UserTypeStep({ onSelect, onNext }: Props) {
-  const router = useRouter();
+  const [selectedType, setSelectedType] = useState<'particular' | 'profissional' | 'empresa' | null>(null);
 
-  const handleSelect = (type: 'particular' | 'professional' | 'empresa') => {
-    onSelect(type);
-    onNext();
+  const handleSelect = (type: 'particular' | 'profissional' | 'empresa') => {
+    setSelectedType(type);
+  };
+
+  const handleNext = () => {
+    if (selectedType) {
+      onSelect(selectedType);
+      onNext();
+    }
   };
 
   return (
-    <Card className="w-[350px]">
+    <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle className="text-center">Tipo de Registro</CardTitle>
+        <CardTitle className="text-center">Tipo de Utilizador</CardTitle>
+        <CardDescription className="text-center">
+          Selecione o tipo de conta que deseja criar
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <Button
-          variant="outline"
-          onClick={() => handleSelect('particular')}
+        <div className="grid grid-cols-1 gap-4">
+          <Button
+            variant={selectedType === 'particular' ? 'default' : 'outline'}
+            className={`h-auto py-4 px-6 flex justify-between items-center ${selectedType === 'particular' ? 'border-primary' : ''}`}
+            onClick={() => handleSelect('particular')}
+          >
+            <div className="flex flex-col items-start">
+              <span className="font-medium">Particular</span>
+              <span className="text-sm text-muted-foreground text-left">Para uso pessoal</span>
+            </div>
+            {selectedType === 'particular' && <Check className="h-5 w-5" />}
+          </Button>
+
+          <Button
+            variant={selectedType === 'profissional' ? 'default' : 'outline'}
+            className={`h-auto py-4 px-6 flex justify-between items-center ${selectedType === 'profissional' ? 'border-primary' : ''}`}
+            onClick={() => handleSelect('profissional')}
+          >
+            <div className="flex flex-col items-start">
+              <span className="font-medium">Profissional</span>
+              <span className="text-sm text-muted-foreground text-left">Para advogados e solicitadores</span>
+            </div>
+            {selectedType === 'profissional' && <Check className="h-5 w-5" />}
+          </Button>
+
+          <Button
+            variant={selectedType === 'empresa' ? 'default' : 'outline'}
+            className={`h-auto py-4 px-6 flex justify-between items-center ${selectedType === 'empresa' ? 'border-primary' : ''}`}
+            onClick={() => handleSelect('empresa')}
+          >
+            <div className="flex flex-col items-start">
+              <span className="font-medium">Empresa</span>
+              <span className="text-sm text-muted-foreground text-left">Para escritórios e empresas</span>
+            </div>
+            {selectedType === 'empresa' && <Check className="h-5 w-5" />}
+          </Button>
+        </div>
+
+        <Button 
+          onClick={handleNext} 
+          disabled={!selectedType}
+          className="mt-4"
         >
-          Particular
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => handleSelect('professional')}
-        >
-          Profissional
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => handleSelect('empresa')}
-        >
-          Empresa
+          Continuar
         </Button>
       </CardContent>
     </Card>

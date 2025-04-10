@@ -6,30 +6,46 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
+  FormDescription
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { UserType } from '@/types/auth';
 
 type Props = {
-  userType: 'particular' | 'professional' | 'empresa';
+  userType: UserType;
   initialValues: any;
   onNext: (data: any) => void;
+  onBack: () => void;
 };
 
 const personalSchema = z.object({
   fullName: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
-  nif: z.string().min(9, 'NIF deve ter 9 dígitos').max(9),
+  nif: z.string().min(9, 'NIF deve ter 9 dígitos').max(9, 'NIF deve ter 9 dígitos'),
   email: z.string().email('Email inválido'),
   phone: z.string().optional(),
-  address: z.string().optional()
+  address: z.string().optional(),
+  password: z.string().min(8, 'A senha deve ter pelo menos 8 caracteres'),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "As senhas não coincidem",
+  path: ["confirmPassword"],
 });
 
-export default function PersonalDataStep({ userType, initialValues, onNext }: Props) {
+export default function PersonalDataStep({ userType, initialValues, onNext, onBack }: Props) {
   const form = useForm({
     resolver: zodResolver(personalSchema),
-    defaultValues: initialValues
+    defaultValues: {
+      fullName: initialValues?.fullName || '',
+      nif: initialValues?.nif || '',
+      email: initialValues?.email || '',
+      phone: initialValues?.phone || '',
+      address: initialValues?.address || '',
+      password: initialValues?.password || '',
+      confirmPassword: initialValues?.confirmPassword || ''
+    }
   });
 
   const onSubmit = (data: z.infer<typeof personalSchema>) => {
@@ -113,8 +129,36 @@ export default function PersonalDataStep({ userType, initialValues, onNext }: Pr
           </>
         )}
 
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Senha *</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirmar Senha *</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="flex justify-between">
-          <Button type="button" variant="ghost">
+          <Button type="button" variant="outline" onClick={onBack}>
             Voltar
           </Button>
           <Button type="submit">Continuar</Button>

@@ -6,41 +6,55 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
+  FormDescription
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Checkbox } from '@/components/ui/checkbox';
+import { UserType } from '@/types/auth';
 
 type Props = {
   initialValues: any;
+  personalData: any;
   onNext: (data: any) => void;
   onCompanyLink: () => void;
+  onBack: () => void;
 };
 
 const professionalSchema = z.object({
-  licenseNumber: z.string().min(5, 'Número da cédula inválido'),
-  professionalEmail: z.string().email('Email profissional inválido')
-    .refine(email => email === z.object({}).parse({}).email, {
-      message: 'Email profissional deve ser igual ao email principal'
-    }),
-  workAddress: z.string().min(5, 'Morada profissional obrigatória'),
-  orderId: z.string().min(3, 'Identificação da ordem obrigatória'),
-  hasCompany: z.boolean().default(false)
+  numero_cedula: z.string().min(5, 'Número da cédula inválido'),
+  email_profissional: z.string().email('Email profissional inválido'),
+  morada_profissional: z.string().min(5, 'Morada profissional obrigatória'),
+  ordem_id: z.string().min(3, 'Identificação da ordem obrigatória'),
+  vinculado_empresa: z.boolean().default(false)
 });
 
-export default function ProfessionalDataStep({ initialValues, onNext, onCompanyLink }: Props) {
+export default function ProfessionalDataStep({ initialValues, personalData, onNext, onCompanyLink, onBack }: Props) {
   const form = useForm({
     resolver: zodResolver(professionalSchema),
     defaultValues: {
-      ...initialValues,
-      hasCompany: false
-    }
+      numero_cedula: initialValues?.numero_cedula || '',
+      email_profissional: personalData?.email || '',
+      morada_profissional: initialValues?.morada_profissional || '',
+      ordem_id: initialValues?.ordem_id || '',
+      vinculado_empresa: initialValues?.vinculado_empresa || false
+    },
+    context: { email: personalData?.email }
   });
 
   const onSubmit = (data: z.infer<typeof professionalSchema>) => {
-    if (data.hasCompany) {
+    // Validar que o email profissional é igual ao email pessoal
+    if (data.email_profissional !== personalData?.email) {
+      form.setError('email_profissional', {
+        type: 'manual',
+        message: 'Email profissional deve ser igual ao email fornecido anteriormente'
+      });
+      return;
+    }
+    
+    if (data.vinculado_empresa) {
       onCompanyLink();
     } else {
       onNext(data);
@@ -52,7 +66,7 @@ export default function ProfessionalDataStep({ initialValues, onNext, onCompanyL
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="licenseNumber"
+          name="numero_cedula"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Número da Cédula Profissional *</FormLabel>
@@ -66,7 +80,7 @@ export default function ProfessionalDataStep({ initialValues, onNext, onCompanyL
 
         <FormField
           control={form.control}
-          name="workAddress"
+          name="morada_profissional"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Morada Profissional *</FormLabel>
@@ -80,13 +94,16 @@ export default function ProfessionalDataStep({ initialValues, onNext, onCompanyL
 
         <FormField
           control={form.control}
-          name="professionalEmail"
+          name="email_profissional"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email Profissional *</FormLabel>
               <FormControl>
                 <Input type="email" {...field} />
               </FormControl>
+              <FormDescription>
+                Deve ser igual ao email fornecido anteriormente
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -94,7 +111,7 @@ export default function ProfessionalDataStep({ initialValues, onNext, onCompanyL
 
         <FormField
           control={form.control}
-          name="orderId"
+          name="ordem_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Identificação da Ordem *</FormLabel>
@@ -108,7 +125,7 @@ export default function ProfessionalDataStep({ initialValues, onNext, onCompanyL
 
         <FormField
           control={form.control}
-          name="hasCompany"
+          name="vinculado_empresa"
           render={({ field }) => (
             <FormItem className="flex items-center gap-2">
               <FormControl>
@@ -123,11 +140,11 @@ export default function ProfessionalDataStep({ initialValues, onNext, onCompanyL
         />
 
         <div className="flex justify-between">
-          <Button type="button" variant="ghost" onClick={() => onNext({})}>
+          <Button type="button" variant="outline" onClick={onBack}>
             Voltar
           </Button>
           <Button type="submit">
-            {form.watch('hasCompany') ? 'Próximo' : 'Finalizar Registro'}
+            {form.watch('vinculado_empresa') ? 'Próximo' : 'Finalizar Registro'}
           </Button>
         </div>
       </form>
