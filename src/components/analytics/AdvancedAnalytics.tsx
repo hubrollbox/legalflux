@@ -181,7 +181,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({
                 mode="range"
                 defaultMonth={dateRange.from}
                 selected={dateRange}
-                onSelect={(range) => setDateRange({ from: range?.from, to: range?.to })}
+                onSelect={(range: { from?: Date, to?: Date }) => setDateRange({ from: range?.from, to: range?.to })}
                 numberOfMonths={2}
               />
             </PopoverContent>

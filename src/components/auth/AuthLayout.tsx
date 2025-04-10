@@ -1,6 +1,6 @@
 
 import React, { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -13,7 +13,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) =>
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
         <div className="flex flex-col items-center">
-          <Link to="/">
+          <Link href="/">
             <img
               src="/lovable-uploads/2e2650ad-d2c9-49ca-ba40-8c19627e97aa.png"
               alt="LegalFlux Logo"
