@@ -33,7 +33,7 @@ export const SignUpForm = () => {
     });
   };
 
-  const handleSubmitPersonalData = () => {
+  const handleSubmitPersonalData = async () => {
     // Validação básica
     if (!formData.nome || !formData.nif || !formData.email || !formData.password) {
       alert('Preencha os campos obrigatórios!');
@@ -43,32 +43,41 @@ export const SignUpForm = () => {
     if (userType === 'profissional') {
       setCurrentStep(3); // Próximo passo: dados profissionais
     } else {
-      // Enviar dados para API
-      const emailExists = await checkEmailExists(formData.email);
-      if (emailExists) {
-        setError('Este email já está registrado');
-        return;
+      try {
+        // Enviar dados para API
+        const emailExists = await checkEmailExists(formData.email);
+        if (emailExists) {
+          setError('Este email já está registrado');
+          return;
+        }
+        await signUp({ ...formData, userType, password: formData.password });
+      } catch (err: any) {
+        setError(err.message || 'Erro ao processar o registro');
       }
-      await signUp({ ...formData, password: formData.password });
     }
   };
 
   const handleSubmitCompanyData = async () => {
     setError('');
     try {
+      if (!formData.empresaNome || !formData.empresaNIF || !formData.empresaCAE || !formData.empresaEmail) {
+        alert('Preencha os campos obrigatórios da empresa!');
+        return;
+      }
+      
       const emailExists = await checkEmailExists(formData.empresaEmail);
       if (emailExists) {
         setError('Este email corporativo já está registrado');
         return;
       }
-    if (!formData.empresaNome || !formData.empresaNIF || !formData.empresaCAE || !formData.empresaEmail) {
-      alert('Preencha os campos obrigatórios da empresa!');
-      return;
-    }
-    try {
-      await signUp(formData);
-    } catch (err) {
-      setError(err.message);
+      
+      await signUp({
+        ...formData,
+        userType,
+        password: formData.password
+      });
+    } catch (err: any) {
+      setError(err.message || 'Erro ao processar o registro da empresa');
     }
   };
 

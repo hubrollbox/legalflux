@@ -16,6 +16,8 @@ interface AuthContextType {
     name: string,
     role?: UserRole
   ) => Promise<void>;
+  signUp: (userData: any) => Promise<void>;
+  checkEmailExists: (email: string) => Promise<boolean>;
   requestPasswordReset: (email: string) => Promise<void>;
   resetPassword: (token: string, newPassword: string) => Promise<void>;
   updateProfile: (updatedUser: Partial<User>) => Promise<void>;
@@ -347,7 +349,87 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
 
-    return (
+    // Verificar se um email já existe no sistema
+  const checkEmailExists = async (email: string): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('email', email)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        console.error("Erro ao verificar email:", error);
+        throw error;
+      }
+      
+      return !!data; // Retorna true se o email existir
+    } catch (error) {
+      console.error("Erro ao verificar email:", error);
+      return false;
+    }
+  };
+
+  // Função de registro para o fluxo multi-etapas
+  const signUp = async (userData: any): Promise<void> => {
+    setIsLoading(true);
+    try {
+      // Registrar o usuário no Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
+        email: userData.email,
+        password: userData.password,
+        options: {
+          data: {
+            nome_completo: userData.nome,
+            nif: userData.nif,
+            telefone: userData.telemovel,
+            morada: userData.morada,
+            user_type: userData.userType,
+            // Dados profissionais, se aplicável
+            ...(userData.cedulaProfissional && {
+              cedula_profissional: userData.cedulaProfissional,
+              ordem_profissional: userData.ordemProfissional,
+            }),
+            // Dados da empresa, se aplicável
+            ...(userData.empresaNome && {
+              empresa_nome: userData.empresaNome,
+              empresa_nif: userData.empresaNIF,
+              empresa_cae: userData.empresaCAE,
+              empresa_email: userData.empresaEmail,
+              empresa_telefone: userData.empresaTelefone,
+              empresa_morada: userData.empresaMorada,
+            }),
+          }
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+      
+      toast({
+        title: "Registro bem-sucedido",
+        description: "Sua conta foi criada com sucesso! Verifique seu email para confirmar o registro.",
+      });
+      
+      if (data.user) {
+        const mappedUser = mapUserData(data.user);
+        setUser(mappedUser);
+      }
+    } catch (error: any) {
+      console.error("Erro no registro:", error);
+      toast({
+        title: "Erro no registro",
+        description: error.message || "Ocorreu um erro ao tentar criar sua conta.",
+        variant: "destructive",
+      });
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
       <AuthContext.Provider
         value={{
           user,
@@ -355,6 +437,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           login,
           logout,
           register,
+          signUp,
+          checkEmailExists,
           requestPasswordReset,
           resetPassword,
           updateProfile,
