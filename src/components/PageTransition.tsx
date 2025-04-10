@@ -56,14 +56,9 @@ const PageTransition: React.FC<PageTransitionProps> = ({
 
   return (
     <motion.div
-      initial={animations.initial}
-      animate={animations.animate}
-      exit={animations.exit}
-      transition={{ 
-        duration: duration, 
-        delay: delay,
-        ease: 'easeInOut'
-      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
     >
       {children}
     </motion.div>

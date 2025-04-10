@@ -14,25 +14,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
-}
-{
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
-  "compilerOptions": {
-    "target": "es5",
-    "jsx": "react-jsx",
-    "module": "es6",
-    "moduleResolution": "node",
-    "rootDir": "./",
+    "incremental": true,
     "baseUrl": "./src",
-    "noEmit": true,
     "paths": {
       "@/*": ["*"],
       "test/*": ["../test/*"]
@@ -41,13 +24,14 @@
     "sourceMap": true,
     "outDir": "./dist",
     "importHelpers": true,
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "isolatedModules": false,
     "types": ["jest", "node"]
-  }
+  },
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json", "composite": true }
+  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
