@@ -412,7 +412,7 @@ const RegisterForm = () => {
           <Checkbox 
             id="linkedToCompany" 
             checked={formData.linkedToCompany}
-            onCheckedChange={(checked) => 
+            onCheckedChange={(checked: boolean) => 
               setFormData({...formData, linkedToCompany: checked as boolean})
             }
           />
@@ -571,7 +571,7 @@ const RegisterForm = () => {
           <Checkbox 
             id="terms" 
             checked={formData.terms}
-            onCheckedChange={(checked) => 
+            onCheckedChange={(checked: boolean) => 
               setFormData({...formData, terms: checked as boolean})
             }
           />
