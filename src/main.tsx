@@ -6,7 +6,7 @@ import { RouterProvider } from 'react-router-dom'
 import router from './router.tsx'
 import './index.css'
 import './styles/improved-interfaces.css'
-import { AuthProvider } from '@/components/auth/AuthProvider'
+import AuthProvider from '@/components/auth/AuthProvider'
 import { PermissionsProvider } from '@/hooks/usePermissions'
 
 // Register service worker
