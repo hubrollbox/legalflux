@@ -1,24 +1,13 @@
 
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import AuthLayout from "@/components/auth/AuthLayout";
-import { Loader2 } from "lucide-react";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { UserRole } from "@/types";
-import { validateEmail, isValidPassword } from "@/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { useState } from 'react';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/navigation';
+import UserTypeStep from '@/components/auth/UserTypeStep';
+import PersonalDataStep from '@/components/auth/PersonalDataStep';
+import ProfessionalDataStep from '@/components/auth/ProfessionalDataStep';
+import CompanyDataStep from '@/components/auth/CompanyDataStep';
+import { Database } from '@/types/supabase';
+
 
 interface RegisterFormData {
   fullName: string;
@@ -40,26 +29,15 @@ interface RegisterFormData {
   acceptUpdates: boolean;
 }
 
-const Register = () => {
-  const [formData, setFormData] = useState<RegisterFormData>({
-    fullName: "",
-    email: "",
-    phone: "",
-    officeName: "",
-    taxId: "",
-    country: "",
-    city: "",
-    username: "",
-    password: "",
-    confirmPassword: "",
-    accountType: "particular",
-    practiceArea: "",
-    teamSize: "",
-    currentTools: "",
-    acceptTerms: false,
-    acceptPilot: false,
-    acceptUpdates: false
-  });
+type UserType = 'particular' | 'professional' | 'empresa';
+
+export default function Register() {
+  const [step, setStep] = useState(1);
+  const [userType, setUserType] = useState<UserType>();
+  const [formData, setFormData] = useState({});
+  const supabase = createClientComponentClient<Database>();
+  const router = useRouter();
+
 
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 4;
@@ -160,16 +138,37 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNextStep = () => {
-    if (validateStep(currentStep)) {
-      // Se estiver no passo 2 e for conta particular, pular para o passo 4
-      if (currentStep === 2 && formData.accountType === "particular") {
-        setCurrentStep(4);
-      } else {
-        setCurrentStep(prev => Math.min(prev + 1, totalSteps));
+  const handleNext = (data: any) => {
+    setFormData(prev => ({ ...prev, ...data }));
+    setStep(prev => {
+      if (userType === 'particular' && prev === 2) return 4;
+      return prev + 1;
+    });
+  };
+
+  const handleSubmit = async (finalData: any) => {
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: finalData.email,
+        password: finalData.password,
+        options: {
+          data: {
+            user_type: userType,
+            ...finalData
+          }
+        }
+      });
+
+      if (!error) {
+        router.push(
+          userType === 'empresa' ? '/client-portal' : '/dashboard'
+        );
       }
+    } catch (error) {
+      console.error('Erro no registro:', error);
     }
   };
+
 
   const handlePrevStep = () => {
     setCurrentStep(prev => Math.max(prev - 1, 1));
