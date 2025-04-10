@@ -7,7 +7,8 @@
     "jsx": "react-jsx",
     "allowImportingTsExtensions": true,
     "moduleDetection": "force",
-    "types": ["vite/client", "node"]
+    "types": ["vite/client", "node"],
+    "noEmit": true
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.spec.*", "src/**/*.test.*", "node_modules"]
