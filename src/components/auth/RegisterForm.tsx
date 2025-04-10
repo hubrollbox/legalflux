@@ -255,7 +255,7 @@ const RegisterForm = () => {
       
       <RadioGroup 
         value={formData.userType} 
-        onValueChange={(value) => handleSelectChange('userType', value)}
+        onValueChange={(value: string) => handleSelectChange('userType', value)}
         className="space-y-3"
       >
         <div className="flex items-center space-x-2">
@@ -391,7 +391,7 @@ const RegisterForm = () => {
       <div className="space-y-2">
         <Label htmlFor="professionalOrder">Ordem Profissional <span className="text-red-500">*</span></Label>
         <Select 
-          onValueChange={(value) => handleSelectChange('professionalOrder', value)}
+          onValueChange={(value: string) => handleSelectChange('professionalOrder', value)}
           value={formData.professionalOrder}
         >
           <SelectTrigger id="professionalOrder">
