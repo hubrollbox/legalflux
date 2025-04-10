@@ -1,5 +1,4 @@
 
-import { createBrowserRouter, Navigate } from 'react-router-dom';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import ClientPortal from './pages/client-portal/ClientPortal';
 import ProcessesPage from './pages/client-portal/ProcessesPage';
