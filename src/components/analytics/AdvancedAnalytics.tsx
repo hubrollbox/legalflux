@@ -26,7 +26,7 @@ import {
   ComposedChart
 } from 'recharts';
 import { format } from 'date-fns';
-import { pt } from 'date-fns/locale';
+import { ptBR } from 'date-fns/locale/pt-BR';
 import { Download, BarChart2, PieChart as PieChartIcon, TrendingUp, Calendar as CalendarIcon } from 'lucide-react';
 import type { Case, FinancialTransaction, Task, User } from '@/types';
 
@@ -90,7 +90,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
   // Função para formatar a data
   const formatDate = (date: Date | undefined) => {
     if (!date) return '';
-    return format(date, 'P', pt);
+    return format(date, 'P', { locale: ptBR });
   };
 
   // Dados para o gráfico de desempenho de advogados baseados nos usuários e tarefas
@@ -169,8 +169,11 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
     for (let i = 5; i >= 0; i--) {
       const d = new Date(today);
       d.setMonth(today.getMonth() - i);
-      const monthKey = months[d.getMonth()];
-      result[monthKey] = { month: monthKey, novos: 0, concluidos: 0, ativos: 0 };
+      const monthIndex = d.getMonth();
+      const monthKey = months[monthIndex];
+      if (monthKey) {
+        result[monthKey] = { month: monthKey, novos: 0, concluidos: 0, ativos: 0 };
+      }
     }
     
     // Processa os casos
