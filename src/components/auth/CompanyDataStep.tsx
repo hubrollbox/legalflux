@@ -11,7 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { UserType } from '@/types/auth';
+
 
 const companySchema = z.object({
   nome: z.string().min(3, 'Nome da empresa obrigatório'),
