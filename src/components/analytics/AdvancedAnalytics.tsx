@@ -90,7 +90,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
   // Função para formatar a data
   const formatDate = (date: Date | undefined) => {
     if (!date) return '';
-    return format(date, 'P', { locale: pt });
+    return format(date, 'P', pt);
   };
 
   // Dados para o gráfico de desempenho de advogados baseados nos usuários e tarefas
