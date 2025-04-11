@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { type FC, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 
 interface PageTransitionProps {
@@ -8,13 +8,12 @@ interface PageTransitionProps {
   direction?: 'up' | 'down' | 'left' | 'right' | 'none';
 }
 
-const PageTransition: React.FC<PageTransitionProps> = ({ 
+const PageTransition: FC<PageTransitionProps> = ({ 
   children, 
   duration = 0.3, 
   delay = 0, 
   direction = 'none' 
 }) => {
-  // Configurar animações baseadas na direção
   const getAnimations = () => {
     const distance = 30;
     
@@ -56,9 +55,11 @@ const PageTransition: React.FC<PageTransitionProps> = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      {...animations}
+      transition={{ 
+        duration, 
+        delay 
+      }}
     >
       {children}
     </motion.div>

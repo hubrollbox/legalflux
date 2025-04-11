@@ -3,13 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import {
   AreaChart,
   Area,
@@ -26,13 +23,43 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  ComposedChart,
-  Scatter
+  ComposedChart
 } from 'recharts';
 import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
-import { Download, Filter, BarChart2, PieChart as PieChartIcon, TrendingUp, Calendar as CalendarIcon, FileText, Settings2 } from 'lucide-react';
+import { Download, BarChart2, PieChart as PieChartIcon, TrendingUp, Calendar as CalendarIcon } from 'lucide-react';
 import { Case, FinancialTransaction, Task, User } from '@/types';
+
+interface ChartDataTypes {
+  LawyerPerformance: {
+    name: string;
+    processos: number;
+    tarefas: number;
+    honorarios: number;
+  };
+  CaseType: {
+    name: string;
+    value: number;
+  };
+  CaseTrend: {
+    month: string;
+    novos: number;
+    concluidos: number;
+    ativos: number;
+  };
+  RevenueByService: {
+    name: string;
+    value: number;
+  };
+  ResolutionTime: {
+    tipo: string;
+    tempo: number;
+  };
+  ClientSatisfaction: {
+    month: string;
+    satisfacao: number;
+  };
+}
 
 interface AdvancedAnalyticsProps {
   cases?: Case[];
@@ -68,7 +95,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({
   };
 
   // Dados para o gráfico de desempenho de advogados
-  const lawyerPerformanceData = [
+  const lawyerPerformanceData: ChartDataTypes['LawyerPerformance'][] = [
     { name: 'Advogado 1', processos: 12, tarefas: 45, honorarios: 15000 },
     { name: 'Advogado 2', processos: 8, tarefas: 30, honorarios: 12000 },
     { name: 'Advogado 3', processos: 15, tarefas: 60, honorarios: 18000 },
@@ -77,7 +104,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({
   ];
 
   // Dados para o gráfico de tipos de processos
-  const caseTypeData = [
+  const caseTypeData: ChartDataTypes['CaseType'][] = [
     { name: 'Cível', value: 35 },
     { name: 'Família', value: 25 },
     { name: 'Trabalhista', value: 20 },
@@ -86,7 +113,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({
   ];
 
   // Dados para o gráfico de tendências de processos
-  const caseTrendData = [
+  const caseTrendData: ChartDataTypes['CaseTrend'][] = [
     { month: 'Jan', novos: 5, concluidos: 3, ativos: 20 },
     { month: 'Fev', novos: 7, concluidos: 4, ativos: 23 },
     { month: 'Mar', novos: 6, concluidos: 5, ativos: 24 },
@@ -96,7 +123,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({
   ];
 
   // Dados para o gráfico de receitas por tipo de serviço
-  const revenueByServiceData = [
+  const revenueByServiceData: ChartDataTypes['RevenueByService'][] = [
     { name: 'Consultoria', value: 30000 },
     { name: 'Processos', value: 45000 },
     { name: 'Contratos', value: 25000 },
@@ -105,7 +132,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({
   ];
 
   // Dados para o gráfico de tempo médio de resolução
-  const resolutionTimeData = [
+  const resolutionTimeData: ChartDataTypes['ResolutionTime'][] = [
     { tipo: 'Cível', tempo: 180 },
     { tipo: 'Família', tempo: 120 },
     { tipo: 'Trabalhista', tempo: 90 },
@@ -114,7 +141,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = ({
   ];
 
   // Dados para o gráfico de satisfação de clientes
-  const clientSatisfactionData = [
+  const clientSatisfactionData: ChartDataTypes['ClientSatisfaction'][] = [
     { month: 'Jan', satisfacao: 4.2 },
     { month: 'Fev', satisfacao: 4.3 },
     { month: 'Mar', satisfacao: 4.1 },

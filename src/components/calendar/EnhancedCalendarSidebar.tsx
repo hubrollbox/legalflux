@@ -1,6 +1,7 @@
 import React from "react";
 import Calendar from "react-calendar";
-import type { Value } from "react-calendar";
+import { Value } from "react-calendar";
+import { Locale } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Clock, FileText, Calendar as CalendarIcon } from "lucide-react";
@@ -135,7 +136,7 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
           <Calendar
             onChange={handleDateChange}
             value={selectedDate}
-            locale={ptBR}
+            locale={ptBR as Locale}
             className={cn(
               "w-full",
               "rounded-lg",

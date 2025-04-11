@@ -29,10 +29,20 @@
     "noUnusedParameters": true,
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "declaration": true,
+    "sourceMap": true,
+    "removeComments": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "vite.config.ts"],
+  "exclude": ["node_modules", "build", "dist"],
   "references": [
     { "path": "./tsconfig.app.json", "composite": true },
     { "path": "./tsconfig.node.json" }
