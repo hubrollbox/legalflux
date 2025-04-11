@@ -28,7 +28,7 @@ import {
 import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import { Download, BarChart2, PieChart as PieChartIcon, TrendingUp, Calendar as CalendarIcon } from 'lucide-react';
-import { Case, FinancialTransaction, Task, User } from '@/types';
+import type { Case, FinancialTransaction, Task, User } from '@/types';
 
 interface ChartDataTypes {
   LawyerPerformance: {
