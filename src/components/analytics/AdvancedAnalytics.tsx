@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Settings2, FileText } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -183,21 +184,24 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
       const createdMonth = months[createdDate.getMonth()];
       const updatedMonth = months[updatedDate.getMonth()];
       
-      // Verifica se o mês está nos últimos 6 meses
-      if (result[createdMonth]) {
+      // Verifica se o mês está nos últimos 6 meses e existe no resultado
+      if (createdMonth && typeof result[createdMonth] === 'object' && result[createdMonth] !== null) {
         result[createdMonth].novos++;
       }
       
-      if (c.status === 'closed' && result[updatedMonth]) {
+      if (c.status === 'closed' && updatedMonth && result[updatedMonth]) {
         result[updatedMonth].concluidos++;
       }
       
       // Conta casos ativos para cada mês
       Object.keys(result).forEach(month => {
-        const monthDate = new Date(currentYear, months.indexOf(month));
-        if (createdDate <= monthDate && 
-            (c.status !== 'closed' || updatedDate > monthDate)) {
-          result[month].ativos++;
+        const monthData = result[month];
+        if (monthData) {
+          const monthDate = new Date(currentYear, months.indexOf(month));
+          if (createdDate <= monthDate && 
+              (c.status !== 'closed' || updatedDate > monthDate)) {
+            monthData.ativos++;
+          }
         }
       });
     });
@@ -547,7 +551,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
                         fill="#8884d8"
                         dataKey="value"
                       >
-                        {caseTypeData.map((entry, index) => (
+                        {caseTypeData.map((_, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
@@ -649,7 +653,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
                         fill="#8884d8"
                         dataKey="value"
                       >
-                        {revenueByServiceData.map((entry, index) => (
+                        {revenueByServiceData.map((_, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>

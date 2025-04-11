@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { AuthProvider as AuthContext } from '@/hooks/useAuth';
 const AuthContextProvider = AuthContext;
 

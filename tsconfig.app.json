@@ -3,12 +3,11 @@
   "compilerOptions": {
     "composite": true,
     "useDefineForClassFields": true,
+    "noEmit": false,
     "module": "ESNext",
-    "jsx": "react-jsx",
-    "allowImportingTsExtensions": true,
+    "jsx": "preserve",
     "moduleDetection": "force",
-    "types": ["vite/client", "node"],
-    "noEmit": true
+    "types": ["vite/client", "node"]
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.spec.*", "src/**/*.test.*", "node_modules"]
