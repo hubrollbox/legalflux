@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { CalendarEvent } from './DraggableEvent';
+import type { CalendarEvent } from './DraggableEvent';
 import DraggableEvent from './DraggableEvent';
 import { cn } from '@/lib/utils';
 
