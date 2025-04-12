@@ -11,7 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { UserType } from '@/types/auth';
+import type { UserType } from '@/types/auth';
 
 type Props = {
   userType: UserType;
@@ -96,7 +96,7 @@ export default function PersonalDataStep({ userType, initialValues, onNext, onBa
           )}
         />
 
-        {userType !== 'empresa' && (
+        {userType !== 'company' && (
           <>
             <FormField
               control={form.control}
