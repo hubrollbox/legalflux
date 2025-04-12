@@ -1,5 +1,5 @@
 import React from "react";
-import Calendar, { Value } from "react-calendar";
+import Calendar from "react-calendar";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -10,17 +10,7 @@ import { cn } from "@/lib/utils";
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-export interface CalendarEvent {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  category: CategoryKey;
-  description?: string;
-  priority?: PriorityLevel;
-  clientId?: string;
-  processId?: string;
-}
+
 
 export type CategoryKey = 'meeting' | 'deadline' | 'task' | 'other';
 export type PriorityLevel = 'high' | 'medium' | 'low';
@@ -59,22 +49,19 @@ const categoryConfig: Record<CategoryKey, CategoryConfig> = {
   }
 };
 
-interface EnhancedCalendarSidebarProps {
-  events: CalendarEvent[];
-  selectedDate: Date;
-  onDateChange: (date: Date) => void;
-  onCategoryFilter: (category: CategoryKey | null) => void;
-  selectedCategory: CategoryKey | null;
-}
+import { useCalendar } from './CalendarContext';
 
-export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = ({
-  events,
-  selectedDate,
-  onDateChange,
-  onCategoryFilter,
-  selectedCategory,
-}) => {
-  const handleDateChange = React.useCallback((value: Value, event: React.SyntheticEvent) => {
+interface EnhancedCalendarSidebarProps {}
+
+export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = () => {
+  const {
+    events,
+    selectedDate,
+    handleDateChange: onDateChange,
+    handleCategoryChange: onCategoryFilter,
+    selectedCategory
+  } = useCalendar();
+  const handleDateChange = React.useCallback((value: Date | [Date, Date] | null, event: React.SyntheticEvent) => {
     if (value instanceof Date) {
       onDateChange(value);
     } else if (Array.isArray(value)) {
@@ -179,7 +166,22 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
                   >
                     <div className="flex items-center gap-2 mb-2">
                       {config.icon}
-                      <h4 className="font-medium">{event.title}</h4>
+                      <div className="flex items-center gap-2">
+  <h4 className="font-medium">{event.title}</h4>
+  {event.priority && (
+    <Badge 
+      variant="outline"
+      className={cn(
+        'text-xs capitalize',
+        event.priority === 'high' && 'bg-red-100 text-red-700',
+        event.priority === 'medium' && 'bg-orange-100 text-orange-700',
+        event.priority === 'low' && 'bg-green-100 text-green-700'
+      )}
+    >
+      {event.priority}
+    </Badge>
+  )}
+</div>
                     </div>
                     <p className="text-sm opacity-80">
                       {format(event.start, 'dd/MM/yyyy HH:mm', { locale: ptBR })}

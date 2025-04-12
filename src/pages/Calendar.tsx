@@ -14,9 +14,20 @@ import EventForm from "@/components/calendar/EventForm";
 import CalendarSidebar from "@/components/calendar/CalendarSidebar";
 import { useToast } from "@/hooks/use-toast";
 
-const CalendarPage = () => {
+interface CalendarPageProps {
+  initialEvents: Array<{
+    id: string
+    title: string
+    start: Date
+    end: Date
+    category: 'meeting' | 'deadline' | 'task' | 'other'
+    description?: string
+  }>
+}
+
+const CalendarPage = ({ initialEvents }: CalendarPageProps) => {
   const [date, setDate] = useState(new Date());
-  const [events, setEvents] = useState<Array<any>>([]);
+  const { events, createEvent, updateEvent, deleteEvent } = useCalendar();
   const [view, setView] = useState(Views.MONTH);
   const [isEventFormOpen, setIsEventFormOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
@@ -45,44 +56,37 @@ const CalendarPage = () => {
   const locales = { 'pt-BR': ptBR };
   const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
-  const handleEventCreate = useCallback((eventData: any) => {
-    const newEvent = {
-      id: Date.now().toString(),
+  const handleEventCreate = useCallback(async (eventData: any) => {
+    await createEvent({
       title: eventData.title,
       start: eventData.dateRange.from,
       end: eventData.dateRange.to,
-      description: eventData.description,
       category: eventData.category,
+      description: eventData.description,
       isRecurring: eventData.isRecurring,
       recurrenceType: eventData.recurrenceType
-    };
-
-    setEvents(prev => [...prev, newEvent]);
+    });
     setIsEventFormOpen(false);
     toast({
       title: "Evento criado",
       description: "O evento foi adicionado com sucesso."
     });
-  }, []);
+  }, [createEvent]);
 
   const handleEventSelect = useCallback((event: any) => {
     setSelectedEvent(event);
     setIsEventFormOpen(true);
   }, []);
 
-  const handleEventUpdate = useCallback((eventData: any) => {
-    setEvents(prev => prev.map(event => 
-      event.id === selectedEvent.id 
-        ? { ...event, ...eventData }
-        : event
-    ));
+  const handleEventUpdate = useCallback(async (eventData: any) => {
+    await updateEvent(selectedEvent.id, eventData);
     setIsEventFormOpen(false);
     setSelectedEvent(null);
     toast({
       title: "Evento atualizado",
       description: "As alterações foram salvas com sucesso."
     });
-  }, [selectedEvent]);
+  }, [selectedEvent, updateEvent]);
 
   const filteredEvents = categoryFilter
     ? events.filter(event => event.category === categoryFilter)
@@ -166,5 +170,28 @@ const CalendarPage = () => {
     </DashboardLayout>
   );
 };
+
+export async function getServerSideProps() {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events`);
+    const events = await res.json();
+    return {
+      props: {
+        initialEvents: events.map((event: any) => ({
+          ...event,
+          start: new Date(event.start),
+          end: new Date(event.end)
+        }))
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    return {
+      props: {
+        initialEvents: []
+      },
+    };
+  }
+}
 
 export default CalendarPage;
