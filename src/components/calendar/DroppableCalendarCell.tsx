@@ -16,6 +16,9 @@ const DroppableCalendarCell: React.FC<DroppableCalendarCellProps> = ({
   children,
   className,
 }) => {
+  // Usando useRef para criar uma referência para o elemento div
+  const elementRef = React.useRef<HTMLDivElement>(null);
+  
   const [{ isOver, canDrop }, drop] = useDrop(() => ({
     accept: 'EVENT',
     drop: (item: { id: string; event: CalendarEvent }) => {
@@ -27,10 +30,17 @@ const DroppableCalendarCell: React.FC<DroppableCalendarCellProps> = ({
       canDrop: !!monitor.canDrop(),
     }),
   }));
+  
+  // Aplicando a função drop à referência do elemento
+  React.useEffect(() => {
+    if (elementRef.current) {
+      drop(elementRef.current);
+    }
+  }, [drop, elementRef]);
 
   return (
     <div
-      ref={drop}
+      ref={elementRef}
       className={cn(
         'h-full w-full transition-colors',
         isOver && canDrop && 'bg-primary/10',
