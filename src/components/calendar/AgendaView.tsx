@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { format, isToday, isTomorrow, isThisWeek, isThisMonth, addDays } from 'date-fns';
+import { format, isToday, isTomorrow, isThisWeek, isThisMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale/pt-BR';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,10 +16,30 @@ interface AgendaViewProps {
 }
 
 type GroupedEvents = {
+  today: {
+    title: string;
+    events: CalendarEvent[];
+  };
+  tomorrow: {
+    title: string;
+    events: CalendarEvent[];
+  };
+  thisWeek: {
+    title: string;
+    events: CalendarEvent[];
+  };
+  thisMonth: {
+    title: string;
+    events: CalendarEvent[];
+  };
+  future: {
+    title: string;
+    events: CalendarEvent[];
+  };
   [key: string]: {
     title: string;
     events: CalendarEvent[];
-  }
+  };
 };
 
 const AgendaView: React.FC<AgendaViewProps> = ({
@@ -29,10 +49,8 @@ const AgendaView: React.FC<AgendaViewProps> = ({
 }) => {
   // Agrupar eventos por período (hoje, amanhã, esta semana, este mês, futuro)
   const groupedEvents = useMemo(() => {
-    const today = new Date();
-    // A variável 'tomorrow' foi removida pois não é utilizada diretamente
-    const nextWeekStart = addDays(today, 7);
-    const nextMonthStart = addDays(today, 30);
+    // Não precisamos da variável 'today' pois as funções isToday, isTomorrow, etc.
+    // já fazem a comparação com a data atual internamente
     
     const groups: GroupedEvents = {
       today: { title: 'Hoje', events: [] },

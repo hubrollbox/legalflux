@@ -42,13 +42,8 @@ const CalendarSidebar: React.FC<CalendarSidebarProps> = ({
     setCategoryFilter(category);
     onCategoryFilter(category);
   };
-  const categories = [
-    { id: 'meeting', label: 'Reunião', color: 'bg-blue-500' },
-    { id: 'deadline', label: 'Prazo', color: 'bg-red-500' },
-    { id: 'task', label: 'Tarefa', color: 'bg-green-500' },
-    { id: 'other', label: 'Outro', color: 'bg-gray-500' },
-  ];
-
+  // A variável 'categories' foi removida pois não é utilizada no código
+  
   const upcomingEvents = events
     .filter(event => event.start >= new Date())
     .sort((a, b) => a.start.getTime() - b.start.getTime())
