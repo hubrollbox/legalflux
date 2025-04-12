@@ -77,7 +77,7 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
   onCategoryFilter,
   selectedCategory,
 }) => {
-  const handleDateChange = React.useCallback((value: Value) => {
+  const handleDateChange = React.useCallback((value: Value | [Date, Date], event?: MouseEvent<HTMLButtonElement>) => {
     if (value instanceof Date) {
       onDateChange(value);
     } else if (Array.isArray(value) && value[0] instanceof Date) {
