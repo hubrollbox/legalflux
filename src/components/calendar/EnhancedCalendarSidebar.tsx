@@ -3,7 +3,7 @@ import Calendar from "react-calendar";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { Value } from 'react-calendar';
+
 import { Badge } from "@/components/ui/badge";
 import { Users, Clock, FileText, Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -74,7 +74,7 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
   onCategoryFilter,
   selectedCategory,
 }) => {
-  const handleDateChange = React.useCallback((value: Value, event: React.SyntheticEvent) => {
+  const handleDateChange = React.useCallback((value: Date | Date[], event: React.SyntheticEvent) => {
     if (value instanceof Date) {
       onDateChange(value);
     } else if (Array.isArray(value)) {
