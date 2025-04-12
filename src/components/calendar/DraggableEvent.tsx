@@ -103,7 +103,7 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
 
   return (
     <div
-      ref={(node) => drag(node as any)}
+      ref={drag}
       className={cn(
         'p-2 rounded-md cursor-pointer transition-all',
         getCategoryColor(event.category),
