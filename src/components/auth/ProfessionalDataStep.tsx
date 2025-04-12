@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Checkbox } from '@/components/ui/checkbox';
-import { UserType } from '@/types/auth';
+import type { UserType } from '@/types/auth';
 
 type Props = {
   initialValues: any;
