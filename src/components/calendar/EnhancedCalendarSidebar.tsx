@@ -1,17 +1,9 @@
 import React from "react";
-import Calendar from "react-calendar";
-import type { Locale } from "date-fns";
-
-// Define o tipo Value baseado na documentação do react-calendar
 
 type Value = Date | Date[] | null;
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Clock, FileText, Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 
 export interface CalendarEvent {
   id: string;
@@ -77,7 +69,7 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
   onCategoryFilter,
   selectedCategory,
 }) => {
-  const handleDateChange = React.useCallback((value: Value | [Date, Date], event?: MouseEvent<HTMLButtonElement>) => {
+  const handleDateChange = React.useCallback((value: Value | [Date, Date]) => {
     if (value instanceof Date) {
       onDateChange(value);
     } else if (Array.isArray(value) && value[0] instanceof Date) {
@@ -139,7 +131,6 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
           <Calendar
             onChange={handleDateChange}
             value={selectedDate}
-            locale={ptBR as Locale}
             className={cn(
               "w-full",
               "rounded-lg",
