@@ -4,7 +4,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { usePermissions } from "@/hooks/usePermissions";
 import { toast } from "sonner";
-import { UserRole } from "@/types";
+import type { UserRole } from "@/types";
 import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteProps {
