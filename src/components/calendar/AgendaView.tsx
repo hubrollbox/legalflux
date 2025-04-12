@@ -30,7 +30,7 @@ const AgendaView: React.FC<AgendaViewProps> = ({
   // Agrupar eventos por período (hoje, amanhã, esta semana, este mês, futuro)
   const groupedEvents = useMemo(() => {
     const today = new Date();
-    const tomorrow = addDays(today, 1);
+    // A variável 'tomorrow' foi removida pois não é utilizada diretamente
     const nextWeekStart = addDays(today, 7);
     const nextMonthStart = addDays(today, 30);
     
