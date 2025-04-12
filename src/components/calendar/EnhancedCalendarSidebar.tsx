@@ -1,5 +1,5 @@
 import React from "react";
-import Calendar from "react-calendar";
+import Calendar, { Value } from "react-calendar";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -74,7 +74,7 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
   onCategoryFilter,
   selectedCategory,
 }) => {
-  const handleDateChange = React.useCallback((value: Date | Date[], event: React.SyntheticEvent) => {
+  const handleDateChange = React.useCallback((value: Value, event: React.SyntheticEvent) => {
     if (value instanceof Date) {
       onDateChange(value);
     } else if (Array.isArray(value)) {
