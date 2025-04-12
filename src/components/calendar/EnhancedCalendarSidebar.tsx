@@ -1,7 +1,10 @@
 import React from "react";
 import Calendar from "react-calendar";
-import { Value } from "react-calendar";
-import { Locale } from "date-fns";
+import type { Locale } from "date-fns";
+
+// Define o tipo Value baseado na documentação do react-calendar
+
+type Value = Date | Date[] | null;
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Clock, FileText, Calendar as CalendarIcon } from "lucide-react";
