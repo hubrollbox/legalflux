@@ -37,7 +37,10 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
   showTime = true,
   showDetails = false
 }) => {
-  // @ts-ignore - Ignorando erro de tipagem do react-dnd
+  // Usando useRef para criar uma referência para o elemento div
+  const elementRef = React.useRef<HTMLDivElement>(null);
+  
+  // Configurando o hook useDrag
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'EVENT',
     item: { id: event.id, event },
@@ -46,6 +49,13 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
     }),
     canDrag: isDraggable,
   }));
+  
+  // Aplicando a função drag à referência do elemento
+  React.useEffect(() => {
+    if (elementRef.current) {
+      drag(elementRef.current);
+    }
+  }, [drag, elementRef]);
 
   // Função para obter o ícone com base na categoria do evento
   const getCategoryIcon = (category: string) => {
@@ -103,7 +113,7 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
 
   return (
     <div
-      ref={drag}
+      ref={elementRef}
       className={cn(
         'p-2 rounded-md cursor-pointer transition-all',
         getCategoryColor(event.category),

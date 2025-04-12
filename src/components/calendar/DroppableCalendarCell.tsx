@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import { cn } from '@/lib/utils';
-import { CalendarEvent } from './DraggableEvent';
+import type { CalendarEvent } from './DraggableEvent';
 
 interface DroppableCalendarCellProps {
   date: Date;
