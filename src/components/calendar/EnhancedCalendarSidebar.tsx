@@ -1,9 +1,13 @@
 import React from "react";
+import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type Value = Date | Date[] | null;
 import { Badge } from "@/components/ui/badge";
 import { Users, Clock, FileText, Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 export interface CalendarEvent {
   id: string;
