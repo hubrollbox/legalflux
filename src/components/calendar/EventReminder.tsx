@@ -2,7 +2,6 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Bell, Calendar, Clock, AlertTriangle } from 'lucide-react';
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { format, isToday, isTomorrow, addDays, isWithinInterval } from "date-fns";
@@ -83,7 +82,7 @@ const EventReminder: React.FC<EventReminderProps> = ({ events, onEventClick }) =
     if (isToday(date)) {
       return <Badge variant="destructive">Hoje</Badge>;
     } else if (isTomorrow(date)) {
-      return <Badge variant="warning" className="bg-amber-500">Amanhã</Badge>;
+      return <Badge variant="outline" className="border-amber-500 text-amber-800 dark:border-amber-300 dark:text-amber-300">Amanhã</Badge>;
     } else {
       return <Badge variant="outline">Em breve</Badge>;
     }
