@@ -1,5 +1,6 @@
 import React from "react";
 import Calendar from "react-calendar";
+import type { Value } from "react-calendar";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -7,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Users, Clock, FileText, Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { CategoryKey } from '@/types';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -45,6 +47,18 @@ const categoryConfig: Record<CategoryKey, CategoryConfig> = {
     color: "bg-gray-100 text-gray-700",
     hoverColor: "hover:bg-gray-50",
     icon: <CalendarIcon className="h-4 w-4" />
+  },
+  reminder: {
+    label: "Lembretes",
+    color: "bg-yellow-100 text-yellow-700",
+    hoverColor: "hover:bg-yellow-50",
+    icon: <Clock className="h-4 w-4" />
+  },
+  document: {
+    label: "Documentos",
+    color: "bg-purple-100 text-purple-700",
+    hoverColor: "hover:bg-purple-50",
+    icon: <FileText className="h-4 w-4" />
   }
 };
 
@@ -60,7 +74,7 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
     handleCategoryChange: onCategoryFilter,
     selectedCategory
   } = useCalendar();
-  const handleDateChange = React.useCallback((value: Date | [Date, Date] | null, event: React.SyntheticEvent) => {
+  const handleDateChange = React.useCallback((value: Value) => {
     if (value instanceof Date) {
       onDateChange(value);
     } else if (Array.isArray(value)) {
@@ -139,8 +153,8 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
         <CardContent className="p-4">
           <div className="space-y-2">
             {renderCategoryFilter(null)}
-            {Object.keys(categoryConfig).map(category => 
-              renderCategoryFilter(category as CategoryKey)
+            {(Object.keys(categoryConfig) as CategoryKey[]).map(category => 
+              renderCategoryFilter(category)
             )}
           </div>
         </CardContent>
