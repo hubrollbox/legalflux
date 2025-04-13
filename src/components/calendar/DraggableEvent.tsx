@@ -5,20 +5,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale/pt-BR';
 
-export interface CalendarEvent {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  category: 'meeting' | 'deadline' | 'task' | 'hearing' | 'trial' | 'client' | 'other';
-  description?: string;
-  client?: string;
-  process?: string;
-  location?: string;
-  priority?: 'high' | 'medium' | 'low';
-  isRecurring?: boolean;
-  recurrenceType?: 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'yearly';
-}
+import type { CalendarEvent } from '@/types';
 
 interface DraggableEventProps {
   event: CalendarEvent;

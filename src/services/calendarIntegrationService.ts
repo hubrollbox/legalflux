@@ -9,22 +9,7 @@ export interface CalendarProvider {
   exportEvent: (calendarId: string, event: CalendarEvent) => Promise<{ success: boolean; errors?: string[] }>;
 }
 
-export interface CalendarEvent {
-  id: string;
-  title: string;
-  description?: string;
-  startDate: Date;
-  endDate: Date;
-  location?: string;
-  type: 'deadline' | 'hearing' | 'meeting' | 'other';
-  processId?: string;
-  clientId?: string;
-  externalId?: string;
-  externalCalendarId?: string;
-  attendees?: string[];
-  notes?: string;
-  category?: string;
-}
+import type { CalendarEvent } from '@/types';
 
 export interface SyncOptions {
   syncDeadlines: boolean;

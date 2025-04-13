@@ -65,10 +65,10 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
 
   const updateEvent = async (eventId: string, updates: Partial<CalendarEvent>) => {
     try {
-      const response = await fetch(`/api/events`, {
+      const response = await fetch(`/api/events/${eventId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: eventId, ...updates })
+        body: JSON.stringify(updates)
       });
       if (!response.ok) throw new Error('Erro ao atualizar evento');
       await fetchEvents();
@@ -79,10 +79,10 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
 
   const deleteEvent = async (eventId: string) => {
     try {
-      const response = await fetch(`/api/events`, {
+      const response = await fetch(`/api/events/${eventId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: eventId })
+
       });
       if (!response.ok) throw new Error('Erro ao excluir evento');
       await fetchEvents();
