@@ -6,7 +6,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { DateRange } from "react-day-picker";
 
 interface EventFormProps {
   onSubmit: (event: EventData) => void;
@@ -72,7 +71,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialData }) => {
         <Label htmlFor="category">Categoria</Label>
         <Select
           value={formData.category}
-          onValueChange={(value) => setFormData({ ...formData, category: value })}
+          onValueChange={(value: string) => setFormData({ ...formData, category: value })}
         >
           <SelectTrigger>
             <SelectValue placeholder="Selecione uma categoria" />
@@ -90,7 +89,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialData }) => {
         <Switch
           id="recurring"
           checked={formData.isRecurring}
-          onCheckedChange={(checked) => setFormData({ ...formData, isRecurring: checked })}
+          onCheckedChange={(checked: boolean) => setFormData({ ...formData, isRecurring: checked })}
         />
         <Label htmlFor="recurring">Evento Recorrente</Label>
       </div>
@@ -100,7 +99,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialData }) => {
           <Label htmlFor="recurrenceType">Tipo de Recorrência</Label>
           <Select
             value={formData.recurrenceType}
-            onValueChange={(value) => setFormData({ ...formData, recurrenceType: value })}
+            onValueChange={(value: string) => setFormData({ ...formData, recurrenceType: value })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecione o tipo de recorrência" />
