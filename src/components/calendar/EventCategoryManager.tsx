@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, X, Edit2, Check, Users, Clock, FileText, Calendar as CalendarIcon, Briefcase, Gavel, Scale } from 'lucide-react';
+import { Plus, X, Edit2, Users, Clock, FileText, Calendar as CalendarIcon, Briefcase, Gavel, Scale } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
 export interface EventCategory {

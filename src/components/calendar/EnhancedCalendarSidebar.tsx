@@ -1,6 +1,10 @@
 import React from "react";
 
-import Calendar, { type Value } from "react-calendar";
+import Calendar from "react-calendar";
+
+// Definindo o tipo Value localmente baseado na definição do react-calendar
+type ValuePiece = Date | null;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -73,14 +77,12 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
     handleCategoryChange: onCategoryFilter,
     selectedCategory
   } = useCalendar();
-  const handleDateChange = React.useCallback((value: Value, event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleDateChange = React.useCallback((value: Value) => {
     if (!value) return;
-
-    if (value === null) return;
-
+    
     if (value instanceof Date) {
       onDateChange(value);
-    } else if (Array.isArray(value)) {
+    } else if (Array.isArray(value) && value.length > 0 && value[0] instanceof Date) {
       onDateChange(value[0]);
     }
   }, [onDateChange]);
