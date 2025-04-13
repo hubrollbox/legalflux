@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import { CalendarEvent } from '@/types';
+import type { CalendarEvent } from '@/types';
 
 let events: CalendarEvent[] = [];
 

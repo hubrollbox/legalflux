@@ -1,20 +1,7 @@
-import { create } from 'zustand';
-// Fix the import by using the type directly instead of trying to import it
-// Remove this line:
-// import { Notification } from '@/components/notifications/NotificationSystem';
-import { NotificationPreference } from '@/components/notifications/NotificationPreferences';
+import { create, type StateCreator } from 'zustand';
+import type { Notification, NotificationPreference } from '@/types';
 
-// Define the Notification interface directly in this file
-interface Notification {
-  id: string;
-  title: string;
-  content: string;
-  type: "message" | "deadline" | "process";
-  priority: 'high' | 'medium' | 'low';
-  timestamp: Date;
-  read: boolean;
-  data?: any;
-}
+
 
 interface NotificationState {
   notifications: Notification[];
@@ -44,21 +31,21 @@ const defaultPreferences: NotificationPreference = {
   deliveryMethod: 'all',
 };
 
-export const useNotificationStore = create<NotificationState>((set, get) => ({
+export const useNotificationStore = create<NotificationState>(((set, get) => ({
   notifications: [],
   preferences: defaultPreferences,
   unreadCount: 0,
   isConnected: false,
   lastSyncTimestamp: null,
 
-  setNotifications: (notifications) => {
+  setNotifications: (notifications: Notification[]) => {
     set({
       notifications,
       unreadCount: notifications.filter((n) => !n.read).length,
     });
   },
 
-  addNotification: (notification) => {
+  addNotification: (notification: Notification) => {
     const { notifications, preferences } = get();
     const { priority: priorityPrefs, deliveryMethod } = preferences;
 
@@ -84,7 +71,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
     }
   },
 
-  markAsRead: (id) => {
+  markAsRead: (id: string) => {
     set((state) => ({
       notifications: state.notifications.map((n) =>
         n.id === id ? { ...n, read: true } : n
@@ -104,11 +91,11 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
     set({ preferences });
   },
 
-  setConnectionStatus: (status) => {
+  setConnectionStatus: (status: boolean) => {
     set({ isConnected: status });
   },
 
-  removeNotification: (id) => {
+  removeNotification: (id: string) => {
     set((state) => ({
       notifications: state.notifications.filter((n) => n.id !== id),
       unreadCount: state.notifications.filter((n) => !n.read && n.id !== id).length,
@@ -190,7 +177,7 @@ export const notificationWS = new NotificationWebSocket();
 export async function notifyUsers(notification: {
   title: string;
   message: string;
-  type: "message" | "deadline" | "process";
+  type: "message" | "deadline" | "process" | "action";
   recipients?: string[];
   priority?: "high" | "medium" | "low";
   data: any;

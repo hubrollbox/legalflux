@@ -5,11 +5,15 @@ export interface CalendarProvider {
   name: string;
   icon: string;
   isConnected: boolean;
-  lastSync?: Date;
-  exportEvent: (calendarId: string, event: CalendarEvent) => Promise<{ success: boolean; errors?: string[] }>;
+  lastSync: Date | undefined;
+  createEvent: (calendarId: string, event: CalendarEvent) => Promise<{ success: boolean; errors?: string[] }>;
+  updateEvent: (calendarId: string, event: CalendarEvent) => Promise<{ success: boolean; errors?: string[] }>;
+  deleteEvent: (calendarId: string, event: CalendarEvent) => Promise<{ success: boolean; errors?: string[] }>;
 }
 
 import type { CalendarEvent } from '@/types';
+
+
 
 export interface SyncOptions {
   syncDeadlines: boolean;
@@ -46,7 +50,19 @@ class CalendarIntegrationService {
       name: 'Google Calendar',
       icon: '/img/integrations/google-calendar.svg',
       isConnected: false,
-      exportEvent: async (calendarId: string, event: CalendarEvent) => { return { success: true }; }
+      lastSync: undefined,
+      createEvent: async (_calendarId: string, _event: CalendarEvent) => {
+    console.log(`Simulando criação de evento no calendário ${_calendarId}`);
+    return { success: true, errors: [] };
+  },
+      updateEvent: async (_calendarId: string, _event: CalendarEvent) => {
+    if (!_event.externalId) return { success: false, errors: ['ID externo não encontrado'] };
+    return { success: true, errors: [] };
+  },
+      deleteEvent: async (_calendarId: string, _event: CalendarEvent) => {
+    if (!_event.externalId) return { success: false, errors: ['ID externo não encontrado'] };
+    return { success: true, errors: [] };
+  }
     });
 
     this.providers.set('outlook', {
@@ -54,7 +70,19 @@ class CalendarIntegrationService {
       name: 'Microsoft Outlook',
       icon: '/img/integrations/outlook.svg',
       isConnected: false,
-      exportEvent: async (calendarId: string, event: CalendarEvent) => { return { success: true }; }
+      lastSync: undefined,
+      createEvent: async (_calendarId: string, _event: CalendarEvent) => {
+    console.log(`Simulando criação de evento no calendário ${_calendarId}`);
+    return { success: true, errors: [] };
+  },
+      updateEvent: async (_calendarId: string, _event: CalendarEvent) => {
+    if (!_event.externalId) return { success: false, errors: ['ID externo não encontrado'] };
+    return { success: true, errors: [] };
+  },
+      deleteEvent: async (_calendarId: string, _event: CalendarEvent) => {
+    if (!_event.externalId) return { success: false, errors: ['ID externo não encontrado'] };
+    return { success: true, errors: [] };
+  }
     });
 
     this.providers.set('apple', {
@@ -62,7 +90,19 @@ class CalendarIntegrationService {
       name: 'Apple Calendar',
       icon: '/img/integrations/apple-calendar.svg',
       isConnected: false,
-      exportEvent: async (calendarId: string, event: CalendarEvent) => { return { success: true }; }
+      lastSync: undefined,
+      createEvent: async (_calendarId: string, _event: CalendarEvent) => {
+    console.log(`Simulando criação de evento no calendário ${_calendarId}`);
+    return { success: true, errors: [] };
+  },
+      updateEvent: async (_calendarId: string, _event: CalendarEvent) => {
+    if (!_event.externalId) return { success: false, errors: ['ID externo não encontrado'] };
+    return { success: true, errors: [] };
+  },
+      deleteEvent: async (_calendarId: string, _event: CalendarEvent) => {
+    if (!_event.externalId) return { success: false, errors: ['ID externo não encontrado'] };
+    return { success: true, errors: [] };
+  }
     });
   }
 
@@ -164,7 +204,7 @@ class CalendarIntegrationService {
       const updatedProvider = {
         ...provider,
         isConnected: false,
-        lastSync: undefined
+        
       };
 
       this.providers.set(providerId, updatedProvider);
@@ -293,14 +333,19 @@ class CalendarIntegrationService {
       // Simulação de importação bem-sucedida
       // Em uma implementação real, isso envolveria chamadas à API do provedor de calendário
       const now = new Date();
+      const baseDate = startDate || now;
+      const rangeEnd = endDate || new Date(baseDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+
       const mockEvents: CalendarEvent[] = [
         {
           id: crypto.randomUUID(),
           title: 'Reunião importada do calendário externo',
           description: 'Esta é uma reunião importada do calendário externo',
-          startDate: new Date(now.getTime() + 24 * 60 * 60 * 1000), // Amanhã
-          endDate: new Date(now.getTime() + 25 * 60 * 60 * 1000), // Amanhã + 1h
+          start: new Date(baseDate.getTime() + 24 * 60 * 60 * 1000),
+          end: new Date(baseDate.getTime() + 25 * 60 * 60 * 1000),
+          client: 'Cliente Externo',
           type: 'meeting',
+          category: 'meeting',
           externalId: 'ext_123',
           externalCalendarId: providerId
         },
@@ -308,9 +353,11 @@ class CalendarIntegrationService {
           id: crypto.randomUUID(),
           title: 'Prazo importado do calendário externo',
           description: 'Este é um prazo importado do calendário externo',
-          startDate: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000), // Daqui a 3 dias
-          endDate: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000), // Mesmo dia
+          start: new Date(rangeEnd.getTime() - 3 * 24 * 60 * 60 * 1000),
+          end: new Date(rangeEnd.getTime() - 3 * 24 * 60 * 60 * 1000),
+          client: 'Cliente Externo',
           type: 'deadline',
+          category: 'deadline',
           externalId: 'ext_456',
           externalCalendarId: providerId
         }

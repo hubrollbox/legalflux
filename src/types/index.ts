@@ -16,10 +16,48 @@ export interface User {
   avatar?: string;
 }
 
+
+
+export interface Notification {
+  id: string;
+  title: string;
+  content: string;
+  type: 'message' | 'deadline' | 'process' | 'action';
+  priority: 'high' | 'medium' | 'low';
+  timestamp: Date;
+  read: boolean;
+  data?: any;
+  externalId?: string;
+  externalCalendarId?: string;
+}
+
+export interface NotificationPreference {
+  deadlines: boolean;
+  messages: boolean;
+  processes: boolean;
+  sound: boolean;
+  priority: {
+    high: boolean;
+    medium: boolean;
+    low: boolean;
+  };
+  deliveryMethod: 'all' | 'none' | 'priority';
+}
+
+export interface Client {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  createdAt: Date;
+}
+
 export type CategoryKey = 'meeting' | 'deadline' | 'task' | 'other';
 export type PriorityLevel = 'high' | 'medium' | 'low';
 
 export type CaseStatus = "active" | "pending" | "closed" | "archived";
+
+export type TaskStatus = 'todo' | 'inProgress' | 'review' | 'completed';
 
 export interface Case {
   id: string;
@@ -36,7 +74,6 @@ export interface Case {
   description?: string;
 }
 
-export type TaskStatus = "todo" | "in_progress" | "done" | "blocked";
 
 export interface Task {
   id: string;
@@ -58,13 +95,18 @@ export interface Task {
 export interface CalendarEvent {
   id: string;
   title: string;
+  type: string;
+  description: string;
   start: Date;
+  end: Date;
+  client: string;
   category: CategoryKey;
   priority?: PriorityLevel;
-  description?: string;
+  process?: string;
+  location?: string;
+  externalId?: string;
+  externalCalendarId?: string;
 }
-
-export type TaskStatus = "todo" | "in_progress" | "done" | "blocked";
 
 export interface Task {
   id: string;
@@ -100,7 +142,6 @@ export interface FinancialTransaction {
   description?: string;
 }
 
-export type TaskStatus = "todo" | "in_progress" | "done" | "blocked";
 
 export interface Task {
   id: string;
