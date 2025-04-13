@@ -1,9 +1,9 @@
 import React from "react";
-import Calendar from "react-calendar";
-import type { Value } from 'react-calendar/dist/cjs/shared/types';
+import Calendar, { Value } from "react-calendar";
+// Define the Value type to match react-calendar's expected types
+
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
 
 import { Badge } from "@/components/ui/badge";
 import { Users, Clock, FileText, Calendar as CalendarIcon } from "lucide-react";
@@ -75,6 +75,8 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
     selectedCategory
   } = useCalendar();
   const handleDateChange = React.useCallback((value: Value) => {
+    if (!value) return;
+
     if (value instanceof Date) {
       onDateChange(value);
     } else if (Array.isArray(value)) {
