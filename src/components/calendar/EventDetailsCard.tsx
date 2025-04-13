@@ -4,7 +4,7 @@ import { ptBR } from 'date-fns/locale/pt-BR';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CalendarEvent } from './DraggableEvent';
+import type { CalendarEvent } from '@/types';
 import { Users, Clock, FileText, Calendar as CalendarIcon, Briefcase, Gavel, Scale, MapPin, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
