@@ -14,7 +14,7 @@ export interface EventCategory {
   name: string;
   color: string;
   icon: string;
-  description?: string;
+  description: string | undefined;
 }
 
 interface EventCategoryManagerProps {
