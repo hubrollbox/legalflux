@@ -14,7 +14,7 @@ export interface EventCategory {
   name: string;
   color: string;
   icon: string;
-  description: string | undefined;
+  description?: string | undefined;
 }
 
 interface EventCategoryManagerProps {
@@ -44,7 +44,8 @@ const EventCategoryManager: React.FC<EventCategoryManagerProps> = ({
   const [newCategory, setNewCategory] = React.useState<Partial<EventCategory>>({
     name: '',
     color: 'bg-gray-500',
-    icon: 'calendar'
+    icon: 'calendar',
+    
   });
   const [editingCategoryId, setEditingCategoryId] = React.useState<string | null>(null);
 
@@ -81,7 +82,7 @@ const EventCategoryManager: React.FC<EventCategoryManagerProps> = ({
     };
     
     onCategoryChange([...categories, newCategoryComplete]);
-    setNewCategory({ name: '', color: 'bg-gray-500', icon: 'calendar' });
+    setNewCategory({ name: '', color: 'bg-gray-500', icon: 'calendar',  });
     setIsAddingCategory(false);
   };
 
@@ -101,7 +102,7 @@ const EventCategoryManager: React.FC<EventCategoryManagerProps> = ({
     
     onCategoryChange(updatedCategories);
     setEditingCategoryId(null);
-    setNewCategory({ name: '', color: 'bg-gray-500', icon: 'calendar' });
+    setNewCategory({ name: '', color: 'bg-gray-500', icon: 'calendar',  });
   };
 
   const handleDeleteCategory = (id: string) => {
@@ -222,7 +223,7 @@ const EventCategoryManager: React.FC<EventCategoryManagerProps> = ({
                     size="sm" 
                     onClick={() => {
                       setIsAddingCategory(false);
-                      setNewCategory({ name: '', color: 'bg-gray-500', icon: 'calendar' });
+                      setNewCategory({ name: '', color: 'bg-gray-500', icon: 'calendar',  });
                     }}
                   >
                     Cancelar
@@ -309,7 +310,7 @@ const EventCategoryManager: React.FC<EventCategoryManagerProps> = ({
                         size="sm" 
                         onClick={() => {
                           setEditingCategoryId(null);
-                          setNewCategory({ name: '', color: 'bg-gray-500', icon: 'calendar' });
+                          setNewCategory({ name: '', color: 'bg-gray-500', icon: 'calendar',  });
                         }}
                       >
                         Cancelar
