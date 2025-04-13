@@ -1,10 +1,9 @@
 import React from "react";
-import Calendar, { Value } from "react-calendar";
-// Define the Value type to match react-calendar's expected types
+
+import Calendar, { type Value } from "react-calendar";
 
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
 import { Badge } from "@/components/ui/badge";
 import { Users, Clock, FileText, Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -69,13 +68,15 @@ interface EnhancedCalendarSidebarProps {}
 export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = () => {
   const {
     events,
-    selectedDate,
+    selectedDate = new Date(),
     handleDateChange: onDateChange,
     handleCategoryChange: onCategoryFilter,
     selectedCategory
   } = useCalendar();
-  const handleDateChange = React.useCallback((value: Value) => {
+  const handleDateChange = React.useCallback((value: Value, event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (!value) return;
+
+    if (value === null) return;
 
     if (value instanceof Date) {
       onDateChange(value);
@@ -137,7 +138,7 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
         <CardContent className="p-4">
           <Calendar
             onChange={handleDateChange}
-            value={selectedDate}
+            value={selectedDate ?? new Date()}
             className={cn(
               "w-full",
               "rounded-lg",
