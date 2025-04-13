@@ -1,6 +1,6 @@
 import React from "react";
 import Calendar from "react-calendar";
-import type { Value } from "react-calendar";
+import type { Value } from 'react-calendar/dist/cjs/shared/types';
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 

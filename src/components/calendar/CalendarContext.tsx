@@ -1,14 +1,14 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import type { CalendarEvent } from '@/types';
+import type { CalendarEvent, CategoryKey } from '@/types';
 
 type CalendarContextType = {
   events: CalendarEvent[];
   selectedDate: Date;
-  selectedCategory: 'meeting' | 'deadline' | 'task' | 'other' | null;
+  selectedCategory: CategoryKey | null;
   loading: boolean;
   error: string | null;
   handleDateChange: (date: Date) => void;
-  handleCategoryChange: (category: 'meeting' | 'deadline' | 'task' | 'other' | null) => void;
+  handleCategoryChange: (category: CategoryKey | null) => void;
   refreshEvents: () => Promise<void>;
   createEvent: (event: Omit<CalendarEvent, 'id'>) => Promise<void>;
   updateEvent: (eventId: string, updates: Partial<CalendarEvent>) => Promise<void>;

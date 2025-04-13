@@ -1,5 +1,5 @@
 
-export type CategoryKey = 'meeting' | 'deadline' | 'task' | 'reminder' | 'document' | 'other';
+export type CategoryKey = 'meeting' | 'deadline' | 'task' | 'other' | 'reminder' | 'document';
 
 export interface CalendarEvent {
   id: string;
