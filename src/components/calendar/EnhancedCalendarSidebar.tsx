@@ -12,8 +12,7 @@ import { ptBR } from 'date-fns/locale';
 
 
 
-export type CategoryKey = 'meeting' | 'deadline' | 'task' | 'other';
-export type PriorityLevel = 'high' | 'medium' | 'low';
+
 
 interface CategoryConfig {
   label: string;

@@ -1,8 +1,6 @@
 
-// User roles
 export type UserRole = "admin" | "lawyer" | "senior_lawyer" | "assistant" | "client";
 
-// User types
 export interface User {
   id: string;
   email: string;
@@ -15,30 +13,14 @@ export interface User {
   organizationId?: string;
   phone?: string;
   assignedToLawyerId?: string;
-  avatar?: string; // Adding the avatar property as optional
+  avatar?: string;
 }
 
-// Permission related types
-export interface Permission {
-  id: string;
-  name: string;
-  description: string;
-  module: string;
-  action: "read" | "create" | "update" | "delete";
-}
+export type CategoryKey = 'meeting' | 'deadline' | 'task' | 'other';
+export type PriorityLevel = 'high' | 'medium' | 'low';
 
-export interface RolePermission {
-  roleId: string;
-  permissionId: string;
-}
-
-// Case status
 export type CaseStatus = "active" | "pending" | "closed" | "archived";
 
-// Priority types
-export type PriorityLevel = "low" | "medium" | "high";
-
-// Case types
 export interface Case {
   id: string;
   title: string;
@@ -54,10 +36,8 @@ export interface Case {
   description?: string;
 }
 
-// Task status
 export type TaskStatus = "todo" | "in_progress" | "done" | "blocked";
 
-// Task types
 export interface Task {
   id: string;
   title: string;
@@ -75,39 +55,34 @@ export interface Task {
   updatedAt: string;
 }
 
-// Document types
-export interface Document {
+export interface CalendarEvent {
   id: string;
-  name: string;
-  caseId?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  createdBy: string;
-  size: number;
-  type: 'document' | 'action' | 'precedent' | 'strategy';
-  url: string;
-  fileUrl: string;
-  version: number;
-  processId: string; // Changed from optional to required
-  clientId: string;  // Changed from optional to required
+  title: string;
+  start: Date;
+  category: CategoryKey;
+  priority?: PriorityLevel;
+  description?: string;
 }
 
-// Message types
-export interface Message {
+export type TaskStatus = "todo" | "in_progress" | "done" | "blocked";
+
+export interface Task {
   id: string;
-  type?: 'text' | 'system' | 'warning';
-  content: string;
-  senderId: string;
-  senderName: string;
-  senderRole: UserRole;
-  receiverId: string;
-  receiverName: string;
-  caseId?: string;
-  readAt?: string;
+  title: string;
+  description?: string;
+  caseId: string;
+  caseName: string;
+  assignedToId: string;
+  assignedToName: string;
+  assignedById: string;
+  assignedByName: string;
+  status: TaskStatus;
+  priority: PriorityLevel;
+  dueDate?: string;
   createdAt: string;
+  updatedAt: string;
 }
 
-// Financial transaction types
 export type TransactionType = "invoice" | "payment" | "refund" | "subscription";
 export type TransactionStatus = "pending" | "completed" | "failed" | "canceled";
 
@@ -125,29 +100,21 @@ export interface FinancialTransaction {
   description?: string;
 }
 
-// Organization types
-export interface Organization {
+export type TaskStatus = "todo" | "in_progress" | "done" | "blocked";
+
+export interface Task {
   id: string;
-  name: string;
-  memberCount: number;
+  title: string;
+  description?: string;
+  caseId: string;
+  caseName: string;
+  assignedToId: string;
+  assignedToName: string;
+  assignedById: string;
+  assignedByName: string;
+  status: TaskStatus;
+  priority: PriorityLevel;
+  dueDate?: string;
   createdAt: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-}
-
-// Subscription types
-export type SubscriptionPlan = "basic" | "solo" | "enterprise" | "custom";
-export type SubscriptionStatus = "active" | "canceled" | "past_due" | "trialing";
-
-export interface Subscription {
-  id: string;
-  organizationId: string;
-  plan: SubscriptionPlan;
-  status: SubscriptionStatus;
-  price: number;
-  currency: string;
-  currentPeriodStart: string;
-  currentPeriodEnd: string;
-  cancelAtPeriodEnd: boolean;
+  updatedAt: string;
 }

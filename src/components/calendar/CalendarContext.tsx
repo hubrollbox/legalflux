@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { CalendarEvent } from './EnhancedCalendarSidebar';
+import type { CalendarEvent } from '@/types';
 
 type CalendarContextType = {
   events: CalendarEvent[];
