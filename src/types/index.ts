@@ -51,12 +51,16 @@ export enum TransactionType {
 
 export interface Notification {
   id: string;
-  type: 'deadline' | 'reminder' | 'alert';
   title: string;
-  description: string;
+  content: string;
+  type: 'deadline' | 'reminder' | 'alert' | 'process' | 'action' | 'message' | 'info';
   timestamp: string;
   read: boolean;
-  priority: 'medium' | 'high' | 'low';
+  priority: 'high' | 'medium' | 'low';
+  description?: string;
+  userId?: string;
+  data?: Record<string, any>;
+  recipients?: string[];
 }
 
 export enum TransactionStatus {
@@ -192,18 +196,7 @@ export interface Subscription {
   paymentMethod?: string;
 }
 
-export interface Notification {
-  id: string;
-  title: string;
-  content: string;
-  type: 'deadline' | 'reminder' | 'alert' | 'process' | 'action' | 'message' | 'info';
-  timestamp: string;
-  read: boolean;
-  priority: 'high' | 'medium' | 'low';
-  userId?: string;
-  data?: Record<string, any>;
-  recipients?: string[];
-}
+
 
 export interface NotificationPreference {
   deadlines: boolean;
