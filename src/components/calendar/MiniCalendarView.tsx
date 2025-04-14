@@ -5,6 +5,7 @@ import type { CalendarEvent } from '@/types';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale/pt-BR';
 import { cn } from '@/lib/utils';
+import type { CalendarDay, Modifiers } from 'react-day-picker';
 
 interface MiniCalendarViewProps {
   events: CalendarEvent[];
@@ -33,8 +34,8 @@ const MiniCalendarView: React.FC<MiniCalendarViewProps> = ({
   }, [events]);
 
   // Função para renderizar o conteúdo do dia no calendário
-  const renderDay = (day: Date) => {
-    const dateKey = format(day, 'yyyy-MM-dd');
+  const renderDay = (day: CalendarDay) => {
+    const dateKey = format(day.date, 'yyyy-MM-dd');
     const dayEvents = eventsByDate.get(dateKey) || [];
     
     if (dayEvents.length === 0) return null;
@@ -73,12 +74,12 @@ const MiniCalendarView: React.FC<MiniCalendarViewProps> = ({
           locale={ptBR}
           className="w-full"
           components={{
-            DayContent: ({ date }: { date: Date }) => (
-              <>
-                <div>{format(date, 'd')}</div>
-                {renderDay(date)}
-              </>
-            ),
+            Day: ({ day, modifiers, ...props }: { day: CalendarDay; modifiers: Modifiers; [key: string]: any }) => (
+              <div {...props}>
+                <div>{format(day.date, 'd')}</div>
+                {renderDay(day)}
+              </div>
+            )
           }}
           classNames={{
             day_today: "bg-muted font-bold text-primary",
