@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import {
   Table,
@@ -19,7 +19,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal, Eye, Edit, Trash2, FileText } from "lucide-react";
-import { Client } from "@/types/client";
+import type { Client } from "@/types/client";
+import { useToast } from '@/components/ui/use-toast';
+import { clientService } from '@/services/clientService';
 
 interface ClientListProps {
   onEdit: (client: Client) => void;
@@ -29,23 +31,29 @@ interface ClientListProps {
 
 const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => {
   const [clients, setClients] = useState<Client[]>([]);
-  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
     const loadClients = async () => {
       try {
-        const data = await ClientService.listClients();
-        setClients(data);
+        const data = await clientService.listClients();
+        setClients(data.map(client => ({
+          ...client,
+          name: client.nome || '',
+          nif: client.nif || '',
+          email: client.email || '',
+          phone: client.telefone || '',
+          address: client.morada || '',
+          status: client.estado || 'prospect',
+          createdAt: client.criado_em ? new Date(client.criado_em) : new Date()
+        })));
       } catch (error) {
         toast({
           title: 'Erro',
           description: 'Falha ao carregar clientes',
           variant: 'destructive',
         });
-      } finally {
-        setLoading(false);
-      }
+      } finally {}
     };
     loadClients();
   }, []);
@@ -64,8 +72,8 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
     }
   };
 
-  const handleViewProcesses = (clientId: string) => {
-    navigate(`/processes?clientId=${clientId}`);
+  const handleViewProcesses = (client: Client) => {
+    navigate(`/processes?clientId=${client.id}`);
   };
 
   return (
@@ -114,7 +122,7 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
                         <Edit className="mr-2 h-4 w-4" />
                         Editar
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleViewProcesses(client.id)}>
+                      <DropdownMenuItem onClick={() => handleViewProcesses(client)}>
                         <FileText className="mr-2 h-4 w-4" />
                         Ver processos
                       </DropdownMenuItem>

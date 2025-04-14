@@ -2,16 +2,16 @@
 
 export interface Client {
   id: string;
-  name: string;
-  nif: string; // Número de Identificação Fiscal
+  nome: string;
+  nif: string;
   email: string;
-  phone: string;
-  address: string;
-  createdAt: string;
-  updatedAt: string;
-  userId: string; // ID do advogado/escritório responsável
-  status: ClientStatus;
+  telefone: string;
+  morada: string;
+  estado: string;
+  criado_em: Date;
   notes?: string;
+  userId: string;
+  lawyerId?: string;
 }
 
 export type ClientStatus = "active" | "inactive" | "prospect";

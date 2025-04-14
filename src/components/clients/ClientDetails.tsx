@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2, FileText, Loader2, ExternalLink } from "lucide-react";
-import { Client } from "@/types/client";
+import type { Client } from "@/types/client";
 import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
@@ -47,7 +47,12 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
     if (!onRefresh) {
       setIsLoading(true);
       try {
-        await clientService.getClientById(client.id);
+        const updatedClient = await clientService.getClient(client.id);
+        const mappedClient = {
+          ...updatedClient,
+          createdAt: updatedClient.criado_em ? new Date(updatedClient.criado_em) : new Date()
+        };
+        onEdit(mappedClient);
         toast({
           title: "Dados atualizados",
           description: "Os dados do cliente foram atualizados com sucesso."
