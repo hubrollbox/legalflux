@@ -131,6 +131,7 @@ export interface User {
   lastLogin?: string;
   hasTwoFactorEnabled?: boolean;
   organizationId?: string;
+  assignedToLawyerId?: string;
 }
 
 export interface Document {

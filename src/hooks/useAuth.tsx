@@ -1,7 +1,8 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
-import type { User, UserRole, RegisterData } from "@/types";
+import type { User, UserRole } from "@/types";
+import type { RegisterData } from "@/types/auth";
 import { useToast } from "@/components/ui/use-toast";
 import { toast as sonnerToast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,7 +18,7 @@ interface AuthContextType {
     name: string,
     role?: UserRole
   ) => Promise<void>;
-  signUp: (userData: any) => Promise<void>;
+  signUp: (userData: RegisterData | DetailedUserData) => Promise<void>;
   checkEmailExists: (email: string) => Promise<boolean>;
   requestPasswordReset: (email: string) => Promise<void>;
   resetPassword: (token: string, newPassword: string) => Promise<void>;
@@ -26,11 +27,20 @@ interface AuthContextType {
   getRedirectPath: () => string;
 }
 
+// Interface para o formato detalhado de dados do usuário
+interface DetailedUserData {
+  email: string;
+  password: string;
+  name: string;
+  role: UserRole;
+  phone?: string;
+  organizationId?: string;
+  userType: 'individual' | 'professional' | 'company';
+}
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Função para mapear os dados do usuário do Supabase para o formato da aplicação
-//Fix the mapUserData function
-// Fix duplicate organizationId property in mapUserData
 const mapUserData = (userData: any): User => {
   return {
     id: userData.id,
@@ -44,7 +54,8 @@ const mapUserData = (userData: any): User => {
     hasTwoFactorEnabled: userData.user_metadata?.hasTwoFactorEnabled || false,
     phone: userData.user_metadata?.phone,
     assignedToLawyerId: userData.user_metadata?.assignedToLawyerId,
-    avatar: userData.user_metadata?.avatar
+    avatar: userData.user_metadata?.avatar,
+    status: userData.status || "active"
   };
 };
 
@@ -131,7 +142,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }; []);
+  }, []);
 
   if (error) {
     return (
@@ -232,14 +243,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error('Apenas administradores podem criar contas com roles específicas');
       }
 
-      const registerData: RegisterData = {
+      // Definindo os dados de registro
+      // Nota: Não estamos usando esta variável diretamente, mas mantemos para referência futura
+      const _registerData: RegisterData = {
         userType: 'individual',
         personalData: {
           fullName: name,
           email,
-          phone: user?.phone,
+          phone: user?.phone === undefined ? undefined : user?.phone,
           password,
-        };
+        },
         acceptTerms: true,
       };
 
@@ -280,47 +293,65 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  signUp: async (userData: {
-    email: string;
-    password: string;
-    name: string;
-    role: UserRole;
-    phone?: string;
-    organizationId?: string;
-    userType: 'individual' | 'professional' | 'company';
-  }): Promise<void> => {
+  // Função unificada de signUp que aceita tanto RegisterData quanto o formato detalhado
+  const signUp = async (userData: RegisterData | DetailedUserData): Promise<void> => {
     setIsLoading(true);
     try {
       // Verificar se o email já existe
-      const emailExists = await checkEmailExists(userData.email);
+      const email = 'personalData' in userData ? userData.personalData.email : userData.email;
+      const emailExists = await checkEmailExists(email);
       if (emailExists) {
         throw new Error('Este email já está em uso.');
       }
 
-      // Registrar o usuário no Supabase Auth
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: userData.email,
-        password: userData.password,
-        options: {
-          data: {
-            nome_completo: userData.name,
-            funcao: userData.role,
-            phone: userData.phone,
-            escritorio_id: userData.organizationId,
-            user_type: userData.userType
+      // Preparar dados para o Supabase Auth
+      let authOptions: any;
+      
+      if ('personalData' in userData) {
+        // Caso RegisterData
+        authOptions = {
+          email: userData.personalData.email,
+          password: userData.personalData.password,
+          options: {
+            data: {
+              nome_completo: userData.personalData.fullName,
+              funcao: 'client', // Default para client
+              phone: userData.personalData.phone,
+              escritorio_id: user?.organizationId
+            }
           }
-        }
-      });
+        };
+      } else {
+        // Caso formato detalhado
+        authOptions = {
+          email: userData.email,
+          password: userData.password,
+          options: {
+            data: {
+              nome_completo: userData.name,
+              funcao: userData.role,
+              phone: userData.phone,
+              escritorio_id: userData.organizationId,
+              user_type: userData.userType
+            }
+          }
+        };
+      }
 
-      if (authError) throw authError;
+      // Registrar o usuário no Supabase Auth
+      const { data, error } = await supabase.auth.signUp(authOptions);
+      
+      if (error) {
+        throw error;
+      }
 
-      if (authData.user) {
-        // Criar registro na tabela de usuários
+      // Se for o formato detalhado e tivermos um usuário criado, criar também na tabela users
+      if (!('personalData' in userData) && data.user) {
         const { error: profileError } = await supabase
           .from('users')
-          .insert<Partial<User>>([
+          .insert([
             {
-              id: authData.user.id,
+              id: data.user.id,
               email: userData.email,
               nome_completo: userData.name,
               funcao: userData.role,
@@ -339,13 +370,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         });
 
         sonnerToast.success('Registro realizado! Verifique seu email.');
+      } else {
+        toast({
+          title: "Registro bem-sucedido",
+          description: "Sua conta foi criada com sucesso!",
+        });
+      }
+
+      if (data.user) {
+        const mappedUser = mapUserData(data.user);
+        setUser(mappedUser);
       }
     } catch (error: any) {
-      console.error('Erro no registro:', error);
+      console.error("Registration error:", error);
       toast({
-        title: 'Erro no registro',
-        description: error.message || 'Ocorreu um erro ao criar sua conta.',
-        variant: 'destructive',
+        title: "Erro",
+        description: error.message || "Ocorreu um erro ao tentar criar sua conta.",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -376,7 +417,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const resetPassword = async (token: string, newPassword: string): Promise<void> => {
+  const resetPassword = async (_token: string, newPassword: string): Promise<void> => {
     try {
       const { error } = await supabase.auth.updateUser({
         password: newPassword
@@ -417,8 +458,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       
       // Atualizar o estado local
-      const newUserData: User = { ...user, ...updatedUser };
-      setUser(newUserData);
+      if (user) {
+        const newUserData: User = { ...user, ...updatedUser as User };
+        setUser(newUserData);
+      }
       
       toast({
         title: "Perfil atualizado",
@@ -431,8 +474,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-
-    // Verificar se um email já existe no sistema
+  // Verificar se um email já existe no sistema
   const checkEmailExists = async (email: string): Promise<boolean> => {
     try {
       const { data, error } = await supabase
@@ -450,78 +492,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error('Erro ao verificar email:', error);
       return false;
-    }
-  };
-
-  const signUp = async (userData: {
-    email: string;
-    password: string;
-    name: string;
-    role: UserRole;
-    phone?: string;
-    organizationId?: string;
-    userType: 'individual' | 'professional' | 'company';
-  }): Promise<void> => {
-    setIsLoading(true);
-    try {
-      // Verificar se o email já existe
-      const emailExists = await checkEmailExists(userData.email);
-      if (emailExists) {
-        throw new Error('Este email já está em uso.');
-      }
-
-      // Registrar o usuário no Supabase Auth
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: userData.email,
-        password: userData.password,
-        options: {
-          data: {
-            nome_completo: userData.name,
-            funcao: userData.role,
-            phone: userData.phone,
-            escritorio_id: userData.organizationId,
-            user_type: userData.userType
-          }
-        }
-      });
-
-      if (authError) throw authError;
-
-      if (authData.user) {
-        // Criar registro na tabela de usuários
-        const { error: profileError } = await supabase
-          .from('users')
-          .insert<Partial<User>>([
-            {
-              id: authData.user.id,
-              email: userData.email,
-              nome_completo: userData.name,
-              funcao: userData.role,
-              phone: userData.phone,
-              escritorio_id: userData.organizationId,
-              user_type: userData.userType,
-              is_active: true
-            }
-          ]);
-
-        if (profileError) throw profileError;
-
-        toast({
-          title: 'Registro realizado com sucesso',
-          description: 'Por favor, verifique seu email para confirmar o cadastro.',
-        });
-
-        sonnerToast.success('Registro realizado! Verifique seu email.');
-      }
-    } catch (error: any) {
-      console.error('Erro no registro:', error);
-      toast({
-        title: 'Erro no registro',
-        description: error.message || 'Ocorreu um erro ao criar sua conta.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
     }
   };
 

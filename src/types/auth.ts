@@ -28,7 +28,6 @@ export interface User {
   assignedToLawyerId?: string;
   hasTwoFactorEnabled?: boolean;
   phone?: string;
-  assignedToLawyerId?: string;
   avatar?: string;
 }
 
@@ -64,7 +63,12 @@ export interface CompanyData {
 // Dados completos do registro
 export interface RegisterData {
   userType: UserType;
-  personalData?: PersonalData;
+  personalData: {
+    fullName: string;
+    email: string;
+    phone?: string;
+    password: string;
+  };
   professionalData?: ProfessionalData;
   companyData?: CompanyData;
   acceptTerms: boolean;
