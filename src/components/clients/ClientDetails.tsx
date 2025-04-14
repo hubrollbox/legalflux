@@ -48,8 +48,17 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
       setIsLoading(true);
       try {
         const updatedClient = await clientService.getClient(client.id);
-        const mappedClient = {
-          ...updatedClient,
+        const mappedClient: Client = {
+          id: updatedClient.id,
+          name: updatedClient.nome || "Unknown",
+          nif: updatedClient.nif || "Unknown",
+          email: updatedClient.email || "Unknown",
+          phone: updatedClient.telefone || "Unknown",
+          address: updatedClient.morada || "Unknown",
+          status: updatedClient.estado || "prospect",
+          notes: updatedClient.notas || "",
+          userId: updatedClient.user_id,
+          lawyerId: updatedClient.advogado_id,
           createdAt: updatedClient.criado_em ? new Date(updatedClient.criado_em) : new Date()
         };
         onEdit(mappedClient);
@@ -99,7 +108,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
           </div>
           <div>
             <h3 className="text-sm font-medium text-muted-foreground">Data de Criação</h3>
-            <p className="text-base">{new Date(client.createdAt).toLocaleDateString()}</p>
+            <p className="text-base">{new Date(client.criado_em).toLocaleDateString()}</p>
           </div>
         </div>
 
