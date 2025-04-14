@@ -5,16 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export interface Client {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  address?: string;
-  notes?: string;
-  documents?: Document[];
-  processes?: Process[];
-}
+
 
 export interface Process {
   id: string;

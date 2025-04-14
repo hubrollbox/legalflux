@@ -9,40 +9,4 @@ export const columns: ColumnDef<Client>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Nome
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-  },
-  {
-    accessorKey: 'email',
-    header: 'Email',
-  },
-  {
-    accessorKey: 'phone',
-    header: 'Telefone',
-  },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => {
-      const status = row.getValue<Client['status']>('status');
-      return <span className="capitalize">{status}</span>;
-    },
-  },
-  {
-    id: 'actions',
-    cell: () => (
-      <div className="flex gap-2">
-        <Button variant="outline" size="sm">
-          <Edit className="h-4 w-4" />
-        </Button>
-        <Button variant="destructive" size="sm">
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </div>
-    ),
-  },
-];
+        onClick={() =>

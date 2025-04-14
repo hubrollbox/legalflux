@@ -2,12 +2,12 @@
 
 export interface Client {
   id: string;
-  nome: string;
+  name: string;
   nif: string;
   email: string;
-  telefone: string;
-  morada: string;
-  estado: string;
+  phone: string;
+  address: string;
+  status: ClientStatus;
   criado_em: Date;
   notes?: string;
   userId: string;
