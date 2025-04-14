@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { addDays, isSameDay, startOfDay, endOfDay, isWithinInterval } from 'date-fns';
 import { useNotificationStore } from '@/services/notificationService';
-import { CalendarEvent } from '../DraggableEvent';
+import type { CalendarEvent } from '@/types';
 
 interface UseCalendarEventsProps {
   initialEvents?: CalendarEvent[];
@@ -52,10 +52,10 @@ export const useCalendarEvents = ({ initialEvents = [] }: UseCalendarEventsProps
       id: `event-notification-${event.id}`,
       type: 'deadline',
       title: `Novo evento: ${event.title}`,
-      description: `Um novo evento foi agendado para ${event.start.toLocaleDateString()}.`,
-      timestamp: new Date(),
+      content: `Um novo evento foi agendado para ${event.start.toLocaleDateString()}.`,
+      timestamp: new Date().toISOString(),
       read: false,
-      priority: event.priority || 'medium'
+      priority: (event.priority || 'medium') as 'medium' | 'high' | 'low'
     });
     
     return event;
@@ -89,10 +89,10 @@ export const useCalendarEvents = ({ initialEvents = [] }: UseCalendarEventsProps
           id: `event-moved-${event.id}-${Date.now()}`,
           type: 'deadline',
           title: `Evento reagendado: ${event.title}`,
-          description: `O evento foi movido para ${newStart.toLocaleDateString()}.`,
-          timestamp: new Date(),
+          content: `O evento foi movido para ${newStart.toLocaleDateString()}.`,
+          timestamp: new Date().toISOString(),
           read: false,
-          priority: event.priority || 'medium'
+          priority: (event.priority || 'medium') as 'medium' | 'high' | 'low'
         });
         
         return { ...event, start: newStart, end: newEnd };

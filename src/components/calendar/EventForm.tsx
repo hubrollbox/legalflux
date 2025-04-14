@@ -15,7 +15,7 @@ interface EventFormProps {
 interface EventData {
   title: string;
   description: string;
-  dateRange: { from: Date; to?: Date };
+  dateRange: { from: Date | undefined; to?: Date | undefined };
   category: string;
   isRecurring: boolean;
   recurrenceType?: string;

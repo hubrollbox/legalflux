@@ -6,8 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { DateRange } from "react-day-picker";
-import { CalendarEvent } from './DraggableEvent';
+import type { DateRange } from "react-day-picker";
+import type { CalendarEvent, CategoryKey } from '@/types';
 import { AlertTriangle, MapPin } from 'lucide-react';
 
 interface EventFormProps {
@@ -28,7 +28,7 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
     description: '',
     start: new Date(),
     end: new Date(new Date().setHours(new Date().getHours() + 1)),
-    category: 'meeting',
+    category: 'meeting' as CategoryKey,
     priority: 'medium',
     client: '',
     process: '',
@@ -46,8 +46,8 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
     if (range?.from) {
       setFormData(prev => ({
         ...prev,
-        start: range.from,
-        end: range.to || range.from
+        start: range.from!,
+        end: range.to! || range.from!
       }));
     }
   };
@@ -70,7 +70,7 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
           <Label htmlFor="category">Categoria <span className="text-red-500">*</span></Label>
           <Select
             value={formData.category}
-            onValueChange={(value) => setFormData({ ...formData, category: value as 'meeting' | 'deadline' | 'task' | 'hearing' | 'trial' | 'client' | 'other' })}
+            onValueChange={(value: CategoryKey) => setFormData({ ...formData, category: value })}
           >
             <SelectTrigger id="category">
               <SelectValue placeholder="Selecione uma categoria" />
@@ -91,7 +91,7 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
           <Label htmlFor="priority">Prioridade</Label>
           <Select
             value={formData.priority}
-            onValueChange={(value) => setFormData({ ...formData, priority: value as 'high' | 'medium' | 'low' })}
+            onValueChange={(value: 'high' | 'medium' | 'low') => setFormData({ ...formData, priority: value })}
           >
             <SelectTrigger id="priority">
               <SelectValue placeholder="Selecione a prioridade" />
@@ -148,7 +148,7 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
           {clients.length > 0 ? (
             <Select
               value={formData.client || ''}
-              onValueChange={(value) => setFormData({ ...formData, client: value })}
+              onValueChange={(value: string) => setFormData({ ...formData, client: value })}
             >
               <SelectTrigger id="client">
                 <SelectValue placeholder="Selecione um cliente" />
@@ -175,7 +175,7 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
           {processes.length > 0 ? (
             <Select
               value={formData.process || ''}
-              onValueChange={(value) => setFormData({ ...formData, process: value })}
+              onValueChange={(value: string) => setFormData({ ...formData, process: value })}
             >
               <SelectTrigger id="process">
                 <SelectValue placeholder="Selecione um processo" />
@@ -216,7 +216,7 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
         <Switch
           id="recurring"
           checked={formData.isRecurring || false}
-          onCheckedChange={(checked) => setFormData({ ...formData, isRecurring: checked })}
+          onCheckedChange={(checked: boolean) => setFormData({ ...formData, isRecurring: checked })}
         />
         <Label htmlFor="recurring">Evento Recorrente</Label>
       </div>
@@ -226,7 +226,7 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
           <Label htmlFor="recurrenceType">Tipo de Recorrência</Label>
           <Select
             value={formData.recurrenceType || 'daily'}
-            onValueChange={(value) => setFormData({ ...formData, recurrenceType: value as 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'yearly' })}
+            onValueChange={(value: 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'yearly') => setFormData({ ...formData, recurrenceType: value })}
           >
             <SelectTrigger id="recurrenceType">
               <SelectValue placeholder="Selecione o tipo de recorrência" />

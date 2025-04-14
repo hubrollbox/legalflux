@@ -9,7 +9,7 @@ import { Users, Clock, FileText, Calendar as CalendarIcon, Briefcase, Gavel, Sca
 import { cn } from "@/lib/utils";
 import { format, isToday, isTomorrow, addDays, isWithinInterval } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
-import { CalendarEvent } from "./DraggableEvent";
+import type { CalendarEvent } from "@/types";
 import MiniCalendarView from "./MiniCalendarView";
 import DraggableEvent from "./DraggableEvent";
 

@@ -15,6 +15,8 @@ export interface CalendarEvent {
   priority?: string;
   process?: string;
   location?: string;
+  isRecurring?: boolean;
+  recurrenceType?: 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'yearly';
 }
 
 export interface CategoryConfig {
@@ -45,6 +47,16 @@ export enum TransactionType {
   PAYMENT = 'payment',
   REFUND = 'refund',
   OTHER = 'other'
+}
+
+export interface Notification {
+  id: string;
+  type: 'deadline' | 'reminder' | 'alert';
+  title: string;
+  description: string;
+  timestamp: string;
+  read: boolean;
+  priority: 'medium' | 'high' | 'low';
 }
 
 export enum TransactionStatus {
@@ -184,7 +196,7 @@ export interface Notification {
   id: string;
   title: string;
   content: string;
-  type: 'message' | 'deadline' | 'process' | 'action' | 'info';
+  type: 'deadline' | 'reminder' | 'alert' | 'process' | 'action' | 'message' | 'info';
   timestamp: string;
   read: boolean;
   priority: 'high' | 'medium' | 'low';

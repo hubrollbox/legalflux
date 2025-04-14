@@ -21,7 +21,7 @@ import CalendarViewSelector from "@/components/calendar/CalendarViewSelector";
 import EventDetailsCard from "@/components/calendar/EventDetailsCard";
 import AgendaView from "@/components/calendar/AgendaView";
 import DroppableCalendarCell from "@/components/calendar/DroppableCalendarCell";
-import { CalendarEvent } from "@/components/calendar/DraggableEvent";
+import type { CalendarEvent } from '@/types';
 
 // Hook personalizado
 import { useCalendarEvents } from "@/components/calendar/hooks/useCalendarEvents";

@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
-import { CalendarEvent } from './DraggableEvent';
-import { isSameDay, format } from 'date-fns';
+import type { CalendarEvent } from '@/types';
+import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale/pt-BR';
 import { cn } from '@/lib/utils';
 
@@ -73,7 +73,7 @@ const MiniCalendarView: React.FC<MiniCalendarViewProps> = ({
           locale={ptBR}
           className="w-full"
           components={{
-            DayContent: ({ date }) => (
+            DayContent: ({ date }: { date: Date }) => (
               <>
                 <div>{format(date, 'd')}</div>
                 {renderDay(date)}
