@@ -382,6 +382,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
                 selected={dateRange}
                 onSelect={(range: DateRange) => setDateRange(range)}
                 numberOfMonths={2}
+                required
               />
             </PopoverContent>
           </Popover>
