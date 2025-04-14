@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
+import type { Client } from "@/types/client";
 
 
 export interface Process {
@@ -166,7 +166,7 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
             <Label htmlFor="status">Status <span className="text-red-500">*</span></Label>
             <Select
               value={(formData as Partial<Process>).status}
-              onValueChange={(value) => setFormData({ ...formData, status: value as 'active' | 'archived' | 'completed' })}
+              onValueChange={(value: string) => setFormData({ ...formData, status: value as 'active' | 'archived' | 'completed' })}
             >
               <SelectTrigger id="status">
                 <SelectValue placeholder="Selecione o status" />
@@ -183,7 +183,7 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
             <Label htmlFor="clientId">Cliente <span className="text-red-500">*</span></Label>
             <Select
               value={(formData as Partial<Process>).clientId}
-              onValueChange={(value) => setFormData({ ...formData, clientId: value })}
+              onValueChange={(value: string) => setFormData({ ...formData, clientId: value })}
             >
               <SelectTrigger id="clientId">
                 <SelectValue placeholder="Selecione o cliente" />
