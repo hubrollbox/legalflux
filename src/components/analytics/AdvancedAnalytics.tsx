@@ -28,6 +28,7 @@ import {
 } from 'recharts';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale/pt-BR';
+import type { DateRange } from "react-day-picker";
 import { Download, BarChart2, PieChart as PieChartIcon, TrendingUp, Calendar as CalendarIcon } from 'lucide-react';
 import type { Case, FinancialTransaction, Task, User } from '@/types';
 
@@ -75,13 +76,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
   const tasks = props.tasks || [];
   const users = props.users || [];
   const [activeTab, setActiveTab] = useState('performance');
-  const [dateRange, setDateRange] = useState<{
-    from: Date | undefined;
-    to: Date | undefined;
-  }>({
-    from: undefined,
-    to: undefined,
-  });
+  const [dateRange, setDateRange] = useState<DateRange>({ from: undefined, to: undefined });
   const [groupBy, setGroupBy] = useState('month');
   const [chartType, setChartType] = useState('bar');
   const [showLabels, setShowLabels] = useState(true);
@@ -366,7 +361,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full justify-start text-left font-normal">
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {dateRange.from ? (
+                {dateRange?.from ? (
                   dateRange.to ? (
                     <>
                       {formatDate(dateRange.from)} - {formatDate(dateRange.to)}
@@ -383,9 +378,9 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
               <Calendar
                 initialFocus
                 mode="range"
-                defaultMonth={dateRange.from}
+                defaultMonth={dateRange.from || new Date()}
                 selected={dateRange}
-                onSelect={(range: { from?: Date, to?: Date }) => setDateRange({ from: range?.from, to: range?.to })}
+                onSelect={(range: DateRange) => setDateRange(range)}
                 numberOfMonths={2}
               />
             </PopoverContent>
