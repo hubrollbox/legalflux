@@ -36,16 +36,26 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
   useEffect(() => {
     const loadClients = async () => {
       try {
-        const data = await clientService.listClients();
+        // Type assertion to handle the API response type
+        const data = await clientService.listClients() as any[];
         setClients(data.map(client => ({
-          ...client,
+          id: client.id,
           name: client.nome || '',
           nif: client.nif || '',
           email: client.email || '',
           phone: client.telefone || '',
           address: client.morada || '',
           status: client.estado || 'prospect',
-          createdAt: client.criado_em ? new Date(client.criado_em) : new Date()
+          createdAt: client.criado_em ? new Date(client.criado_em) : new Date(),
+          userId: client.user_id,
+          lawyerId: client.advogado_id,
+          // Include Portuguese API fields to satisfy TypeScript
+          nome: client.nome,
+          telefone: client.telefone,
+          morada: client.morada,
+          estado: client.estado,
+          advogado_id: client.advogado_id,
+          criado_em: client.criado_em
         })));
       } catch (error) {
         toast({
