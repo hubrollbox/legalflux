@@ -40,11 +40,11 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
         setClients(data.map(client => ({
           id: client.id,
           name: client.nome || '',
-          taxId: client.nif || '',
+          nif: client.nif || '',
           phone: client.telefone || '',
           email: client.email || '',
           address: client.morada || '',
-          status: client.estado || 'prospect',
+          status: client.status || 'prospect',
           createdAt: client.criado_em ? new Date(client.criado_em) : new Date(),
           userId: client.user_id,
           lawyerId: client.advogado_id

@@ -131,7 +131,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, []);
+  }; []);
 
   if (error) {
     return (
@@ -224,7 +224,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  register: async (email: string, password: string, name: string, role?: UserRole): Promise<void> => {
+  const register = async (email: string, password: string, name: string, role?: UserRole): Promise<void> => {
     setIsLoading(true);
     try {
       // Validar permissões RBAC para registro
@@ -239,7 +239,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           email,
           phone: user?.phone,
           password,
-        },
+        };
         acceptTerms: true,
       };
 
@@ -278,7 +278,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  },
+  };
 
   signUp: async (userData: {
     email: string;
@@ -350,7 +350,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  },
+  };
 
   const requestPasswordReset = async (email: string): Promise<void> => {
     try {
@@ -532,8 +532,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           isLoading,
           login,
           logout,
-          register: (data: RegisterData) => Promise<void>,
-          signOut: () => Promise<void>,
+          register,
+          signUp,
           checkEmailExists,
           requestPasswordReset,
           resetPassword,

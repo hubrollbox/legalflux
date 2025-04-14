@@ -5,6 +5,17 @@ export type UserType = 'individual' | 'professional' | 'company';
 export type UserRole = 'admin' | 'lawyer' | 'senior_lawyer' | 'assistant' | 'client';
 
 // Interface do usuário
+export interface RegisterData {
+  userType: 'individual' | 'professional' | 'company';
+  personalData: {
+    fullName: string;
+    email: string;
+    phone?: string;
+    password: string;
+  };
+  acceptTerms: boolean;
+}
+
 export interface User {
   id: string;
   email: string;
@@ -14,6 +25,7 @@ export interface User {
   createdAt: string;
   lastLogin?: string;
   organizationId?: string;
+  assignedToLawyerId?: string;
   hasTwoFactorEnabled?: boolean;
   phone?: string;
   assignedToLawyerId?: string;
