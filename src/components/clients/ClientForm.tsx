@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Client, ClientStatus, CreateClientDTO, UpdateClientDTO } from "@/types/client";
+import type { Client, ClientStatus, CreateClientDTO, UpdateClientDTO } from "@/types/client";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";

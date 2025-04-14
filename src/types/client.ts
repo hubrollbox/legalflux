@@ -31,7 +31,7 @@ export interface CreateClientDTO {
   email: string;
   phone: string;
   address: string;
-  notes?: string;
+  notes?: string | undefined;
   status?: ClientStatus;
 }
 
@@ -42,6 +42,6 @@ export interface UpdateClientDTO {
   email?: string;
   phone?: string;
   address?: string;
-  notes?: string;
+  notes?: string | undefined;
   status?: ClientStatus;
 }
