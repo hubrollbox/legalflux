@@ -1,5 +1,5 @@
-import { ColumnDef } from '@tanstack/react-table';
-import { Client } from '@/types/client';
+import type { ColumnDef } from '@tanstack/react-table';
+import type { Client } from '@/types/client';
 import { Button } from '@/components/ui/button';
 import { ArrowUpDown, Edit, Trash2 } from 'lucide-react';
 
@@ -27,13 +27,14 @@ export const columns: ColumnDef<Client>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
-    cell: ({ row }) => (
-      <span className="capitalize">{row.getValue('status')}</span>
-    ),
+    cell: ({ row }) => {
+      const status = row.getValue<Client['status']>('status');
+      return <span className="capitalize">{status}</span>;
+    },
   },
   {
     id: 'actions',
-    cell: ({ row }) => (
+    cell: () => (
       <div className="flex gap-2">
         <Button variant="outline" size="sm">
           <Edit className="h-4 w-4" />
