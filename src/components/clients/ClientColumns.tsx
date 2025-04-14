@@ -1,7 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Client } from '@/types/client';
 import { Button } from '@/components/ui/button';
-import { ArrowUpDown, Edit, Trash2 } from 'lucide-react';
 
 export const columns: ColumnDef<Client>[] = [
   {
@@ -9,4 +8,10 @@ export const columns: ColumnDef<Client>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() =>
+        onClick={() => console.log(column)}
+      >
+        {column.id}
+      </Button>
+    ),
+  }
+];
