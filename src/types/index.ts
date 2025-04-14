@@ -125,6 +125,7 @@ export interface User {
   role: UserRole;
   avatar?: string;
   status: string;
+  phone?: string;
   isActive?: boolean;
   createdAt?: string;
   lastLogin?: string;

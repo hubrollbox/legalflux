@@ -36,26 +36,18 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
   useEffect(() => {
     const loadClients = async () => {
       try {
-        // Type assertion to handle the API response type
-        const data = await clientService.listClients() as any[];
+        const data = await clientService.listClients();
         setClients(data.map(client => ({
           id: client.id,
           name: client.nome || '',
-          nif: client.nif || '',
-          email: client.email || '',
+          taxId: client.nif || '',
           phone: client.telefone || '',
+          email: client.email || '',
           address: client.morada || '',
           status: client.estado || 'prospect',
           createdAt: client.criado_em ? new Date(client.criado_em) : new Date(),
           userId: client.user_id,
-          lawyerId: client.advogado_id,
-          // Include Portuguese API fields to satisfy TypeScript
-          nome: client.nome,
-          telefone: client.telefone,
-          morada: client.morada,
-          estado: client.estado,
-          advogado_id: client.advogado_id,
-          criado_em: client.criado_em
+          lawyerId: client.advogado_id
         })));
       } catch (error) {
         toast({
@@ -92,7 +84,7 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
         <TableHeader>
           <TableRow>
             <TableHead>Nome</TableHead>
-            <TableHead>NIF</TableHead>
+            <TableHead>Tax ID</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Telefone</TableHead>
             <TableHead>Estado</TableHead>
@@ -110,8 +102,8 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
             clients.map((client) => (
               <TableRow key={client.id}>
                 <TableCell className="font-medium">{client.name}</TableCell>
-                <TableCell>{client.nif}</TableCell>
-                <TableCell>{client.email}</TableCell>
+                <TableCell>{client.taxId}</TableCell>
+                <TableCell>{client.email || ''}</TableCell>
                 <TableCell>{client.phone}</TableCell>
                 <TableCell>{getStatusBadge(client.status)}</TableCell>
                 <TableCell className="text-right">

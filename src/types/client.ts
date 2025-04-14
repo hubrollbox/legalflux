@@ -3,7 +3,7 @@
 export interface Client {
   id: string;
   name: string;
-  nif: string;
+  taxId: string;
   email: string;
   phone: string;
   address: string;

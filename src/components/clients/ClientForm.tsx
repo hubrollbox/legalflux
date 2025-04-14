@@ -28,7 +28,7 @@ import { supabase } from "@/integrations/supabase/client";
 // Schema de validação para o formulário de cliente
 const clientFormSchema = z.object({
   name: z.string().min(2, { message: "O nome deve ter pelo menos 2 caracteres" }),
-  nif: z.string().min(9, { message: "O NIF deve ter 9 dígitos" }).max(9),
+  nif: z.string().min(9, { message: "O Tax ID deve ter 9 dígitos" }).max(9),
   email: z.string().email({ message: "Email inválido" }),
   phone: z.string().min(9, { message: "Telefone inválido" }),
   address: z.string().min(5, { message: "Morada deve ter pelo menos 5 caracteres" }),
@@ -218,13 +218,9 @@ const ClientForm: React.FC<ClientFormProps> = ({
           name="notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Notas</FormLabel>
+              <FormLabel>Tax ID <span className="text-red-500">*</span></FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder="Observações sobre o cliente"
-                  className="resize-none"
-                  {...field}
-                />
+                <Input placeholder="Tax ID" {...field} name="taxId" />
               </FormControl>
               <FormMessage />
             </FormItem>

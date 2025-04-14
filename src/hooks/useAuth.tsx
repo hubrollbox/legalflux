@@ -1,6 +1,7 @@
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { User, UserRole } from "@/types";
+import { createContext, useContext, useState, useEffect } from "react";
+import type { ReactNode } from "react";
+import type { User, UserRole, RegisterData } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
 import { toast as sonnerToast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -74,7 +75,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(mappedUser);
           
           // Verificar se a sessão está próxima de expirar
-          const expiresAt = new Date(session.expires_at * 1000);
+          const expiresAt = session.expires_at ? new Date(session.expires_at * 1000) : new Date();
           const now = new Date();
           const timeUntilExpiry = expiresAt.getTime() - now.getTime();
           
@@ -223,14 +224,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (email: string, password: string, name: string, role?: UserRole): Promise<void> => {
+  register: async (email: string, password: string, name: string, role?: UserRole): Promise<void> => {
     setIsLoading(true);
     try {
       // Validar permissões RBAC para registro
       if (role && user?.role !== 'admin') {
         throw new Error('Apenas administradores podem criar contas com roles específicas');
       }
-  
+
+      const registerData: RegisterData = {
+        userType: 'individual',
+        personalData: {
+          fullName: name,
+          email,
+          phone: user?.phone,
+          password,
+        },
+        acceptTerms: true,
+      };
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -242,7 +254,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }
         }
       });
-  
+
       if (error) {
         throw error;
       }
@@ -266,7 +278,79 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  },
+
+  signUp: async (userData: {
+    email: string;
+    password: string;
+    name: string;
+    role: UserRole;
+    phone?: string;
+    organizationId?: string;
+    userType: 'individual' | 'professional' | 'company';
+  }): Promise<void> => {
+    setIsLoading(true);
+    try {
+      // Verificar se o email já existe
+      const emailExists = await checkEmailExists(userData.email);
+      if (emailExists) {
+        throw new Error('Este email já está em uso.');
+      }
+
+      // Registrar o usuário no Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: userData.email,
+        password: userData.password,
+        options: {
+          data: {
+            nome_completo: userData.name,
+            funcao: userData.role,
+            phone: userData.phone,
+            escritorio_id: userData.organizationId,
+            user_type: userData.userType
+          }
+        }
+      });
+
+      if (authError) throw authError;
+
+      if (authData.user) {
+        // Criar registro na tabela de usuários
+        const { error: profileError } = await supabase
+          .from('users')
+          .insert<Partial<User>>([
+            {
+              id: authData.user.id,
+              email: userData.email,
+              nome_completo: userData.name,
+              funcao: userData.role,
+              phone: userData.phone,
+              escritorio_id: userData.organizationId,
+              user_type: userData.userType,
+              is_active: true
+            }
+          ]);
+
+        if (profileError) throw profileError;
+
+        toast({
+          title: 'Registro realizado com sucesso',
+          description: 'Por favor, verifique seu email para confirmar o cadastro.',
+        });
+
+        sonnerToast.success('Registro realizado! Verifique seu email.');
+      }
+    } catch (error: any) {
+      console.error('Erro no registro:', error);
+      toast({
+        title: 'Erro no registro',
+        description: error.message || 'Ocorreu um erro ao criar sua conta.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  },
 
   const requestPasswordReset = async (email: string): Promise<void> => {
     try {
@@ -333,7 +417,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       
       // Atualizar o estado local
-      const newUserData = { ...user, ...updatedUser };
+      const newUserData: User = { ...user, ...updatedUser };
       setUser(newUserData);
       
       toast({
@@ -407,7 +491,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // Criar registro na tabela de usuários
         const { error: profileError } = await supabase
           .from('users')
-          .insert([
+          .insert<Partial<User>>([
             {
               id: authData.user.id,
               email: userData.email,
@@ -448,8 +532,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           isLoading,
           login,
           logout,
-          register,
-          signUp,
+          register: (data: RegisterData) => Promise<void>,
+          signOut: () => Promise<void>,
           checkEmailExists,
           requestPasswordReset,
           resetPassword,
