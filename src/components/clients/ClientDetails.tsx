@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2, FileText, Loader2, ExternalLink } from "lucide-react";
-import type { Client } from "@/types/client";
+import type { Client, ClientStatus } from "@/types/client";
 import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
@@ -48,18 +48,33 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
       setIsLoading(true);
       try {
         const updatedClient = await clientService.getClient(client.id);
+        // Usando type assertion para acessar as propriedades em português
+        const apiClient = updatedClient as unknown as {
+          id: string;
+          nome?: string;
+          nif?: string;
+          email?: string;
+          telefone?: string;
+          morada?: string;
+          estado?: string;
+          notas?: string;
+          user_id: string;
+          advogado_id: string | null;
+          criado_em: string | null;
+        };
+        
         const mappedClient: Client = {
-          id: updatedClient.id,
-          name: updatedClient.nome || "Unknown",
-          nif: updatedClient.nif || "Unknown",
-          email: updatedClient.email || "Unknown",
-          phone: updatedClient.telefone || "Unknown",
-          address: updatedClient.morada || "Unknown",
-          status: updatedClient.estado || "prospect",
-          notes: updatedClient.notas || "",
-          userId: updatedClient.user_id,
-          lawyerId: updatedClient.advogado_id,
-          createdAt: updatedClient.criado_em ? new Date(updatedClient.criado_em) : new Date()
+          id: apiClient.id,
+          name: apiClient.nome || "Unknown",
+          nif: apiClient.nif || "Unknown",
+          email: apiClient.email || "Unknown",
+          phone: apiClient.telefone || "Unknown",
+          address: apiClient.morada || "Unknown",
+          status: (apiClient.estado as ClientStatus) || "prospect",
+          notes: apiClient.notas || "",
+          userId: String(apiClient.user_id),
+          lawyerId: apiClient.advogado_id ? String(apiClient.advogado_id) : null,
+          createdAt: apiClient.criado_em ? new Date(apiClient.criado_em) : new Date()
         };
         onEdit(mappedClient);
         toast({
@@ -108,7 +123,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
           </div>
           <div>
             <h3 className="text-sm font-medium text-muted-foreground">Data de Criação</h3>
-            <p className="text-base">{new Date(client.criado_em).toLocaleDateString()}</p>
+            <p className="text-base">{new Date(client.createdAt).toLocaleDateString()}</p>
           </div>
         </div>
 

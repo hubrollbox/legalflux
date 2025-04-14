@@ -8,10 +8,18 @@ export interface Client {
   phone: string;
   address: string;
   status: ClientStatus;
-  criado_em: Date;
   notes?: string;
   userId: string;
-  lawyerId?: string;
+  lawyerId: string | null;
+  createdAt: Date;
+  // Portuguese API fields
+  nome?: string;
+  telefone?: string;
+  morada?: string;
+  estado?: string;
+  notas?: string;
+  advogado_id?: string | null;
+  criado_em?: string;
 }
 
 export type ClientStatus = "active" | "inactive" | "prospect";
