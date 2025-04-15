@@ -39,16 +39,16 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
         const data = await clientService.listClients();
         setClients(data.map(client => ({
           id: client.id,
-          name: client.name || '',
+          nome: client.nome || '',
           taxId: client.taxId || '',
           nif: client.nif || '',
-          phone: client.phone || '',
+          telefone: client.telefone || '',
           email: client.email || '',
-          address: client.address || '',
-          status: client.status || 'prospect',
-          createdAt: client.createdAt ? new Date(client.createdAt) : new Date(),
-          userId: client.userId,
-          lawyerId: client.lawyerId
+          morada: client.morada || '',
+          estado: client.estado || 'prospect',
+          criado_em: client.criado_em ? new Date(client.criado_em) : new Date(),
+          user_id: client.user_id,
+          advogado_id: client.advogado_id
         })));
       } catch (error) {
         toast({

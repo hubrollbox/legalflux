@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { Client } from '@/types/client';
+import type { Client } from '@/types/client';
 
 // Export the clientService with minimal changes to fix the type issues
 export const clientService = {
@@ -9,12 +9,24 @@ export const clientService = {
       .insert({
         ...clientData,
         user_id: userId,
-        advogado_id: advogadoId
+        advogado_id: advogadoId ?? null
       })
       .select();
 
     if (error) throw error;
-    return data[0];
+    return {
+  id: data?.[0]?.id ?? '',
+  nome: data?.[0]?.nome ?? '',
+  taxId: data?.[0]?.taxId ?? '',
+  nif: data?.[0]?.nif ?? '',
+  telefone: data?.[0]?.telefone ?? '',
+  email: data?.[0]?.email ?? '',
+  morada: data?.[0]?.morada ?? '',
+  estado: data?.[0]?.estado ?? 'prospect',
+  criado_em: data?.[0]?.criado_em ? new Date(data?.[0]?.criado_em) : new Date(),
+  user_id: data?.[0]?.user_id ?? '',
+  advogado_id: data?.[0]?.advogado_id ?? '';
+};
   },
 
   async getClient(id: string) {
@@ -36,7 +48,19 @@ export const clientService = {
       .select();
 
     if (error) throw error;
-    return data[0];
+    return {
+  id: data?.[0]?.id ?? '',
+  name: data?.[0]?.nome ?? '',
+  taxId: data?.[0]?.taxId ?? '',
+  nif: data?.[0]?.nif ?? '',
+  phone: data?.[0]?.telefone ?? '',
+  email: data?.[0]?.email ?? '',
+  address: data?.[0]?.morada ?? '',
+  status: data?.[0]?.estado ?? 'prospect',
+  createdAt: data?.[0]?.criado_em ? new Date(data?.[0]?.criado_em) : new Date(),
+  userId: data?.[0]?.user_id ?? '',
+  lawyerId: data?.[0]?.advogado_id ?? '';
+};
   },
 
   async deleteClient(id: string) {

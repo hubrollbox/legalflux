@@ -67,6 +67,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
           id: apiClient.id,
           name: apiClient.nome || "Unknown",
           nif: apiClient.nif || "Unknown",
+          taxId: apiClient.nif || "Unknown",
           email: apiClient.email || "Unknown",
           phone: apiClient.telefone || "Unknown",
           address: apiClient.morada || "Unknown",
