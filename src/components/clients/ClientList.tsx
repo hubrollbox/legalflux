@@ -39,15 +39,16 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
         const data = await clientService.listClients();
         setClients(data.map(client => ({
           id: client.id,
-          name: client.nome || '',
-          taxId: client.nif || '',
-          phone: client.telefone || '',
+          name: client.name || '',
+          taxId: client.taxId || '',
+          nif: client.nif || '',
+          phone: client.phone || '',
           email: client.email || '',
-          address: client.morada || '',
-          status: client.estado || 'prospect',
-          createdAt: client.criado_em ? new Date(client.criado_em) : new Date(),
-          userId: client.user_id,
-          lawyerId: client.advogado_id
+          address: client.address || '',
+          status: client.status || 'prospect',
+          createdAt: client.createdAt ? new Date(client.createdAt) : new Date(),
+          userId: client.userId,
+          lawyerId: client.lawyerId
         })));
       } catch (error) {
         toast({
@@ -102,7 +103,7 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
             clients.map((client) => (
               <TableRow key={client.id}>
                 <TableCell className="font-medium">{client.name}</TableCell>
-                <TableCell>{client.taxId}</TableCell>
+                <TableCell>{client.nif}</TableCell>
                 <TableCell>{client.email || ''}</TableCell>
                 <TableCell>{client.phone}</TableCell>
                 <TableCell>{getStatusBadge(client.status)}</TableCell>

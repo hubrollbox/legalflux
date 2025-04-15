@@ -20,6 +20,8 @@ export interface Client {
   notas?: string;
   advogado_id?: string | null;
   criado_em?: string;
+  taxId: string;
+  // Ensure the Client type definition includes all necessary fields for type consistency.
 }
 
 export type ClientStatus = "active" | "inactive" | "prospect";
