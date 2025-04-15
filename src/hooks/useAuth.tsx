@@ -36,6 +36,9 @@ interface DetailedUserData {
   phone?: string;
   organizationId?: string;
   userType: 'individual' | 'professional' | 'company';
+  tipo: string;
+  nome: string;
+  criado_em?: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -45,8 +48,8 @@ const mapUserData = (userData: any): User => {
   return {
     id: userData.id,
     email: userData.email,
-    name: userData.nome_completo || userData.email.split('@')[0],
-    role: (userData.funcao || "client") as UserRole,
+    name: userData.nome || userData.email.split('@')[0],
+    role: (userData.tipo || "client") as UserRole,
     isActive: userData.is_active,
     createdAt: userData.created_at,
     lastLogin: userData.last_sign_in_at,
@@ -243,18 +246,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error('Apenas administradores podem criar contas com roles específicas');
       }
 
-      // Definindo os dados de registro
-      // Nota: Não estamos usando esta variável diretamente, mas mantemos para referência futura
-      const _registerData: RegisterData = {
-        userType: 'individual',
-        personalData: {
-          fullName: name,
-          email,
-          phone: user?.phone === undefined ? undefined : user?.phone,
-          password,
-        },
-        acceptTerms: true,
-      };
+      // Dados de registro estão sendo passados diretamente para o Supabase Auth
 
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -314,8 +306,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           password: userData.personalData.password,
           options: {
             data: {
-              nome_completo: userData.personalData.fullName,
-              funcao: 'client', // Default para client
+              nome: userData.personalData.fullName,
+              tipo: 'client', // Default para client
               phone: userData.personalData.phone,
               escritorio_id: user?.organizationId
             }
@@ -328,11 +320,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           password: userData.password,
           options: {
             data: {
-              nome_completo: userData.name,
-              funcao: userData.role,
+              nome: userData.name,
+              tipo: userData.role,
               phone: userData.phone,
               escritorio_id: userData.organizationId,
-              user_type: userData.userType
+              user_type: userData.userType,
+              password: '',
+              criado_em: new Date().toISOString()
             }
           }
         };
@@ -353,11 +347,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             {
               id: data.user.id,
               email: userData.email,
-              nome_completo: userData.name,
-              funcao: userData.role,
+              nome: userData.name,
+              tipo: userData.role,
               phone: userData.phone,
               escritorio_id: userData.organizationId,
               user_type: userData.userType,
+              password: '',
+              criado_em: new Date().toISOString(),
               is_active: true
             }
           ]);

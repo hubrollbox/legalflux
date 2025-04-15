@@ -10,7 +10,7 @@ export interface RegisterData {
   personalData: {
     fullName: string;
     email: string;
-    phone?: string;
+    phone?: string | undefined;
     password: string;
   };
   acceptTerms: boolean;
