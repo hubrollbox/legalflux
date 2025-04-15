@@ -1,19 +1,23 @@
 
-import { UserRole, PriorityLevel } from "@/types";
+import { UserRole } from "@/types/permissions";
+import { PriorityLevel } from "@/types";
 
 // Helper function to get user role name
 export const getUserRoleName = (role: UserRole): string => {
   const roleNames: Record<UserRole, string> = {
-    admin: "Administrador",
-    lawyer: "Advogado",
-    senior_lawyer: "Advogado Sênior",
-    assistant: "Assistente",
-    client: "Cliente",
+    [UserRole.CLIENT]: "Cliente",
+    [UserRole.LAWYER]: "Advogado",
+    [UserRole.SENIOR_LAWYER]: "Advogado Sênior",
+    [UserRole.ASSISTANT]: "Assistente",
+    [UserRole.ADMIN]: "Administrador",
   };
+  
   return roleNames[role] || "Utilizador";
 };
 
-// Mock data functions that should be in mockData.ts
+// Dashboard data functions
+// These functions should ideally be moved to mockData.ts in a real application
+// Keeping them here for now for dashboard-specific functionality
 export const getChartData = () => [
   { name: "Jan", cases: 4 },
   { name: "Fev", cases: 7 },
@@ -67,3 +71,20 @@ export const getStatisticsData = () => [
     description: "3 novos este mês",
   },
 ];
+
+// Helper function to get color based on priority level
+export const getColorByPriority = (priority: PriorityLevel | string): string => {
+  switch (priority) {
+    case PriorityLevel.LOW:
+    case 'low':
+      return 'bg-blue-100 text-blue-800';
+    case PriorityLevel.MEDIUM:
+    case 'medium':
+      return 'bg-yellow-100 text-yellow-800';
+    case PriorityLevel.HIGH:
+    case 'high':
+      return 'bg-red-100 text-red-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+};

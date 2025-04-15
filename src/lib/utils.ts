@@ -1,7 +1,7 @@
 
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { UserRole } from "@/types";
+import type { UserRole } from "@/types/permissions";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -24,11 +24,11 @@ export const formatCurrency = (amount: number, currency: string = "EUR"): string
 
 export const getUserRoleName = (role: UserRole): string => {
   const roleNames: Record<UserRole, string> = {
-    client: "Cliente",
-    lawyer: "Advogado",
-    senior_lawyer: "Advogado Sênior",
-    assistant: "Assistente",
-    admin: "Administrador",
+    [UserRole.CLIENT]: "Cliente",
+    [UserRole.LAWYER]: "Advogado",
+    [UserRole.SENIOR_LAWYER]: "Advogado Sênior",
+    [UserRole.ASSISTANT]: "Assistente",
+    [UserRole.ADMIN]: "Administrador",
   };
   
   return roleNames[role] || role;

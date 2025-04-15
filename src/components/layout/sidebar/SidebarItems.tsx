@@ -1,10 +1,8 @@
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { UserRole } from "@/types";
+import { SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
+import { UserRole } from "@/types/permissions";
 
 export interface SidebarItem {
   label: string;

@@ -110,29 +110,10 @@ export interface Task {
   type?: string;
 }
 
-export enum UserRole {
-  ADMIN = 'admin',
-  LAWYER = 'lawyer',
-  SENIOR_LAWYER = 'senior_lawyer',
-  ASSISTANT = 'assistant',
-  CLIENT = 'client'
-}
+export type { User } from './auth';
+export { UserRole } from './permissions';
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: UserRole;
-  avatar?: string;
-  status: string;
-  phone?: string;
-  isActive?: boolean;
-  createdAt?: string;
-  lastLogin?: string;
-  hasTwoFactorEnabled?: boolean;
-  organizationId?: string;
-  assignedToLawyerId?: string;
-}
+
 
 export interface Document {
   id: string;

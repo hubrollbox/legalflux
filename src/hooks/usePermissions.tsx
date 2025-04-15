@@ -1,6 +1,8 @@
-import { useContext, createContext, useState, useEffect, ReactNode } from "react";
+import { useContext, createContext, useState, useEffect } from "react";
+import type { ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Permission, RolePermission, UserPermission, UserRole } from "@/types/permissions";
+import type { Permission, RolePermission, UserPermission } from "@/types/permissions";
+import { UserRole } from "@/types/permissions";
 
 interface PermissionsContextType {
   hasPermission: (module: string, action: 'create' | 'read' | 'update' | 'delete') => boolean;

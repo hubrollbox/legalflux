@@ -2,7 +2,6 @@
 export type UserType = 'individual' | 'professional' | 'company';
 
 // Funções de usuário no sistema
-export type UserRole = 'admin' | 'lawyer' | 'senior_lawyer' | 'assistant' | 'client';
 
 // Interface do usuário
 export interface RegisterData {
@@ -10,25 +9,36 @@ export interface RegisterData {
   personalData: {
     fullName: string;
     email: string;
-    phone?: string | undefined;
+    phone?: string;
     password: string;
+    taxId?: string;
   };
   acceptTerms: boolean;
 }
 
+import { UserRole } from './permissions';
+
 export interface User {
   id: string;
-  email: string;
-  name: string;
-  role: UserRole;
-  isActive: boolean;
-  createdAt: string;
-  lastLogin?: string;
-  organizationId?: string;
   assignedToLawyerId?: string;
   hasTwoFactorEnabled?: boolean;
-  phone?: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  createdAt: string;
+  updatedAt?: string;
   avatar?: string;
+  organizationId?: string;
+  phone?: string;
+  jobTitle?: string;
+  lastLogin?: string;
+  isActive: boolean;
+  status?: string;
+  preferences?: {
+    theme: 'light' | 'dark';
+    notifications: boolean;
+    language: string;
+  };
 }
 
 // Dados pessoais (para Individual e Professional)
@@ -68,6 +78,7 @@ export interface RegisterData {
     email: string;
     phone?: string;
     password: string;
+    taxId?: string;
   };
   professionalData?: ProfessionalData;
   companyData?: CompanyData;

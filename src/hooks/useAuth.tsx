@@ -1,7 +1,8 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
-import type { User, UserRole } from "@/types";
+import { UserRole } from "@/types/permissions";
+import type { User } from "@/types";
 import type { RegisterData } from "@/types/auth";
 import { useToast } from "@/components/ui/use-toast";
 import { toast as sonnerToast } from "sonner";
@@ -39,6 +40,7 @@ interface DetailedUserData {
   tipo: string;
   nome: string;
   criado_em?: string;
+  taxId?: string; // Added to support NIF field in SignUpForm
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -162,12 +164,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!user) return "/login";
     
     switch (user.role) {
-      case "client":
+      case UserRole.CLIENT:
         return "/client-portal/processes";
-      case "admin":
-      case "lawyer":
-      case "senior_lawyer":
-      case "assistant":
+      case UserRole.ADMIN:
+      case UserRole.LAWYER:
+      case UserRole.SENIOR_LAWYER:
+      case UserRole.ASSISTANT:
         return "/dashboard";
       default:
         return "/dashboard";
@@ -242,7 +244,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     try {
       // Validar permissões RBAC para registro
-      if (role && user?.role !== 'admin') {
+      if (role && user?.role !== UserRole.ADMIN) {
         throw new Error('Apenas administradores podem criar contas com roles específicas');
       }
 
@@ -254,7 +256,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         options: {
           data: {
             name,
-            role: role || 'client', // Default para client
+            role: role || UserRole.CLIENT, // Default para client
             organizationId: user?.organizationId
           }
         }
@@ -441,7 +443,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     try {
       // Validar alterações de role
-      if (updatedUser.role && user?.role !== 'admin') {
+      if (updatedUser.role && user?.role !== UserRole.ADMIN) {
         throw new Error('Apenas administradores podem alterar roles');
       }
   

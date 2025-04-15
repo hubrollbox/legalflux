@@ -1,6 +1,5 @@
 
 import React from "react";
-import { UserRole } from "@/types";
 import { 
   Form,
   FormControl,
@@ -20,13 +19,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import * as z from "zod";
 
 export const userFormSchema = z.object({
   email: z.string().email("Email inválido").min(1, "Email é obrigatório"),
   name: z.string().min(1, "Nome é obrigatório"),
-  role: z.enum(["client", "lawyer", "senior_lawyer", "assistant", "admin"]),
+  role: z.enum(["CLIENT", "LAWYER", "SENIOR_LAWYER", "ASSISTANT", "ADMIN"] as const),
   isActive: z.boolean().default(true),
   organizationId: z.string().optional(),
   phone: z.string().optional(),
@@ -96,7 +95,7 @@ const UserForm = ({ form, onSubmit, onCancel, submitLabel }: UserFormProps) => {
                   <SelectItem value="lawyer">Advogado</SelectItem>
                   <SelectItem value="senior_lawyer">Advogado Sênior</SelectItem>
                   <SelectItem value="assistant">Assistente</SelectItem>
-                  <SelectItem value="admin">Administrador</SelectItem>
+                  <SelectItem value="ADMIN">Administrador</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>

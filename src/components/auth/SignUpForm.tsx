@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 
-type UserType = 'particular' | 'profissional' | 'empresa';
+import type { UserType } from '../../types/auth';
 
 export const SignUpForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [userType, setUserType] = useState<UserType>();
+  const [userType, setUserType] = useState<UserType>('individual');
   const [error, setError] = useState('');
   const { signUp, checkEmailExists } = useAuth();
 
@@ -47,7 +47,7 @@ export const SignUpForm = () => {
       return;
     }
 
-    if (userType === 'profissional') {
+    if (userType === 'professional') {
       setCurrentStep(3); // Próximo passo: dados profissionais
     } else {
       try {
@@ -57,7 +57,17 @@ export const SignUpForm = () => {
           setError('Este email já está registrado');
           return;
         }
-        await signUp({ ...formData, userType, password: formData.password });
+        await signUp({
+          userType: userType,
+          personalData: {
+            fullName: formData.nome,
+            email: formData.email,
+            phone: formData.telemovel,
+            password: formData.password,
+            taxId: formData.nif
+          },
+          acceptTerms: true
+        });
       } catch (err: any) {
         setError(err.message || 'Erro ao processar o registro');
       }
@@ -79,9 +89,23 @@ export const SignUpForm = () => {
       }
       
       await signUp({
-        ...formData,
-        userType,
-        password: formData.password
+        userType: 'company',
+        personalData: {
+          fullName: formData.empresaNome,
+          email: formData.empresaEmail,
+          phone: formData.empresaTelefone,
+          password: formData.password,
+          taxId: formData.empresaNIF
+        },
+        companyData: {
+          name: formData.empresaNome,
+          nif: formData.empresaNIF,
+          cae: formData.empresaCAE,
+          email: formData.empresaEmail,
+          phone: formData.empresaTelefone,
+          address: formData.empresaMorada
+        },
+        acceptTerms: true
       });
     } catch (err: any) {
       setError(err.message || 'Erro ao processar o registro da empresa');
@@ -93,13 +117,13 @@ export const SignUpForm = () => {
       {currentStep === 1 && (
         <div className="user-type-selection">
           <h2>Selecione o tipo de utilizador</h2>
-          <button onClick={() => handleUserTypeSelect('particular')}>
+          <button onClick={() => handleUserTypeSelect('individual')}>
             Particular
           </button>
-          <button onClick={() => handleUserTypeSelect('profissional')}>
+          <button onClick={() => handleUserTypeSelect('professional')}>
             Profissional
           </button>
-          <button onClick={() => handleUserTypeSelect('empresa')}>
+          <button onClick={() => handleUserTypeSelect('company')}>
             Empresa
           </button>
         </div>
@@ -107,11 +131,11 @@ export const SignUpForm = () => {
 
       {currentStep === 2 && userType && (
         <div className="personal-data-form">
-          <h2>Dados {userType === 'empresa' ? 'da Empresa' : 'Pessoais'}</h2>
+          <h2>Dados {userType === 'company' ? 'da Empresa' : 'Pessoais'}</h2>
           
           <input
             name="nome"
-            placeholder={userType === 'empresa' ? 'Nome da Empresa*' : 'Nome Completo*'}
+            placeholder={userType === 'company' ? 'Nome da Empresa*' : 'Nome Completo*'}
             required
             onChange={handleInputChange}
           />
@@ -132,7 +156,7 @@ export const SignUpForm = () => {
             onChange={handleInputChange}
           />
 
-          {userType !== 'empresa' && (
+          {userType !== 'company' && (
             <>
               <input
                 name="telemovel"
@@ -150,7 +174,7 @@ export const SignUpForm = () => {
 
           {error && <div style={{ color: 'red', margin: '10px 0' }}>{error}</div>}
           <button onClick={handleSubmitPersonalData}>
-            {userType === 'profissional' ? 'Continuar' : 'Registar'}
+            {userType === 'professional' ? 'Continuar' : 'Registar'}
           </button>
         </div>
       )}
@@ -182,7 +206,24 @@ export const SignUpForm = () => {
             Estou vinculado a uma empresa
           </label>
 
-          <button onClick={() => formData.empresaVinculada ? setCurrentStep(4) : signUp(formData)}>
+          <button onClick={() => formData.empresaVinculada ? setCurrentStep(4) : signUp({
+            userType: userType,
+            personalData: {
+              fullName: formData.nome,
+              email: formData.email,
+              phone: formData.telemovel,
+              password: formData.password,
+              taxId: formData.nif
+            },
+            professionalData: {
+              licenseNumber: formData.cedulaProfissional,
+              professionalEmail: formData.email,
+              professionalAddress: formData.morada || '',
+              barAssociationId: formData.ordemProfissional,
+              companyAffiliated: formData.empresaVinculada
+            },
+            acceptTerms: true
+          })}>
             {formData.empresaVinculada ? 'Continuar' : 'Registar'}
           </button>
         </div>
