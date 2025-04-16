@@ -111,19 +111,19 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground">NIF</h3>
-            <p className="text-base">{client.nif}</p>
+            <h3 className="text-sm font-medium text-muted-foreground">Tax ID</h3>
+            <p className="text-base">{client.taxId}</p>
           </div>
           <div>
             <h3 className="text-sm font-medium text-muted-foreground">Email</h3>
             <p className="text-base">{client.email}</p>
           </div>
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground">Telefone</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">Phone</h3>
             <p className="text-base">{client.phone}</p>
           </div>
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground">Data de Criação</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">Creation Date</h3>
             <p className="text-base">{new Date(client.createdAt).toLocaleDateString()}</p>
           </div>
         </div>
@@ -131,7 +131,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
         <Separator className="my-4" />
 
         <div>
-          <h3 className="text-sm font-medium text-muted-foreground">Morada</h3>
+          <h3 className="text-sm font-medium text-muted-foreground">Address</h3>
           <p className="text-base">{client.address}</p>
         </div>
 

@@ -39,16 +39,16 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
         const data = await clientService.listClients();
         setClients(data.map(client => ({
           id: client.id,
-          nome: client.nome || '',
+          name: client.name || '',
           taxId: client.taxId || '',
           nif: client.nif || '',
-          telefone: client.telefone || '',
+          phone: client.phone || '',
           email: client.email || '',
-          morada: client.morada || '',
-          estado: client.estado || 'prospect',
-          criado_em: client.criado_em ? new Date(client.criado_em) : new Date(),
-          user_id: client.user_id,
-          advogado_id: client.advogado_id
+          address: client.address || '',
+          status: client.status || 'prospect',
+          createdAt: client.createdAt ? new Date(client.createdAt) : new Date(),
+          userId: client.userId || '',
+          lawyerId: client.lawyerId || ''
         })));
       } catch (error) {
         toast({
@@ -84,11 +84,11 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Nome</TableHead>
+            <TableHead>Name</TableHead>
             <TableHead>Tax ID</TableHead>
             <TableHead>Email</TableHead>
-            <TableHead>Telefone</TableHead>
-            <TableHead>Estado</TableHead>
+            <TableHead>Phone</TableHead>
+            <TableHead>Status</TableHead>
             <TableHead className="text-right">Ações</TableHead>
           </TableRow>
         </TableHeader>
