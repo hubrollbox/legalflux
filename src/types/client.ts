@@ -10,6 +10,6 @@ export interface Client {
   status: ClientStatus;
   createdAt: Date;
   userId: string;
-  lawyerId?: string;
+  lawyerId?: string | null;
   notes?: string;
 }
