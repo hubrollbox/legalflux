@@ -3,11 +3,11 @@ import type { Client } from '@/types/client';
 
 // Export the clientService with minimal changes to fix the type issues
 export const clientService = {
-  async createClient(clientData: Omit<Client, 'id' | 'criado_em'>, userId: string, advogadoId?: string) {
+  async createClient(clientData: Omit<Client, 'id' | 'createdAt'>, userId: string, advogadoId?: string) {
     const { data, error } = await supabase
       .from('clientes')
       .insert({
-        name: clientData.name,
+        nome: clientData.name,
         nif: clientData.taxId,
         telefone: clientData.phone,
         email: clientData.email,
@@ -16,87 +16,97 @@ export const clientService = {
         user_id: userId,
         advogado_id: advogadoId ?? null
       })
-      .select('id, name, nif as taxId, telefone as phone, email, morada as address, estado as status, criado_em as createdAt, user_id as userId, advogado_id as lawyerId')
+      .select()
       .single();
 
     if (error) throw error;
+    if (!data) {
+      throw new Error('No data returned from database');
+    }
+    
     return {
-      id: data?.id ?? '',
-      name: data?.name ?? '',
-      taxId: data?.taxId ?? '',
-      phone: data?.phone ?? '',
-      email: data?.email ?? '',
-      address: data?.address ?? '',
-      status: data?.status ?? 'prospect',
-      createdAt: data?.createdAt ? new Date(data.createdAt) : new Date(),
-      userId: data?.userId ?? '',
-      lawyerId: data?.lawyerId ?? ''
-    };
+      id: data.id ?? '',
+      name: data.nome ?? '',
+      taxId: data.nif ?? '',
+      phone: data.telefone ?? '',
+      email: data.email ?? '',
+      address: data.morada ?? '',
+      status: data.estado ?? 'prospect',
+      createdAt: data.created_at ? new Date(data.created_at) : new Date(),
+      userId: data.user_id ?? '',
+      lawyerId: data.advogado_id ?? ''
+    } as Client;
   },
 
   async getClient(id: string) {
     const { data, error } = await supabase
       .from('clientes')
-      .select('id, nome as name, nif as taxId, telefone as phone, email, morada as address, estado as status, criado_em as createdAt, user_id as userId, advogado_id as lawyerId')
+      .select('id, nome, nif, telefone, email, morada, estado, created_at, user_id, advogado_id')
       .eq('id', id)
       .single();
 
     if (error) throw error;
+    if (!data) {
+      throw new Error('No data returned from database');
+    }
+    
     return {
-      ...data,
-      taxId: data.nif,
-      phone: data.telefone,
-      address: data.morada,
-      status: data.estado,
-      createdAt: new Date(data.criado_em)
+      id: data.id ?? '',
+      name: data.nome ?? '',
+      taxId: data.nif ?? '',
+      phone: data.telefone ?? '',
+      email: data.email ?? '',
+      address: data.morada ?? '',
+      status: data.estado ?? 'prospect',
+      createdAt: data.created_at ? new Date(data.created_at) : new Date(),
+      userId: data.user_id ?? '',
+      lawyerId: data.advogado_id ?? ''
     } as Client;
-  }
+  },
 
   async updateClient(id: string, clientData: Partial<Client>) {
+    // Create an update object with only the properties that are provided
+    const updateData: Record<string, any> = {};
+    
+    if (clientData.name !== undefined) updateData.nome = clientData.name;
+    if (clientData.taxId !== undefined) updateData.nif = clientData.taxId;
+    if (clientData.phone !== undefined) updateData.telefone = clientData.phone;
+    if (clientData.email !== undefined) updateData.email = clientData.email;
+    if (clientData.address !== undefined) updateData.morada = clientData.address;
+    if (clientData.status !== undefined) updateData.estado = clientData.status;
+    if (clientData.lawyerId !== undefined) updateData.advogado_id = clientData.lawyerId;
+    
     const { data, error } = await supabase
       .from('clientes')
-      .update({
-        nome: clientData.name,
-        nif: clientData.taxId,
-        telefone: clientData.phone,
-        email: clientData.email,
-        morada: clientData.address,
-        estado: clientData.status,
-        advogado_id: clientData.lawyerId
-      })
+      .update(updateData)
       .eq('id', id)
-      .select('id, nome as name, nif as taxId, telefone as phone, email, morada as address, estado as status, criado_em as createdAt, user_id as userId, advogado_id as lawyerId')
+      .select('id, nome, nif, telefone, email, morada, estado, created_at, user_id, advogado_id')
       .single();
 
     if (error) throw error;
+    if (!data) {
+      throw new Error('No data returned from database');
+    }
+    
     return {
-      id: data?.id ?? '',
-      name: data?.name ?? '',
-      taxId: data?.taxId ?? '',
-      phone: data?.phone ?? '',
-      email: data?.email ?? '',
-      address: data?.address ?? '',
-      status: data?.status ?? 'prospect',
-      createdAt: data?.createdAt ? new Date(data.createdAt) : new Date(),
-      userId: data?.userId ?? '',
-      lawyerId: data?.lawyerId ?? ''
+      id: data.id ?? '',
+      name: data.nome ?? '',
+      taxId: data.nif ?? '',
+      phone: data.telefone ?? '',
+      email: data.email ?? '',
+      address: data.morada ?? '',
+      status: data.estado ?? 'prospect',
+      createdAt: data.created_at ? new Date(data.created_at) : new Date(),
+      userId: data.user_id ?? '',
+      lawyerId: data.advogado_id ?? ''
     } as Client;
   },
 
-  async deleteClient(id: string) {
-    const { error } = await supabase
-      .from('clientes')
-      .delete()
-      .eq('id', id);
-
-    if (error) throw error;
-  },
-
-  async listClients(userId?: string, userRole?: string, advogadoId?: string): Promise<Client[]> {
+  async listClients(userRole?: string, advogadoId?: string): Promise<Client[]> {
     const query = supabase
       .from('clientes')
-      .select('id, name, nif as taxId, telefone as phone, email, morada as address, estado as status, criado_em as createdAt, user_id as userId, advogado_id as lawyerId')
-      .order('criado_em', { ascending: false });
+      .select('id, nome, nif, telefone, email, morada, estado, created_at, user_id, advogado_id')
+      .order('created_at', { ascending: false });
 
     if (userRole === 'advogado' && advogadoId) {
       query.eq('advogado_id', advogadoId);
@@ -106,12 +116,16 @@ export const clientService = {
 
     if (error) throw error;
     return data.map(item => ({
-      ...item,
-      taxId: item.nif,
-      phone: item.telefone,
-      address: item.morada,
-      status: item.estado,
-      createdAt: new Date(item.criado_em)
+      id: item.id ?? '',
+      name: item.nome ?? '',
+      taxId: item.nif ?? '',
+      phone: item.telefone ?? '',
+      email: item.email ?? '',
+      address: item.morada ?? '',
+      status: item.estado ?? 'prospect',
+      createdAt: item.created_at ? new Date(item.created_at) : new Date(),
+      userId: item.user_id ?? '',
+      lawyerId: item.advogado_id ?? ''
     })) as Client[];
   }
 };
