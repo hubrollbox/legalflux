@@ -1,3 +1,5 @@
+export type ClientStatus = 'active' | 'inactive' | 'prospect';
+
 export interface Client {
   id: string;
   name: string;
@@ -5,8 +7,9 @@ export interface Client {
   phone: string;
   email: string;
   address: string;
-  status: 'active' | 'inactive' | 'prospect';
+  status: ClientStatus;
   createdAt: Date;
   userId: string;
   lawyerId?: string;
+  notes?: string;
 }
