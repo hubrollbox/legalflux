@@ -2,7 +2,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import PriorityBadge from "@/components/dashboard/PriorityBadge";
-import { RecentTask } from "./types";
+import type { RecentTask } from "./types";
 
 interface RecentTasksCardProps {
   tasks: RecentTask[];

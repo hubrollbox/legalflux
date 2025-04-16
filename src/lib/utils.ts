@@ -2,6 +2,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { UserRole } from "@/types/permissions";
+import { PriorityLevel } from "@/types"; // Import PriorityLevel
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -34,11 +35,12 @@ export const getUserRoleName = (role: UserRole): string => {
   return roleNames[role] || role;
 };
 
-export const getColorByPriority = (priority: 'low' | 'medium' | 'high'): string => {
+export const getColorByPriority = (priority: PriorityLevel): string => { // Change type to PriorityLevel
   switch (priority) {
-    case 'low': return 'bg-blue-100 text-blue-800';
-    case 'medium': return 'bg-yellow-100 text-yellow-800';
-    case 'high': return 'bg-red-100 text-red-800';
+    case PriorityLevel.LOW: return 'bg-blue-100 text-blue-800';
+    case PriorityLevel.MEDIUM: return 'bg-yellow-100 text-yellow-800';
+    case PriorityLevel.HIGH: return 'bg-red-100 text-red-800';
+    case PriorityLevel.URGENT: return 'bg-purple-100 text-purple-800'; // Add Urgent case
     default: return 'bg-gray-100 text-gray-800';
   }
 };

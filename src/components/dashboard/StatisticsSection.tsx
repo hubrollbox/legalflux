@@ -2,7 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import SectionHeader from "@/components/layout/SectionHeader";
 import MetricsCard from "@/components/dashboard/MetricsCard";
-import { StatCard } from "./types";
+import type { StatCard } from "./types";
 import { motion } from "framer-motion";
 
 interface StatisticsSectionProps {

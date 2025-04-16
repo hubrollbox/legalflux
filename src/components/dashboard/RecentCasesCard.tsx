@@ -38,4 +38,5 @@ const RecentCasesCard: React.FC<RecentCasesCardProps> = ({ cases }) => {
 };
 
 export default RecentCasesCard;
-import type { RecentCase } from "./types";
+// Remove the duplicate import below
+// import type { RecentCase } from "./types";

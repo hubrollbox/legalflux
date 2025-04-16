@@ -40,7 +40,7 @@ export const clientService = {
     
     return {
       id: dbClient.id ?? '',
-      name: dbClient.name ?? '',
+      name: dbClient.nome ?? '',
       taxId: dbClient.nif ?? '',
       phone: dbClient.telefone ?? '',
       email: dbClient.email ?? '',
@@ -80,7 +80,7 @@ export const clientService = {
     
     return {
       id: dbClient.id ?? '',
-      name: dbClient.name ?? '',
+      name: dbClient.nome ?? '',
       taxId: dbClient.nif ?? '',
       phone: dbClient.telefone ?? '',
       email: dbClient.email ?? '',
@@ -175,7 +175,7 @@ export const clientService = {
     
     return (data as unknown as DbClient[]).map(item => ({
       id: item.id ?? '',
-      name: item.name ?? '',
+      name: item.nome ?? '',
       taxId: item.nif ?? '',
       phone: item.telefone ?? '',
       email: item.email ?? '',
