@@ -1,6 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Briefcase, Clock, FileText, Users, LucideIcon, TrendingUp, TrendingDown, DollarSign, AlertCircle } from "lucide-react";
+import { Briefcase, Clock, FileText, Users, TrendingUp, TrendingDown, DollarSign, AlertCircle } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 interface MetricsCardProps {
   title: string;

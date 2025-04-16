@@ -1,7 +1,8 @@
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Maximize2, Minimize2 } from 'lucide-react';
+import { useState } from 'react';
 
 interface DashboardWidgetProps {
   title: string;
@@ -22,8 +23,8 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
   onRemove,
   onMaximize,
 }) => {
-  const [isCollapsed, setIsCollapsed] = React.useState(false);
-  const [isMaximized, setIsMaximized] = React.useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
