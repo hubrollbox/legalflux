@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { CheckCircle, Clock, AlertCircle, ExternalLink, Filter, ArrowUpDown } from 'lucide-react';
+import { CheckCircle, Clock, AlertCircle, ExternalLink, ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import DashboardWidget from './DashboardWidget';
-import { Task, TaskStatus, PriorityLevel } from '@/types';
+import type { Task, PriorityLevel } from '@/types';
 
 interface PendingTasksWidgetProps {
   tasks: Task[];
@@ -80,7 +80,7 @@ const PendingTasksWidget: React.FC<PendingTasksWidgetProps> = ({
             className="flex-1"
           />
           <div className="flex gap-2">
-            <Select value={filterPriority} onValueChange={(value) => setFilterPriority(value as PriorityLevel | 'all')}>
+            <Select value={filterPriority} onValueChange={(value: string) => setFilterPriority(value as PriorityLevel | 'all')}>
               <SelectTrigger className="w-32">
                 <SelectValue placeholder="Prioridade" />
               </SelectTrigger>
