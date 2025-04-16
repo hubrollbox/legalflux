@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 import { Bell, Sun, Moon, BarChart2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
