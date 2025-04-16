@@ -25,7 +25,7 @@ export interface CreateClientDTO {
   status: ClientStatus;
   userId: string;
   lawyerId?: string | null;
-  notes?: string;
+  notes?: string | undefined;
 }
 
 export interface UpdateClientDTO {
@@ -37,5 +37,5 @@ export interface UpdateClientDTO {
   address?: string;
   status?: ClientStatus;
   lawyerId?: string | null;
-  notes?: string;
+  notes?: string | undefined;
 }

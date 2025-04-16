@@ -28,7 +28,8 @@ import { supabase } from "@/integrations/supabase/client";
 // Schema de validação para o formulário de cliente
 const clientFormSchema = z.object({
   name: z.string().min(2, { message: "O nome deve ter pelo menos 2 caracteres" }),
-  nif: z.string().min(9, { message: "O Tax ID deve ter 9 dígitos" }).max(9),
+  nif: z.string().min(9, { message: "O NIF deve ter 9 dígitos" }).max(9),
+  taxId: z.string().min(9, { message: "O Tax ID deve ter 9 dígitos" }),
   email: z.string().email({ message: "Email inválido" }),
   phone: z.string().min(9, { message: "Telefone inválido" }),
   address: z.string().min(5, { message: "Morada deve ter pelo menos 5 caracteres" }),
@@ -55,6 +56,7 @@ const ClientForm: React.FC<ClientFormProps> = ({
     defaultValues: initialData || {
       name: "",
       nif: "",
+      taxId: "",
       email: "",
       phone: "",
       address: "",
@@ -86,6 +88,15 @@ const ClientForm: React.FC<ClientFormProps> = ({
         form.setError("nif", { 
           type: "manual", 
           message: "O NIF deve conter exatamente 9 dígitos numéricos" 
+        });
+        return;
+      }
+      
+      // Validação adicional do Tax ID
+      if (values.taxId && values.taxId.length < 9) {
+        form.setError("taxId", { 
+          type: "manual", 
+          message: "O Tax ID deve ter pelo menos 9 caracteres" 
         });
         return;
       }
@@ -215,12 +226,26 @@ const ClientForm: React.FC<ClientFormProps> = ({
 
         <FormField
           control={form.control}
-          name="notes"
+          name="taxId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Tax ID <span className="text-red-500">*</span></FormLabel>
               <FormControl>
-                <Input placeholder="Tax ID" {...field} name="taxId" />
+                <Input placeholder="Tax ID" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="notes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Notas</FormLabel>
+              <FormControl>
+                <Input placeholder="Notas adicionais" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -7,16 +7,16 @@ export const clientService = {
     const { data, error } = await supabase
       .from('clientes')
       .insert({
-        name: clientData.name,
-        tax_id: clientData.taxId,
-        phone: clientData.phone,
+        nome: clientData.name,
+        nif: clientData.taxId,
+        telefone: clientData.phone,
         email: clientData.email,
-        address: clientData.address,
-        status: clientData.status,
+        morada: clientData.address,
+        estado: clientData.status,
         user_id: userId,
-        lawyer_id: advogadoId ?? null
+        advogado_id: advogadoId ?? null
       })
-      .select('id, name, tax_id, phone, email, address, status, created_at, user_id, lawyer_id')
+      .select('id, nome, nif, telefone, email, morada, estado, created_at, user_id, advogado_id')
       .single();
 
     if (error) throw error;
@@ -25,37 +25,37 @@ export const clientService = {
     }
     
     // Explicitly type the database response to match the expected structure
-    const dbClient = data as {
+    const dbClient = data as unknown as {
       id: string;
-      name: string;
-      tax_id: string;
-      phone: string;
+      nome: string;
+      nif: string;
+      telefone: string;
       email: string;
-      address: string;
-      status: string;
+      morada: string;
+      estado: string;
       created_at: string;
       user_id: string;
-      lawyer_id: string | null;
+      advogado_id: string | null;
     };
     
     return {
       id: dbClient.id ?? '',
-      name: dbClient.name ?? '',
-      taxId: dbClient.tax_id ?? '',
-      phone: dbClient.phone ?? '',
+      name: dbClient.nome ?? '',
+      taxId: dbClient.nif ?? '',
+      phone: dbClient.telefone ?? '',
       email: dbClient.email ?? '',
-      address: dbClient.address ?? '',
-      status: dbClient.status ?? 'prospect',
+      address: dbClient.morada ?? '',
+      status: dbClient.estado ?? 'prospect',
       createdAt: dbClient.created_at ? new Date(dbClient.created_at) : new Date(),
       userId: dbClient.user_id ?? '',
-      lawyerId: dbClient.lawyer_id ?? ''
+      lawyerId: dbClient.advogado_id ?? ''
     } as Client;
   },
 
   async getClient(id: string) {
     const { data, error } = await supabase
       .from('clientes')
-      .select('id, name, tax_id, phone, email, address, status, created_at, user_id, lawyer_id')
+      .select('id, nome, nif, telefone, email, morada, estado, created_at, user_id, advogado_id')
       .eq('id', id)
       .single();
 
@@ -65,30 +65,30 @@ export const clientService = {
     }
     
     // Explicitly type the database response to match the expected structure
-    const dbClient = data as {
+    const dbClient = data as unknown as {
       id: string;
-      name: string;
-      tax_id: string;
-      phone: string;
+      nome: string;
+      nif: string;
+      telefone: string;
       email: string;
-      address: string;
-      status: string;
+      morada: string;
+      estado: string;
       created_at: string;
       user_id: string;
-      lawyer_id: string | null;
+      advogado_id: string | null;
     };
     
     return {
       id: dbClient.id ?? '',
-      name: dbClient.name ?? '',
-      taxId: dbClient.tax_id ?? '',
-      phone: dbClient.phone ?? '',
+      name: dbClient.nome ?? '',
+      taxId: dbClient.nif ?? '',
+      phone: dbClient.telefone ?? '',
       email: dbClient.email ?? '',
-      address: dbClient.address ?? '',
-      status: dbClient.status ?? 'prospect',
+      address: dbClient.morada ?? '',
+      status: dbClient.estado ?? 'prospect',
       createdAt: dbClient.created_at ? new Date(dbClient.created_at) : new Date(),
       userId: dbClient.user_id ?? '',
-      lawyerId: dbClient.lawyer_id ?? ''
+      lawyerId: dbClient.advogado_id ?? ''
     } as Client;
   },
 
@@ -96,19 +96,19 @@ export const clientService = {
     // Create an update object with only the properties that are provided
     const updateData: Record<string, any> = {};
     
-    if (clientData.name !== undefined) updateData.name = clientData.name;
-    if (clientData.taxId !== undefined) updateData.tax_id = clientData.taxId;
-    if (clientData.phone !== undefined) updateData.phone = clientData.phone;
+    if (clientData.name !== undefined) updateData.nome = clientData.name;
+    if (clientData.taxId !== undefined) updateData.nif = clientData.taxId;
+    if (clientData.phone !== undefined) updateData.telefone = clientData.phone;
     if (clientData.email !== undefined) updateData.email = clientData.email;
-    if (clientData.address !== undefined) updateData.address = clientData.address;
-    if (clientData.status !== undefined) updateData.status = clientData.status;
-    if (clientData.lawyerId !== undefined) updateData.lawyer_id = clientData.lawyerId;
+    if (clientData.address !== undefined) updateData.morada = clientData.address;
+    if (clientData.status !== undefined) updateData.estado = clientData.status;
+    if (clientData.lawyerId !== undefined) updateData.advogado_id = clientData.lawyerId;
     
     const { data, error } = await supabase
       .from('clientes')
       .update(updateData)
       .eq('id', id)
-      .select('id, name, tax_id, phone, email, address, status, created_at, user_id, lawyer_id')
+      .select('id, nome, nif, telefone, email, morada, estado, created_at, user_id, advogado_id')
       .single();
 
     if (error) throw error;
@@ -117,41 +117,42 @@ export const clientService = {
     }
     
     // Explicitly type the database response to match the expected structure
-    const dbClient = data as {
+    // First cast to unknown to avoid direct type assertion errors
+    const dbClient = (data as unknown) as {
       id: string;
-      name: string;
-      tax_id: string;
-      phone: string;
+      nome: string;
+      nif: string;
+      telefone: string;
       email: string;
-      address: string;
-      status: string;
+      morada: string;
+      estado: string;
       created_at: string;
       user_id: string;
-      lawyer_id: string | null;
+      advogado_id: string | null;
     };
     
     return {
       id: dbClient.id ?? '',
-      name: dbClient.name ?? '',
-      taxId: dbClient.tax_id ?? '',
-      phone: dbClient.phone ?? '',
+      name: dbClient.nome ?? '',
+      taxId: dbClient.nif ?? '',
+      phone: dbClient.telefone ?? '',
       email: dbClient.email ?? '',
-      address: dbClient.address ?? '',
-      status: dbClient.status ?? 'prospect',
+      address: dbClient.morada ?? '',
+      status: dbClient.estado ?? 'prospect',
       createdAt: dbClient.created_at ? new Date(dbClient.created_at) : new Date(),
       userId: dbClient.user_id ?? '',
-      lawyerId: dbClient.lawyer_id ?? ''
+      lawyerId: dbClient.advogado_id ?? ''
     } as Client;
   },
 
   async listClients(userRole?: string, advogadoId?: string): Promise<Client[]> {
     const query = supabase
       .from('clientes')
-      .select('id, name, tax_id, phone, email, address, status, created_at, user_id, lawyer_id')
+      .select('id, nome, nif, telefone, email, morada, estado, created_at, user_id, advogado_id')
       .order('created_at', { ascending: false });
 
     if (userRole === 'advogado' && advogadoId) {
-      query.eq('lawyer_id', advogadoId);
+      query.eq('advogado_id', advogadoId);
     }
 
     const { data, error } = await query;
@@ -161,18 +162,18 @@ export const clientService = {
     // Explicitly type the database response items to match the expected structure
     type DbClient = {
       id: string;
-      name: string;
-      tax_id: string;
-      phone: string;
+      nome: string;
+      nif: string;
+      telefone: string;
       email: string;
-      address: string;
-      status: string;
+      morada: string;
+      estado: string;
       created_at: string;
       user_id: string;
-      lawyer_id: string | null;
+      advogado_id: string | null;
     };
     
-    return (data as DbClient[]).map(item => ({
+    return (data as unknown as DbClient[]).map(item => ({
       id: item.id ?? '',
       name: item.nome ?? '',
       taxId: item.nif ?? '',
