@@ -7,7 +7,7 @@ export const clientService = {
     const { data, error } = await supabase
       .from('clientes')
       .insert({
-        nome: clientData.name,
+        name: clientData.name,
         nif: clientData.taxId,
         telefone: clientData.phone,
         email: clientData.email,
@@ -16,7 +16,7 @@ export const clientService = {
         user_id: userId,
         advogado_id: advogadoId ?? null
       })
-      .select('id, nome, nif, telefone, email, morada, estado, created_at, user_id, advogado_id')
+      .select('id, name, nif, telefone, email, morada, estado, created_at, user_id, advogado_id')
       .single();
 
     if (error) throw error;
@@ -40,7 +40,7 @@ export const clientService = {
     
     return {
       id: dbClient.id ?? '',
-      name: dbClient.nome ?? '',
+      name: dbClient.name ?? '',
       taxId: dbClient.nif ?? '',
       phone: dbClient.telefone ?? '',
       email: dbClient.email ?? '',
@@ -55,7 +55,7 @@ export const clientService = {
   async getClient(id: string) {
     const { data, error } = await supabase
       .from('clientes')
-      .select('id, nome, nif, telefone, email, morada, estado, created_at, user_id, advogado_id')
+      .select('id, name, nif, telefone, email, morada, estado, created_at, user_id, advogado_id')
       .eq('id', id)
       .single();
 
@@ -80,7 +80,7 @@ export const clientService = {
     
     return {
       id: dbClient.id ?? '',
-      name: dbClient.nome ?? '',
+      name: dbClient.name ?? '',
       taxId: dbClient.nif ?? '',
       phone: dbClient.telefone ?? '',
       email: dbClient.email ?? '',
@@ -96,7 +96,7 @@ export const clientService = {
     // Create an update object with only the properties that are provided
     const updateData: Record<string, any> = {};
     
-    if (clientData.name !== undefined) updateData.nome = clientData.name;
+    if (clientData.name !== undefined) updateData.name = clientData.name;
     if (clientData.taxId !== undefined) updateData.nif = clientData.taxId;
     if (clientData.phone !== undefined) updateData.telefone = clientData.phone;
     if (clientData.email !== undefined) updateData.email = clientData.email;
@@ -175,7 +175,7 @@ export const clientService = {
     
     return (data as unknown as DbClient[]).map(item => ({
       id: item.id ?? '',
-      name: item.nome ?? '',
+      name: item.name ?? '',
       taxId: item.nif ?? '',
       phone: item.telefone ?? '',
       email: item.email ?? '',

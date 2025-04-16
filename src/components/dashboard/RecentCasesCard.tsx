@@ -2,7 +2,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import StatusBadge from "@/components/dashboard/StatusBadge";
-import { RecentCase } from "./types";
+import type { RecentCase } from "./types";
 
 interface RecentCasesCardProps {
   cases: RecentCase[];
@@ -38,3 +38,4 @@ const RecentCasesCard: React.FC<RecentCasesCardProps> = ({ cases }) => {
 };
 
 export default RecentCasesCard;
+import type { RecentCase } from "./types";

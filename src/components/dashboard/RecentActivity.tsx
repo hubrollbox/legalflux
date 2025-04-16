@@ -6,7 +6,7 @@ import RecentCasesCard from "./RecentCasesCard";
 import RecentTasksCard from "./RecentTasksCard";
 import CasesAnalyticsChart from "./CasesAnalyticsChart";
 import TasksPerformanceChart from "./TasksPerformanceChart";
-import { RecentCase, RecentTask } from "./types";
+import type { RecentCase, RecentTask } from "./types";
 
 interface RecentActivityProps {
   recentCases: RecentCase[];

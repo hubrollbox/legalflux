@@ -1,5 +1,5 @@
 
-import { RecentCase, RecentTask } from "./types";
+import type { RecentCase, RecentTask } from "./types";
 import { PriorityLevel } from "@/types";
 
 // Recent cases data
