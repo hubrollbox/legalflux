@@ -3,6 +3,7 @@ export type ClientStatus = 'active' | 'inactive' | 'prospect';
 export interface Client {
   id: string;
   name: string;
+  nif: string;
   taxId: string;
   phone: string;
   email: string;
