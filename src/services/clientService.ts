@@ -7,7 +7,7 @@ export const clientService = {
     const { data, error } = await supabase
       .from('clientes')
       .insert({
-        nome: clientData.name,
+        name: clientData.name,
         nif: clientData.taxId,
         telefone: clientData.phone,
         email: clientData.email,
@@ -16,22 +16,21 @@ export const clientService = {
         user_id: userId,
         advogado_id: advogadoId ?? null
       })
-      .select('id, nome as name, nif as taxId, telefone as phone, email, morada as address, estado as status, criado_em as createdAt, user_id as userId, advogado_id as lawyerId')
-      .returns<Client[]>();
+      .select('id, name, nif as taxId, telefone as phone, email, morada as address, estado as status, criado_em as createdAt, user_id as userId, advogado_id as lawyerId')
+      .single();
 
     if (error) throw error;
     return {
-      id: data?.[0]?.id ?? '',
-      name: data?.[0]?.name ?? '',
-      taxId: data?.[0]?.taxId ?? '',
-
-      phone: data?.[0]?.phone ?? '',
-      email: data?.[0]?.email ?? '',
-      address: data?.[0]?.address ?? '',
-      status: data?.[0]?.status ?? 'prospect',
-      createdAt: data?.[0]?.createdAt ? new Date(data?.[0]?.createdAt) : new Date(),
-      userId: data?.[0]?.userId ?? '',
-      lawyerId: data?.[0]?.lawyerId ?? ''
+      id: data?.id ?? '',
+      name: data?.name ?? '',
+      taxId: data?.taxId ?? '',
+      phone: data?.phone ?? '',
+      email: data?.email ?? '',
+      address: data?.address ?? '',
+      status: data?.status ?? 'prospect',
+      createdAt: data?.createdAt ? new Date(data.createdAt) : new Date(),
+      userId: data?.userId ?? '',
+      lawyerId: data?.lawyerId ?? ''
     };
   },
 
@@ -40,24 +39,18 @@ export const clientService = {
       .from('clientes')
       .select('id, nome as name, nif as taxId, telefone as phone, email, morada as address, estado as status, criado_em as createdAt, user_id as userId, advogado_id as lawyerId')
       .eq('id', id)
-      .single()
-      .returns<Client>();
+      .single();
 
     if (error) throw error;
-    return data.map(item => ({
-      id: item.id,
-      name: item.name,
-      taxId: item.taxId,
-
-      phone: item.phone,
-      email: item.email,
-      address: item.address,
-      status: item.status,
-      createdAt: new Date(item.createdAt),
-      userId: item.userId,
-      lawyerId: item.lawyerId
-    })) as Client[];
-  },
+    return {
+      ...data,
+      taxId: data.nif,
+      phone: data.telefone,
+      address: data.morada,
+      status: data.estado,
+      createdAt: new Date(data.criado_em)
+    } as Client;
+  }
 
   async updateClient(id: string, clientData: Partial<Client>) {
     const { data, error } = await supabase
@@ -73,21 +66,20 @@ export const clientService = {
       })
       .eq('id', id)
       .select('id, nome as name, nif as taxId, telefone as phone, email, morada as address, estado as status, criado_em as createdAt, user_id as userId, advogado_id as lawyerId')
-      .returns<Client[]>();
+      .single();
 
     if (error) throw error;
     return {
-      id: data?.[0]?.id ?? '',
-      name: data?.[0]?.name ?? '',
-      taxId: data?.[0]?.taxId ?? '',
-
-      phone: data?.[0]?.phone ?? '',
-      email: data?.[0]?.email ?? '',
-      address: data?.[0]?.address ?? '',
-      status: data?.[0]?.status ?? 'prospect',
-      createdAt: data?.[0]?.createdAt ? new Date(data?.[0]?.createdAt) : new Date(),
-      userId: data?.[0]?.userId ?? '',
-      lawyerId: data?.[0]?.lawyerId ?? ''
+      id: data?.id ?? '',
+      name: data?.name ?? '',
+      taxId: data?.taxId ?? '',
+      phone: data?.phone ?? '',
+      email: data?.email ?? '',
+      address: data?.address ?? '',
+      status: data?.status ?? 'prospect',
+      createdAt: data?.createdAt ? new Date(data.createdAt) : new Date(),
+      userId: data?.userId ?? '',
+      lawyerId: data?.lawyerId ?? ''
     } as Client;
   },
 
@@ -100,13 +92,13 @@ export const clientService = {
     if (error) throw error;
   },
 
-  async listClients(userId?: string, userRole?: string, advogadoId?: string) {
+  async listClients(userId?: string, userRole?: string, advogadoId?: string): Promise<Client[]> {
     const query = supabase
       .from('clientes')
-      .select('id, nome as name, nif as taxId, telefone as phone, email, morada as address, estado as status, criado_em as createdAt, user_id as userId, advogado_id as lawyerId')
+      .select('id, name, nif as taxId, telefone as phone, email, morada as address, estado as status, criado_em as createdAt, user_id as userId, advogado_id as lawyerId')
       .order('criado_em', { ascending: false });
 
-    if (userRole !== 'admin' && advogadoId) {
+    if (userRole === 'advogado' && advogadoId) {
       query.eq('advogado_id', advogadoId);
     }
 
@@ -114,17 +106,12 @@ export const clientService = {
 
     if (error) throw error;
     return data.map(item => ({
-      id: item.id,
-      name: item.name,
-      taxId: item.taxId,
-
-      phone: item.phone,
-      email: item.email,
-      address: item.address,
-      status: item.status,
-      createdAt: new Date(item.createdAt),
-      userId: item.userId,
-      lawyerId: item.lawyerId
+      ...item,
+      taxId: item.nif,
+      phone: item.telefone,
+      address: item.morada,
+      status: item.estado,
+      createdAt: new Date(item.criado_em)
     })) as Client[];
   }
 };
