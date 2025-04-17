@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { Process, CreateProcessDTO, UpdateProcessDTO, ProcessStatus } from "@/types/process";
+import type { Process, CreateProcessDTO, UpdateProcessDTO, ProcessStatus } from "@/types/process";
 
 export const processService = {
   async createProcess(processData: CreateProcessDTO, userId: string, organizationId: string): Promise<Process> {
@@ -89,6 +89,12 @@ export const processService = {
 
     if (error) throw error;
     return data;
+  },
+
+  async getCurrentProcess(): Promise<Process | null> {
+    // Implementation to get the currently selected process
+    // This could be enhanced to track the current process in state
+    return null;
   }
 };
 

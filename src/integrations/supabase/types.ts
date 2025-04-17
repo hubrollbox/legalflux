@@ -7,6 +7,124 @@ export type Json =
   | Json[]
 
 export type Database = {
+  schema_public: {
+    Tables: {
+      processes: {
+        Row: {
+          id: string;
+          status: string;
+          created_by: string;
+          organization_id: string;
+          client_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          status: string;
+          created_by: string;
+          organization_id: string;
+          client_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          status?: string;
+          created_by?: string;
+          organization_id?: string;
+          client_id?: string;
+          created_at?: string;
+        };
+      };
+    };
+  };
+  public: {
+    Tables: {
+      processes: {
+        Row: {
+          id: string;
+          status: string;
+          created_by: string;
+          organization_id: string;
+          client_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          status: string;
+          created_by: string;
+          organization_id: string;
+          client_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          status?: string;
+          created_by?: string;
+          organization_id?: string;
+          client_id?: string;
+          created_at?: string;
+        };
+      };
+  public: {
+    Tables: {
+      processes: {
+        Row: {
+          id: string;
+          status: string;
+          created_by: string;
+          organization_id: string;
+          client_id: string;
+          created_at: string;
+        };
+      };
+  public: {
+    Tables: {
+      processes: {
+        Row: {
+          id: string;
+          status: string;
+          created_by: string;
+          organization_id: string;
+          client_id: string;
+          created_at: string;
+        };
+      };
+  public: {
+    Tables: {
+      processes: {
+        Row: {
+          id: string;
+          status: string;
+          created_by: string;
+          organization_id: string;
+          client_id: string;
+          created_at: string;
+        };
+      };
+  public: {
+    Tables: {
+      process_records: {
+        Row: {
+          id: string;
+          status: string;
+          created_by: string;
+          organization_id: string;
+          client_id: string;
+          created_at: string;
+        };
+      };
+  processes: {
+    Row: {
+      id: string;
+      status: string;
+      created_by: string;
+      organization_id: string;
+      client_id: string;
+      created_at: string;
+    };
+  };
+
+  public: {
   public: {
     Tables: {
       advogados: {
@@ -452,7 +570,7 @@ export type Database = {
   }
 }
 
-type PublicSchema = Database[Extract<keyof Database, "public">]
+type PublicSchema = Database["public"];
 
 export type Tables<
   PublicTableNameOrOptions extends
@@ -530,7 +648,7 @@ export type Enums<
     : never = never,
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
+  : PublicEnumNameOrOptions extends keyof (PublicSchema["Enums"] & {})
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
     : never
 
