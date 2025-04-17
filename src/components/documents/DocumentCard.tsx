@@ -1,6 +1,5 @@
 
-// React is already imported in the combined import statement below
-import { FileText, FileImage, FileArchive, File, FileCode, MoreHorizontal, Eye, Download, Share2, Trash2, Tag } from "lucide-react";
+import { FileText, FileImage, File, FileCode, MoreHorizontal, Eye, Download, Share2, Trash2, Tag, Check } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -141,7 +140,13 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ doc }) => {
           >
             {isSigned ? (
               <>
-                <CheckCircle2 className="h-4 w-4" />
+                <Check className="h-4 w-4" />
+
+
+
+
+
+
                 Assinado
               </>
             ) : (
@@ -160,7 +165,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ doc }) => {
         )}
         <div className="space-y-2">
           <div className="flex items-center text-xs text-muted-foreground">
-            <span>Atualizado em {formatDate(doc.updatedAt)}</span>
+            <span>Atualizado em {formatDate(doc.updatedAt.toString())}</span>
           </div>
           <div className="flex items-center text-xs text-muted-foreground">
             <span>Processo: {doc.process}</span>
