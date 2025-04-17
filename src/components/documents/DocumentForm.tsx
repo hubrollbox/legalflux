@@ -4,7 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Client, Process, Document } from "@/components/clients/ClientProcessForm";
+import type { Client } from "@/types/client";
+import { Process } from "@/types/process";
+import { Document } from "@/types/document";
 
 interface DocumentFormProps {
   onSubmit: (data: Partial<Document>) => void;
@@ -98,7 +100,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
         <Label htmlFor="clientId">Cliente</Label>
         <Select
           value={formData.clientId}
-          onValueChange={(value) => setFormData({ ...formData, clientId: value, processId: undefined })}
+          onValueChange={(value: string) => setFormData({ ...formData, clientId: value, processId: undefined })}
           disabled={!!selectedClient}
         >
           <SelectTrigger id="clientId">
