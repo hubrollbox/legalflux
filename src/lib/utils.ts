@@ -25,11 +25,11 @@ export const formatCurrency = (amount: number, currency: string = "EUR"): string
 
 export const getUserRoleName = (role: UserRole): string => {
   const roleNames: Record<UserRole, string> = {
-    [UserRole.CLIENT]: "Cliente",
-    [UserRole.LAWYER]: "Advogado",
-    [UserRole.SENIOR_LAWYER]: "Advogado Sênior",
-    [UserRole.ASSISTANT]: "Assistente",
-    [UserRole.ADMIN]: "Administrador",
+    'client': "Cliente",
+    'lawyer': "Advogado",
+    'senior_lawyer': "Advogado Sênior",
+    'assistant': "Assistente",
+    'admin': "Administrador",
   };
   
   return roleNames[role] || role;
