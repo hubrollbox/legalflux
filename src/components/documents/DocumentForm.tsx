@@ -5,8 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { Client } from "@/types/client";
-import { Process } from "@/types/process";
-import { Document } from "@/types/document";
+import type { Process } from "@/types/process";
+import type { Document } from "@/types/document";
 
 interface DocumentFormProps {
   onSubmit: (data: Partial<Document>) => void;
@@ -37,17 +37,14 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
     }
   );
 
-  const [file, setFile] = React.useState<File | null>(null);
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const selectedFile = e.target.files[0];
-      setFile(selectedFile);
-      setFormData(prev => ({
-        ...prev,
-        fileType: selectedFile.type
-      }));
-    }
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    
+    setFormData(prev => ({
+      ...prev,
+      fileType: files[0]?.type || ''
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -118,7 +115,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
         <Label htmlFor="processId">Processo</Label>
         <Select
           value={formData.processId}
-          onValueChange={(value) => setFormData({ ...formData, processId: value })}
+          onValueChange={(value: string) => setFormData({ ...formData, processId: value })}
           disabled={!!selectedProcess || !formData.clientId}
         >
           <SelectTrigger id="processId">
