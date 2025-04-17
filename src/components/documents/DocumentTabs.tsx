@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FileText } from "lucide-react";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -14,12 +14,18 @@ interface DocumentTabsProps {
   setViewMode: (mode: "grid" | "list") => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+  filters: {
+    type: "document" | "action" | "precedent" | "strategy";
+    date: Date | undefined;
+    tags: string[];
+  };
+  setFilters: (filters: any) => void;
   filteredDocuments: Array<{
     id: string;
     name: string;
-    type: string;
+    type: "document" | "action" | "precedent" | "strategy";
     size: string;
-    updatedAt: string | Date;
+    updatedAt: Date;
     owner: string;
     folder: string;
     process: string;
@@ -28,7 +34,7 @@ interface DocumentTabsProps {
   filteredTemplates: Array<{
     id: string;
     name: string;
-    type: string;
+    type: "document" | "action" | "precedent" | "strategy";
     size: string;
     description: string;
     updatedAt: string;
@@ -41,6 +47,8 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
   setViewMode,
   searchTerm,
   setSearchTerm,
+  filters,
+  setFilters,
   filteredDocuments,
   filteredTemplates
 }) => {
@@ -62,7 +70,12 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
         <DocumentsViewMode viewMode={viewMode} setViewMode={setViewMode} />
       </div>
       
-      <DocumentsSearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <DocumentsSearchBar 
+  searchTerm={searchTerm} 
+  setSearchTerm={setSearchTerm}
+  filters={filters}
+  setFilters={setFilters}
+/>
 
       <TabsContent value="all" className="mt-6">
         <DocumentsContent
