@@ -1,11 +1,10 @@
 import * as React from 'react';
 
 type FileUploadProps = {
-  processId: string;
   onUploadSuccess: (files: File[]) => void;
 };
 
-export const FileUpload = ({ processId, onUploadSuccess }: FileUploadProps) => {
+export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       onUploadSuccess(Array.from(e.target.files));

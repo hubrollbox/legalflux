@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import type { ControllerRenderProps } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -41,6 +42,8 @@ import { processService } from "@/services/processService";
 // Remove unused imports since they are not being used in the component
 // Remove unused import since FileUpload component is not being used
 // Remove unused import since we're not using react-pdf/renderer components
+import type { ControllerFieldState } from "react-hook-form";
+import type { UseFormStateReturn } from "react-hook-form";
 
 // Schema de validação para o formulário de documento
 const documentTemplateFormSchema = z.object({
@@ -98,8 +101,67 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
   const [previewContent, setPreviewContent] = useState<string>('');
   const [activePlaceholders, setActivePlaceholders] = useState<string[]>([]);
 
-  // Remove unused predefinedPlaceholders array since it's not being read
-const predefinedPlaceholders = [
+  const generatePreview = async (): Promise<string> => {
+    if (!templateContent || !selectedTemplate) return '';
+    let content = templateContent;
+    const clientData = clientService.getCurrentClient();
+    const processData = await processService.getCurrentProcess();
+
+    let processNumber = parseInt(processData?.number?.toString() || '0', 10);
+    if (Number.isNaN(processNumber)) processNumber = 0;
+    
+    activePlaceholders.forEach((placeholder) => {
+      const value = {
+        nome_cliente: clientData?.name || '[Nome do Cliente]',
+        nif: clientData?.nif || '[NIF]',
+        numero_processo: processNumber.toString() || '[Número do Processo]',
+        data_actual: new Date().toLocaleDateString('pt-PT'),
+        morada: clientData?.address || '[Morada]',
+      }[placeholder];
+    
+      content = content.replace(
+        new RegExp(`{{${placeholder}}}`, 'g'),
+        () => `<span class="font-medium text-blue-600">${value}</span>`
+      );
+    });
+
+    const clientId = form.watch('clientId');
+    const processId = form.watch('processId');
+    const currentClient = clients.find(c => c.id === clientId);
+    const currentProcess = processes.find(p => p.id === processId);
+
+    content = content
+      .replace(/\{\{cliente.nome\}\}/g, currentClient?.name || '[Cliente]')
+      .replace(/\{\{processo.numero\}\}/g, currentProcess?.number?.toString() || '[Número]');
+
+    const customFields = form.watch('customFields');
+    Object.entries(customFields).forEach(([key, value]) => {
+      content = content.replace(new RegExp(`\{\{${key}\}\}`, 'g'), value || `[${key}]`);
+    });
+
+    return content;
+  };
+
+  const handleExportPDF = (): void => {
+    const pdfContent = previewContent.replace(/<[^>]+>/g, '');
+    const blob = new Blob([pdfContent], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'documento_gerado.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* existing JSX content */}
+    </div>
+  );
+
+  const predefinedPlaceholders = [
     'nome_cliente',
     'nif',
     'numero_processo',
@@ -107,7 +169,7 @@ const predefinedPlaceholders = [
     'morada'
   ];
 
-  const handleInsertPlaceholder = (placeholder: string) => {
+  const handleInsertPlaceholder = (placeholder: string): void => {
     const newContent = `${templateContent}{{${placeholder}}}`;
     setTemplateContent(newContent);
     if (!activePlaceholders.includes(placeholder)) {
@@ -147,7 +209,7 @@ const predefinedPlaceholders = [
   }, []);
 
   // Atualizar o template selecionado quando o usuário selecionar um template
-  const handleTemplateChange = (templateId: string) => {
+  const handleTemplateChange = (templateId: string): void => {
     const template = templates?.find((t: { id: string }) => t.id === templateId);
     setSelectedTemplate(template);
 
@@ -162,53 +224,7 @@ const predefinedPlaceholders = [
   };
 
   // Gerar visualização do documento com os campos preenchidos
-  const generatePreview = async (): Promise<string> => {
 
-// Add type annotation for option parameter
-{selectedTemplate?.fields?.find((field) => field.type === 'select')?.options?.map((option: string) => (
-  <SelectItem key={option} value={option}>
-    {option}
-  </SelectItem>
-))}
-    if (!templateContent || !selectedTemplate) return '';
-    let content = templateContent;
-    const clientData = clientService.getCurrentClient();
-    const processData = await processService.getCurrentProcess();
-
-    activePlaceholders.forEach((placeholder) => {
-      const value = {
-        nome_cliente: clientData?.name || '[Nome do Cliente]',
-        nif: clientData?.nif || '[NIF]',
-        numero_processo: processData?.number?.toString() || '[Número do Processo]',
-        data_actual: new Date().toLocaleDateString('pt-PT'),
-        morada: clientData?.address || '[Morada]',
-      }[placeholder];
-
-      content = content.replace(
-        new RegExp(`{{${placeholder}}}`, 'g'),
-        () => `<span class="font-medium text-blue-600">${value}</span>`
-      );
-    });
-
-    // Add client/process data from form
-    const clientId = form.watch('clientId');
-    const processId = form.watch('processId');
-    const currentClient = clients.find(c => c.id === clientId);
-    const currentProcess = processes.find(p => p.id === processId);
-
-    // Replace template placeholders
-    content = content
-      .replace(/\{\{cliente.nome\}\}/g, currentClient?.name || '[Cliente]')
-      .replace(/\{\{processo.numero\}\}/g, currentProcess?.number?.toString() || '[Número]');
-
-    // Replace custom fields
-    const customFields = form.watch('customFields');
-    Object.entries(customFields).forEach(([key, value]) => {
-      content = content.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value || `[${key}]`);
-    });
-
-    return content;
-  };
 
   // Atualizar a visualização quando os campos forem alterados
   useEffect(() => {
@@ -234,396 +250,282 @@ const predefinedPlaceholders = [
   return (
     <>
       <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <div>
-            <Label>Conteúdo do Documento</Label>
-            <Textarea
-              value={templateContent}
-              onChange={(e) => setTemplateContent(e.target.value)}
-              className="min-h-[300px] font-mono"
-              placeholder="Insira seu texto aqui..."
-            />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div>
+          {/* Placeholder for additional content */}
+              <Label>Conteúdo do Documento</Label>
+              <Textarea
+                value={templateContent}
+                onChange={(e) => setTemplateContent(e.target.value)}
+                className="min-h-[300px] font-mono"
+                placeholder="Insira seu texto aqui..."
+              />
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {predefinedPlaceholders.map(placeholder => (
+                <Button
+                  key={placeholder}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleInsertPlaceholder(placeholder)}
+                >
+                  {`{{${placeholder}}}`}
+                </Button>
+              ))}
+            </div>
+            <Button onClick={generatePreview} className="mt-4">
+              Atualizar Pré-visualização
+            </Button>
           </div>
-
-          <div className="flex flex-wrap gap-2">
-            {predefinedPlaceholders.map(placeholder => (
-              <Button
-                key={placeholder}
-                variant="outline"
-                size="sm"
-                onClick={() => handleInsertPlaceholder(placeholder)}
-              >
-                {`{{${placeholder}}`}
-              </Button>
-            ))}
+          <div className="space-y-4">
+            <Label>Pré-visualização</Label>
+            <Card>
+              <CardContent className="p-4 prose max-w-none">
+                <div dangerouslySetInnerHTML={{ __html: previewContent }} />
+              </CardContent>
+            </Card>
+            <PDFDownloadLink
+              document={(
+                <Document>
+                  <Page style={{ padding: 20 }}>
+                    <Text>{previewContent.replace(/<[^>]+>/g, '')}</Text>
+                  </Page>
+                </Document>
+              )}
+              fileName="documento_gerado.pdf"
+            >
+              {({ loading }) => (
+                <Button className="w-full" disabled={loading}>
+                  <Download className="mr-2 h-4 w-4" />
+                  {loading ? 'Gerando PDF...' : 'Exportar Documento'}
+                </Button>
+              )}
+            </PDFDownloadLink>
           </div>
-
-          <Button onClick={generatePreview} className="mt-4">
-            Atualizar Pré-visualização
-          </Button>
         </div>
-
-        <div className="space-y-4">
-          <Label>Pré-visualização</Label>
-          <Card>
-            <CardContent className="p-4 prose max-w-none">
-              <div dangerouslySetInnerHTML={{ __html: previewContent }} />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          {/* Placeholder for additional content */}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onFormSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="templateId"
+                render={({ field }: { field: ControllerRenderProps<{ templateId: string; name: string; processId: string; clientId: string; customFields: Record<string, string>; }, "templateId"> & { onChange: (value: string) => void; onBlur: () => void; value: string; name: string; ref: React.Ref<any>; } }) => (
+                  <FormItem>
+                    <FormLabel>Modelo <span className="text-red-500">*</span></FormLabel>
+                    <Select
+                      onValueChange={(value: string) => {
+                        field.onChange(value);
+                        handleTemplateChange(value);
+                      }}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um modelo" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {templates.map((template) => (
+                          <SelectItem key={template.id} value={template.id}>
+                            {template.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field, formState }: { field: ControllerRenderProps<{ templateId: string; name: string; processId: string; clientId: string; customFields: Record<string, string>; }, "name"> & { onChange: (value: string) => void; onBlur: () => void; value: string; name: string; ref: React.Ref<any>; }; formState: UseFormStateReturn<DocumentTemplateFormValues> }) => (
+                <FormItem>
+                <FormLabel>Nome do Documento <span className="text-red-500">*</span></FormLabel>
+                <FormControl>
+                <Input placeholder="Nome do documento" {...field} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>)
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="processId"
+                  render={({ field, fieldState, formState }: { field: ControllerRenderProps<{ templateId: string; name: string; processId: string; clientId: string; customFields: Record<string, string>; }, "processId"> & { onChange: (value: string) => void; onBlur: () => void; value: string; name: string; ref: React.Ref<any>; }; fieldState: ControllerFieldState; formState: UseFormStateReturn<DocumentTemplateFormValues> }) => (
+                    <FormItem>
+                      <FormLabel>Processo <span className="text-red-500">*</span></FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        disabled={isLoadingProcesses}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione um processo" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {isLoadingProcesses ? (
+                            <SelectItem value="loading" disabled>
+                              Carregando processos...
+                            </SelectItem>
+                          ) : processes.length === 0 ? (
+                            <SelectItem value="empty" disabled>
+                              Nenhum processo encontrado
+                            </SelectItem>
+                          ) : (
+                            processes.map((process) => (
+                              <SelectItem key={process.id} value={process.id}>
+                                {process.title}
+                              </SelectItem>
+                            ))
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="clientId"
+                  render={({ field, fieldState, formState }: { field: ControllerRenderProps<{ templateId: string; name: string; processId: string; clientId: string; customFields: Record<string, string>; }, "clientId"> & { onChange: (value: string) => void; onBlur: () => void; value: string; name: string; ref: React.Ref<any>; }; fieldState: ControllerFieldState; formState: UseFormStateReturn<DocumentTemplateFormValues> }) => (
+                    <FormItem>
+                      <FormLabel>Cliente <span className="text-red-500">*</span></FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        disabled={isLoadingClients}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione um cliente" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {isLoadingClients ? (
+                            <SelectItem value="loading" disabled>
+                              Carregando clientes...
+                            </SelectItem>
+                          ) : clients.length === 0 ? (
+                            <SelectItem value="empty" disabled>
+                              Nenhum cliente encontrado
+                            </SelectItem>
+                          ) : (
+                            clients.map((client) => (
+                              <SelectItem key={client.id} value={client.id}>
+                                {client.name}
+                              </SelectItem>
+                            ))
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {selectedTemplate && selectedTemplate.fields.length > 0 && (
+                <div className="space-y-4">
+                  <FileUpload onUploadSuccess={(files: File[]) => console.log('Arquivos enviados:', files)} />
+                  <h3 className="font-medium">Campos Personalizados</h3>
+                  {selectedTemplate.fields.map((field) => (
+                    <FormField
+                      key={field.id}
+                      control={form.control}
+                      name={`customFields.${field.key}`}
+                      render={({ field: formField, fieldState, formState }: { field: ControllerRenderProps<{ name: string; templateId: string; processId: string; clientId: string; customFields: Record<string, string>; }, `customFields.${any}`>; fieldState: ControllerFieldState; formState: UseFormStateReturn<DocumentTemplateFormValues> }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {field.name}
+                            {field.required && <span className="text-red-500">*</span>}
+                          </FormLabel>
+                          <FormControl>
+                            {field?.type === "text" ? (
+                              <Input {...formField} />
+                            ) : field?.type === "textarea" ? (
+                              <Textarea {...formField} />
+                            ) : field?.type === "select" && field?.options ? (
+                              <Select
+                                onValueChange={formField.onChange}
+                                defaultValue={formField.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder={`Selecione ${field.name}`} />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {field.options.map((option: string) => (
+                                    <SelectItem key={option} value={option}>
+                                      {option}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            ) : (
+                              <Input {...formField} />
+                            )}
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+                </div>
+              )}
+              <div className="flex justify-end space-x-2">
+                <Button type="button" variant="outline">
+                  Cancelar
+                </Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  Gerar Documento
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </div>
+        <div>
+          {/* Placeholder for additional content */}
+          <h3 className="font-medium mb-4">Pré-visualização</h3>
+          <Card className="h-full">
+            <CardContent className="p-6">
+              {selectedTemplate ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <FileText className="h-5 w-5 mr-2 text-blue-600" />
+                      <h3 className="font-medium">{form.watch("name") || "Novo Documento"}</h3>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={handleExportPDF}>
+                      <Download className="h-4 w-4 mr-2" />
+                      Exportar PDF
+                    </Button>
+                  </div>
+                  <div className="border-t pt-4">
+                    <pre className="whitespace-pre-wrap font-sans text-sm">
+                      {previewContent || "Preencha os campos para visualizar o documento."}
+                    </pre>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-12 text-muted-foreground">
+                  <FileText className="h-12 w-12 mx-auto mb-4 opacity-20" aria-hidden="true" />
+                  <p>Selecione um modelo para visualizar o documento.</p>
+                </div>
+              )}
             </CardContent>
           </Card>
-
-          <PDFDownloadLink
-            document={(
-              <Document>
-                <Page style={{ padding: 20 }}>
-                  <Text>{previewContent.replace(/<[^>]+>/g, '')}</Text>
-                </Page>
-              </Document>
-            )}
-            fileName="documento_gerado.pdf"
-          >
-            {({ loading }) => (
-              <Button className="w-full" disabled={loading}>
-                <Download className="mr-2 h-4 w-4" />
-                {loading ? 'Gerando PDF...' : 'Exportar Documento'}
-              </Button>
-            )}
-          </PDFDownloadLink>
         </div>
       </div>
-        </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onFormSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="templateId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Modelo <span className="text-red-500">*</span></FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      handleTemplateChange(value);
-                    }}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione um modelo" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {templates.map((template) => (
-                        <SelectItem key={template.id} value={template.id}>
-                          {template.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome do Documento <span className="text-red-500">*</span></FormLabel>
-                  <FormControl>
-                    <Input placeholder="Nome do documento" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="processId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Processo <span className="text-red-500">*</span></FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      disabled={isLoadingProcesses}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione um processo" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {isLoadingProcesses ? (
-                          <SelectItem value="loading" disabled>
-                            Carregando processos...
-                          </SelectItem>
-                        ) : processes.length === 0 ? (
-                          <SelectItem value="empty" disabled>
-                            Nenhum processo encontrado
-                          </SelectItem>
-                        ) : (
-                          processes.map((process) => (
-                            <SelectItem key={process.id} value={process.id}>
-                              {process.title}
-                            </SelectItem>
-                          ))
-                        )}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="clientId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Cliente <span className="text-red-500">*</span></FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      disabled={isLoadingClients}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione um cliente" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {isLoadingClients ? (
-                          <SelectItem value="loading" disabled>
-                            Carregando clientes...
-                          </SelectItem>
-                        ) : clients.length === 0 ? (
-                          <SelectItem value="empty" disabled>
-                            Nenhum cliente encontrado
-                          </SelectItem>
-                        ) : (
-                          clients.map((client) => (
-                            <SelectItem key={client.id} value={client.id}>
-                              {client.name}
-                            </SelectItem>
-                          ))
-                        )}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            {selectedTemplate && selectedTemplate.fields.length > 0 && (
-              <div className="space-y-4">
-                <FileUpload
-                  processId={form.watch("processId")}
-                  onUploadSuccess={(files: any) => console.log('Arquivos enviados:', files)}
-                />
-                <h3 className="font-medium">Campos Personalizados</h3>
-                {selectedTemplate.fields.map((field) => (
-                  <FormField
-                    key={field.id}
-                    control={form.control}
-                    name={`customFields.${field.key}`}
-                    render={({ field: formField }) => (
-                      <FormItem>
-                        <FormLabel>
-                          {field.name}
-                          {field.required && <span className="text-red-500">*</span>}
-                        </FormLabel>
-                        <FormControl>
-                          {field?.type === "text" ? (
-                            <Input {...formField} />
-                          ) : field?.type === "textarea" ? (
-                            <Textarea {...formField} />
-                          ) : field?.type === "select" && field?.options ? (
-                            <Select
-                              onValueChange={formField.onChange}
-                              defaultValue={formField.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder={`Selecione ${field.name}`} />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {field.options.map((option) => (
-                                  <SelectItem key={option} value={option}>
-                                    {option}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          ) : (
-                            <Input {...formField} />
-                          )}
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                ))}
-              </div>
-            )}
-
-            <div className="flex justify-end space-x-2">
-              <Button type="button" variant="outline">
-                Cancelar
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                Gerar Documento
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </div>
-
-      <div>
-        <h3 className="font-medium mb-4">Pré-visualização</h3>
-        <Card className="h-full">
-          <CardContent className="p-6">
-            {selectedTemplate ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <FileText className="h-5 w-5 mr-2 text-blue-600" />
-                    <h3 className="font-medium">{form.watch("name") || "Novo Documento"}</h3>
-                  </div>
-                  <Button variant="outline" size="sm" onClick={handleExportPDF}>
-                    <Download className="h-4 w-4 mr-2" />
-                    Exportar PDF
-                  </Button>
-                </div>
-                <div className="border-t pt-4">
-                  <pre className="whitespace-pre-wrap font-sans text-sm">
-                    {previewContent || "Preencha os campos para visualizar o documento."}
-                  </pre>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-12 text-muted-foreground">
-<FileText className="h-12 w-12 mx-auto mb-4 opacity-20" aria-hidden="true" />
-                <p>Selecione um modelo para visualizar o documento.</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    </>
   );
 }
 
-// Move handleExportPDF inside component
-const handleExportPDF = (): void => {
-  const pdfContent = previewContent.replace(/<[^>]+>/g, '');
-  const blob = new Blob([pdfContent], { type: 'application/pdf' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'documento_gerado.pdf';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  window.URL.revokeObjectURL(url);
-};
-
-// Fix JSX fragment closure
-return (
-  <div className="space-y-6">
-    {/* existing JSX content */}
-  </div>
-);
-
-// Add explicit type annotations for SelectItem options
-{field?.options?.map((option: string) => (
-  <SelectItem key={option} value={option}>
-    {option}
-  </SelectItem>
-))}
-
-// Add isSubmitting to component props
-const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templates, isSubmitting }) => {
-
-// Move handleExportPDF inside component scope
-const handleExportPDF = (): void => {
-  const pdfContent = previewContent.replace(/<[^>]+>/g, '');
-  const blob = new Blob([pdfContent], { type: 'application/pdf' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'documento_gerado.pdf';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  window.URL.revokeObjectURL(url);
-};
-
-// Fix JSX fragment closure
-return (
-  <div className="space-y-6">
-    {/* existing JSX content */}
-  </div>
-);
-
-}; // Close the DocumentTemplateForm component
-
 export default DocumentTemplateForm;
 
-
-type DocumentTemplateFormValues = z.infer<typeof documentTemplateFormSchema>;
-
-interface DocumentTemplateFormProps {
-  onSubmit: (data: any) => void;
-  isSubmitting?: boolean;
-  templates: Array<{
-    id: string;
-    name: string;
-    description: string;
-    fields: Array<{
-      id: string;
-      name: string;
-      key: string;
-      type: "text" | "date" | "number" | "select";
-      options?: string[];
-      required: boolean;
-    }>;
-  }>;
-}
-const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templates, isSubmitting }) => {
-  const form = useForm<DocumentTemplateFormValues>({
-    resolver: zodResolver(documentTemplateFormSchema),
-    defaultValues: {
-      templateId: "",
-      name: "",
-      processId: "",
-      clientId: "",
-      customFields: {},
-    },
-  });
-
-  const [templateContent, setTemplateContent] = useState('');
-  const [previewContent, setPreviewContent] = useState<string>('');
-  const [activePlaceholders, setActivePlaceholders] = useState<string[]>([]);
-  const [clients, setClients] = useState<Client[]>([]);
-  const [processes, setProcesses] = useState<Process[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
-  const [isLoadingClients, setIsLoadingClients] = useState(true);
-  const [isLoadingProcesses, setIsLoadingProcesses] = useState(true);
-
-  // Rest of the component implementation...
-
-  return (
-    // Component JSX...
-  );
-};
-
-export default DocumentTemplateForm;
-</>
