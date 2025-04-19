@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/supabase';
-import { FileText, Image, Loader2, Upload } from 'lucide-react';
+import { FileText, Loader2, Upload } from 'lucide-react';
 
 type FilePreview = {
   name: string;
@@ -127,3 +127,4 @@ export const FileUpload = ({ processId, onUploadSuccess }: FileUploadProps) => {
     </Card>
   );
 };
+import { FileText, Loader2, Upload } from 'lucide-react';
