@@ -3,7 +3,7 @@ import { Document as PdfDocument, Page as PdfPage } from 'react-pdf';
 import { PDFRenderer } from '@cyntler/react-doc-viewer';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
-import { FileText, Image, X } from 'lucide-react';
+import { FileText, X } from 'lucide-react';
 
 interface FilePreviewProps {
   fileUrl: string;
