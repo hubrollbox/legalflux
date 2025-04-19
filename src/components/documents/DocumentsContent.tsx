@@ -12,7 +12,7 @@ interface DocumentsContentProps {
     name: string;
     type: "document" | "action" | "precedent" | "strategy";
     size: string;
-    updatedAt: string;
+    updatedAt: Date;
     owner: string;
     folder: string;
     process: string;
