@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Document as PdfDocument, Page as PdfPage } from 'react-pdf';
-import { type DocViewerRef, PDFRenderer } from '@cyntler/react-doc-viewer';
+import { PDFRenderer } from '@cyntler/react-doc-viewer';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { FileText, X } from 'lucide-react';
