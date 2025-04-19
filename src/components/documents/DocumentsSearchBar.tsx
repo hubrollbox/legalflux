@@ -18,7 +18,11 @@ interface DocumentsSearchBarProps {
     date: Date | undefined;
     tags: string[];
   };
-  setFilters: (filters: any) => void;
+  setFilters: (filters: {
+    type: "document" | "action" | "precedent" | "strategy";
+    date: Date | undefined;
+    tags: string[];
+  }) => void;
 }
 
 const DocumentsSearchBar: React.FC<DocumentsSearchBarProps> = ({ 
@@ -45,7 +49,13 @@ const DocumentsSearchBar: React.FC<DocumentsSearchBarProps> = ({
         <div className="flex gap-2">
           <Select
             value={filters.type}
-            onValueChange={(value) => setFilters({ ...filters, type: value })}
+            onValueChange={(value: string) => {
+              if (value === "todos") {
+                setFilters({ ...filters, type: "document" });
+              } else {
+                setFilters({ ...filters, type: value as "document" | "action" | "precedent" | "strategy" });
+              }
+            }}
           >
             <SelectTrigger className="w-[130px]">
               <SelectValue placeholder="Tipo" />
@@ -118,9 +128,9 @@ const DocumentsSearchBar: React.FC<DocumentsSearchBarProps> = ({
       </div>
 
       {/* Filtros ativos */}
-      {(filters.type !== "todos" || filters.date || filters.tags.length > 0) && (
+      {(filters.type !== "document" || filters.date || filters.tags.length > 0) && (
         <div className="flex flex-wrap gap-2">
-          {filters.type !== "todos" && (
+          {filters.type !== "document" && (
             <Badge variant="secondary" className="flex items-center gap-1">
               <Filter className="h-3 w-3" />
               Tipo: {filters.type.toUpperCase()}
@@ -128,7 +138,7 @@ const DocumentsSearchBar: React.FC<DocumentsSearchBarProps> = ({
                 variant="ghost"
                 size="icon"
                 className="h-4 w-4 ml-1 hover:bg-transparent"
-                onClick={() => setFilters({ ...filters, type: "todos" })}
+                onClick={() => setFilters({ ...filters, type: "document" })}
               >
                 ×
               </Button>
@@ -167,13 +177,13 @@ const DocumentsSearchBar: React.FC<DocumentsSearchBarProps> = ({
               </Button>
             </Badge>
           ))}
-          {(filters.type !== "todos" || filters.date || filters.tags.length > 0) && (
+          {(filters.type !== "document" || filters.date || filters.tags.length > 0) && (
             <Button
               variant="ghost"
               size="sm"
               className="text-muted-foreground hover:text-foreground"
               onClick={() =>
-                setFilters({ type: "todos", date: undefined, tags: [] })
+                setFilters({ type: "document", date: undefined, tags: [] })
               }
             >
               Limpar filtros
