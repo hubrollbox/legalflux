@@ -42,8 +42,8 @@ import { processService } from "@/services/processService";
 // Remove unused imports since they are not being used in the component
 // Remove unused import since FileUpload component is not being used
 // Remove unused import since we're not using react-pdf/renderer components
-import type { ControllerFieldState } from "react-hook-form";
-import type { UseFormStateReturn } from "react-hook-form";
+// Removed unused import ControllerFieldState
+// Removed unused import UseFormStateReturn
 
 // Schema de validação para o formulário de documento
 const documentTemplateFormSchema = z.object({
@@ -343,20 +343,21 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
               <FormField
                 control={form.control}
                 name="name"
-                render={({ field, formState }: { field: ControllerRenderProps<{ templateId: string; name: string; processId: string; clientId: string; customFields: Record<string, string>; }, "name"> & { onChange: (value: string) => void; onBlur: () => void; value: string; name: string; ref: React.Ref<any>; }; formState: UseFormStateReturn<DocumentTemplateFormValues> }) => (
-                <FormItem>
-                <FormLabel>Nome do Documento <span className="text-red-500">*</span></FormLabel>
-                <FormControl>
-                <Input placeholder="Nome do documento" {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>)
+render={({ field }: { field: ControllerRenderProps<{ templateId: string; name: string; processId: string; clientId: string; customFields: Record<string, string>; }, "name"> & { onChange: (value: string) => void; onBlur: () => void; value: string; name: string; ref: React.Ref<any>; } }) => (
+  <FormItem>
+    <FormLabel>Nome do Documento <span className="text-red-500">*</span></FormLabel>
+    <FormControl>
+      <Input placeholder="Nome do documento" {...field} />
+    </FormControl>
+    <FormMessage />
+  </FormItem>
+)}
               />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="processId"
-                  render={({ field, fieldState, formState }: { field: ControllerRenderProps<{ templateId: string; name: string; processId: string; clientId: string; customFields: Record<string, string>; }, "processId"> & { onChange: (value: string) => void; onBlur: () => void; value: string; name: string; ref: React.Ref<any>; }; fieldState: ControllerFieldState; formState: UseFormStateReturn<DocumentTemplateFormValues> }) => (
+                  render={({ field }: { field: ControllerRenderProps<{ templateId: string; name: string; processId: string; clientId: string; customFields: Record<string, string>; }, "processId"> & { onChange: (value: string) => void; onBlur: () => void; value: string; name: string; ref: React.Ref<any>; } }) => (
                     <FormItem>
                       <FormLabel>Processo <span className="text-red-500">*</span></FormLabel>
                       <Select
@@ -394,7 +395,7 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
                 <FormField
                   control={form.control}
                   name="clientId"
-                  render={({ field, fieldState, formState }: { field: ControllerRenderProps<{ templateId: string; name: string; processId: string; clientId: string; customFields: Record<string, string>; }, "clientId"> & { onChange: (value: string) => void; onBlur: () => void; value: string; name: string; ref: React.Ref<any>; }; fieldState: ControllerFieldState; formState: UseFormStateReturn<DocumentTemplateFormValues> }) => (
+                  render={({ field }: { field: ControllerRenderProps<{ templateId: string; name: string; processId: string; clientId: string; customFields: Record<string, string>; }, "clientId"> & { onChange: (value: string) => void; onBlur: () => void; value: string; name: string; ref: React.Ref<any>; } }) => (
                     <FormItem>
                       <FormLabel>Cliente <span className="text-red-500">*</span></FormLabel>
                       <Select
@@ -434,12 +435,12 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
                 <div className="space-y-4">
                   <FileUpload onUploadSuccess={(files: File[]) => console.log('Arquivos enviados:', files)} />
                   <h3 className="font-medium">Campos Personalizados</h3>
-                  {selectedTemplate.fields.map((field) => (
+                  {selectedTemplate.fields.map((field: { id: string; name: string; key: string; type: "text" | "textarea" | "select"; options?: string[]; required: boolean }) => (
                     <FormField
                       key={field.id}
                       control={form.control}
                       name={`customFields.${field.key}`}
-                      render={({ field: formField, fieldState, formState }: { field: ControllerRenderProps<{ name: string; templateId: string; processId: string; clientId: string; customFields: Record<string, string>; }, `customFields.${any}`>; fieldState: ControllerFieldState; formState: UseFormStateReturn<DocumentTemplateFormValues> }) => (
+                      render={({ field: formField }: { field: ControllerRenderProps<{ name: string; templateId: string; processId: string; clientId: string; customFields: Record<string, string>; }, `customFields.${any}`> }) => (
                         <FormItem>
                           <FormLabel>
                             {field.name}
