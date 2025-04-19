@@ -12,7 +12,7 @@ interface DocumentsContentProps {
     name: string;
     type: "document" | "action" | "precedent" | "strategy";
     size: string;
-    updatedAt: string;
+    updatedAt: Date;
     owner: string;
     folder: string;
     process: string;
@@ -42,7 +42,10 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
             ))}
           </div>
         ) : (
-          <DocumentList documents={documents} />
+          <DocumentList documents={documents.map(doc => ({
+            ...doc,
+            updatedAt: doc.updatedAt.toISOString()
+          }))} />
         )}
       </CardContent>
     </Card>
