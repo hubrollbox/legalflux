@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Document as PdfDocument, Page as PdfPage } from 'react-pdf';
-import { DocViewer, PDFRenderer } from '@cyntler/react-doc-viewer';
+import { DocViewerRef, PDFRenderer } from '@cyntler/react-doc-viewer';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { FileText, X } from 'lucide-react';
@@ -33,7 +33,7 @@ export const FilePreview = ({ fileUrl, fileName, onClose }: FilePreviewProps) =>
     if (fileType && ['doc', 'docx'].includes(fileType)) {
       return (
         <div className="h-full">
-          <DocViewer
+          <DocViewerRef
             documents={[{ uri: fileUrl }]}
             pluginRenderers={[PDFRenderer]}
             config={{ header: { disableHeader: true } }}
