@@ -13,7 +13,7 @@ interface FilePreviewProps {
 
 export const FilePreview = ({ fileUrl, fileName, onClose }: FilePreviewProps) => {
   const [numPages, setNumPages] = useState<number>();
-  const fileType = fileName.split('.').pop()?.toLowerCase();
+  const fileType = fileName.split('.').pop()?.toLowerCase() || '';
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
@@ -30,7 +30,7 @@ export const FilePreview = ({ fileUrl, fileName, onClose }: FilePreviewProps) =>
       );
     }
 
-    if (['doc', 'docx'].includes(fileType)) {
+    if (fileType && ['doc', 'docx'].includes(fileType)) {
       return (
         <div className="h-full">
           <DocViewer
@@ -42,7 +42,7 @@ export const FilePreview = ({ fileUrl, fileName, onClose }: FilePreviewProps) =>
       );
     }
 
-    if (['png', 'jpg', 'jpeg'].includes(fileType)) {
+    if (fileType && ['png', 'jpg', 'jpeg'].includes(fileType)) {
       return <img src={fileUrl} alt={fileName} className="max-h-screen mx-auto" />;
     }
 
