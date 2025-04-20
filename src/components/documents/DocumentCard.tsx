@@ -32,8 +32,8 @@ export const getFileIcon = (type: "pdf" | "docx" | "xlsx" | "jpg" | "png" | stri
 };
 
 // Function to format the date
-export const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
+export const formatDate = (dateInput: string | Date) => {
+  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
   return new Intl.DateTimeFormat('pt-PT', {
     day: '2-digit',
     month: '2-digit',
