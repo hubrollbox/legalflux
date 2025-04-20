@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/supabase';
 import { FileText, Loader2, Upload } from 'lucide-react';
 
+
 type FilePreview = {
   name: string;
   type: string;
@@ -51,7 +52,7 @@ export const FileUpload = ({ processId, onUploadSuccess }: FileUploadProps) => {
 
         const { error } = await supabase.storage
           .from('process-documents')
-          .upload(fileName, file.fileObject);
+          .upload(fileName, (file as any).fileObject);
 
         if (error) throw error;
         filePaths.push(fileName);
@@ -127,4 +128,3 @@ export const FileUpload = ({ processId, onUploadSuccess }: FileUploadProps) => {
     </Card>
   );
 };
-import { FileText, Loader2, Upload } from 'lucide-react';
