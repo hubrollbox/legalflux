@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, CreditCard, Calendar, FileText } from 'lucide-react';
+import { DollarSign, CreditCard, Calendar, FileText, BarChart2, PieChart } from 'lucide-react';
 import type { FinancialTransaction } from '@/types';
 import FinancialCard from './FinancialCard';
 
@@ -114,7 +114,7 @@ const ImprovedFinancialDashboard: React.FC<ImprovedFinancialDashboardProps> = ({
         <Card className="shadow-md hover:shadow-lg transition-shadow duration-300">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-semibold flex items-center">
-              <BarChart className="h-5 w-5 mr-2 text-primary" />
+              <BarChart2 className="h-5 w-5 mr-2 text-primary" />
               Receitas vs Despesas
             </CardTitle>
             <CardDescription>Análise comparativa dos últimos 6 meses</CardDescription>
@@ -163,34 +163,33 @@ const ImprovedFinancialDashboard: React.FC<ImprovedFinancialDashboardProps> = ({
                 </tr>
               </thead>
               <tbody>
-                {transactions.slice(0, 5).map((transaction, index) => (
-                  <tr key={index} className="border-b hover:bg-muted/50 transition-colors">
-                    <td className="py-3 px-4">{transaction.clientName}</td>
-                    <td className="py-3 px-4">{transaction.description}</td>
-                    <td className="py-3 px-4 text-right font-medium">
-                      <span className={transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'}>
-                        {transaction.amount >= 0 ? '+' : ''}{transaction.amount.toLocaleString('pt-PT', {style: 'currency', currency: transaction.currency || 'EUR'})}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-right text-muted-foreground">
-                      {new Date(transaction.date).toLocaleDateString('pt-PT')}
-                    </td>
-                    <td className="py-3 px-4 text-right">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        transaction.status === 'completed' ? 'bg-green-100 text-green-800' :
-                        transaction.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                        transaction.status === 'failed' ? 'bg-red-100 text-red-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
-                        {transaction.status === 'completed' ? 'Concluído' :
-                         transaction.status === 'pending' ? 'Pendente' :
-                         transaction.status === 'failed' ? 'Falhou' :
-                         transaction.status === 'canceled' ? 'Cancelado' : transaction.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+                                  {transactions.slice(0, 5).map((transaction, index) => (
+                                    <tr key={index} className="border-b hover:bg-muted/50 transition-colors">
+                      <td className="py-3 px-4">{transaction.description}</td>
+                      <td className="py-3 px-4 text-right font-medium">
+                        <span className={transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'}>
+                          {transaction.amount >= 0 ? '+' : ''}{transaction.amount.toLocaleString('pt-PT', {style: 'currency', currency: 'EUR'})}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-right text-muted-foreground">
+                        {new Date(transaction.date).toLocaleDateString('pt-PT')}
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          transaction.status === 'completed' ? 'bg-green-100 text-green-800' :
+                          transaction.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                          transaction.status === 'failed' ? 'bg-red-100 text-red-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {transaction.status === 'completed' ? 'Concluído' :
+                           transaction.status === 'pending' ? 'Pendente' :
+                           transaction.status === 'failed' ? 'Falhou' :
+                           transaction.status === 'canceled' ? 'Cancelado' : transaction.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
             </table>
           </div>
         </CardContent>
