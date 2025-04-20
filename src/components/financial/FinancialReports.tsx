@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { FinancialTransaction } from '@/types';
+import type { FinancialTransaction } from '@/types';
 import { Download, FileText, Calendar as CalendarIcon, Filter } from 'lucide-react';
 import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
@@ -14,7 +14,7 @@ interface FinancialReportsProps {
   transactions: FinancialTransaction[];
 }
 
-const FinancialReports: React.FC<FinancialReportsProps> = ({ transactions }) => {
+const FinancialReports: React.FC<FinancialReportsProps> = () => {
   const [reportType, setReportType] = useState('revenue');
   const [dateRange, setDateRange] = useState<{
     from: Date | undefined;
@@ -154,9 +154,9 @@ const FinancialReports: React.FC<FinancialReportsProps> = ({ transactions }) => 
                     <Calendar
                       initialFocus
                       mode="range"
-                      defaultMonth={dateRange.from}
+                      defaultMonth={dateRange.from ?? new Date()}
                       selected={dateRange}
-                      onSelect={(range) => setDateRange({ from: range?.from, to: range?.to })}
+                      onSelect={range => setDateRange({ from: range?.from, to: range?.to })}
                       numberOfMonths={2}
                     />
                   </PopoverContent>

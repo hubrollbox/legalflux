@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, TrendingDown, DollarSign, CreditCard, Calendar, FileText, BarChart, PieChart } from 'lucide-react';
-import { FinancialTransaction } from '@/types';
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
+import { DollarSign, CreditCard, Calendar, FileText } from 'lucide-react';
+import type { FinancialTransaction } from '@/types';
 import FinancialCard from './FinancialCard';
 
 interface ImprovedFinancialDashboardProps {
