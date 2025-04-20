@@ -19,7 +19,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { FinancialTransaction } from '@/types';
+import type { FinancialTransaction } from '@/types';
 
 interface FinancialChartsProps {
   transactions: FinancialTransaction[];
@@ -30,7 +30,6 @@ interface FinancialChartsProps {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
 const FinancialCharts: React.FC<FinancialChartsProps> = ({ 
-  transactions, 
   revenueData, 
   expenseData 
 }) => {
@@ -170,7 +169,7 @@ const FinancialCharts: React.FC<FinancialChartsProps> = ({
                         fill="#8884d8"
                         dataKey="value"
                       >
-                        {pieData.map((entry, index) => (
+                        {pieData.map((_, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { FinancialTransaction } from '@/types';
+import type { FinancialTransaction } from '@/types';
 import { AlertCircle, Clock, Calendar, Bell } from 'lucide-react';
 
 interface FinancialAlertsProps {
@@ -59,7 +59,7 @@ const FinancialAlerts: React.FC<FinancialAlertsProps> = ({ transactions }) => {
               {overdueTransactions.slice(0, 3).map(transaction => (
                 <div key={transaction.id} className="flex justify-between items-center mt-2 p-2 bg-red-50 rounded-md">
                   <div>
-                    <p className="font-medium">{transaction.clientName}</p>
+                    <p className="font-medium">{transaction.clientId}</p>
                     <p className="text-sm text-muted-foreground">{transaction.description}</p>
                   </div>
                   <div className="text-right">
@@ -92,7 +92,7 @@ const FinancialAlerts: React.FC<FinancialAlertsProps> = ({ transactions }) => {
               {upcomingTransactions.slice(0, 3).map(transaction => (
                 <div key={transaction.id} className="flex justify-between items-center mt-2 p-2 bg-blue-50 rounded-md">
                   <div>
-                    <p className="font-medium">{transaction.clientName}</p>
+                    <p className="font-medium">{transaction.clientId}</p>
                     <p className="text-sm text-muted-foreground">{transaction.description}</p>
                   </div>
                   <div className="text-right">

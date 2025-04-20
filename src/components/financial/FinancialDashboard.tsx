@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, DollarSign, CreditCard, Calendar, FileText } from 'lucide-react';
 import { FinancialTransaction } from '@/types';
 
