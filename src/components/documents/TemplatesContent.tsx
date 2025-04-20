@@ -38,7 +38,7 @@ const TemplatesContent: React.FC<TemplatesContentProps> = ({ templates, viewMode
             ))}
           </div>
         ) : (
-          <TemplateList templates={templates} />
+          <TemplateList templates={templates.map(template => ({...template, updatedAt: new Date(template.updatedAt)}))} />
         )}
       </CardContent>
     </Card>
