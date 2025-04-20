@@ -42,7 +42,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
           </Badge>
         </div>
         <div className="bg-muted p-2 flex justify-between items-center">
-          <span className="text-xs">Atualizado: {formatDate(template.updatedAt)}</span>
+          <span className="text-xs">Atualizado: {formatDate(template.updatedAt.toString())}</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-8 w-8">
