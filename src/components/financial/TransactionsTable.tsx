@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import type { FinancialTransaction, TransactionStatus, TransactionType } from '@/types';
-import { Download, Filter, Search, ArrowUpDown } from 'lucide-react';
+import { Download, Search, ArrowUpDown } from 'lucide-react';
 
 interface TransactionsTableProps {
   transactions: FinancialTransaction[];
