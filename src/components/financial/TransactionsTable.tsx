@@ -27,8 +27,8 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
       const csvData = filteredTransactions.map(t => [
         t.id,
         `${t.amount}`,
-        translateTransactionType(t.type),
-        translateTransactionStatus(t.status),
+        translateTransactionType(t.type as TransactionType),
+        translateTransactionStatus(t.status as TransactionStatus),
         new Date(t.date).toLocaleDateString('pt-PT'),
         t.description || ''
       ]);
@@ -54,7 +54,10 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
       'invoice': 'Fatura',
       'payment': 'Pagamento',
       'refund': 'Reembolso',
-      'subscription': 'Assinatura'
+      'income': 'Receita',
+      'expense': 'Despesa',
+      'other': 'Outro',
+      // Removed 'subscription' as it's not part of TransactionType
     };
     return translations[type] || type;
   };
@@ -64,7 +67,8 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
       'pending': 'Pendente',
       'completed': 'Concluído',
       'failed': 'Falhou',
-      'canceled': 'Cancelado'
+      'cancelled': 'Cancelado',
+      'refunded': 'Reembolsado'
     };
     return translations[status] || status;
   };
@@ -75,7 +79,8 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
       'pending': 'bg-yellow-500',
       'completed': 'bg-green-500',
       'failed': 'bg-red-500',
-      'canceled': 'bg-gray-500'
+      'cancelled': 'bg-gray-500',
+      'refunded': 'bg-blue-500'
     };
     return colors[status] || 'bg-gray-500';
   };
@@ -254,17 +259,17 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
                     <TableCell className="font-medium">
                       {transaction.amount.toLocaleString('pt-PT')}
                     </TableCell>
-                    <TableCell>{translateTransactionType(transaction.type)}</TableCell>
+                    <TableCell>{translateTransactionType(transaction.type as TransactionType)}</TableCell>
                     <TableCell>
-                      <Badge className={getStatusColor(transaction.status)}>
-                        {translateTransactionStatus(transaction.status)}
+                      <Badge className={getStatusColor(transaction.status as TransactionStatus)}>
+                        {translateTransactionStatus(transaction.status as TransactionStatus)}
                       </Badge>
                     </TableCell>
                     <TableCell>{new Date(transaction.date).toLocaleDateString('pt-PT')}</TableCell>
                     <TableCell className="max-w-[200px] truncate">{transaction.description || 'N/A'}</TableCell>
                   </TableRow>
-                ))}
-              )}
+                ))
+)}
             </TableBody>
           </Table>
         </div>
