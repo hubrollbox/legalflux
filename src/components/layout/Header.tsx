@@ -31,7 +31,7 @@ const UserNav: React.FC<{ user: any; onLogout: () => void }> = ({ user, onLogout
   const { user: authUser } = useAuth();
   
   const filteredMenuItems = userMenuItems.filter(item =>
-    item.roles.includes(authUser?.role)
+    authUser?.role !== undefined && item.roles.includes(authUser.role)
   );
 
   return (
