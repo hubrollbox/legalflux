@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Home, Menu, PanelLeftClose, PanelLeftOpen, User, LogOut } from "lucide-react";
+import { Menu, PanelLeftClose, PanelLeftOpen, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getUserRoleName, cn } from "@/lib/utils";
