@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarIcon, Check, RefreshCw } from "lucide-react";
+import { Calendar as CalendarIcon, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const CalendarIntegration = () => {
