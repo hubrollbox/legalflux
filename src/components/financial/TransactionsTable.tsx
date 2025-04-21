@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { FinancialTransaction, TransactionStatus, TransactionType } from '@/types';
+import type { FinancialTransaction, TransactionStatus, TransactionType } from '@/types';
 import { Download, Filter, Search, ArrowUpDown } from 'lucide-react';
 
 interface TransactionsTableProps {
@@ -21,29 +21,21 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
 
   // Função para exportar dados
   const exportData = (format: 'csv' | 'pdf' | 'excel') => {
-    // Implementação real dependeria de bibliotecas como jspdf, xlsx, etc.
     alert(`Exportando dados em formato ${format}...`);
-    
     if (format === 'csv') {
-      // Exemplo simples de exportação CSV
-      const headers = ['ID', 'Cliente', 'Caso', 'Valor', 'Tipo', 'Status', 'Data', 'Descrição'];
-      
+      const headers = ['ID', 'Valor', 'Tipo', 'Status', 'Data', 'Descrição'];
       const csvData = filteredTransactions.map(t => [
         t.id,
-        t.clientName || '',
-        t.caseName || '',
-        `${t.amount} ${t.currency}`,
+        `${t.amount}`,
         translateTransactionType(t.type),
         translateTransactionStatus(t.status),
         new Date(t.date).toLocaleDateString('pt-PT'),
         t.description || ''
       ]);
-      
       const csvContent = [
         headers.join(','),
         ...csvData.map(row => row.join(','))
       ].join('\n');
-      
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -104,8 +96,6 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
         // Filtro de pesquisa
         const searchLower = searchTerm.toLowerCase();
         const matchesSearch = 
-          (transaction.clientName?.toLowerCase().includes(searchLower) || false) ||
-          (transaction.caseName?.toLowerCase().includes(searchLower) || false) ||
           (transaction.description?.toLowerCase().includes(searchLower) || false);
         
         // Filtro de status
@@ -166,7 +156,8 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
                 <SelectItem value="pending">Pendente</SelectItem>
                 <SelectItem value="completed">Concluído</SelectItem>
                 <SelectItem value="failed">Falhou</SelectItem>
-                <SelectItem value="canceled">Cancelado</SelectItem>
+                <SelectItem value="cancelled">Cancelado</SelectItem>
+                <SelectItem value="refunded">Reembolsado</SelectItem>
               </SelectContent>
             </Select>
             
@@ -176,10 +167,12 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos os tipos</SelectItem>
+                <SelectItem value="income">Receita</SelectItem>
+                <SelectItem value="expense">Despesa</SelectItem>
                 <SelectItem value="invoice">Fatura</SelectItem>
                 <SelectItem value="payment">Pagamento</SelectItem>
                 <SelectItem value="refund">Reembolso</SelectItem>
-                <SelectItem value="subscription">Assinatura</SelectItem>
+                <SelectItem value="other">Outro</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -208,14 +201,6 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
                   <div className="flex items-center">
                     ID
                     {sortField === 'id' && (
-                      <ArrowUpDown className="ml-2 h-4 w-4" />
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead className="cursor-pointer" onClick={() => toggleSort('clientName')}>
-                  <div className="flex items-center">
-                    Cliente
-                    {sortField === 'clientName' && (
                       <ArrowUpDown className="ml-2 h-4 w-4" />
                     )}
                   </div>
@@ -266,9 +251,8 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
                 filteredTransactions.map((transaction) => (
                   <TableRow key={transaction.id} className="financial-table">
                     <TableCell className="font-medium">{transaction.id}</TableCell>
-                    <TableCell>{transaction.clientName || 'N/A'}</TableCell>
                     <TableCell className="font-medium">
-                      {transaction.amount.toLocaleString('pt-PT')} {transaction.currency}
+                      {transaction.amount.toLocaleString('pt-PT')}
                     </TableCell>
                     <TableCell>{translateTransactionType(transaction.type)}</TableCell>
                     <TableCell>
@@ -279,7 +263,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
                     <TableCell>{new Date(transaction.date).toLocaleDateString('pt-PT')}</TableCell>
                     <TableCell className="max-w-[200px] truncate">{transaction.description || 'N/A'}</TableCell>
                   </TableRow>
-                ))
+                ))}
               )}
             </TableBody>
           </Table>
