@@ -4,6 +4,7 @@ import {
   Settings, DollarSign, CheckSquare, UserPlus, CreditCard, FileText, User, BarChart2, BookOpen
 } from "lucide-react";
 import type { SidebarItem } from "./SidebarItems";
+import { UserRole } from "@/types/permissions"; // <-- Add this import
 
 // Itens que aparecem no menu lateral
 export const sidebarItems: SidebarItem[] = [
@@ -11,67 +12,67 @@ export const sidebarItems: SidebarItem[] = [
     label: "Painel",
     icon: LayoutDashboard,
     href: "/dashboard",
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"],
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
   },
   {
     label: "Processos",
     icon: Briefcase,
     href: "/processes",
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"],
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
   },
   {
     label: "Tarefas",
     icon: CheckSquare,
     href: "/tasks",
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant"],
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT],
   },
   {
     label: "Documentos",
     icon: FileText,
     href: "/documents",
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"],
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
   },
   {
     label: "Onboarding",
     icon: BookOpen,
     href: "/onboarding",
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"],
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
   },
   {
     label: "Clientes",
     icon: Users,
     href: "/clients",
-    roles: ["admin", "lawyer", "senior_lawyer"],
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER],
   },
   {
     label: "Agenda",
     icon: Calendar,
     href: "/calendar",
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"],
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
   },
   {
     label: "Mensagens",
     icon: MessageSquare,
     href: "/messages",
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"],
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
   },
   {
     label: "Financeiro",
     icon: DollarSign,
     href: "/financial",
-    roles: ["admin", "lawyer", "senior_lawyer", "client"],
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.CLIENT],
   },
   {
     label: "Análise de Dados",
     icon: BarChart2,
     href: "/analytics",
-    roles: ["admin", "lawyer", "senior_lawyer"],
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER],
   },
   {
     label: "Links Úteis",
     icon: FileText,
     href: "/useful-links",
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"],
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
   },
 ];
 
@@ -81,24 +82,24 @@ export const userMenuItems: SidebarItem[] = [
     label: "Utilizadores",
     icon: UserPlus,
     href: "/users",
-    roles: ["admin", "senior_lawyer"],
+    roles: [UserRole.ADMIN, UserRole.SENIOR_LAWYER],
   },
   {
     label: "Assinaturas",
     icon: CreditCard,
     href: "/subscriptions",
-    roles: ["admin", "senior_lawyer"],
+    roles: [UserRole.ADMIN, UserRole.SENIOR_LAWYER],
   },
   {
     label: "Configurações",
     icon: Settings,
     href: "/settings",
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"],
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
   },
   {
     label: "Perfil",
     icon: User,
     href: "/profile",
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"],
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
   },
 ];
