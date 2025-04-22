@@ -1,7 +1,7 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
-import type { Process } from '@/types/process';
+import type { Process, Document } from '@/types/process';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -10,12 +10,7 @@ import { FileText, Users, Calendar, Edit, ArrowLeft, Download } from 'lucide-rea
 
 interface ProcessDetailProps {
   process: Process & {
-    documents?: Array<{
-      id: string;
-      name: string;
-      version: string;
-      updatedAt: string;
-    }>;
+    documents?: Document[];
   };
   onBack: () => void;
   onEdit: (id: string) => void;

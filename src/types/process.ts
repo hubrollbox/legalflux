@@ -1,6 +1,6 @@
 // Definição dos tipos para gestão de processos
 
-import { Client } from "./client";
+import type { Client } from "./client";
 
 export interface Process {
   id: string;
@@ -44,4 +44,11 @@ export interface UpdateProcessDTO {
   startDate?: string;
   endDate?: string;
   status?: ProcessStatus;
+}
+
+export interface Document {
+  id: string;
+  name: string;
+  version: string;
+  updatedAt: string;
 }
