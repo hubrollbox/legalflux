@@ -25,7 +25,7 @@ const NotificationSystem: React.FC = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const {
     notifications,
-    preferences,
+    // Remove preferences from here
     unreadCount,
     markAsRead,
     markAllAsRead,

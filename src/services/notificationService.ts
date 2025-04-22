@@ -143,7 +143,7 @@ class NotificationWebSocket {
         this.handleReconnect();
       };
 
-      this.ws.onerror = (error) => {
+      this.ws?.onerror = (error) => {
         console.error('Erro na conexão WebSocket:', error);
         useNotificationStore.getState().setConnectionStatus(false);
       };
