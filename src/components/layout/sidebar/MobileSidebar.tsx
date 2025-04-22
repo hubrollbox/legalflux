@@ -4,7 +4,7 @@ import { X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LOGO } from "@/assets";
 import UserProfile from "../UserProfile";
-import { SidebarItem } from "./SidebarItems";
+import type { SidebarItem } from "./SidebarItems";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface MobileSidebarProps {
