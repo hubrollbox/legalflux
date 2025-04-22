@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Process, ProcessStatus } from "@/types/process";
+import type { Process, ProcessStatus } from "@/types/process";
 
 interface ProcessListProps {
   processes: Process[];
