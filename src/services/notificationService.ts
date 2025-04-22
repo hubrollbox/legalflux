@@ -28,7 +28,7 @@ const defaultPreferences: NotificationPreference = {
     medium: true,
     low: true,
   },
-  deliveryMethod: 'all',
+  deliveryMethod: 'push', // Changed from 'all' to 'push'
 };
 
 export const useNotificationStore = create<NotificationState>(((set, get) => ({
@@ -116,37 +116,39 @@ class NotificationWebSocket {
 
   private connect() {
     try {
-      // Change WebSocket connection URL to use environment variable
       const socket = new WebSocket(
         process.env.NODE_ENV === 'production' 
           ? 'wss://your-production-url.com/notifications'
           : 'ws://localhost:3001/notifications'
       );
+      this.ws = socket;
 
-      this.ws.onopen = () => {
-        useNotificationStore.getState().setConnectionStatus(true);
-        this.reconnectAttempts = 0;
-        this.reconnectTimeout = 1000;
-      };
+      if (this.ws) {
+        this.ws.onopen = () => {
+          useNotificationStore.getState().setConnectionStatus(true);
+          this.reconnectAttempts = 0;
+          this.reconnectTimeout = 1000;
+        };
 
-      this.ws.onmessage = (event) => {
-        try {
-          const notification = JSON.parse(event.data);
-          useNotificationStore.getState().addNotification(notification);
-        } catch (error) {
-          console.error('Erro ao processar notificação:', error);
-        }
-      };
+        this.ws.onmessage = (event) => {
+          try {
+            const notification = JSON.parse(event.data);
+            useNotificationStore.getState().addNotification(notification);
+          } catch (error) {
+            console.error('Erro ao processar notificação:', error);
+          }
+        };
 
-      this.ws.onclose = () => {
-        useNotificationStore.getState().setConnectionStatus(false);
-        this.handleReconnect();
-      };
+        this.ws.onclose = () => {
+          useNotificationStore.getState().setConnectionStatus(false);
+          this.handleReconnect();
+        };
 
-      this.ws?.onerror = (error) => {
-        console.error('Erro na conexão WebSocket:', error);
-        useNotificationStore.getState().setConnectionStatus(false);
-      };
+        this.ws.onerror = (error) => {
+          console.error('Erro na conexão WebSocket:', error);
+          useNotificationStore.getState().setConnectionStatus(false);
+        };
+      }
     } catch (error) {
       console.error('Erro ao estabelecer conexão WebSocket:', error);
       this.handleReconnect();
@@ -189,23 +191,24 @@ export async function notifyUsers(notification: {
     useNotificationStore.getState().addNotification({
       id: notificationId,
       title: notification.title,
-      content: notification.message, // Change property name from 'message' to 'content'
+      content: notification.message,
       type: notification.type,
       priority: notification.priority || 'medium',
-      timestamp: now.toISOString(), // <-- Convert Date to string
+      timestamp: now.toISOString(),
       read: false,
       data: notification.data
     });
     
-    // Em uma implementação real, aqui enviaríamos a notificação para os destinatários
-    // através de WebSockets, push notifications, e-mail, etc.
     if (notification.recipients && notification.recipients.length > 0) {
       console.log(`Enviando notificação para destinatários específicos: ${notification.recipients.join(', ')}`);
     }
     
-    return notificationId;
-  } catch (error) {
-    console.error('Erro ao enviar notificação:', error);
-    return null;
+    return { success: true, id: notificationId };
+  } catch (error: unknown) {
+    console.error('Error sending notification:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    };
   }
 }

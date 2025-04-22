@@ -7,8 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { useNotificationStore } from '@/services/notificationService';
 // Remove this line:
-// import NotificationPreferences from './NotificationPreferences';
-import type { NotificationPreference } from './NotificationPreferences';
+import type { NotificationPreference } from '@/types';
 
 interface Notification {
   id: string;
@@ -25,11 +24,10 @@ const NotificationSystem: React.FC = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const {
     notifications,
-    // Remove preferences from here
     unreadCount,
     markAsRead,
-    markAllAsRead,
-    updatePreferences
+    markAllAsRead
+    // Remove updatePreferences from here
   } = useNotificationStore();
 
 
@@ -63,9 +61,10 @@ const NotificationSystem: React.FC = () => {
     );
   };
 
-  const handlePreferencesChange = (newPreferences: NotificationPreference): void => {
-    updatePreferences(newPreferences);
-  };
+  // Remove this unused function:
+  // const handlePreferencesChange = (newPreferences: NotificationPreference): void => {
+  //   updatePreferences(newPreferences);
+  // };
 
   return (
     <div className="relative">
