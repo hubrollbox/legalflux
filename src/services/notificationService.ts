@@ -28,7 +28,7 @@ const defaultPreferences: NotificationPreference = {
     medium: true,
     low: true,
   },
-  notifications: 'all',
+  deliveryMethod: 'all',
 };
 
 export const useNotificationStore = create<NotificationState>(((set, get) => ({
