@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,7 +71,7 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
   useEffect(() => {
     const loadClients = async () => {
       try {
-        const data = await clientService.getClients();
+        const data = await clientService.listClients();
         setClients(data);
       } catch (error) {
         console.error("Erro ao carregar clientes:", error);
@@ -83,45 +84,47 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
   }, []);
 
   // Preparar valores iniciais para o formulário
-  const defaultValues: Partial<ProcessFormValues> = {
-    title: "",
-    number: "",
-    type: "civil" as ProcessType,
-    clientId: "",
-    description: "",
-    status: "new" as ProcessStatus,
-  };
-
-  // Se houver dados iniciais, converter para o formato do formulário
-  const getInitialValues = () => {
-    if (!initialData) return defaultValues;
-
-    return {
-      title: initialData.title,
-      number: initialData.number,
-      type: initialData.type,
-      clientId: initialData.clientId,
-      description: initialData.description || "",
-      startDate: initialData.startDate ? new Date(initialData.startDate) : undefined,
-      endDate: initialData.endDate ? new Date(initialData.endDate) : undefined,
-      status: initialData.status,
-    };
-  };
+  // Remove this unused constant:
+  // const defaultValues: Partial<ProcessFormValues> = {
+  //   title: "",
+  //   number: "",
+  //   type: "civil" as ProcessType,
+  //   clientId: "",
+  //   description: "",
+  //   status: "new" as ProcessStatus,
+  // };
 
   const form = useForm<ProcessFormValues>({
     resolver: zodResolver(processFormSchema),
-    defaultValues: getInitialValues(),
+    defaultValues: async () => ({
+      title: "",
+      number: "",
+      type: "civil" as ProcessType,
+      clientId: "",
+      description: "",
+      status: "new" as ProcessStatus,
+      startDate: new Date(),
+      ...(initialData ? {
+        title: initialData.title,
+        number: initialData.number,
+        type: initialData.type,
+        clientId: initialData.clientId,
+        description: initialData.description || "",
+        startDate: initialData.startDate ? new Date(initialData.startDate) : new Date(),
+        endDate: initialData.endDate ? new Date(initialData.endDate) : undefined,
+        status: initialData.status,
+      } : {})
+    }),
   });
 
-  const handleSubmit = (values: ProcessFormValues) => {
-    // Converter datas para string ISO
+  const handleSubmit: SubmitHandler<ProcessFormValues> = (values) => {
     const formattedData = {
       ...values,
       startDate: values.startDate.toISOString(),
-      endDate: values.endDate ? values.endDate.toISOString() : undefined,
+      endDate: values.endDate?.toISOString(),
+      description: values.description || undefined,
     };
-
-    onSubmit(formattedData);
+    onSubmit(formattedData as CreateProcessDTO | UpdateProcessDTO);
   };
 
   return (
