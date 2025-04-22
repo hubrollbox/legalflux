@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// Removed unused imports from @/components/ui/card
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, Phone, Video, MoreVertical, Paperclip, Search, Clock, Check, CheckCheck } from 'lucide-react';
 import NotificationSystem from '../notifications/NotificationSystem';
@@ -161,7 +161,7 @@ const mockMessages: Record<string, Message[]> = {
 };
 
 const ChatInterface: React.FC = () => {
-  const [activeContact, setActiveContact] = useState<Contact | null>(mockContacts[0]);
+  const [activeContact, setActiveContact] = useState<Contact | null>(mockContacts[0] || null);
   const [messageInput, setMessageInput] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('all');
