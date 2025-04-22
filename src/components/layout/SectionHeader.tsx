@@ -1,6 +1,7 @@
 
 import React from "react";
-import type { ReactNode } from "react";
+// Remove this line:
+// import type { ReactNode } from "react";
 
 interface SectionHeaderProps {
   title: string;
