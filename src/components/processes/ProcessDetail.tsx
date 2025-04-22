@@ -1,15 +1,22 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
-import { Process } from '@/types/process';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import type { Process } from '@/types/process';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText, Users, Calendar, Clock, Edit, ArrowLeft, Download } from 'lucide-react';
+import { FileText, Users, Calendar, Edit, ArrowLeft, Download } from 'lucide-react';
 
 interface ProcessDetailProps {
-  process: Process;
+  process: Process & {
+    documents?: Array<{
+      id: string;
+      name: string;
+      version: string;
+      updatedAt: string;
+    }>;
+  };
   onBack: () => void;
   onEdit: (id: string) => void;
   onExportPdf: (id: string) => void;
