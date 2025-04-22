@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { Bell, Calendar, MessageSquare, FileText, Volume2 } from 'lucide-react';
+import { Calendar, MessageSquare, FileText, Volume2 } from 'lucide-react';
 
 export interface NotificationPreference {
   deadlines: boolean;
