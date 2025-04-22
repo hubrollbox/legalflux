@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { useNotificationStore } from '@/services/notificationService';
 import NotificationPreferences from './NotificationPreferences';
 import type { NotificationPreference } from './NotificationPreferences';
@@ -62,7 +62,7 @@ const NotificationSystem: React.FC = () => {
     );
   };
 
-  const handlePreferencesChange = (newPreferences: NotificationPreference) => {
+  const handlePreferencesChange = (newPreferences: NotificationPreference): void => {
     updatePreferences(newPreferences);
   };
 

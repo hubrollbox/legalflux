@@ -1,4 +1,4 @@
-import { create, type StateCreator } from 'zustand';
+import { create } from 'zustand';
 import type { Notification, NotificationPreference } from '@/types';
 
 
