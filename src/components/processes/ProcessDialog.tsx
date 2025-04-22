@@ -2,13 +2,11 @@ import React from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
+  DialogDescription
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Process } from "@/types/process";
+import type { Process } from "@/types/process";
 import ProcessForm from "./ProcessForm";
 
 interface ProcessDialogProps {
@@ -38,7 +36,18 @@ const ProcessDialog: React.FC<ProcessDialogProps> = ({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <ProcessForm
-          initialData={process}
+          initialData={process || {
+            id: '',
+            title: '',
+            number: '',
+            type: 'other',
+            status: 'new',
+            clientId: '',
+            startDate: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            userId: ''
+          }}
           onSubmit={onSubmit}
           isSubmitting={isSubmitting}
         />
