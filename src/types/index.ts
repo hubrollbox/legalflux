@@ -191,6 +191,7 @@ export interface NotificationPreference {
     medium: boolean;
     low: boolean;
   };
+  deliveryMethod?: 'none' | 'email' | 'push'; // Add this line if needed
 }
 
 export interface DocumentTemplate {

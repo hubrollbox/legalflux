@@ -192,7 +192,7 @@ export async function notifyUsers(notification: {
       content: notification.message, // Change property name from 'message' to 'content'
       type: notification.type,
       priority: notification.priority || 'medium',
-      timestamp: now,
+      timestamp: now.toISOString(), // <-- Convert Date to string
       read: false,
       data: notification.data
     });
