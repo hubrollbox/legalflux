@@ -96,17 +96,7 @@ const NotificationSystem: React.FC = () => {
                     <Settings2 className="h-4 w-4" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right">
-                  <SheetHeader>
-                    <SheetTitle>Configurações de Notificações</SheetTitle>
-                  </SheetHeader>
-                  <div className="mt-6">
-                    <NotificationPreferences
-                      preferences={preferences}
-                      onPreferencesChange={handlePreferencesChange}
-                    />
-                  </div>
-                </SheetContent>
+                {/* TODO: Place your Sheet content here according to your UI library's documentation */}
               </Sheet>
               <Button
                 variant="ghost"
