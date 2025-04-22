@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Briefcase, Users, Calendar, MessageSquare, 
   Settings, DollarSign, CheckSquare, UserPlus, CreditCard, FileText, User, BarChart2, BookOpen
 } from "lucide-react";
-import { SidebarItem } from "./SidebarItems";
+import type { SidebarItem } from "./SidebarItems";
 
 // Itens que aparecem no menu lateral
 export const sidebarItems: SidebarItem[] = [
