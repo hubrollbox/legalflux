@@ -6,8 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { useNotificationStore } from '@/services/notificationService';
-// Remove this line:
-import type { NotificationPreference } from '@/types';
 
 interface Notification {
   id: string;
