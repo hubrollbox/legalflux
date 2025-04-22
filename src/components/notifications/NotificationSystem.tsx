@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useNotificationStore } from '@/services/notificationService';
-import NotificationPreferences, { NotificationPreference } from './NotificationPreferences';
+import NotificationPreferences from './NotificationPreferences';
+import type { NotificationPreference } from './NotificationPreferences';
 
 interface Notification {
   id: string;
@@ -27,8 +28,7 @@ const NotificationSystem: React.FC = () => {
     unreadCount,
     markAsRead,
     markAllAsRead,
-    updatePreferences,
-    removeNotification
+    updatePreferences
   } = useNotificationStore();
 
 
@@ -102,7 +102,7 @@ const NotificationSystem: React.FC = () => {
                   </SheetHeader>
                   <div className="mt-6">
                     <NotificationPreferences
-                      preferences={preferences}
+                      preferences={preferences /* Make sure preferences includes deliveryMethod or update NotificationPreferences to not require it */}
                       onPreferencesChange={handlePreferencesChange}
                     />
                   </div>
@@ -141,7 +141,7 @@ const NotificationSystem: React.FC = () => {
                       {notification.content}
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {formatTime(notification.timestamp)}
+                      {formatTime(new Date(notification.timestamp))}
                     </p>
                   </div>
                 </div>
