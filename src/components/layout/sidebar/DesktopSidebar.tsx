@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { LOGO } from "@/assets";
 import { cn } from "@/lib/utils";
-import { SidebarItem } from "./SidebarItems";
+import type { SidebarItem } from "./SidebarItems";
 import { LogOut } from "lucide-react";
 
 interface DesktopSidebarProps {
