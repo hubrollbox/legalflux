@@ -1,5 +1,4 @@
 import * as React from "react";
-// Remove unused import
 import { DayPicker } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
