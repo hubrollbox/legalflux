@@ -26,8 +26,8 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { cn } from "@/lib/utils";
-import { Process, ProcessStatus, ProcessType, CreateProcessDTO, UpdateProcessDTO } from "@/types/process";
-import { Client } from "@/types/client";
+import type { Process, ProcessStatus, ProcessType, CreateProcessDTO, UpdateProcessDTO } from "@/types/process";
+import type { Client } from "@/types/client";
 import { clientService } from "@/services/clientService";
 
 // Schema de validação para o formulário de processo
