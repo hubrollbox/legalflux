@@ -1,6 +1,7 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
+// Remove or comment out this line if present:
 import { LogOut } from "lucide-react";
 import DesktopSidebar from "./sidebar/DesktopSidebar";
 import MobileSidebar from "./sidebar/MobileSidebar";
