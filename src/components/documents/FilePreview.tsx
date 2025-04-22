@@ -55,7 +55,7 @@ export const FilePreview = ({ fileUrl, fileName, onClose }: FilePreviewProps) =>
   };
 
   return (
-    <Dialog open={true} onOpenChange={onClose}>
+    <Dialog open={true} onOpenChange={(open) => !open && onClose?.()}>
       <DialogContent className="max-w-4xl h-[90vh]">
         <DialogHeader className="flex flex-row justify-between items-center">
           <span className="text-lg font-medium">{fileName}</span>
