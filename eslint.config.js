@@ -7,7 +7,6 @@ import nextPlugin from "@next/eslint-plugin-next";
 
 export default tseslint.config(
   { ignores: ["dist"] },
-  // Next.js recommended config as a separate object
   nextPlugin.configs.recommended,
   {
     extends: [
