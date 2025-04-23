@@ -67,7 +67,12 @@ const categoryConfig: Record<CategoryKey, CategoryConfig> = {
 
 import { useCalendar } from './CalendarContext';
 
-interface EnhancedCalendarSidebarProps {}
+// Replace:
+interface Props {}
+// With:
+type Props = {
+  // Add actual props here
+}
 
 export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = () => {
   const {

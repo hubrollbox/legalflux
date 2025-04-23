@@ -53,4 +53,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = "Button"
 
+// Move constants to a separate file like button-constants.ts
+export const BUTTON_VARIANTS = [...] // Move this to new file
 export { Button, buttonVariants }

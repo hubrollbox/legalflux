@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { Image } from 'next/image';
 
 export const Footer = () => {
   return (
@@ -8,7 +9,12 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <img src="/favicon.ico" alt="LegalFlux" className="h-8 w-8" />
+              <Image 
+                src="/logo.png" 
+                alt="Company Logo"
+                width={120}
+                height={40}
+              />
               <span className="font-bold">LegalFlux</span>
             </div>
             <p className="text-sm text-muted-foreground">

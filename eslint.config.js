@@ -7,12 +7,18 @@ import nextPlugin from "@next/eslint-plugin-next";
 
 export default tseslint.config(
   { ignores: ["dist"] },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
-    // Remove extends array and manually include rules
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true
+        }
+      }
     },
     plugins: {
       "react-hooks": reactHooks,
@@ -20,16 +26,12 @@ export default tseslint.config(
       "@next/next": nextPlugin
     },
     rules: {
-      ...js.configs.recommended.rules,
-      ...tseslint.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true },
-      ],
+      "react-refresh/only-export-components": "error",
+      "@next/next/no-img-element": "error",
+      "@typescript-eslint/no-empty-interface": "error",
       "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/no-explicit-any": "off",
-      // Add Next.js specific rules manually if needed
+      "@typescript-eslint/no-explicit-any": "off"
     },
   }
 );
