@@ -11,7 +11,7 @@ export default tseslint.config(
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,
-      "plugin:@next/next/recommended"
+      ...nextPlugin.configs.recommended
     ],
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
