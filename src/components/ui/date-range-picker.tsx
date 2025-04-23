@@ -4,7 +4,7 @@
 import * as React from "react";
 import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { DateRange } from "react-day-picker";
+import type { DateRange } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -23,12 +23,17 @@ interface DatePickerWithRangeProps extends Omit<React.HTMLAttributes<HTMLDivElem
 export function DatePickerWithRange({
   className,
   value,
-  onChange,
+  onChange = () => {},
 }: DatePickerWithRangeProps) {
   const [date, setDate] = React.useState<DateRange | undefined>(value || {
     from: new Date(),
     to: addDays(new Date(), 7),
   });
+
+  const handleDateChange = (newDate: DateRange | undefined) => {
+    setDate(newDate);
+    onChange(newDate);
+  };
 
   React.useEffect(() => {
     if (value) {
@@ -67,12 +72,9 @@ export function DatePickerWithRange({
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={date?.from}
+            defaultMonth={date?.from || new Date()}
             selected={date}
-            onSelect={(newDate) => {
-              setDate(newDate);
-              onChange?.(newDate);
-            }}
+            onSelect={handleDateChange}
             numberOfMonths={2}
             className="pointer-events-auto"
           />
