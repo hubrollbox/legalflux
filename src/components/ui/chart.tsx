@@ -136,27 +136,30 @@ const ChartTooltipContent = React.forwardRef<
         return null
       }
 
-      const [item] = payload
-      const key = `${labelKey || item.dataKey || item.name || "value"}`
-      const itemConfig = getPayloadConfigFromPayload(config, item, key)
-      const value =
-        !labelKey && typeof label === "string"
-          ? config[label as keyof typeof config]?.label || label
-          : itemConfig?.label
+      const [item] = payload;
+      if (item) {
+        const key = `${labelKey || item.dataKey || item.name || "value"}`;
+        const itemConfig = getPayloadConfigFromPayload(config, item, key);
+        const value =
+          !labelKey && typeof label === "string"
+            ? config[label as keyof typeof config]?.label || label
+            : itemConfig?.label
 
-      if (labelFormatter) {
-        return (
-          <div className={cn("font-medium", labelClassName)}>
-            {labelFormatter(value, payload)}
-          </div>
-        )
+        if (labelFormatter) {
+          return (
+            <div className={cn("font-medium", labelClassName)}>
+              {labelFormatter(value, payload)}
+            </div>
+          )
+        }
+
+        if (!value) {
+          return null
+        }
+
+        return <div className={cn("font-medium", labelClassName)}>{value}</div>
       }
-
-      if (!value) {
-        return null
-      }
-
-      return <div className={cn("font-medium", labelClassName)}>{value}</div>
+      return null
     }, [
       label,
       labelFormatter,
