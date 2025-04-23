@@ -101,11 +101,29 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
   const [previewContent, setPreviewContent] = useState<string>('');
   const [activePlaceholders, setActivePlaceholders] = useState<string[]>([]);
 
+  // State declarations (keep only these)
   const [clients, setClients] = useState<Client[]>([]);
   const [processes, setProcesses] = useState<Process[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   const [isLoadingClients, setIsLoadingClients] = useState(true);
   const [isLoadingProcesses, setIsLoadingProcesses] = useState(true);
+
+  const predefinedPlaceholders = [
+    'nome_cliente',
+    'nif',
+    'numero_processo',
+    'data_actual',
+    'morada'
+  ];
+
+  // Function declarations (keep only these)
+  const handleInsertPlaceholder = (placeholder: string): void => {
+    const newContent = `${templateContent}{{${placeholder}}}`;
+    setTemplateContent(newContent);
+    if (!activePlaceholders.includes(placeholder)) {
+      setActivePlaceholders([...activePlaceholders, placeholder]);
+    }
+  };
 
   const generatePreview = useCallback(async (): Promise<string> => {
     if (!templateContent || !selectedTemplate) return '';
@@ -115,7 +133,7 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
   
     let processNumber = parseInt(processData?.number?.toString() || '0', 10);
     if (Number.isNaN(processNumber)) processNumber = 0;
-    
+  
     activePlaceholders.forEach((placeholder) => {
       const value = {
         nome_cliente: clientData?.name || '[Nome do Cliente]',
@@ -124,7 +142,7 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
         data_actual: new Date().toLocaleDateString('pt-PT'),
         morada: clientData?.address || '[Morada]',
       }[placeholder];
-    
+  
       content = content.replace(
         new RegExp(`{{${placeholder}}}`, 'g'),
         () => `<span class="font-medium text-blue-600">${value}</span>`
@@ -167,6 +185,7 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
     </div>
   );
 
+  // Remove everything from here down to line 188
   const predefinedPlaceholders = [
     'nome_cliente',
     'nif',
@@ -197,7 +216,7 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
   
     let processNumber = parseInt(processData?.number?.toString() || '0', 10);
     if (Number.isNaN(processNumber)) processNumber = 0;
-    
+  
     activePlaceholders.forEach((placeholder) => {
       const value = {
         nome_cliente: clientData?.name || '[Nome do Cliente]',
@@ -206,7 +225,7 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
         data_actual: new Date().toLocaleDateString('pt-PT'),
         morada: clientData?.address || '[Morada]',
       }[placeholder];
-    
+  
       content = content.replace(
         new RegExp(`{{${placeholder}}}`, 'g'),
         () => `<span class="font-medium text-blue-600">${value}</span>`
@@ -248,28 +267,6 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
       {/* existing JSX content */}
     </div>
   );
-
-  const predefinedPlaceholders = [
-    'nome_cliente',
-    'nif',
-    'numero_processo',
-    'data_actual',
-    'morada'
-  ];
-
-  const handleInsertPlaceholder = (placeholder: string): void => {
-    const newContent = `${templateContent}{{${placeholder}}}`;
-    setTemplateContent(newContent);
-    if (!activePlaceholders.includes(placeholder)) {
-      setActivePlaceholders([...activePlaceholders, placeholder]);
-    }
-  };
-
-  const [clients, setClients] = useState<Client[]>([]);
-  const [processes, setProcesses] = useState<Process[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
-  const [isLoadingClients, setIsLoadingClients] = useState(true);
-  const [isLoadingProcesses, setIsLoadingProcesses] = useState(true);
 
   // Carregar clientes e processos ao montar o componente
   useEffect(() => {

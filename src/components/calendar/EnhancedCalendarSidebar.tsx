@@ -226,10 +226,3 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
 };
 
 export default EnhancedCalendarSidebar;
-// Replace empty interfaces with:
-interface MyInterface {
-  // Add actual properties or use:
-  [key: string]: unknown;
-}
-// Or:
-type MyInterface = unknown; // For any value type
