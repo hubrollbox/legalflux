@@ -3,6 +3,7 @@
 
 import * as React from "react";
 import { addDays, format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
 import type { DateRange } from "react-day-picker";
 
@@ -15,24 +16,39 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+interface DatePickerWithRangeProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
+  onDateChange?: (date: DateRange | undefined) => void;
+  defaultValue?: DateRange;
+  placeholder?: string;
+}
+
 export function DatePickerWithRange({
   className,
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
-
+  onDateChange,
+  defaultValue = {
     from: new Date(),
     to: addDays(new Date(), 7),
-  });
+  },
+  placeholder = "Selecionar período",
+  ...props
+}: DatePickerWithRangeProps) {
+  const [date, setDate] = React.useState<DateRange | undefined>(defaultValue);
+
+  const handleDateChange = React.useCallback((newDate: DateRange | undefined) => {
+    setDate(newDate);
+    onDateChange?.(newDate);
+  }, [onDateChange]);
 
   return (
-    <div className={cn("grid gap-2", className)}>
+    <div className={cn("grid gap-2", className)} {...props}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal",
+              "w-full md:w-[300px] justify-start text-left font-normal",
               !date && "text-muted-foreground"
             )}
           >
@@ -47,7 +63,7 @@ export function DatePickerWithRange({
                 format(date.from, "dd/MM/yyyy")
               )
             ) : (
-              <span>Selecionar período</span>
+              <span>{placeholder}</span>
             )}
           </Button>
         </PopoverTrigger>
@@ -55,9 +71,10 @@ export function DatePickerWithRange({
           <Calendar
             initialFocus
             mode="range"
+            locale={ptBR}
             {...(date?.from ? { defaultMonth: date.from } : {})}
             selected={date}
-            onSelect={setDate}
+            onSelect={handleDateChange}
             numberOfMonths={2}
             className="pointer-events-auto"
           />
