@@ -179,94 +179,20 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
     window.URL.revokeObjectURL(url);
   };
 
-  return (
-    <div className="space-y-6">
-      {/* existing JSX content */}
-    </div>
-  );
+  // Atualizar o template selecionado quando o usuário selecionar um template
+  const handleTemplateChange = (templateId: string): void => {
+    const template = templates?.find((t: { id: string }) => t.id === templateId);
+    setSelectedTemplate(template);
 
-  // Remove everything from here down to line 188
-  const predefinedPlaceholders = [
-    'nome_cliente',
-    'nif',
-    'numero_processo',
-    'data_actual',
-    'morada'
-  ];
-
-  const handleInsertPlaceholder = (placeholder: string): void => {
-    const newContent = `${templateContent}{{${placeholder}}}`;
-    setTemplateContent(newContent);
-    if (!activePlaceholders.includes(placeholder)) {
-      setActivePlaceholders([...activePlaceholders, placeholder]);
+    // Inicializar campos personalizados
+    if (template) {
+      const initialCustomFields: Record<string, string> = {};
+      template.fields.forEach((field: { key: string }) => {
+        initialCustomFields[field.key] = "";
+      });
+      form.setValue("customFields", initialCustomFields);
     }
   };
-
-  const [clients, setClients] = useState<Client[]>([]);
-  const [processes, setProcesses] = useState<Process[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
-  const [isLoadingClients, setIsLoadingClients] = useState(true);
-  const [isLoadingProcesses, setIsLoadingProcesses] = useState(true);
-
-  const generatePreview = useCallback(async (): Promise<string> => {
-    if (!templateContent || !selectedTemplate) return '';
-    let content = templateContent;
-    const clientData = clientService.getCurrentClient();
-    const processData = await processService.getCurrentProcess();
-  
-    let processNumber = parseInt(processData?.number?.toString() || '0', 10);
-    if (Number.isNaN(processNumber)) processNumber = 0;
-  
-    activePlaceholders.forEach((placeholder) => {
-      const value = {
-        nome_cliente: clientData?.name || '[Nome do Cliente]',
-        nif: clientData?.nif || '[NIF]',
-        numero_processo: processNumber.toString() || '[Número do Processo]',
-        data_actual: new Date().toLocaleDateString('pt-PT'),
-        morada: clientData?.address || '[Morada]',
-      }[placeholder];
-  
-      content = content.replace(
-        new RegExp(`{{${placeholder}}}`, 'g'),
-        () => `<span class="font-medium text-blue-600">${value}</span>`
-      );
-    });
-  
-    const clientId = form.watch('clientId');
-    const processId = form.watch('processId');
-    const currentClient = clients.find(c => c.id === clientId);
-    const currentProcess = processes.find(p => p.id === processId);
-  
-    content = content
-      .replace(/\{\{cliente.nome\}\}/g, currentClient?.name || '[Cliente]')
-      .replace(/\{\{processo.numero\}\}/g, currentProcess?.number?.toString() || '[Número]');
-  
-    const customFields = form.watch('customFields');
-    Object.entries(customFields).forEach(([key, value]) => {
-      content = content.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value || `[${key}]`);
-    });
-  
-    return content;
-  }, [templateContent, selectedTemplate, activePlaceholders, clients, processes, form.watch]);
-
-  const handleExportPDF = (): void => {
-    const pdfContent = previewContent.replace(/<[^>]+>/g, '');
-    const blob = new Blob([pdfContent], { type: 'application/pdf' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'documento_gerado.pdf';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  };
-
-  return (
-    <div className="space-y-6">
-      {/* existing JSX content */}
-    </div>
-  );
 
   // Carregar clientes e processos ao montar o componente
   useEffect(() => {
@@ -292,24 +218,6 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
       // Cleanup function if needed
     };
   }, []);
-
-  // Atualizar o template selecionado quando o usuário selecionar um template
-  const handleTemplateChange = (templateId: string): void => {
-    const template = templates?.find((t: { id: string }) => t.id === templateId);
-    setSelectedTemplate(template);
-
-    // Inicializar campos personalizados
-    if (template) {
-      const initialCustomFields: Record<string, string> = {};
-      template.fields.forEach((field: { key: string }) => {
-        initialCustomFields[field.key] = "";
-      });
-      form.setValue("customFields", initialCustomFields);
-    }
-  };
-
-  // Gerar visualização do documento com os campos preenchidos
-
 
   // Atualizar a visualização quando os campos forem alterados
   useEffect(() => {
@@ -338,7 +246,6 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div>
-          {/* Placeholder for additional content */}
               <Label>Conteúdo do Documento</Label>
               <Textarea
                 value={templateContent}
@@ -611,7 +518,7 @@ render={({ field }: { field: ControllerRenderProps<{ templateId: string; name: s
       </div>
     </>
   );
-}
+};
 
 export default DocumentTemplateForm;
 
