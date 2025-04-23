@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { ControllerRenderProps } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -101,12 +101,18 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
   const [previewContent, setPreviewContent] = useState<string>('');
   const [activePlaceholders, setActivePlaceholders] = useState<string[]>([]);
 
-  const generatePreview = async (): Promise<string> => {
+  const [clients, setClients] = useState<Client[]>([]);
+  const [processes, setProcesses] = useState<Process[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+  const [isLoadingClients, setIsLoadingClients] = useState(true);
+  const [isLoadingProcesses, setIsLoadingProcesses] = useState(true);
+
+  const generatePreview = useCallback(async (): Promise<string> => {
     if (!templateContent || !selectedTemplate) return '';
     let content = templateContent;
     const clientData = clientService.getCurrentClient();
     const processData = await processService.getCurrentProcess();
-
+  
     let processNumber = parseInt(processData?.number?.toString() || '0', 10);
     if (Number.isNaN(processNumber)) processNumber = 0;
     
@@ -124,23 +130,105 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
         () => `<span class="font-medium text-blue-600">${value}</span>`
       );
     });
-
+  
     const clientId = form.watch('clientId');
     const processId = form.watch('processId');
     const currentClient = clients.find(c => c.id === clientId);
     const currentProcess = processes.find(p => p.id === processId);
-
+  
     content = content
       .replace(/\{\{cliente.nome\}\}/g, currentClient?.name || '[Cliente]')
       .replace(/\{\{processo.numero\}\}/g, currentProcess?.number?.toString() || '[Número]');
-
+  
     const customFields = form.watch('customFields');
     Object.entries(customFields).forEach(([key, value]) => {
-      content = content.replace(new RegExp(`\{\{${key}\}\}`, 'g'), value || `[${key}]`);
+      content = content.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value || `[${key}]`);
     });
-
+  
     return content;
+  }, [templateContent, selectedTemplate, activePlaceholders, clients, processes, form.watch]);
+
+  const handleExportPDF = (): void => {
+    const pdfContent = previewContent.replace(/<[^>]+>/g, '');
+    const blob = new Blob([pdfContent], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'documento_gerado.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   };
+
+  return (
+    <div className="space-y-6">
+      {/* existing JSX content */}
+    </div>
+  );
+
+  const predefinedPlaceholders = [
+    'nome_cliente',
+    'nif',
+    'numero_processo',
+    'data_actual',
+    'morada'
+  ];
+
+  const handleInsertPlaceholder = (placeholder: string): void => {
+    const newContent = `${templateContent}{{${placeholder}}}`;
+    setTemplateContent(newContent);
+    if (!activePlaceholders.includes(placeholder)) {
+      setActivePlaceholders([...activePlaceholders, placeholder]);
+    }
+  };
+
+  const [clients, setClients] = useState<Client[]>([]);
+  const [processes, setProcesses] = useState<Process[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+  const [isLoadingClients, setIsLoadingClients] = useState(true);
+  const [isLoadingProcesses, setIsLoadingProcesses] = useState(true);
+
+  const generatePreview = useCallback(async (): Promise<string> => {
+    if (!templateContent || !selectedTemplate) return '';
+    let content = templateContent;
+    const clientData = clientService.getCurrentClient();
+    const processData = await processService.getCurrentProcess();
+  
+    let processNumber = parseInt(processData?.number?.toString() || '0', 10);
+    if (Number.isNaN(processNumber)) processNumber = 0;
+    
+    activePlaceholders.forEach((placeholder) => {
+      const value = {
+        nome_cliente: clientData?.name || '[Nome do Cliente]',
+        nif: clientData?.nif || '[NIF]',
+        numero_processo: processNumber.toString() || '[Número do Processo]',
+        data_actual: new Date().toLocaleDateString('pt-PT'),
+        morada: clientData?.address || '[Morada]',
+      }[placeholder];
+    
+      content = content.replace(
+        new RegExp(`{{${placeholder}}}`, 'g'),
+        () => `<span class="font-medium text-blue-600">${value}</span>`
+      );
+    });
+  
+    const clientId = form.watch('clientId');
+    const processId = form.watch('processId');
+    const currentClient = clients.find(c => c.id === clientId);
+    const currentProcess = processes.find(p => p.id === processId);
+  
+    content = content
+      .replace(/\{\{cliente.nome\}\}/g, currentClient?.name || '[Cliente]')
+      .replace(/\{\{processo.numero\}\}/g, currentProcess?.number?.toString() || '[Número]');
+  
+    const customFields = form.watch('customFields');
+    Object.entries(customFields).forEach(([key, value]) => {
+      content = content.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value || `[${key}]`);
+    });
+  
+    return content;
+  }, [templateContent, selectedTemplate, activePlaceholders, clients, processes, form.watch]);
 
   const handleExportPDF = (): void => {
     const pdfContent = previewContent.replace(/<[^>]+>/g, '');

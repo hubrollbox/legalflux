@@ -56,7 +56,20 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
           description: 'Falha ao carregar clientes',
           variant: 'destructive',
         });
-      } finally {}
+      } finally {
+        // Remove this empty if block:
+        // if (condition) {
+        // }
+        
+        // Either remove the if statement entirely or replace with actual condition:
+        if (false) { // Replace with your actual condition if needed
+        // Add logic here
+        }
+        // Or remove entirely if not needed
+        useEffect(() => {
+        // ... existing code ...
+        }, [toast]); // Add missing dependency
+      }
     };
     loadClients();
   }, []); // Add missing dependencies here or remove array if not needed
