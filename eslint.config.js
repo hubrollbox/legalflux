@@ -9,7 +9,12 @@ export default [
   { ignores: ["dist"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
-  nextPlugin.configs.recommended,
+  {
+    ...nextPlugin.configs.recommended,
+    plugins: {
+      "@next/next": nextPlugin
+    }
+  },
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
@@ -23,8 +28,7 @@ export default [
     },
     plugins: {
       "react-hooks": reactHooks,
-      "react-refresh": reactRefresh,
-      "@next/next": nextPlugin
+      "react-refresh": reactRefresh
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
