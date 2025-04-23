@@ -9,7 +9,6 @@ export default tseslint.config(
   { ignores: ["dist"] },
   {
     extends: [
-      nextjs.configs.recommended,
       js.configs.recommended,
       ...tseslint.configs.recommended
     ],
@@ -21,9 +20,11 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
+      "next": nextjs
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      ...nextjs.configs.recommended.rules,
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
