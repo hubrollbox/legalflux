@@ -59,7 +59,7 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
       } finally {}
     };
     loadClients();
-  }, []);
+  }, []); // Add missing dependencies here or remove array if not needed
   const navigate = useNavigate();
 
   const getStatusBadge = (status: string) => {

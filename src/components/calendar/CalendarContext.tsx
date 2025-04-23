@@ -119,3 +119,5 @@ export const useCalendar = () => {
   }
   return context;
 };
+// Move constants/functions to a new file like calendar-utils.ts
+// Keep only component-related code in this file
