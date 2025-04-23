@@ -4,7 +4,7 @@
 import * as React from "react";
 import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { DateRange } from "react-day-picker";
+import type { DateRange } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ export function DatePickerWithRange({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
+
     from: new Date(),
     to: addDays(new Date(), 7),
   });
@@ -54,7 +55,7 @@ export function DatePickerWithRange({
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={date?.from}
+            {...(date?.from ? { defaultMonth: date.from } : {})}
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}
