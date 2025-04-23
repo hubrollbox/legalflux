@@ -1,4 +1,4 @@
-// ... existing imports ...
+import Image from 'next/image';
 import Link from "next/link";
 
 const LandingFooter = () => {
@@ -31,10 +31,20 @@ const LandingFooter = () => {
           
           {/* ... other columns ... */}
           <a href="#" className="text-muted-foreground hover:text-foreground">
-            <img src="/img/windows-store.svg" alt="Windows Store" className="h-5 w-5" />
+            <Image 
+              src="/logo.png" 
+              alt="Logo"
+              width={100}
+              height={50}
+            />
           </a>
           <a href="#" className="text-muted-foreground hover:text-foreground">
-            <img src="/img/google-play.svg" alt="Google Play" className="h-5 w-5" />
+            <Image 
+              src="/google-play.svg" 
+              alt="Google Play" 
+              width={20}
+              height={20}
+            />
           </a>
         </div>
       </div>

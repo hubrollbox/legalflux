@@ -9,6 +9,7 @@ export default tseslint.config(
   { ignores: ["dist"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
+  nextPlugin.configs.recommended,  // Add this line
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
