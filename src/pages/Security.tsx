@@ -6,6 +6,7 @@ import Navbar from "@/pages/landing/components/LandingNavbar";
 import Footer from "@/pages/landing/components/LandingFooter";
 import { Button } from "@/components/ui/button";
 import PageTransition from "@/components/PageTransition";
+import Image from 'next/image';
 
 interface SecurityFeatureProps {
   icon: React.ComponentType<{ size?: number | string }>;
@@ -42,10 +43,12 @@ const Certification = ({ imgSrc, name }: CertificationProps) => {
   return (
     <div className="flex flex-col items-center p-4">
       <div className="bg-gray-100 w-24 h-24 rounded-full flex items-center justify-center mb-3">
-        <img 
-          src={imgSrc} 
-          alt={name} 
-          className="w-16 h-16 object-contain"
+        <Image 
+          src={imgSrc}
+          alt={name}
+          width={64}
+          height={64}
+          className="object-contain"
           onError={(e) => {
             (e.target as HTMLImageElement).src = `https://placehold.co/64x64?text=${name[0]}`;
           }}
