@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { CloudIcon, Link2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import Image from 'next/image';
 
 const CloudIntegration = () => {
   const { toast } = useToast();
@@ -34,10 +35,12 @@ const CloudIntegration = () => {
             <div className="flex flex-col space-y-2">
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center">
-                  <img 
+                  <Image 
                     src="/img/integrations/google-drive.svg" 
                     alt="Google Drive" 
-                    className="w-6 h-6 mr-2"
+                    width={24}
+                    height={24}
+                    className="mr-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=GD";
                     }}
@@ -54,11 +57,14 @@ const CloudIntegration = () => {
                 </Button>
               </div>
               
+              // Replace all img tags with Next.js Image components
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center">
-                  <img 
+                  <Image 
                     src="/img/integrations/onedrive.svg" 
                     alt="Microsoft OneDrive" 
+                    width={24}
+                    height={24}
                     className="w-6 h-6 mr-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=OD";
@@ -78,9 +84,11 @@ const CloudIntegration = () => {
               
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center">
-                  <img 
+                  <Image 
                     src="/img/integrations/dropbox.svg" 
                     alt="Dropbox" 
+                    width={24}
+                    height={24}
                     className="w-6 h-6 mr-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=DB";

@@ -159,7 +159,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ doc }) => {
             <img 
               src={doc.preview} 
               alt={doc.name}
-              className="absolute inset-0 w-full h-full object-cover"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute' }}
             />
           </div>
         )}

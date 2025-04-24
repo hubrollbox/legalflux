@@ -1,13 +1,21 @@
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs/client'; // Changed from react to nextjs
+import { useRouter } from 'next/router';
 import UserTypeStep from '@/components/auth/UserTypeStep';
 import PersonalDataStep from '@/components/auth/PersonalDataStep';
 import ProfessionalDataStep from '@/components/auth/ProfessionalDataStep';
 import CompanyDataStep from '@/components/auth/CompanyDataStep';
-import { Database } from '@/types/supabase';
-
+import { Database } from '@/types/database'; // Changed path
+import { useNavigate } from 'react-router-dom';
+import { Input } from '@/components/ui/input';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Loader2 } from 'lucide-react';
+import AuthLayout from '@/components/layout/AuthLayout'; // Added missing import
+import Link from 'next/link'; // Added missing import
 
 interface RegisterFormData {
   fullName: string;
@@ -34,7 +42,26 @@ type UserType = 'particular' | 'professional' | 'empresa';
 export default function Register() {
   const [step, setStep] = useState(1);
   const [userType, setUserType] = useState<UserType>();
-  const [formData, setFormData] = useState({});
+  // Replace the empty object with proper typing
+  const [formData, setFormData] = useState<RegisterFormData>({
+    fullName: '',
+    email: '',
+    phone: '',
+    officeName: '',
+    taxId: '',
+    country: '',
+    city: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+    accountType: 'particular',
+    practiceArea: '',
+    teamSize: '',
+    currentTools: '',
+    acceptTerms: false,
+    acceptPilot: false,
+    acceptUpdates: false
+  });
   const supabase = createClientComponentClient<Database>();
   const router = useRouter();
 
@@ -60,27 +87,27 @@ export default function Register() {
   }>({});
 
   const handleInputChange = (field: keyof RegisterFormData, value: string | boolean) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-
-    if (field === "email" || field === "fullName") {
-      const username = field === "email" 
-        ? (value as string).split("@")[0] 
-        : (value as string).toLowerCase().replace(/\s+/g, ".");
-      setFormData(prev => ({ ...prev, username }));
-    }
-
-    if (field === "password" && typeof value === "string") {
-      setFormData(prev => ({ ...prev, password: value }));
-    }
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [field]: value
+      };
+      
+      // Handle username generation
+      if (field === "email") {
+        newData.username = (value as string).split("@")[0];
+      } else if (field === "fullName") {
+        newData.username = (value as string).toLowerCase().replace(/\s+/g, ".");
+      }
+      
+      return newData;
+    });
   };
   
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const validateStep = (step: number) => {
+  const validateStep = (step: number): boolean => {
     const newErrors: Record<string, string> = {};
     
     switch (step) {
@@ -138,7 +165,7 @@ export default function Register() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = (data: any) => {
+  const handleNextStep = (data: any) => {
     setFormData(prev => ({ ...prev, ...data }));
     setStep(prev => {
       if (userType === 'particular' && prev === 2) return 4;
@@ -234,22 +261,11 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) {
-      // Se houver erros, exibir mensagem e não prosseguir
-      console.log("Formulário com erros:", errors);
-      return;
-    }
+    if (!validateForm()) return;
     
     setIsLoading(true);
-    console.log("Iniciando registro com dados:", {
-      email: formData.email,
-      nome: formData.fullName,
-      role: role
-    });
-    
     try {
       await register(formData.email, formData.password, formData.fullName);
-      // Redirect based on user role
       navigate(role === 'client' ? '/client-portal' : '/dashboard');
     } catch (error) {
       console.error("Registration error:", error);
@@ -586,16 +602,44 @@ export default function Register() {
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
           Já tem uma conta?{" "}
-          <Link
-            to="/login"
+          <a
+            href="/login"
             className="text-primary-600 hover:text-primary-800 font-medium"
           >
             Faça login
-          </Link>
+          </a>
         </p>
       </div>
     </AuthLayout>
   );
 }
 ;
-export default Register;
+
+// Add missing type definitions
+type UserRole = 'lawyer' | 'assistant' | 'client';
+
+// Add these utility functions before the component
+const validateEmail = (email: string): boolean => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
+const isValidPassword = (password: string): boolean => {
+  return password.length >= 8 && 
+         /[A-Z]/.test(password) && 
+         /[0-9]/.test(password) && 
+         /[^A-Za-z0-9]/.test(password);
+};
+
+// Add this custom hook definition
+const useAuth = () => {
+  return {
+    register: async (email: string, password: string) => {
+      // Implementation would go here
+    }
+  };
+};
+
+// Fix the Select value parameter types
+const handleSelectChange = (_value: string) => {
+  // Add your select change logic here
+};

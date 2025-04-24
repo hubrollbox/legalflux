@@ -24,9 +24,11 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) =>
         <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
           <div className="flex flex-col items-center">
             <Link href="/">
-              <img
+              <Image
                 src="/lovable-uploads/2e2650ad-d2c9-49ca-ba40-8c19627e97aa.png"
                 alt="LegalFlux Logo"
+                width={80}
+                height={80}
                 className="h-20 mb-6"
               />
             </Link>

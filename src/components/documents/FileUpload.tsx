@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/supabase';
 import { FileText, Loader2, Upload } from 'lucide-react';
+import { useEffect } from 'react';
 
 
 type FilePreview = {
@@ -66,6 +67,14 @@ export const FileUpload = ({ processId, onUploadSuccess }: FileUploadProps) => {
       setIsUploading(false);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      uploadedFiles.forEach(file => {
+        URL.revokeObjectURL(file.preview);
+      });
+    };
+  }, [uploadedFiles]);
 
   return (
     <Card>
