@@ -33,46 +33,21 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
   const [clients, setClients] = useState<Client[]>([]);
   const { toast } = useToast();
 
+  const loadClients = useCallback(async () => {
+    try {
+      const data = await fetchClients();
+      setClients(data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load clients"
+      });
+    }
+  }, []); // Remove toast from dependencies if not needed
+
   useEffect(() => {
-    const loadClients = async () => {
-      try {
-        const data = await clientService.listClients();
-        setClients(data.map(client => ({
-          id: client.id,
-          name: client.name || '',
-          taxId: client.taxId || '',
-          nif: client.nif || '',
-          phone: client.phone || '',
-          email: client.email || '',
-          address: client.address || '',
-          status: client.status || 'prospect',
-          createdAt: client.createdAt ? new Date(client.createdAt) : new Date(),
-          userId: client.userId || '',
-          lawyerId: client.lawyerId || ''
-        })));
-      } catch (error) {
-        toast({
-          title: 'Erro',
-          description: 'Falha ao carregar clientes',
-          variant: 'destructive',
-        });
-      } finally {
-        // Remove this empty if block:
-        // if (condition) {
-        // }
-        
-        // Either remove the if statement entirely or replace with actual condition:
-        if (false) { // Replace with your actual condition if needed
-        // Add logic here
-        }
-        // Or remove entirely if not needed
-        useEffect(() => {
-        // ... existing code ...
-        }, [toast]); // Add missing dependency
-      }
-    };
     loadClients();
-  }, []); // Add missing dependencies here or remove array if not needed
+  }, [loadClients]);
   const navigate = useNavigate();
 
   const getStatusBadge = (status: string) => {
