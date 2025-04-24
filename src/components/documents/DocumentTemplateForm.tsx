@@ -33,19 +33,11 @@ import { processService } from "@/services/processService";
 import { FileUpload } from '@/components/ui/upload';
 
 // Schema de validação para o formulário de documento
-const documentTemplateFormSchema = z.object({
-  templateId: z.string({
-    required_error: "Selecione um modelo",
-  }),
-  name: z.string().min(2, { message: "O nome deve ter pelo menos 2 caracteres" }),
-  processId: z.string({
-    required_error: "Selecione um processo",
-  }),
-  clientId: z.string({
-    required_error: "Selecione um cliente",
-  }),
-  customFields: z.record(z.string()),
-});
+import {
+  documentTemplateFormSchema
+} from "./documentTemplateForm.types";
+import type {
+} from "./documentTemplateForm.types";
 
 type DocumentTemplateFormValues = z.infer<typeof documentTemplateFormSchema>;
 
@@ -151,7 +143,7 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
     });
   
     return content;
-  }, [templateContent, selectedTemplate, activePlaceholders, clients, processes, form, form.watch]);
+  }, [templateContent, selectedTemplate, activePlaceholders, clients, processes, form]);
 
   const handleExportPDF = (): void => {
     const pdfContent = previewContent.replace(/<[^>]+>/g, '');
@@ -215,7 +207,7 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
       }
     });
     return () => subscription.unsubscribe();
-  }, [form, form.watch, selectedTemplate, generatePreview]);
+  }, [form, selectedTemplate, generatePreview]);
 
   const onFormSubmit = (values: DocumentTemplateFormValues) => {
     // Preparar dados para envio
