@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from "react-router-dom";
 import {
   Table,
@@ -35,7 +35,7 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
 
   const loadClients = useCallback(async () => {
     try {
-      const data = await fetchClients();
+      const data = await clientService.fetchClients();
       setClients(data);
     } catch (error) {
       toast({
@@ -43,7 +43,7 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
         description: "Failed to load clients"
       });
     }
-  }, []); // Remove toast from dependencies if not needed
+  }, [toast]);
 
   useEffect(() => {
     loadClients();
