@@ -75,13 +75,12 @@ import { useCalendar } from './CalendarContext';
 // }
 // type MyType = object;
 
+// Remove duplicate Props interfaces and replace with:
 interface EnhancedCalendarSidebarProps {
-  // Since this component doesn't currently use any props,
-  // we can either:
-  // 1. Keep it empty with a comment explaining why
-  // 2. Remove it entirely if not needed
-  // For now, I'll keep it with a comment
-  // This component doesn't currently require any props
+  // Add any needed props here
+  // Example:
+  // initialDate?: Date;
+  // onDateChange?: (date: Date) => void;
 }
 
 export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = () => {

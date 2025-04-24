@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/supabase';
 import { FileText, Loader2, Upload } from 'lucide-react';
 import { useEffect } from 'react';
+import Image from 'next/image';
 
 
 type FilePreview = {
@@ -100,12 +101,15 @@ export const FileUpload = ({ processId, onUploadSuccess }: FileUploadProps) => {
               {uploadedFiles.map((file, index) => (
                 <div key={index} className="relative group">
                   {file.type.startsWith('image/') ? (
-                    <img
-                      src={file.preview}
+                    <Image 
+                      src={file.preview} 
                       alt={file.name}
-                      className="rounded-md h-32 w-full object-cover"
+                      width={200}
+                      height={150}
+                      className="h-full w-full object-cover rounded-md"
+                      onLoad={() => URL.revokeObjectURL(file.preview)}
                     />
-                  ) : (
+                    ) : (
                     <div className="flex items-center justify-center h-32 w-full bg-muted rounded-md">
                       <FileText className="h-8 w-8 text-muted-foreground" />
                     </div>
