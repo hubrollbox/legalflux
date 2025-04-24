@@ -44,10 +44,11 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) =>
 
 export default AuthLayout;
 
-// Replace:
-<>
-  <img src="/logo.png" alt="Logo" />
-
-  // With:
-  <Image src="/logo.png" alt="Logo" width={100} height={50} />
-</>
+// Replace <img> tags with:
+<Image
+  src="/path/to/image.png"
+  alt="Description"
+  width={500}
+  height={300}
+  priority
+/>
