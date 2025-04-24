@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs/client'; // Changed from react to nextjs
 import { useRouter } from 'next/router';
 import UserTypeStep from '@/components/auth/UserTypeStep';
-import PersonalDataStep from '@/components/auth/PersonalDataStep';
 import ProfessionalDataStep from '@/components/auth/ProfessionalDataStep';
+import PersonalDataStep from '@/components/auth/PersonalDataStep';
 import CompanyDataStep from '@/components/auth/CompanyDataStep';
 import { Database } from '@/types/database'; // Changed path
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import AuthLayout from '@/components/layout/AuthLayout'; // Added missing import
-import Link from 'next/link'; // Added missing import
+import Link from 'next/link';
 
 interface RegisterFormData {
   fullName: string;
@@ -185,7 +185,7 @@ export default function Register() {
           }
         }
       });
-
+  
       if (!error) {
         router.push(
           userType === 'empresa' ? '/client-portal' : '/dashboard'
@@ -615,7 +615,6 @@ export default function Register() {
 }
 ;
 
-// Add missing type definitions
 type UserRole = 'lawyer' | 'assistant' | 'client';
 
 // Add these utility functions before the component
