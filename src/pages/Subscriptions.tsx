@@ -5,7 +5,7 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
 import PlanCard from "@/components/subscription/PlanCard";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, CreditCard } from "lucide-react";
+import { ArrowRight, CreditCard } from "lucide-react"; // Removed unused ArrowLeft
 import PageTransition from "@/components/PageTransition";
 import LandingNavbar from "@/pages/landing/components/LandingNavbar";
 import LandingFooter from "@/pages/landing/components/LandingFooter";
@@ -70,7 +70,7 @@ const plans = [
 ];
 
 const Subscriptions = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   // Componente para exibir quando o usuário estiver autenticado
   const AuthenticatedView = () => (

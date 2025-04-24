@@ -6,7 +6,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { User } from "@/types";
+import type { User } from "@/types";
+import { UserRole } from "@/types"; // Changed from type import to regular import
 import { UserPlus, Search } from "lucide-react";
 import { MOCK_USERS } from "@/services/mockData";
 import UsersTable from "@/components/users/UsersTable";
@@ -16,7 +17,7 @@ import {
   DeleteUserDialog, 
   UserPermissionsDialogWrapper 
 } from "@/components/users/UserDialogs";
-import { UserFormValues } from "@/components/users/UserForm";
+import type { UserFormValues } from "@/components/users/UserForm";
 
 const Users = () => {
   const { user } = useAuth();
@@ -31,7 +32,7 @@ const Users = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   // Verificar permissões do utilizador atual
-  if (user?.role !== "admin" && user?.role !== "senior_lawyer") {
+  if (user?.role !== UserRole.ADMIN && user?.role !== UserRole.SENIOR_LAWYER) {
     navigate("/dashboard");
     toast({
       title: "Acesso Negado",
@@ -65,13 +66,13 @@ const Users = () => {
       id: String(Math.floor(Math.random() * 10000)),
       email: data.email,
       name: data.name,
-      role: data.role,
+      role: UserRole[data.role as keyof typeof UserRole],
       isActive: data.isActive,
       createdAt: new Date().toISOString(),
       lastLogin: new Date().toISOString(),
       hasTwoFactorEnabled: data.hasTwoFactorEnabled,
-      organizationId: data.organizationId,
-      phone: data.phone,
+      organizationId: data.organizationId || '', // Provide empty string default
+      phone: data.phone || '', // Provide empty string default
     };
 
     setUsers([...users, newUser]);
@@ -101,11 +102,11 @@ const Users = () => {
             ...u,
             email: data.email,
             name: data.name,
-            role: data.role,
+            role: UserRole[data.role as keyof typeof UserRole],
             isActive: data.isActive,
             hasTwoFactorEnabled: data.hasTwoFactorEnabled,
-            organizationId: data.organizationId,
-            phone: data.phone,
+            organizationId: data.organizationId || '', // Provide empty string default
+            phone: data.phone || '', // Provide empty string default
           }
         : u
     );

@@ -248,3 +248,17 @@ export interface DocumentAnalysisResult {
     importance: 'essential' | 'recommended' | 'optional';
   }[];
 }
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  isActive: boolean;
+  createdAt: string;
+  lastLogin: string;
+  hasTwoFactorEnabled: boolean;
+  organizationId: string; // Make optional with ?
+  phone?: string; // Make optional with ?
+  type?: string;
+}

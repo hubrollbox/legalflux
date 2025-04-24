@@ -76,7 +76,12 @@ import { useCalendar } from './CalendarContext';
 // type MyType = object;
 
 interface EnhancedCalendarSidebarProps {
-  // Add any props your component needs here
+  // Since this component doesn't currently use any props,
+  // we can either:
+  // 1. Keep it empty with a comment explaining why
+  // 2. Remove it entirely if not needed
+  // For now, I'll keep it with a comment
+  // This component doesn't currently require any props
 }
 
 export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = () => {
