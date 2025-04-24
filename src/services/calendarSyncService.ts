@@ -267,12 +267,15 @@ class CalendarSyncService {
         };
       }
 
-      // Filtrar eventos pelos tipos configurados
-      const filteredEvents = (importResult.events || []).filter(event => 
-        event.type && calendar.eventTypes.includes(event.type as 'deadline' | 'hearing' | 'meeting' | 'other')
-      );
+      // Filtrar eventos pelos tipos configurados com type guard
+      const filteredEvents = (importResult.events || []).filter(event => {
+        if (!event.type || !calendar.eventTypes.includes(event.type as 'deadline' | 'hearing' | 'meeting' | 'other')) {
+          return false;
+        }
+        return true;
+      });
 
-      // Processar eventos importados (em uma implementação real, isso salvaria no banco de dados)
+      // Processar eventos importados
       console.log(`Importados ${filteredEvents.length} eventos do calendário ${calendar.name}`);
 
       return {
@@ -341,30 +344,31 @@ class CalendarSyncService {
   /**
    * Gera eventos de exemplo para simulação
    */
+  // Update the generateMockEvents method to match CalendarEvent interface
   private generateMockEvents(calendar: ExternalCalendarConfig, count: number): CalendarEvent[] {
-    const events: CalendarEvent[] = [];
-    const now = new Date();
-    const eventTypes: ('deadline' | 'hearing' | 'meeting' | 'other')[] = ['deadline', 'hearing', 'meeting', 'other'];
-
-    for (let i = 0; i < count; i++) {
-      const startDate = new Date(now.getTime() + (i + 1) * 24 * 60 * 60 * 1000); // dias à frente
-      const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000); // 2 horas depois
-      const type = eventTypes[i % eventTypes.length];
-
-      events.push({
-        id: crypto.randomUUID(),
-        title: `Evento de ${type} ${i + 1}`,
-        description: `Descrição do evento de ${type} ${i + 1}`,
-        startDate,
-        endDate,
-        location: type === 'hearing' ? 'Tribunal de Justiça' : 'Escritório',
-        type,
-        processId: crypto.randomUUID(),
-        clientId: crypto.randomUUID()
-      });
-    }
-
-    return events;
+      const events: CalendarEvent[] = [];
+      const now = new Date();
+      const eventTypes: ('deadline' | 'hearing' | 'meeting' | 'other')[] = ['deadline', 'hearing', 'meeting', 'other'];
+  
+      for (let i = 0; i < count; i++) {
+        const start = new Date(now.getTime() + (i + 1) * 24 * 60 * 60 * 1000); // dias à frente
+        const end = new Date(start.getTime() + 2 * 60 * 60 * 1000); // 2 horas depois
+        const type = eventTypes[i % eventTypes.length];
+  
+        events.push({
+          id: crypto.randomUUID(),
+          title: `Evento de ${type} ${i + 1}`,
+          description: `Descrição do evento de ${type} ${i + 1}`,
+          start,
+          end,
+          location: type === 'hearing' ? 'Tribunal de Justiça' : 'Escritório',
+          type,
+          processId: crypto.randomUUID(),
+          clientId: crypto.randomUUID()
+        });
+      }
+  
+      return events;
   }
 
   /**
@@ -470,8 +474,8 @@ export async function syncDeadlinesWithExternalCalendar(
     const events: CalendarEvent[] = deadlines.map(deadline => ({
       id: crypto.randomUUID(),
       title: 'Prazo Legal',
-      startDate: deadline,
-      endDate: deadline,
+      start: deadline,
+      end: deadline,
       type: 'deadline',
       attendees: [],
       notes: 'Sincronizado automaticamente',

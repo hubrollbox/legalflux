@@ -1,5 +1,7 @@
 
+/// <reference types="https://deno.land/x/types@v0.1.0/lib.deno.d.ts" />
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
+// Replace the Deno-specific imports with standard ones
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 // Add Deno type declarations
