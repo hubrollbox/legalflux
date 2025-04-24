@@ -10,6 +10,8 @@ import {
 import { Menu } from "lucide-react";
 import { LOGO } from "@/assets";
 import { useAuth } from "@/hooks/useAuth";
+import Image from "next/image";
+// Remove duplicate Image import since we're already using @chunmincms/ui Image component
 
 const LandingNavbar: React.FC = () => {
   const { isAuthenticated, user, getRedirectPath } = useAuth();
@@ -27,9 +29,11 @@ const LandingNavbar: React.FC = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <img
+          <Image
             src={LOGO.DEFAULT}
             alt="LegalFlux"
+            width={32}
+            height={32}
             className="h-8 w-8"
           />
           <span className="font-bold">LegalFlux</span>

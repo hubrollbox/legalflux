@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Calendar as CalendarIcon, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
 
 const CalendarIntegration = () => {
   const { toast } = useToast();
@@ -34,9 +35,11 @@ const CalendarIntegration = () => {
             <div className="flex flex-col space-y-2">
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center">
-                  <img 
+                  <Image 
                     src="/img/integrations/google-calendar.svg" 
                     alt="Google Calendar" 
+                    width={24}
+                    height={24}
                     className="w-6 h-6 mr-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=G";
@@ -56,9 +59,11 @@ const CalendarIntegration = () => {
               
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center">
-                  <img 
+                  <Image 
                     src="/img/integrations/outlook.svg" 
                     alt="Microsoft Outlook" 
+                    width={24}
+                    height={24}
                     className="w-6 h-6 mr-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=O";
@@ -78,9 +83,11 @@ const CalendarIntegration = () => {
               
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center">
-                  <img 
+                  <Image 
                     src="/img/integrations/apple-calendar.svg" 
                     alt="Apple Calendar" 
+                    width={24}
+                    height={24}
                     className="w-6 h-6 mr-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=A";

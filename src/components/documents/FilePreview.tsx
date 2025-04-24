@@ -4,6 +4,7 @@ import DocViewer, { PDFRenderer } from '@cyntler/react-doc-viewer';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { FileText, X } from 'lucide-react';
+import Image from 'next/image';
 
 interface FilePreviewProps {
   fileUrl: string;
@@ -43,7 +44,16 @@ export const FilePreview = ({ fileUrl, fileName, onClose }: FilePreviewProps) =>
     }
 
     if (fileType && ['png', 'jpg', 'jpeg'].includes(fileType)) {
-      return <img src={fileUrl} alt={fileName} className="max-h-screen mx-auto" />;
+      return (
+        <Image
+          src={fileUrl}
+          alt={fileName}
+          width={800}
+          height={600}
+          className="max-h-screen mx-auto"
+          style={{ objectFit: 'contain', width: 'auto', height: 'auto', maxHeight: '80vh' }}
+        />
+      );
     }
 
     return (
