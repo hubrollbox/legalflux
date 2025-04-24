@@ -62,13 +62,13 @@ export const Footer = () => {
                 <Linkedin className="h-5 w-5" />
               </a>
               <a href="/img/app-store.svg" className="text-muted-foreground hover:text-foreground">
-                <img src="/img/app-store.svg" alt="App Store" className="h-5 w-5" />
+                <Image src="/img/app-store.svg" alt="App Store" width={20} height={20} className="h-5 w-5" />
               </a>
               <a href="/img/google-play.svg" className="text-muted-foreground hover:text-foreground">
-                <img src="/img/google-play.svg" alt="Google Play" className="h-5 w-5" />
+                <Image src="/img/google-play.svg" alt="Google Play" width={20} height={20} className="h-5 w-5" />
               </a>
               <a href="/img/windows-store.svg" className="text-muted-foreground hover:text-foreground">
-                <img src="/img/windows-store.svg" alt="Windows Store" className="h-5 w-5" />
+                <Image src="/img/windows-store.svg" alt="Windows Store" width={20} height={20} className="h-5 w-5" />
               </a>
             </div>
           </div>

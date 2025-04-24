@@ -3,18 +3,7 @@ export type UserType = 'individual' | 'professional' | 'company';
 
 // Funções de usuário no sistema
 
-// Interface do usuário
-export interface RegisterData {
-  userType: 'individual' | 'professional' | 'company';
-  personalData: {
-    fullName: string;
-    email: string;
-    phone?: string;
-    password: string;
-    taxId?: string;
-  };
-  acceptTerms: boolean;
-}
+// Remove the duplicate RegisterData interface here
 
 import { UserRole } from './permissions';
 

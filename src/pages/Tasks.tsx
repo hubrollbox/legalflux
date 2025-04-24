@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import type { DropResult } from 'react-beautiful-dnd';
 import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import SectionHeader from '@/components/layout/SectionHeader';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, Edit, GripVertical, CheckCircle, AlertTriangle, Calendar } from 'lucide-react';
+import { Plus, Trash2, Edit, GripVertical, AlertTriangle, Calendar } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -44,6 +45,7 @@ const Tasks = () => {
     if (!result.destination) return;
     const items = Array.from(tasks);
     const [reorderedItem] = items.splice(result.source.index, 1);
+    if (!reorderedItem) return; // Prevent undefined error
     items.splice(result.destination.index, 0, reorderedItem);
     setTasks(items);
   };
@@ -122,7 +124,7 @@ const Tasks = () => {
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="tasks">
-          {(provided) => (
+          {(provided: import('react-beautiful-dnd').DroppableProvided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               <Card className="mt-6">
                 <CardHeader>
@@ -137,7 +139,7 @@ const Tasks = () => {
                 <CardContent>
                   {tasks.map((task, index) => (
                     <Draggable key={task.id} draggableId={task.id} index={index}>
-                      {(provided) => (
+                      {(provided: import('react-beautiful-dnd').DraggableProvided) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}

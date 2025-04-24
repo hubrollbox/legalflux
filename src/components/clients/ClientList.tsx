@@ -35,7 +35,7 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
 
   const loadClients = useCallback(async () => {
     try {
-      const data = await clientService.fetchClients();
+      const data = await clientService.listClients();
       setClients(data);
     } catch (error) {
       toast({
