@@ -11,16 +11,8 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import * as z from "zod";
-// Input component is used in the form fields
-// Button component is used in the form for actions like submit, cancel, etc.
-// Button component is used in the form for actions like submit, cancel, etc.
-// The Button component is used in the form for actions like submit, cancel, etc.
 import { Button } from "@/components/ui/button";
-// Input component is used in the form fields for text input
 import { Input } from "@/components/ui/input";
-// Removing unused import since Textarea is used in the component
-// Remove unused import since Textarea is not being used in the component
-// Remove unused imports since they are not being used in the component
 import {
   Select,
   SelectContent,
@@ -32,18 +24,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { PDFDownloadLink, Document, Page, Text } from '@react-pdf/renderer';
-import { Download } from 'lucide-react';
+import { Download, FileText } from 'lucide-react';
 import type { Process } from "@/types/process";
 import type { Client } from "@/types/client";
 import type { FC } from "react";
 import { clientService } from "@/services/clientService";
 import { processService } from "@/services/processService";
-// Remove unused imports since Card and CardContent are not being used
-// Remove unused imports since they are not being used in the component
-// Remove unused import since FileUpload component is not being used
-// Remove unused import since we're not using react-pdf/renderer components
-// Removed unused import ControllerFieldState
-// Removed unused import UseFormStateReturn
+import { FileUpload } from '@/components/ui/upload';
 
 // Schema de validação para o formulário de documento
 const documentTemplateFormSchema = z.object({
@@ -63,8 +50,8 @@ const documentTemplateFormSchema = z.object({
 type DocumentTemplateFormValues = z.infer<typeof documentTemplateFormSchema>;
 
 // Add missing imports at top
-import { FileText } from 'lucide-react';
-import { FileUpload } from '@/components/ui/upload';
+// FileText is already imported at the top of the file
+// FileUpload is already imported at the top of the file
 
 // Add type for isSubmitting prop
 interface DocumentTemplateFormProps {
@@ -164,7 +151,7 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
     });
   
     return content;
-  }, [templateContent, selectedTemplate, activePlaceholders, clients, processes, form.watch]);
+  }, [templateContent, selectedTemplate, activePlaceholders, clients, processes, form, form.watch]);
 
   const handleExportPDF = (): void => {
     const pdfContent = previewContent.replace(/<[^>]+>/g, '');
@@ -228,7 +215,7 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
       }
     });
     return () => subscription.unsubscribe();
-  }, [form.watch, selectedTemplate]);
+  }, [form, form.watch, selectedTemplate, generatePreview]);
 
   const onFormSubmit = (values: DocumentTemplateFormValues) => {
     // Preparar dados para envio
