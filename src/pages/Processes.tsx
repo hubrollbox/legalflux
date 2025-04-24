@@ -115,7 +115,12 @@ const Processes = () => {
   const [selectedProcess, setSelectedProcess] = useState<string | null>(null);
   const { hasPermission } = usePermissions();
   const canCreateProcess = hasPermission("processes", "create");
-  
+
+  // Move handleProcessSelect inside the component
+  const handleProcessSelect = (processId: string) => {
+    setSelectedProcess(selectedProcess === processId ? null : processId);
+  };
+
   const filteredProcesses = processesMockData.filter(process => {
     const matchesSearch = 
       process.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -461,7 +466,3 @@ const Processes = () => {
 };
 
 export default Processes;
-
-const handleProcessSelect = (processId: string) => {
-  setSelectedProcess(selectedProcess === processId ? null : processId);
-};

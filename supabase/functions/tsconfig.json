@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["deno.window"],
-    "types": ["deno-types"]
+    "lib": ["ESNext"]
   },
   "include": ["**/*.ts"]
 }

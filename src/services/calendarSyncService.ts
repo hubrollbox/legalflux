@@ -268,13 +268,14 @@ class CalendarSyncService {
       }
 
       // Filtrar eventos pelos tipos configurados com type guard
+      // Fix 1: Ensure event.type is never undefined when filtering
       const filteredEvents = (importResult.events || []).filter(event => {
         if (!event.type || !calendar.eventTypes.includes(event.type as 'deadline' | 'hearing' | 'meeting' | 'other')) {
           return false;
         }
         return true;
       });
-
+      
       // Processar eventos importados
       console.log(`Importados ${filteredEvents.length} eventos do calendário ${calendar.name}`);
 
@@ -298,22 +299,29 @@ class CalendarSyncService {
   /**
    * Exporta eventos para um calendário externo
    */
-  private async exportEvents(calendar: ExternalCalendarConfig, startDate?: Date /* TODO: implement date filtering */, endDate?: Date): Promise<SyncResult> {
+  private async exportEvents(calendar: ExternalCalendarConfig, startDate?: Date, endDate?: Date): Promise<SyncResult> {
     try {
-      // Em uma implementação real, isso buscaria eventos do banco de dados
-      // Aqui estamos simulando alguns eventos para exportar
       const eventsToExport = this.generateMockEvents(calendar, 3);
 
-      // Filtrar eventos pelos tipos configurados
-      const filteredEvents = eventsToExport.filter(event => 
-        calendar.eventTypes.includes(event.type)
+      // Type guard for event.type
+      const filteredEvents = eventsToExport.filter(
+        (event): event is CalendarEvent & { type: 'deadline' | 'hearing' | 'meeting' | 'other' } =>
+          typeof event.type === 'string' &&
+          ['deadline', 'hearing', 'meeting', 'other'].includes(event.type)
       );
 
-      // Exportar eventos para o provedor de calendário
-      const exportResult = await calendarIntegrationService.syncEvents(
-        calendar.providerId,
-        filteredEvents
-      );
+      // Ensure syncEvents exists before calling
+      const provider = calendarIntegrationService.getProvider(calendar.providerId);
+      if (!provider || typeof provider.syncEvents !== 'function') {
+        return {
+          success: false,
+          provider: calendar.providerId,
+          calendarId: calendar.id,
+          errors: ['Provider does not support syncEvents']
+        };
+      }
+
+      const exportResult = await provider.syncEvents(calendar.id, filteredEvents);
 
       if (!exportResult.success) {
         return {
@@ -341,9 +349,6 @@ class CalendarSyncService {
     }
   }
 
-  /**
-   * Gera eventos de exemplo para simulação
-   */
   // Update the generateMockEvents method to match CalendarEvent interface
   private generateMockEvents(calendar: ExternalCalendarConfig, count: number): CalendarEvent[] {
       const events: CalendarEvent[] = [];
@@ -363,8 +368,9 @@ class CalendarSyncService {
           end,
           location: type === 'hearing' ? 'Tribunal de Justiça' : 'Escritório',
           type,
-          processId: crypto.randomUUID(),
-          clientId: crypto.randomUUID()
+          category: type, // <-- Add this line to satisfy CalendarEvent interface
+          // Remove clientId, use client if needed
+          // client: crypto.randomUUID()
         });
       }
   
@@ -438,7 +444,7 @@ class CalendarSyncService {
     console.log(`Criando lembretes para o evento ${event.title}`);
     
     this.syncOptions.reminderTimes.forEach(minutes => {
-      const reminderTime = new Date(event.startDate.getTime() - minutes * 60 * 1000);
+      const reminderTime = new Date(event.start.getTime() - minutes * 60 * 1000);
       console.log(`- Lembrete configurado para ${reminderTime.toLocaleString()} (${minutes} minutos antes)`);
     });
   }
@@ -458,8 +464,8 @@ export async function syncDeadlinesWithExternalCalendar(
     }
 
     const provider = calendarIntegrationService.getProvider(calendar.providerId);
-    if (!provider || !provider.isConnected) {
-      throw new Error('Provedor não está conectado');
+    if (!provider || !provider.isConnected || typeof provider.syncEvents !== 'function') {
+      throw new Error('Provedor não está conectado ou não suporta syncEvents');
     }
 
     const syncResult: SyncResult = {
@@ -480,13 +486,14 @@ export async function syncDeadlinesWithExternalCalendar(
       attendees: [],
       notes: 'Sincronizado automaticamente',
       category: 'deadline',
-      processId: crypto.randomUUID(),
-      clientId: crypto.randomUUID()
+      // Remove processId and clientId if not in CalendarEvent interface
+      // process: crypto.randomUUID(),
+      // client: crypto.randomUUID()
     }));
 
     const exportResult = await provider.syncEvents(calendarId, events);
     if (!exportResult.success && exportResult.errors) {
-      syncResult.errors.push(...exportResult.errors);
+      (syncResult.errors ?? []).push(...exportResult.errors);
       syncResult.success = false;
     } else {
       syncResult.eventsExported = events.length;

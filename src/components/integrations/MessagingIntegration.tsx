@@ -6,6 +6,7 @@ import { MessageSquare, PhoneForwarded } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import Image from 'next/image';
 
 const MessagingIntegration = () => {
   const { toast } = useToast();
@@ -158,3 +159,12 @@ const MessagingIntegration = () => {
 };
 
 export default MessagingIntegration;
+
+// Replace <img> tags like this:
+<Image 
+  src="/path/to/image.png" 
+  alt="Description" 
+  width={500} 
+  height={300}
+  priority={false}
+/>

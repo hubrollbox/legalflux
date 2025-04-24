@@ -1,30 +1,30 @@
-import type { User } from '@supabase/supabase-js';
+// Fix import to use local User type if that's what you want
+import type { User } from '@/types/auth'; // or from '@supabase/supabase-js' if you want Supabase's User
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabase-client'; // Updated import path
+import { supabase } from '@/lib/supabase-client'; // Ensure this file exists
 
-interface ExtendedUser extends User {
-  user_metadata?: {
-    role?: string;
-  };
-}
+// Remove ExtendedUser if not needed, or fix its definition
+// If you want to extend Supabase's User, do not override required properties
+// If you want to use your own User, just use it directly
 
 export const permissionService = {
-  checkDocumentPermission: async (documentPath: string, user: ExtendedUser | null) => {
+  checkDocumentPermission: async (documentPath: string, user: User | null) => {
     if (!user) return false;
-    
-    const userRole = user.user_metadata?.role || 'client';
-    
+
+    // Use optional chaining and default values to avoid 'possibly undefined'
+    const userRole = user.role || 'client';
+
     // Extract process ID safely
     const processId = documentPath?.split('/')[0] || '';
-    
+
     // Verify permissions based on role
-    switch(userRole) {
+    switch (userRole) {
       case 'admin':
         return true;
       case 'lawyer':
-        return await this.verifyLawyerAccess(processId, user.id);
+        return await permissionService.verifyLawyerAccess(processId, user.id);
       case 'client':
-        return await this.verifyClientAccess(processId, user.id);
+        return await permissionService.verifyClientAccess(processId, user.id);
       default:
         return false;
     }
@@ -32,7 +32,7 @@ export const permissionService = {
 
   verifyLawyerAccess: async (processId: string | undefined, userId: string | undefined) => {
     if (!processId || !userId) return false;
-    
+
     const { data, error } = await supabase
       .from('process_lawyers')
       .select()
@@ -44,7 +44,7 @@ export const permissionService = {
 
   verifyClientAccess: async (processId: string | undefined, userId: string | undefined) => {
     if (!processId || !userId) return false;
-    
+
     const { data, error } = await supabase
       .from('processes')
       .select('client_id')
@@ -56,6 +56,6 @@ export const permissionService = {
 
   getUserRole: () => {
     const { user } = useAuth();
-    return (user as ExtendedUser)?.user_metadata?.role || 'client';
+    return user?.role || 'client';
   }
 };
