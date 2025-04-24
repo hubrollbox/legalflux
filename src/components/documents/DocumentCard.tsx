@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import React, { useEffect, useState } from "react";
+import Image from 'next/image';
 
 // Function to get the appropriate icon based on file type
 export const getFileIcon = (type: "pdf" | "docx" | "xlsx" | "jpg" | "png" | string) => {
@@ -55,6 +56,8 @@ interface DocumentCardProps {
     process: string;
     preview?: string;
     tags?: string[];
+    fileUrl: string;  // Add this
+    title: string;    // Add this
   };
 }
 
@@ -156,10 +159,11 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ doc }) => {
         </div>
         {doc.preview && (
           <div className="relative aspect-video rounded-md overflow-hidden mb-3 bg-muted">
-            <img 
-              src={doc.preview} 
+            <Image 
+              src={doc.fileUrl} 
               alt={doc.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute' }}
+              width={500}
+              height={300}
             />
           </div>
         )}

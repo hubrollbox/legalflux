@@ -67,11 +67,16 @@ const categoryConfig: Record<CategoryKey, CategoryConfig> = {
 
 import { useCalendar } from './CalendarContext';
 
-// Replace:
-// Remove the type declaration and keep only the interface
+// Remove these unused declarations:
+// interface MyInterface {}
+// interface MyInterface {
+//   id: string;
+//   name: string;
+// }
+// type MyType = object;
+
 interface EnhancedCalendarSidebarProps {
-  // Add actual props here if needed
-  // Currently empty since component doesn't accept props
+  // Add any props your component needs here
 }
 
 export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = () => {
