@@ -7,7 +7,18 @@ import Footer from "@/pages/landing/components/LandingFooter";
 import { Button } from "@/components/ui/button";
 import PageTransition from "@/components/PageTransition";
 
-const SecurityFeature = ({ icon: Icon, title, description }) => {
+interface SecurityFeatureProps {
+  icon: React.ComponentType<{ size?: number | string }>;
+  title: string;
+  description: string;
+}
+
+interface CertificationProps {
+  imgSrc: string;
+  name: string;
+}
+
+const SecurityFeature = ({ icon: Icon, title, description }: SecurityFeatureProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -27,7 +38,7 @@ const SecurityFeature = ({ icon: Icon, title, description }) => {
   );
 };
 
-const Certification = ({ imgSrc, name }) => {
+const Certification = ({ imgSrc, name }: CertificationProps) => {
   return (
     <div className="flex flex-col items-center p-4">
       <div className="bg-gray-100 w-24 h-24 rounded-full flex items-center justify-center mb-3">

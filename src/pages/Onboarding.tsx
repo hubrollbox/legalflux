@@ -47,6 +47,13 @@ export default function Onboarding() {
                 setSearchTerm={() => {}}
                 filteredDocuments={[]}
                 filteredTemplates={[]}
+                setViewMode={() => {}}
+                filters={{
+                  type: "document",
+                  date: undefined,
+                  tags: []
+                }}
+                setFilters={() => {}}
               />
               <p className="mt-4 text-sm text-muted-foreground">
                 Use o botão '+' acima para adicionar novos clientes
