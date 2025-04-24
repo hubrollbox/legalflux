@@ -77,10 +77,10 @@ import { useCalendar } from './CalendarContext';
 
 // Remove duplicate Props interfaces and replace with:
 interface EnhancedCalendarSidebarProps {
-  // Add any needed props here
-  // Example:
-  // initialDate?: Date;
-  // onDateChange?: (date: Date) => void;
+  className?: string;
+  initialDate?: Date;
+  onDateChange?: (date: Date) => void;
+  onCategoryChange?: (category: CategoryKey | null) => void;
 }
 
 export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = () => {

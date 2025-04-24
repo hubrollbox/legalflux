@@ -1,4 +1,6 @@
-import { calendarIntegrationService, CalendarEvent, CalendarProvider } from './calendarIntegrationService';
+import { calendarIntegrationService } from './calendarIntegrationService';
+import type { CalendarProvider } from './calendarIntegrationService';
+import type { CalendarEvent } from '@/types';
 import { notifyUsers } from './notificationService';
 
 export interface ExternalCalendarConfig {
@@ -15,11 +17,11 @@ export interface ExternalCalendarConfig {
 
 export interface SyncResult {
   success: boolean;
-  provider: string;
+  provider: string; // Keep as string to match original declaration
   calendarId?: string;
   eventsImported?: number;
   eventsExported?: number;
-  errors?: string[];
+  errors?: string[]; // Keep as string[] to match original declaration
 }
 
 export interface CalendarSyncOptions {
@@ -267,7 +269,7 @@ class CalendarSyncService {
 
       // Filtrar eventos pelos tipos configurados
       const filteredEvents = (importResult.events || []).filter(event => 
-        calendar.eventTypes.includes(event.type)
+        event.type && calendar.eventTypes.includes(event.type as 'deadline' | 'hearing' | 'meeting' | 'other')
       );
 
       // Processar eventos importados (em uma implementação real, isso salvaria no banco de dados)
@@ -293,7 +295,7 @@ class CalendarSyncService {
   /**
    * Exporta eventos para um calendário externo
    */
-  private async exportEvents(calendar: ExternalCalendarConfig, startDate?: Date, endDate?: Date): Promise<SyncResult> {
+  private async exportEvents(calendar: ExternalCalendarConfig, startDate?: Date /* TODO: implement date filtering */, endDate?: Date): Promise<SyncResult> {
     try {
       // Em uma implementação real, isso buscaria eventos do banco de dados
       // Aqui estamos simulando alguns eventos para exportar
@@ -387,7 +389,7 @@ class CalendarSyncService {
         title: 'Falha na Sincronização de Calendário',
         message: `A sincronização com ${calendarName} (${providerName}) falhou. ` +
                  `Erros: ${result.errors?.join('; ') || 'Erro desconhecido'}`,
-        type: 'error',
+        type: 'action', // Changed from 'error' to 'action'
         data: { result }
       });
     }
@@ -441,9 +443,12 @@ class CalendarSyncService {
 export const calendarSyncService = new CalendarSyncService();
 
 
-export async function syncDeadlinesWithExternalCalendar(calendarId: string, deadlines: Date[]): Promise<SyncResult> {
+export async function syncDeadlinesWithExternalCalendar(
+  calendarId: string, 
+  deadlines: Date[]
+): Promise<SyncResult> {
   try {
-    const calendar = this.externalCalendars.get(calendarId);
+    const calendar = calendarSyncService.getExternalCalendar(calendarId);
     if (!calendar || !calendar.syncEnabled) {
       throw new Error('Calendário não encontrado ou sincronização desativada');
     }
@@ -462,26 +467,25 @@ export async function syncDeadlinesWithExternalCalendar(calendarId: string, dead
       errors: []
     };
 
-    for (const deadline of deadlines) {
-      const event: CalendarEvent = {
-        id: crypto.randomUUID(),
-        title: 'Prazo Legal',
-        startDate: deadline,
-        endDate: deadline,
-        type: 'deadline',
-        attendees: [],
-        notes: 'Sincronizado automaticamente',
-        category: 'deadline',
-        processId: crypto.randomUUID(),
-        clientId: crypto.randomUUID()
-      };
+    const events: CalendarEvent[] = deadlines.map(deadline => ({
+      id: crypto.randomUUID(),
+      title: 'Prazo Legal',
+      startDate: deadline,
+      endDate: deadline,
+      type: 'deadline',
+      attendees: [],
+      notes: 'Sincronizado automaticamente',
+      category: 'deadline',
+      processId: crypto.randomUUID(),
+      clientId: crypto.randomUUID()
+    }));
 
-      const exportResult = await provider.exportEvent(calendarId, event);
-      if (!exportResult.success) {
-        syncResult.errors.push(...exportResult.errors);
-      } else {
-        syncResult.eventsExported++;
-      }
+    const exportResult = await provider.syncEvents(calendarId, events);
+    if (!exportResult.success && exportResult.errors) {
+      syncResult.errors.push(...exportResult.errors);
+      syncResult.success = false;
+    } else {
+      syncResult.eventsExported = events.length;
     }
 
     return syncResult;
@@ -490,7 +494,7 @@ export async function syncDeadlinesWithExternalCalendar(calendarId: string, dead
     return {
       success: false,
       provider: 'unknown',
-      errors: [error.message]
+      errors: [error instanceof Error ? error.message : 'Erro desconhecido']
     };
   }
 }

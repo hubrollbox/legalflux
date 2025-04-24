@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Plus, Search, Filter, ArrowUpDown, Download, MoreHorizontal } from "lucide-react";
+import { Plus, Search, Filter, ArrowUpDown } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import PageTransition from "@/components/PageTransition";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ import {
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+// Remove unused chart imports
 import {
   Table,
   TableBody,
@@ -82,19 +82,6 @@ const processesMockData = [
   }
 ];
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "Em Curso":
-      return "bg-blue-100 text-blue-800";
-    case "Em Espera":
-      return "bg-yellow-100 text-yellow-800";
-    case "Concluído":
-      return "bg-green-100 text-green-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-};
-
 const getPriorityColor = (priority: string) => {
   switch (priority) {
     case "Alta":
@@ -105,6 +92,20 @@ const getPriorityColor = (priority: string) => {
       return "bg-green-100 text-green-800";
     default:
       return "bg-gray-100 text-gray-800";
+  }
+};
+
+// Add these helper functions before the component
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "Em Curso":
+      return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+    case "Em Espera":
+      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+    case "Concluído":
+      return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+    default:
+      return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200";
   }
 };
 
@@ -124,11 +125,12 @@ const Processes = () => {
     return matchesSearch && matchesFilter;
   });
   
-  const chartData = [
-    { name: "Em Curso", value: processesMockData.filter(p => p.status === "Em Curso").length },
-    { name: "Em Espera", value: processesMockData.filter(p => p.status === "Em Espera").length },
-    { name: "Concluído", value: processesMockData.filter(p => p.status === "Concluído").length },
-  ];
+  // Remove this unused variable
+  // const chartData = [
+  //   { name: "Em Curso", value: processesMockData.filter(p => p.status === "Em Curso").length },
+  //   { name: "Em Espera", value: processesMockData.filter(p => p.status === "Em Espera").length },
+  //   { name: "Concluído", value: processesMockData.filter(p => p.status === "Concluído").length },
+  // ];
 
   return (
     <PageTransition>
@@ -334,7 +336,7 @@ const Processes = () => {
                       <TableRow 
                         key={process.id} 
                         className={`cursor-pointer hover:bg-muted/50 ${selectedProcess === process.id ? 'bg-muted' : ''}`}
-                        onClick={() => setSelectedProcess(process.id)}
+                        onClick={() => handleProcessSelect(process.id)}
                       >
                         <TableCell className="font-medium">{process.id}</TableCell>
                         <TableCell>
@@ -351,7 +353,7 @@ const Processes = () => {
                         </TableCell>
                         <TableCell>
                           <Badge className={`${getStatusColor(process.status)} inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2`}>
-                            <span className="flex w-2 h-2 rounded-full mr-1 ${process.status === 'Em Curso' ? 'bg-blue-500' : process.status === 'Em Espera' ? 'bg-yellow-500' : 'bg-green-500'}"></span>
+                            <span className={`flex w-2 h-2 rounded-full mr-1 ${process.status === 'Em Curso' ? 'bg-blue-500' : process.status === 'Em Espera' ? 'bg-yellow-500' : 'bg-green-500'}`}></span>
                             {process.status}
                           </Badge>
                         </TableCell>
@@ -459,3 +461,7 @@ const Processes = () => {
 };
 
 export default Processes;
+
+const handleProcessSelect = (processId: string) => {
+  setSelectedProcess(selectedProcess === processId ? null : processId);
+};

@@ -1,17 +1,23 @@
-import { User } from '@supabase/supabase-js';
+import type { User } from '@supabase/supabase-js';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabase-client'; // Updated import path
+
+interface ExtendedUser extends User {
+  user_metadata?: {
+    role?: string;
+  };
+}
 
 export const permissionService = {
-  checkDocumentPermission: async (documentPath: string, user: User | null) => {
+  checkDocumentPermission: async (documentPath: string, user: ExtendedUser | null) => {
     if (!user) return false;
     
-    // Obter role do usuário a partir de metadados
-    const userRole = user?.user_metadata?.role || 'client';
+    const userRole = user.user_metadata?.role || 'client';
     
-    // Extrair ID do processo do caminho do documento
-    const processId = documentPath.split('/')[0];
+    // Extract process ID safely
+    const processId = documentPath?.split('/')[0] || '';
     
-    // Verificar permissões baseadas na role
+    // Verify permissions based on role
     switch(userRole) {
       case 'admin':
         return true;
@@ -24,30 +30,32 @@ export const permissionService = {
     }
   },
 
-  verifyLawyerAccess: async (processId: string, userId: string) => {
-    // Consultar associação do advogado ao processo
-    const { data } = await supabase
+  verifyLawyerAccess: async (processId: string | undefined, userId: string | undefined) => {
+    if (!processId || !userId) return false;
+    
+    const { data, error } = await supabase
       .from('process_lawyers')
       .select()
       .eq('process_id', processId)
       .eq('lawyer_id', userId);
 
-    return !!data?.length;
+    return !error && !!data?.length;
   },
 
-  verifyClientAccess: async (processId: string, userId: string) => {
-    // Verificar se o processo pertence ao cliente
-    const { data } = await supabase
+  verifyClientAccess: async (processId: string | undefined, userId: string | undefined) => {
+    if (!processId || !userId) return false;
+    
+    const { data, error } = await supabase
       .from('processes')
       .select('client_id')
       .eq('id', processId)
       .single();
 
-    return data?.client_id === userId;
+    return !error && data?.client_id === userId;
   },
 
   getUserRole: () => {
     const { user } = useAuth();
-    return user?.user_metadata?.role || 'client';
+    return (user as ExtendedUser)?.user_metadata?.role || 'client';
   }
 };

@@ -2,6 +2,13 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
+// Add Deno type declarations
+declare const Deno: {
+  env: {
+    get(key: string): string | undefined;
+  };
+};
+
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
 const corsHeaders = {
@@ -9,14 +16,27 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-serve(async (req) => {
-  // Handle CORS preflight requests
+const MODEL_MAP: Record<string, string> = {
+  'basic': 'gpt-3.5-turbo',
+  'standard': 'gpt-4',
+  'premium': 'gpt-4-turbo'
+};
+
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { prompt, context, role = 'lawyer', model = 'gpt-4o-mini', requestType = 'chat' } = await req.json();
+    const { prompt, context, role = 'lawyer', model = 'standard', requestType = 'chat' } = await req.json();
+    
+    // Validate input
+    if (!prompt) {
+      throw new Error('Prompt is required');
+    }
+
+    // Get model from mapping
+    const selectedModel = MODEL_MAP[model] || MODEL_MAP.standard;
     
     // Define o contexto do sistema com base no papel do usuário e tipo de solicitação
     let systemPrompt = '';
@@ -65,12 +85,13 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: model,
+        model: selectedModel,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: prompt }
         ],
         temperature: 0.7,
+        max_tokens: 2000  // Added token limit
       }),
     });
 
@@ -85,9 +106,11 @@ serve(async (req) => {
     return new Response(JSON.stringify({ response: generatedText }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Erro na função ai-assistant:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: error instanceof Error ? error.message : 'Erro desconhecido' 
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
