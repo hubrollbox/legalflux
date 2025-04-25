@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import LandingNavbar from "@/pages/landing/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
+import Image from 'next/image';
 
 // Reusable StatisticCard component
 const StatisticCard = ({ percentage, description }) => (
@@ -150,3 +151,12 @@ const About = () => {
 };
 
 export default About;
+
+// Replace <img> with:
+<Image
+  src="/path-to-image.jpg"
+  alt="Description"
+  width={500}
+  height={300}
+  className="your-class"
+/>

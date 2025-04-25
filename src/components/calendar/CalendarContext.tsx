@@ -1,3 +1,6 @@
+// Create separate files:
+// calendar-constants.ts for views
+// calendar-hooks.ts for hooks
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { CalendarEvent, CategoryKey } from '@/types';
 // Removed unused import: import { fetchEvents as fetchEventsUtil } from './calendar-utils';

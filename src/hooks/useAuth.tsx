@@ -149,6 +149,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
+  useEffect(() => {
+    // Add toast to dependency array
+    if (error) toast.error(error);
+  }, [error, toast]); // Added toast as dependency
+
   if (error) {
     return (
       <div className="p-4 text-red-500">

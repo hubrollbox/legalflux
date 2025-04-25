@@ -622,7 +622,7 @@ class AutomationService {
     } catch (error) {
       // Atualizar o registro de execução em caso de erro
       const updatedExecution = this.workflowExecutions.get(execution.id);
-      if (updatedExecution) {ution) {
+      if (updatedExecution) {
         updatedExecution.status = 'failed';
         updatedExecution.completedAt = new Date();
         this.workflowExecutions.set(execution.id, updatedExecution);

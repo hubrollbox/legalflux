@@ -1,4 +1,13 @@
-
+// Define response data types
+interface OpenAIResponse {
+  choices: Array<{
+    message: {
+      content: string;
+    };
+  }>;
+  error?: {
+    message: string;
+  };
 // Remove the reference directive as it's not available
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 // Keep the import but add a type ignore comment
@@ -14,20 +23,23 @@ declare global {
   };
 }
 
+// Secure API key handling
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
+// CORS configuration
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Handles different types of legal requests
 const MODEL_MAP: Record<string, string> = {
   'basic': 'gpt-3.5-turbo',
   'standard': 'gpt-4',
   'premium': 'gpt-4-turbo'
 };
 
-// Define proper types for the request body
+// Supports multiple request types
 interface RequestBody {
   prompt: string;
   context?: string;

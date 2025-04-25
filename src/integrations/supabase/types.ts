@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  schema_public: {
+  public: {
     Tables: {
       processes: {
         Row: {
@@ -35,8 +35,32 @@ export type Database = {
           created_at?: string;
         };
       };
-    };
-  };
+      process_records: {
+        Row: {
+          id: string;
+          status: string;
+          created_by: string;
+          organization_id: string;
+          client_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          status: string;
+          created_by: string;
+          organization_id: string;
+          client_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          status?: string;
+          created_by?: string;
+          organization_id?: string;
+          client_id?: string;
+          created_at?: string;
+        };
+      };
   public: {
     Tables: {
       processes: {
@@ -63,6 +87,30 @@ export type Database = {
           organization_id?: string;
           client_id?: string;
           created_at?: string;
+        };
+      };
+  public: {
+    Tables: {
+      processes: {
+        Row: {
+          id: string;
+          status: string;
+          created_by: string;
+          organization_id: string;
+          client_id: string;
+          created_at: string;
+        };
+      };
+  public: {
+    Tables: {
+      processes: {
+        Row: {
+          id: string;
+          status: string;
+          created_by: string;
+          organization_id: string;
+          client_id: string;
+          created_at: string;
         };
       };
   public: {
@@ -570,7 +618,7 @@ export type Database = {
   }
 }
 
-type PublicSchema = Database["public"];
+type PublicSchema = Database["public"];  // Ensure this is properly defined
 
 export type Tables<
   PublicTableNameOrOptions extends

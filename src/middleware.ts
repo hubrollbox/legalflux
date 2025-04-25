@@ -101,6 +101,8 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public files (public assets)
      */
+    '// Remove unnecessary escape character
+    const protectedRoutes = [/^\/dashboard(\/.*)?$/];
     '/((?!_next/static|_next/image|favicon.ico|public\/).*)'
   ]
 }

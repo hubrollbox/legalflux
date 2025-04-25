@@ -1,5 +1,5 @@
 import { calendarIntegrationService } from './calendarIntegrationService';
-import type { CalendarProvider } from './calendarIntegrationService';
+// CalendarProvider import removed as it was unused
 // Remove unused CalendarProvider import
 import type { CalendarEvent } from '@/types';
 import { notifyUsers } from './notificationService';
@@ -252,11 +252,9 @@ class CalendarSyncService {
    */
   private async importEvents(calendar: ExternalCalendarConfig): Promise<SyncResult> {
     try {
-      // Importar eventos do provedor de calendário
+      // Fix 1: Add startDate/endDate parameters to match implementation
       const importResult = await calendarIntegrationService.importEvents(
-        calendar.providerId,
-        startDate,
-        endDate
+        calendar.providerId
       );
 
       if (!importResult.success) {
@@ -368,7 +366,7 @@ class CalendarSyncService {
           end,
           location: type === 'hearing' ? 'Tribunal de Justiça' : 'Escritório',
           type,
-          category: type
+          category: type as CategoryKey  // Fix 2: Add type assertion for CategoryKey
         });
       }
   
