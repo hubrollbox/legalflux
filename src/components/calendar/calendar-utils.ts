@@ -23,3 +23,7 @@ export type CalendarContextType = {
   updateEvent: (eventId: string, updates: Partial<CalendarEvent>) => Promise<void>;
   deleteEvent: (eventId: string) => Promise<void>;
 };
+function someFunction() {
+  return result;
+}
+return result;

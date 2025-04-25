@@ -1,12 +1,12 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"; // Ensure ButtonProps includes variant from buttonVariants
 import { MessageSquare, PhoneForwarded } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import Image from 'next/image';
+import Image from 'next/image'; // Import the Image component
 
 const MessagingIntegration = () => {
   const { toast } = useToast();
@@ -35,20 +35,26 @@ const MessagingIntegration = () => {
         <CardContent>
           <div className="space-y-4">
             <div className="flex flex-col space-y-2">
+              {/* WhatsApp Integration */}
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center">
-                  <img 
-                    src="/img/integrations/whatsapp.svg" 
-                    alt="WhatsApp" 
-                    className="w-6 h-6 mr-2"
+                  {/* Replace img with Image */}
+                  <Image
+                    src="/img/integrations/whatsapp.svg"
+                    alt="WhatsApp"
+                    width={24} // Provide width
+                    height={24} // Provide height
+                    className="mr-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=W";
+                      (e.target as HTMLImageElement).srcset = ""; // Clear srcset on error for placeholder
                     }}
                   />
                   <span>WhatsApp Business</span>
                 </div>
-                <Button 
-                  variant="outline" 
+                {/* Ensure Button variant prop is valid */}
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={() => handleConnect("WhatsApp Business")}
                 >
@@ -56,21 +62,27 @@ const MessagingIntegration = () => {
                   Conectar
                 </Button>
               </div>
-              
+
+              {/* Telegram Integration */}
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center">
-                  <img 
-                    src="/img/integrations/telegram.svg" 
-                    alt="Telegram" 
-                    className="w-6 h-6 mr-2"
+                  {/* Replace img with Image */}
+                  <Image
+                    src="/img/integrations/telegram.svg"
+                    alt="Telegram"
+                    width={24} // Provide width
+                    height={24} // Provide height
+                    className="mr-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=T";
+                      (e.target as HTMLImageElement).srcset = ""; // Clear srcset on error for placeholder
                     }}
                   />
                   <span>Telegram</span>
                 </div>
-                <Button 
-                  variant="outline" 
+                {/* Ensure Button variant prop is valid */}
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={() => handleConnect("Telegram")}
                 >
@@ -78,21 +90,27 @@ const MessagingIntegration = () => {
                   Conectar
                 </Button>
               </div>
-              
+
+              {/* SMS API Integration */}
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center">
-                  <img 
-                    src="/img/integrations/sms.svg" 
-                    alt="SMS" 
-                    className="w-6 h-6 mr-2"
+                  {/* Replace img with Image */}
+                  <Image
+                    src="/img/integrations/sms.svg"
+                    alt="SMS"
+                    width={24} // Provide width
+                    height={24} // Provide height
+                    className="mr-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=SMS";
+                      (e.target as HTMLImageElement).srcset = ""; // Clear srcset on error for placeholder
                     }}
                   />
                   <span>SMS API</span>
                 </div>
-                <Button 
-                  variant="outline" 
+                {/* Ensure Button variant prop is valid */}
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={() => handleConnect("SMS API")}
                 >
@@ -105,6 +123,7 @@ const MessagingIntegration = () => {
         </CardContent>
       </Card>
 
+      {/* Settings Card */}
       <Card>
         <CardHeader>
           <CardTitle>Configurações de Mensagens</CardTitle>
@@ -160,11 +179,4 @@ const MessagingIntegration = () => {
 
 export default MessagingIntegration;
 
-// Replace <img> tags like this:
-<Image 
-  src="/path/to/image.png" 
-  alt="Description" 
-  width={500} 
-  height={300}
-  priority={false}
-/>
+// Removed the misplaced example code from the end of the file

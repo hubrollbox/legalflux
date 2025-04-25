@@ -1,6 +1,7 @@
 import { FileText, FileImage, File, FileCode } from "lucide-react";
 import React from "react";
 
+// Keep only one definition for getFileIcon
 export function getFileIcon(type: string): React.ReactNode {
   switch (type.toLowerCase()) {
     case 'pdf':
@@ -22,8 +23,13 @@ export function getFileIcon(type: string): React.ReactNode {
   }
 }
 
+// Keep only one definition for formatDate
 export function formatDate(dateInput: string | Date): string {
   const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  // Ensure the date is valid before formatting
+  if (isNaN(date.getTime())) {
+    return "Invalid Date";
+  }
   return new Intl.DateTimeFormat('pt-PT', {
     day: '2-digit',
     month: '2-digit',
@@ -32,6 +38,8 @@ export function formatDate(dateInput: string | Date): string {
     minute: '2-digit'
   }).format(date);
 }
+
+// Removed the duplicate const definitions below
 export const getFileIcon = (type: "pdf" | "docx" | "xlsx" | "jpg" | "png" | string) => {
   switch (type) {
     case "pdf":
