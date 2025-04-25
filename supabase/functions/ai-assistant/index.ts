@@ -2,7 +2,7 @@
 /// <reference types="https://deno.land/x/types@v0.1.0/lib.deno.d.ts" />
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 // Replace the Deno-specific imports with standard ones
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.200.0/http/server.ts";
 
 // Add Deno type declarations
 declare const Deno: {
@@ -24,13 +24,34 @@ const MODEL_MAP: Record<string, string> = {
   'premium': 'gpt-4-turbo'
 };
 
+// Define proper types for the request body
+interface RequestBody {
+  prompt: string;
+  context?: string;
+  role?: 'lawyer' | 'client';
+  model?: 'basic' | 'standard' | 'premium';
+  requestType?: 'chat' | 'document_analysis' | 'information_extraction' | 'legal_suggestions';
+}
+
+// Define response data types
+interface OpenAIResponse {
+  choices: Array<{
+    message: {
+      content: string;
+    };
+  }>;
+  error?: {
+    message: string;
+  };
+}
+
 serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { prompt, context, role = 'lawyer', model = 'standard', requestType = 'chat' } = await req.json();
+    const { prompt, context, role = 'lawyer', model = 'standard', requestType = 'chat' }: RequestBody = await req.json();
     
     // Validate input
     if (!prompt) {
@@ -93,11 +114,11 @@ serve(async (req: Request) => {
           { role: 'user', content: prompt }
         ],
         temperature: 0.7,
-        max_tokens: 2000  // Added token limit
+        max_tokens: 2000
       }),
     });
 
-    const data = await response.json();
+    const data: OpenAIResponse = await response.json();
     
     if (!response.ok) {
       throw new Error(data.error?.message || 'Erro ao comunicar com a API de IA');

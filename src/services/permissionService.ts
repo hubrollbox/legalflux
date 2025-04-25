@@ -1,7 +1,7 @@
 // Fix import to use local User type if that's what you want
 import type { User } from '@/types/auth'; // or from '@supabase/supabase-js' if you want Supabase's User
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabase-client'; // Ensure this file exists
+import { supabase } from '@supabase/supabase-js';  // Replace the local import with direct package import
 
 // Remove ExtendedUser if not needed, or fix its definition
 // If you want to extend Supabase's User, do not override required properties

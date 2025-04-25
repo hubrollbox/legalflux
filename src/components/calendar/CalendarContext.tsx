@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { CalendarEvent, CategoryKey } from '@/types';
+// Removed unused import: import { fetchEvents as fetchEventsUtil } from './calendar-utils';
 
 type CalendarContextType = {
   events: CalendarEvent[];
@@ -119,5 +120,3 @@ export const useCalendar = () => {
   }
   return context;
 };
-// Move non-component exports to a separate file like calendar-utils.ts
-// Keep only component exports in this file

@@ -9,6 +9,7 @@ export interface CalendarProvider {
   createEvent: (calendarId: string, event: CalendarEvent) => Promise<{ success: boolean; errors?: string[] }>;
   updateEvent: (calendarId: string, event: CalendarEvent) => Promise<{ success: boolean; errors?: string[] }>;
   deleteEvent: (calendarId: string, event: CalendarEvent) => Promise<{ success: boolean; errors?: string[] }>;
+  syncEvents?: (calendarId: string, events: CalendarEvent[]) => Promise<{ success: boolean; message?: string; errors?: string[] }>;
 }
 
 import type { CalendarEvent } from '@/types';
