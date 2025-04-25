@@ -175,7 +175,7 @@ const Processes = () => {
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
+                    <Button className="flex items-center">
                       <Filter className="mr-2 h-4 w-4" />
                       Filtrar
                     </Button>
@@ -259,7 +259,7 @@ const Processes = () => {
                 <div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="w-full justify-between">
+                      <Button className="w-full justify-between">
                         <span>Estado</span>
                         <Filter className="h-4 w-4 opacity-50" />
                       </Button>
@@ -276,7 +276,7 @@ const Processes = () => {
                 <div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="w-full justify-between">
+                      <Button className="w-full justify-between">
                         <span>Tipo</span>
                         <Filter className="h-4 w-4 opacity-50" />
                       </Button>
@@ -388,12 +388,12 @@ const Processes = () => {
               </div>
             </CardContent>
             <CardFooter className="flex justify-between">
-              <Button variant="outline">Exportar</Button>
+              <Button className="bg-transparent border border-input hover:bg-accent hover:text-accent-foreground">Exportar</Button>
               <div className="flex space-x-2">
-                <Button variant="outline" size="sm" disabled>
+                <Button className="bg-transparent border border-input hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2" disabled>
                   Anterior
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button className="bg-transparent border border-input hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
                   Próximo
                 </Button>
               </div>
@@ -427,7 +427,6 @@ const Processes = () => {
                       <h4 className="text-sm font-medium text-muted-foreground mb-4">Timeline do Processo</h4>
                       <div className="border-l-2 border-muted pl-4 space-y-6">
                         <div className="relative">
-                          <div className="absolute -left-[21px] w-4 h-4 rounded-full bg-primary"></div>
                           <div className="bg-muted/50 rounded-lg p-3">
                             <p className="text-sm font-medium">Última Atualização</p>
                             <p className="text-sm text-muted-foreground">
@@ -447,10 +446,10 @@ const Processes = () => {
 
                     {/* Ações */}
                     <div className="flex gap-2">
-                      <Button variant="outline" className="w-full">
+                      <Button className="bg-transparent border border-input hover:bg-accent hover:text-accent-foreground w-full">
                         Ver Documentos
                       </Button>
-                      <Button variant="outline" className="w-full">
+                      <Button className="bg-transparent border border-input hover:bg-accent hover:text-accent-foreground w-full">
                         Adicionar Nota
                       </Button>
                     </div>

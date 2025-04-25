@@ -300,7 +300,7 @@ class CalendarSyncService {
   /**
    * Exporta eventos para um calendário externo
    */
-  private async exportEvents(calendar: ExternalCalendarConfig, startDate?: Date, endDate?: Date): Promise<SyncResult> {
+  private async exportEvents(calendar: ExternalCalendarConfig): Promise<SyncResult> {
     try {
       const eventsToExport = this.generateMockEvents(calendar, 3);
 
@@ -350,7 +350,7 @@ class CalendarSyncService {
     }
   }
 
-  private generateMockEvents(calendar: ExternalCalendarConfig, count: number): CalendarEvent[] {
+  private generateMockEvents(_calendar: ExternalCalendarConfig, count: number): CalendarEvent[] {
       const events: CalendarEvent[] = [];
       const now = new Date();
       const eventTypes: ('deadline' | 'hearing' | 'meeting' | 'other')[] = ['deadline', 'hearing', 'meeting', 'other'];
