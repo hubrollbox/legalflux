@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { FileText, Link2, Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import Image from 'next/image';
 
 const OfficeIntegration = () => {
   const { toast } = useToast();
@@ -155,3 +156,19 @@ const OfficeIntegration = () => {
 };
 
 export default OfficeIntegration;
+
+// Replace each img tag like this:
+<Image
+  src="/icons/outlook.svg"
+  alt="Outlook Integration"
+  width={40}
+  height={40}
+  className="h-10 w-10"
+/>
+<Image
+  src="/office-integration.png"
+  alt="Office Integration"
+  width={500}
+  height={300}
+  className="integration-image"
+/>

@@ -6,6 +6,7 @@ import { LOGO } from "@/assets";
 import { cn } from "@/lib/utils";
 import type { SidebarItem } from "./SidebarItems";
 import { LogOut } from "lucide-react";
+import Image from 'next/image';
 
 interface DesktopSidebarProps {
   user: any;
@@ -43,7 +44,13 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
       {/* Logo */}
       <div className="p-4 border-b border-sidebar-border">
         <div className="flex items-center">
-          <img src={LOGO.WHITE} alt="Logo" className="h-8 w-auto" />
+          <Image 
+            src={LOGO.WHITE}
+            alt="LegalFlux Logo"
+            width={32}
+            height={32}
+            className="h-8 w-auto"
+          />
           {!isCollapsed && (
             <span className="ml-3 text-sidebar-foreground font-bold text-lg">LegalFlux</span>
           )}
@@ -119,3 +126,12 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
 };
 
 export default DesktopSidebar;
+
+// Replace <img> with:
+<Image
+  src="/logo.svg"
+  alt="LegalFlux Logo"
+  width={120}
+  height={40}
+  priority
+/>

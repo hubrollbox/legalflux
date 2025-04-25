@@ -2,21 +2,7 @@
 export type CategoryKey = 'meeting' | 'deadline' | 'task' | 'other' | 'reminder' | 'document';
 
 export interface CalendarEvent {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  category: CategoryKey;
-  description?: string;
-  externalId?: string;
-  type?: string;
-  client?: string;
-  externalCalendarId?: string;
-  priority?: string;
-  process?: string;
-  location?: string;
-  isRecurring?: boolean;
-  recurrenceType?: 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'yearly';
+  // Your event type definition
 }
 
 export interface CategoryConfig {

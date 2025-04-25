@@ -1,7 +1,4 @@
-// Create separate files:
-// calendar-constants.ts for views
-// calendar-hooks.ts for hooks
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import type { CalendarEvent, CategoryKey } from '@/types';
 // Removed unused import: import { fetchEvents as fetchEventsUtil } from './calendar-utils';
 
@@ -21,7 +18,8 @@ type CalendarContextType = {
 
 const CalendarContext = createContext<CalendarContextType | null>(null);
 
-export const CalendarProvider = ({ children }: { children: React.ReactNode }) => {
+// Move non-component exports to a separate file
+export const CalendarProvider = ({ children }: CalendarProviderProps) => {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedCategory, setSelectedCategory] = useState<CalendarContextType['selectedCategory']>(null);
@@ -123,3 +121,20 @@ export const useCalendar = () => {
   }
   return context;
 };
+
+type CalendarEvent = {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  description?: string;
+  category?: string;
+};
+
+type CategoryKey = 'case' | 'meeting' | 'deadline' | 'hearing' | 'other';
+
+interface CalendarProviderProps {
+  children: React.ReactNode;
+  initialView?: 'day' | 'week' | 'month';
+  // Add other required props
+}
