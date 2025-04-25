@@ -150,7 +150,8 @@
     ],
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["*"],
+      "@/lib/utils": ["./lib/utils"]
     },
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "noUnusedLocals": true,
