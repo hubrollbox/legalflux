@@ -41,9 +41,11 @@ const About = () => {
             </div>
           </div>
           <div className="rounded-lg overflow-hidden">
-            <img 
+            <Image 
               src="/img/about-mission.jpg" 
               alt="Nossa missão" 
+              width={800}
+              height={600}
               className="w-full h-full object-cover"
             />
           </div>
@@ -121,9 +123,11 @@ const About = () => {
               </div>
             </div>
             <div className="flex justify-center">
-              <img 
+              <Image 
                 src="/img/about-cta.png" 
                 alt="App Interface" 
+                width={800}
+                height={600}
                 className="max-w-full rounded-lg shadow-lg"
               />
             </div>
@@ -136,11 +140,11 @@ const About = () => {
             Trabalhamos com empresas e instituições líderes para oferecer a melhor solução de gestão jurídica.
           </p>
           <div className="flex flex-wrap justify-center gap-12 items-center opacity-60">
-            <img src="/img/partners/partner1.svg" alt="Partner 1" className="h-12" />
-            <img src="/img/partners/partner2.svg" alt="Partner 2" className="h-12" />
-            <img src="/img/partners/partner3.svg" alt="Partner 3" className="h-12" />
-            <img src="/img/partners/partner4.svg" alt="Partner 4" className="h-12" />
-            <img src="/img/partners/partner5.svg" alt="Partner 5" className="h-12" />
+            <Image src="/img/partners/partner1.svg" alt="Partner 1" width={100} height={48} className="h-12" />
+            <Image src="/img/partners/partner2.svg" alt="Partner 2" width={100} height={48} className="h-12" />
+            <Image src="/img/partners/partner3.svg" alt="Partner 3" width={100} height={48} className="h-12" />
+            <Image src="/img/partners/partner4.svg" alt="Partner 4" width={100} height={48} className="h-12" />
+            <Image src="/img/partners/partner5.svg" alt="Partner 5" width={100} height={48} className="h-12" />
           </div>
         </div>
       </div>
@@ -151,12 +155,3 @@ const About = () => {
 };
 
 export default About;
-
-// Replace <img> with:
-<Image
-  src="/path-to-image.jpg"
-  alt="Description"
-  width={500}
-  height={300}
-  className="your-class"
-/>

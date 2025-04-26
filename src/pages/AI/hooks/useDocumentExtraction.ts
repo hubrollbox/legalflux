@@ -68,12 +68,11 @@ export const useDocumentExtraction = () => {
       const regex = new RegExp(`${sectionName}[:\s]*(.*?)(?=\n\n|\n[0-9]|$)`, 's');
       const match = text.match(regex);
       if (!match || !match[1]) return [];
-      
       return match[1]
         .split('\n')
         .map(item => item.trim())
         .filter(item => item.startsWith('- ') || item.startsWith('* '))
-        .map(item => item.replace(/^[\-\*]\s+/, ''))
+        .map(item => item.replace(/^[\-*]\s+/, ''))
         .filter(Boolean);
     };
 

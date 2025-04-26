@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -9,10 +8,9 @@ import MessageList from './MessageList';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
-const { toast } = useToast();
-
 const ResearchTab = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const { toast } = useToast();
   const {
     messages,
     setMessages,

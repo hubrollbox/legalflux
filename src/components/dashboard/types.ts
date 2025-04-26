@@ -1,5 +1,4 @@
-
-import { PriorityLevel } from "@/types";
+import { PriorityLevel } from "../../types";
 
 // Define types for the recent items to ensure proper type checking
 export interface RecentCase {

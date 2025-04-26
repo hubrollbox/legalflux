@@ -1,9 +1,6 @@
-
 export type CategoryKey = 'meeting' | 'deadline' | 'task' | 'other' | 'reminder' | 'document';
 
-export interface CalendarEvent {
-  // Your event type definition
-}
+export type AnyObject = object;
 
 export interface CategoryConfig {
   label: string;
