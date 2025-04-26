@@ -1,5 +1,5 @@
-
 import React from "react";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const ScreenshotsTab = () => {
@@ -31,9 +31,11 @@ const ScreenshotsTab = () => {
               <CardTitle>{screenshot.title}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <img 
+              <Image 
                 src={screenshot.image} 
                 alt={screenshot.title}
+                width={400}
+                height={300}
                 className="rounded-md border w-full"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = "https://placehold.co/600x400?text=LegalFlux+Screenshot";

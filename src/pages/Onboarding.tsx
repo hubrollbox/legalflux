@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import DocumentTabs from '@/components/documents/DocumentTabs';
@@ -24,7 +25,7 @@ export default function Onboarding() {
               <CardTitle>Passo 1: Criação de Conta</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <img src="/img/about-cta.png" alt="Registro" className="rounded-lg border" />
+              <Image src="/img/about-cta.png" alt="Registro" width={400} height={300} className="rounded-lg border" />
               <ol className="list-decimal pl-6 space-y-2">
                 <li>Acesse a página de registro</li>
                 <li>Preencha seus dados básicos</li>

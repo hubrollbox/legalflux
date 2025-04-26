@@ -1,4 +1,4 @@
-
+import Image from 'next/image';
 import { LOGO } from "@/assets";
 
 const TestimonialsSection = () => {
@@ -17,7 +17,7 @@ const TestimonialsSection = () => {
           <div className="bg-white p-8 rounded-xl border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center mb-6">
               <div className="h-12 w-12 rounded-full flex items-center justify-center mr-4 shadow-lg">
-                <img src={LOGO.LIGHT} alt="LegalFlux" className="h-10 w-10" />
+                <Image src={LOGO.LIGHT} alt="LegalFlux" width={40} height={40} className="h-10 w-10" />
               </div>
               <div>
                 <h4 className="font-semibold text-primary-900 text-lg">Maria Silva</h4>
@@ -31,7 +31,7 @@ const TestimonialsSection = () => {
           <div className="bg-white p-8 rounded-xl border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center mb-6">
               <div className="h-12 w-12 rounded-full flex items-center justify-center mr-4 shadow-lg">
-                <img src={LOGO.LIGHT} alt="LegalFlux" className="h-10 w-10" />
+                <Image src={LOGO.LIGHT} alt="LegalFlux" width={40} height={40} className="h-10 w-10" />
               </div>
               <div>
                 <h4 className="font-semibold text-primary-900 text-lg">Ricardo Costa</h4>
@@ -45,7 +45,7 @@ const TestimonialsSection = () => {
           <div className="bg-white p-8 rounded-xl border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center mb-6">
               <div className="h-12 w-12 rounded-full flex items-center justify-center mr-4 shadow-lg">
-                <img src={LOGO.LIGHT} alt="LegalFlux" className="h-10 w-10" />
+                <Image src={LOGO.LIGHT} alt="LegalFlux" width={40} height={40} className="h-10 w-10" />
               </div>
               <div>
                 <h4 className="font-semibold text-primary-900 text-lg">Ana Martins</h4>

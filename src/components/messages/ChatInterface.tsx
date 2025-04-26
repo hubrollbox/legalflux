@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 // Removed unused imports from @/components/ui/card
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -250,7 +251,7 @@ const ChatInterface: React.FC = () => {
                   <Avatar>
                     <div className="bg-muted h-10 w-10 rounded-full flex items-center justify-center">
                       {contact.avatar ? (
-                        <img src={contact.avatar} alt={contact.name} className="h-10 w-10 rounded-full object-cover" />
+                        <Image src={contact.avatar} alt={contact.name} width={40} height={40} className="h-10 w-10 rounded-full object-cover" />
                       ) : (
                         <span className="text-lg font-medium">{contact.name.charAt(0)}</span>
                       )}
@@ -293,7 +294,7 @@ const ChatInterface: React.FC = () => {
               <Avatar>
                 <div className="bg-muted h-10 w-10 rounded-full flex items-center justify-center">
                   {activeContact.avatar ? (
-                    <img src={activeContact.avatar} alt={activeContact.name} className="h-10 w-10 rounded-full object-cover" />
+                    <Image src={activeContact.avatar} alt={activeContact.name} width={40} height={40} className="h-10 w-10 rounded-full object-cover" />
                   ) : (
                     <span className="text-lg font-medium">{activeContact.name.charAt(0)}</span>
                   )}

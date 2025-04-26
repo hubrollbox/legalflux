@@ -1,5 +1,5 @@
-
 import React from "react";
+import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 interface ScreenshotCardProps {
@@ -18,10 +18,12 @@ export const ScreenshotCard: React.FC<ScreenshotCardProps> = ({
   return (
     <Card className="overflow-hidden">
       <div className="aspect-video bg-gray-100 relative">
-        <img 
+        <Image 
           src={imageSrc} 
           alt={imageAlt} 
-          className="w-full h-full object-cover"
+          width={400} 
+          height={300} 
+          className="rounded-lg border"
         />
       </div>
       <CardHeader className="p-4">

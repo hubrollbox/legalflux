@@ -1,9 +1,9 @@
-
 import React from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import Image from 'next/image';
 
 const HeroSection = () => {
   return (
@@ -37,9 +37,11 @@ const HeroSection = () => {
             <div className="flex -space-x-2">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="w-8 h-8 rounded-full bg-gray-300 border-2 border-white overflow-hidden">
-                  <img 
+                  <Image 
                     src={`/img/avatar${i}.jpg`} 
                     alt="Usuario" 
+                    width={32} 
+                    height={32} 
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/100x100?text=User";
