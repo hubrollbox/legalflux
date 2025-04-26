@@ -8,8 +8,16 @@ import type { SidebarItem } from "./SidebarItems";
 import { LogOut } from "lucide-react";
 import Image from 'next/image';
 
+interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  role: string;
+}
+
 interface DesktopSidebarProps {
-  user: any;
+  user: UserData | null;
   items: SidebarItem[];
   isCollapsed: boolean;
   onNavigate: (href: string) => void;
@@ -79,6 +87,14 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
                   isCollapsed ? "justify-center" : ""
                 )}
                 onClick={() => onNavigate(item.href)}
+                aria-label={item.label}
+                role="navigation"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    onNavigate(item.href);
+                  }
+                }}
               >
                 <item.icon className={cn("flex-shrink-0 h-5 w-5", isActive ? "text-white" : "text-gray-600")} />
                 {!isCollapsed && (
@@ -116,6 +132,13 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
             isCollapsed ? "justify-center" : ""
           )}
           onClick={onLogout}
+          aria-label="Logout"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              onLogout();
+            }
+          }}
         >
           <LogOut className="flex-shrink-0 h-5 w-5 text-gray-600" />
           {!isCollapsed && <span className="ml-3">Sair</span>}

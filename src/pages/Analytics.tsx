@@ -18,19 +18,26 @@ const Analytics = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Carregar dados mockados
+  const [error, setError] = useState<string | null>(null);
+
+  // Load mock data with improved error handling
   useEffect(() => {
-    // Simular carregamento de dados
     const loadData = async () => {
       setIsLoading(true);
+      setError(null);
+      
       try {
-        // Em um cenário real, esses dados viriam de uma API
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        // In a real scenario, this data would come from an API
         setCases(MOCK_CASES);
         setTransactions(MOCK_FINANCIAL_TRANSACTIONS);
         setTasks(MOCK_TASKS);
         setUsers(MOCK_USERS);
       } catch (error) {
-        console.error("Erro ao carregar dados para análise:", error);
+        setError('Failed to load analytics data. Please try again later.');
+        console.error("Error loading analytics data:", error);
       } finally {
         setIsLoading(false);
       }
@@ -58,8 +65,21 @@ const Analytics = () => {
         {/* Tab de Análise Avançada */}
         <TabsContent value="advanced" className="space-y-6">
           {isLoading ? (
-            <div className="flex justify-center items-center h-64">
+            <div className="flex flex-col justify-center items-center h-64 space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              <p className="text-muted-foreground">Loading analytics data...</p>
+            </div>
+          ) : error ? (
+            <div className="flex flex-col justify-center items-center h-64 space-y-4">
+              <div className="text-destructive text-center p-4 rounded-md bg-destructive/10">
+                {error}
+              </div>
+              <Button 
+                variant="outline" 
+                onClick={() => window.location.reload()}
+              >
+                Retry
+              </Button>
             </div>
           ) : (
             <AdvancedAnalytics 

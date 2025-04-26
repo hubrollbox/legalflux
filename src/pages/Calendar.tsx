@@ -14,15 +14,19 @@ import EventForm from "@/components/calendar/EventForm";
 import CalendarSidebar from "@/components/calendar/CalendarSidebar";
 import { useToast } from "@/hooks/use-toast";
 
+interface CalendarEvent {
+  id: string
+  title: string
+  start: Date
+  end: Date
+  category: 'meeting' | 'deadline' | 'task' | 'other'
+  description?: string
+  isRecurring?: boolean
+  recurrenceType?: 'daily' | 'weekly' | 'monthly' | 'yearly'
+}
+
 interface CalendarPageProps {
-  initialEvents: Array<{
-    id: string
-    title: string
-    start: Date
-    end: Date
-    category: 'meeting' | 'deadline' | 'task' | 'other'
-    description?: string
-  }>
+  initialEvents: CalendarEvent[]
 }
 
 const CalendarPage = ({ initialEvents }: CalendarPageProps) => {
@@ -30,7 +34,7 @@ const CalendarPage = ({ initialEvents }: CalendarPageProps) => {
   const { events, createEvent, updateEvent, deleteEvent } = useCalendar();
   const [view, setView] = useState(Views.MONTH);
   const [isEventFormOpen, setIsEventFormOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const { toast } = useToast();
 
@@ -56,37 +60,56 @@ const CalendarPage = ({ initialEvents }: CalendarPageProps) => {
   const locales = { 'pt-BR': ptBR };
   const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
-  const handleEventCreate = useCallback(async (eventData: any) => {
-    await createEvent({
-      title: eventData.title,
-      start: eventData.dateRange.from,
-      end: eventData.dateRange.to,
-      category: eventData.category,
-      description: eventData.description,
-      isRecurring: eventData.isRecurring,
-      recurrenceType: eventData.recurrenceType
-    });
-    setIsEventFormOpen(false);
-    toast({
-      title: "Evento criado",
-      description: "O evento foi adicionado com sucesso."
-    });
-  }, [createEvent]);
+  const handleEventCreate = useCallback(async (eventData: CalendarEvent) => {
+    try {
+      await createEvent({
+        title: eventData.title,
+        start: eventData.start,
+        end: eventData.end,
+        category: eventData.category,
+        description: eventData.description,
+        isRecurring: eventData.isRecurring,
+        recurrenceType: eventData.recurrenceType
+      });
+      setIsEventFormOpen(false);
+      toast({
+        title: "Evento criado",
+        description: "O evento foi adicionado com sucesso.",
+        variant: "default"
+      });
+    } catch (error) {
+      toast({
+        title: "Erro ao criar evento",
+        description: "Não foi possível criar o evento. Por favor, tente novamente.",
+        variant: "destructive"
+      });
+    }
+  }, [createEvent, toast]);
 
   const handleEventSelect = useCallback((event: any) => {
     setSelectedEvent(event);
     setIsEventFormOpen(true);
   }, []);
 
-  const handleEventUpdate = useCallback(async (eventData: any) => {
-    await updateEvent(selectedEvent.id, eventData);
-    setIsEventFormOpen(false);
-    setSelectedEvent(null);
-    toast({
-      title: "Evento atualizado",
-      description: "As alterações foram salvas com sucesso."
-    });
-  }, [selectedEvent, updateEvent]);
+  const handleEventUpdate = useCallback(async (eventData: CalendarEvent) => {
+    try {
+      if (!selectedEvent) return;
+      await updateEvent(selectedEvent.id, eventData);
+      setIsEventFormOpen(false);
+      setSelectedEvent(null);
+      toast({
+        title: "Evento atualizado",
+        description: "As alterações foram salvas com sucesso.",
+        variant: "default"
+      });
+    } catch (error) {
+      toast({
+        title: "Erro ao atualizar evento",
+        description: "Não foi possível atualizar o evento. Por favor, tente novamente.",
+        variant: "destructive"
+      });
+    }
+  }, [selectedEvent, updateEvent, toast]);
 
   const filteredEvents = categoryFilter
     ? events.filter(event => event.category === categoryFilter)

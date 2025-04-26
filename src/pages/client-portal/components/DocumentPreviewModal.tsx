@@ -40,11 +40,22 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
   };
 
   const getDocumentPreview = () => {
+    if (!document) {
+      return (
+        <div className="flex flex-col items-center justify-center h-[60vh] bg-gray-100 rounded border p-8">
+          <div className="text-6xl mb-4">❌</div>
+          <p className="text-center mb-4">Documento não encontrado</p>
+          <p className="text-sm text-muted-foreground text-center max-w-md">
+            O documento solicitado não está disponível.
+          </p>
+        </div>
+      );
+    }
+
     const type = document.type.toLowerCase();
     
     // For images, show the actual image
     if (type === 'jpg' || type === 'jpeg' || type === 'png') {
-      // In a real app, this would be a URL to the actual file
       return (
         <div className="flex justify-center py-6">
           <Image
@@ -53,6 +64,10 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
             width={800}
             height={600}
             className="max-w-full max-h-[60vh] object-contain rounded border"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = `https://placehold.co/800x600?text=Image+Not+Available`;
+            }}
           />
         </div>
       );
@@ -71,13 +86,26 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
       );
     }
     
-    // For other file types, show a generic preview
+    // For supported office documents
+    if (['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt'].includes(type)) {
+      return (
+        <div className="flex flex-col items-center justify-center h-[60vh] bg-gray-100 rounded border p-8">
+          <div className="text-6xl mb-4">{getDocumentTypeIcon()}</div>
+          <p className="text-center mb-4">Pré-visualização disponível</p>
+          <p className="text-sm text-muted-foreground text-center max-w-md">
+            Este tipo de documento pode ser visualizado após o download.
+          </p>
+        </div>
+      );
+    }
+    
+    // For unsupported file types
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] bg-gray-100 rounded border p-8">
-        <div className="text-6xl mb-4">{getDocumentTypeIcon()}</div>
-        <p className="text-center mb-4">Pré-visualização não disponível</p>
+        <div className="text-6xl mb-4">⚠️</div>
+        <p className="text-center mb-4">Tipo de arquivo não suportado</p>
         <p className="text-sm text-muted-foreground text-center max-w-md">
-          Este tipo de ficheiro não pode ser pré-visualizado diretamente. Por favor, descarregue o ficheiro para o visualizar.
+          O tipo {type.toUpperCase()} não pode ser pré-visualizado. Por favor, descarregue o arquivo para visualizá-lo.
         </p>
       </div>
     );

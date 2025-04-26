@@ -70,7 +70,9 @@ interface AdvancedAnalyticsProps {
   users?: User[];
 }
 
-const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
+const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const cases = props.cases || [];
   const transactions = props.transactions || [];
   const tasks = props.tasks || [];
@@ -90,7 +92,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
   };
 
   // Dados para o gráfico de desempenho de advogados baseados nos usuários e tarefas
-  const lawyerPerformanceData: ChartDataTypes['LawyerPerformance'][] = users
+  const lawyerPerformanceData: ChartDataTypes['LawyerPerformance'][] = React.useMemo(() => users
     .filter(user => user.role === 'lawyer' || user.role === 'senior_lawyer')
     .slice(0, 5)
     .map(lawyer => {
@@ -122,7 +124,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
   }
 
   // Dados para o gráfico de tipos de processos baseados nos casos reais
-  const caseTypeData: ChartDataTypes['CaseType'][] = (() => {
+  const caseTypeData: ChartDataTypes['CaseType'][] = React.useMemo(() => (() => {
     // Aqui estamos assumindo que a descrição do caso contém informações sobre o tipo
     // Em um cenário real, você teria um campo específico para o tipo de caso
     const caseTypes = cases.reduce((acc: Record<string, number>, c) => {
@@ -155,7 +157,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
   }
 
   // Dados para o gráfico de tendências de processos baseados nos casos reais
-  const caseTrendData: ChartDataTypes['CaseTrend'][] = (() => {
+  const caseTrendData: ChartDataTypes['CaseTrend'][] = React.useMemo(() => (() => {
     const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     const currentYear = new Date().getFullYear();
     const result: Record<string, { month: string; novos: number; concluidos: number; ativos: number }> = {};
@@ -323,13 +325,34 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = (props) => {
   })();
 
   // Cores para os gráficos
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+  const COLORS = React.useMemo(() => ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'], []);
 
   // Função para exportar relatório
-  const exportReport = (format: 'pdf' | 'excel' | 'csv') => {
+  const exportReport = React.useCallback((format: 'pdf' | 'excel' | 'csv') => {
     // Implementação real dependeria de bibliotecas como jspdf, xlsx, etc.
     alert(`Exportando relatório em formato ${format}...`);
   };
+
+  if (loading) return (
+    <div className="flex items-center justify-center h-[80vh]">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="flex flex-col items-center justify-center h-[80vh] text-destructive">
+      <AlertCircle className="h-12 w-12 mb-4" />
+      <h3 className="text-xl font-bold">Erro ao carregar dados</h3>
+      <p className="text-center max-w-md">{error}</p>
+      <Button 
+        variant="outline" 
+        className="mt-4"
+        onClick={() => window.location.reload()}
+      >
+        Tentar novamente
+      </Button>
+    </div>
+  );
 
   return (
     <div className="space-y-6">

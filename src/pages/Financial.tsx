@@ -47,10 +47,31 @@ const Financial = () => {
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date } | undefined>();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Simular carregamento de transações
+  // Fetch transactions from API
   useEffect(() => {
-    setTransactions(MOCK_FINANCIAL_TRANSACTIONS);
+    const fetchTransactions = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        // Replace with actual API call
+        // const response = await fetch('/api/transactions');
+        // const data = await response.json();
+        // setTransactions(data);
+        
+        // Temporary mock data
+        setTransactions(MOCK_FINANCIAL_TRANSACTIONS);
+      } catch (err) {
+        setError('Failed to load transactions. Please try again later.');
+        console.error('Error fetching transactions:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchTransactions();
   }, []);
 
   // Filtrar transações
@@ -68,6 +89,32 @@ const Financial = () => {
     return matchesSearch && matchesType && matchesDate;
   });
 
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+  
+  if (error) {
+    return (
+      <DashboardLayout>
+        <div className="flex flex-col items-center justify-center h-64 space-y-4">
+          <div className="text-red-500 text-lg">{error}</div>
+          <Button 
+            variant="outline" 
+            onClick={() => window.location.reload()}
+          >
+            Try Again
+          </Button>
+        </div>
+      </DashboardLayout>
+    );
+  }
+  
   return (
     <DashboardLayout>
       <div className="dashboard-header">

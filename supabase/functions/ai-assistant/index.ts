@@ -1,14 +1,3 @@
-// Define response data types
-interface OpenAIResponse {
-  choices: Array<{
-    message: {
-      content: string;
-    };
-  }>;
-  error?: {
-    message: string;
-  };
-// Remove the reference directive as it's not available
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 // Keep the import but add a type ignore comment
 // @ts-ignore: Deno-specific module
@@ -25,6 +14,15 @@ declare global {
 
 // Secure API key handling
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+
+// OpenAI API response interface
+interface OpenAIResponse {
+  choices: {
+    message: {
+      content: string;
+    };
+  }[];
+}
 
 // CORS configuration
 const corsHeaders = {
@@ -48,17 +46,7 @@ interface RequestBody {
   requestType?: 'chat' | 'document_analysis' | 'information_extraction' | 'legal_suggestions';
 }
 
-// Define response data types
-interface OpenAIResponse {
-  choices: Array<{
-    message: {
-      content: string;
-    };
-  }>;
-  error?: {
-    message: string;
-  };
-}
+
 
 serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
@@ -142,13 +130,14 @@ serve(async (req: Request) => {
     });
 
     // Fix the type error by providing a default value for data
-    const data: OpenAIResponse = await response.json().catch(() => ({ choices: [{ message: { content: "" } }] })) as OpenAIResponse;
-      choices: [{ message: { content: "" } }] 
-    }));
-    
     if (!response.ok) {
-      throw new Error(data.error?.message || 'Erro ao comunicar com a API de IA');
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage = (errorData as {error?: {message?: string}})?.error?.message || 
+        `API request failed with status ${response.status}: ${response.statusText}`;
+      throw new Error(errorMessage);
     }
+    
+    const data: OpenAIResponse = await response.json();
     
     const generatedText = data.choices[0].message.content;
 
@@ -164,4 +153,5 @@ serve(async (req: Request) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
-});
+},
+}, { port: 8000 });

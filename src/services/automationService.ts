@@ -415,6 +415,25 @@ class AutomationService {
     workflow: Omit<WorkflowDefinition, 'id' | 'createdAt'>,
     persistToDatabase = true
   ): Promise<WorkflowDefinition> {
+    // Validate workflow input
+    if (!workflow.name || !workflow.description || !workflow.triggerType) {
+      throw new Error('Workflow name, description and triggerType are required');
+    }
+    
+    if (workflow.steps.length === 0) {
+      throw new Error('Workflow must have at least one step');
+    }
+    
+    // Validate each step
+    workflow.steps.forEach(step => {
+      if (!step.id || !step.name || !step.type) {
+        throw new Error('Step id, name and type are required');
+      }
+      
+      if (step.type === 'document_generation' && !step.parameters.templateId) {
+        throw new Error('templateId is required for document_generation steps');
+      }
+    });
     const newWorkflow: WorkflowDefinition = {
       ...workflow,
       id: crypto.randomUUID(),
@@ -557,6 +576,14 @@ class AutomationService {
    * Executa um fluxo de trabalho
    */
   async executeWorkflow(workflowId: string, context: Record<string, any>, userId: string): Promise<WorkflowExecution> {
+    // Validate inputs
+    if (!workflowId || !userId) {
+      throw new Error('workflowId and userId are required');
+    }
+    
+    if (typeof context !== 'object' || context === null) {
+      throw new Error('context must be an object');
+    }
     const workflow = this.workflows.get(workflowId);
     if (!workflow) {
       throw new Error(`Fluxo de trabalho com ID ${workflowId} não encontrado`);
@@ -631,7 +658,7 @@ class AutomationService {
         await notifyUsers({
           title: 'Falha no Fluxo de Trabalho',
           message: `O fluxo de trabalho "${workflow.name}" falhou: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
-          type: 'error',
+          type: 'process',
           data: { workflowId, executionId: execution.id, error: error instanceof Error ? error.message : 'Erro desconhecido' }
         });
         
@@ -1160,7 +1187,7 @@ class AutomationService {
         await notifyUsers({
           title: `Aprovação ${allApproved ? 'Concedida' : 'Negada'}: ${workflow.name}`,
           message: `A aprovação para o passo "${currentStep.name}" foi ${allApproved ? 'concedida' : 'negada'}.`,
-          type: allApproved ? 'success' : 'warning',
+          type: 'process',
           recipients: [execution.initiatedBy],
           data: {
             workflowId: workflow.id,

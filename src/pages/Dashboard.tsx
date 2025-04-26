@@ -47,7 +47,13 @@ const Dashboard = () => {
   const isMobile = useIsMobile();
   
   // Estado para controlar widgets ativos
-  const [activeWidgets, setActiveWidgets] = useState<string[]>(["stats", "recentActivity", "financial", "recentDocs", "pendingTasks"]);
+  const [activeWidgets, setActiveWidgets] = useState<string[]>(() => {
+    // Try to load from localStorage first
+    const savedLayout = localStorage.getItem('dashboardLayout');
+    return savedLayout 
+      ? JSON.parse(savedLayout) 
+      : ["stats", "recentActivity", "financial", "recentDocs", "pendingTasks"];
+  });
   
   const userName = user?.name || "Utilizador";
   const userRole = user?.role ? getUserRoleName(user.role) : "Utilizador";
@@ -96,16 +102,26 @@ const Dashboard = () => {
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([getProcesses(), getDocuments()])
-      .then(([processesData, documentsData]) => {
+    setError('');
+    
+    const fetchData = async () => {
+      try {
+        const [processesData, documentsData] = await Promise.all([
+          getProcesses(),
+          getDocuments()
+        ]);
+        
         setProcesses(processesData);
         setDocuments(documentsData);
+      } catch (err) {
+        console.error('Error loading dashboard data:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => {
-        setError('Failed to load dashboard data');
-        setLoading(false);
-      });
+      }
+    };
+    
+    fetchData();
   }, []);
 
   const handleFilterChange = (field: string, value: string) => {
@@ -116,9 +132,19 @@ const Dashboard = () => {
   };
 
   // Função para salvar o layout personalizado
-  const handleSaveLayout = (widgetIds: string[]) => {
-    setActiveWidgets(widgetIds);
-    // Aqui poderia salvar a preferência do usuário em um banco de dados
+  const handleSaveLayout = async (widgetIds: string[]) => {
+    try {
+      setActiveWidgets(widgetIds);
+      
+      // Save to localStorage for persistence
+      localStorage.setItem('dashboardLayout', JSON.stringify(widgetIds));
+      
+      // In a real app, you would save to your backend API here
+      // await saveUserPreferences({ dashboardLayout: widgetIds });
+    } catch (err) {
+      console.error('Failed to save layout:', err);
+      // Optionally show error to user
+    }
   };
 
   return (

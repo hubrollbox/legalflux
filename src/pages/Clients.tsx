@@ -48,24 +48,42 @@ const Clients = () => {
 
   // Verificar autenticação e carregar clientes ao montar o componente
   useEffect(() => {
-    filterClients();
-    loadClients();
-    toast;
+    let isMounted = true;
+    
     const checkAuth = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!data || !data.session) {
-        navigate('/login');
-        toast({
-          variant: "destructive",
-          title: "Não autenticado",
-          description: "Você precisa estar logado para acessar esta página.",
-        });
-        return;
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (!data || !data.session) {
+          navigate('/login');
+          toast({
+            variant: "destructive",
+            title: "Não autenticado",
+            description: "Você precisa estar logado para acessar esta página.",
+          });
+          return;
+        }
+        
+        if (isMounted) {
+          await loadClients();
+          filterClients();
+        }
+      } catch (error) {
+        if (isMounted) {
+          console.error('Authentication check failed:', error);
+          toast({
+            variant: "destructive",
+            title: "Erro",
+            description: "Falha ao verificar autenticação. Tente novamente.",
+          });
+        }
       }
-      loadClients();
     };
     
     checkAuth();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [navigate]);
 
   // Filtrar clientes quando o termo de busca ou filtro de status mudar
@@ -80,8 +98,15 @@ const Clients = () => {
   const loadClients = async () => {
     setIsLoading(true);
     setError(null);
+    
     try {
       const data = await clientService.getClients();
+      
+      // Validate response data structure
+      if (!Array.isArray(data)) {
+        throw new Error('Invalid response format from server');
+      }
+      
       setClients(data);
     } catch (error: any) {
       console.error("Erro ao carregar clientes:", error);
@@ -91,6 +116,9 @@ const Clients = () => {
         title: "Erro",
         description: "Não foi possível carregar os clientes. Tente novamente.",
       });
+      
+      // Return empty array to prevent UI errors
+      setClients([]);
     } finally {
       setIsLoading(false);
     }
@@ -98,26 +126,39 @@ const Clients = () => {
 
   // Função para filtrar clientes com base no termo de busca e filtro de status
   const filterClients = () => {
-    let filtered = [...clients];
+    try {
+      // Early return if no clients
+      if (!clients || clients.length === 0) {
+        setFilteredClients([]);
+        return;
+      }
 
-    // Aplicar filtro de busca
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (client) =>
-          client.name.toLowerCase().includes(term) ||
-          client.email.toLowerCase().includes(term) ||
-          client.nif.includes(term) ||
-          client.phone.includes(term)
-      );
+      let filtered = [...clients];
+
+      // Apply search filter if term exists
+      if (searchTerm && searchTerm.trim()) {
+        const term = searchTerm.toLowerCase().trim();
+        filtered = filtered.filter(
+          (client) =>
+            (client.name && client.name.toLowerCase().includes(term)) ||
+            (client.email && client.email.toLowerCase().includes(term)) ||
+            (client.nif && client.nif.includes(term)) ||
+            (client.phone && client.phone.includes(term))
+        );
+      }
+
+      // Apply status filter if not 'all'
+      if (statusFilter && statusFilter !== "all") {
+        filtered = filtered.filter(
+          (client) => client && client.status === statusFilter
+        );
+      }
+
+      setFilteredClients(filtered);
+    } catch (error) {
+      console.error('Error filtering clients:', error);
+      setFilteredClients([]);
     }
-
-    // Aplicar filtro de status
-    if (statusFilter !== "all") {
-      filtered = filtered.filter((client) => client.status === statusFilter);
-    }
-
-    setFilteredClients(filtered);
   };
 
   // Funções para gerenciar os diálogos

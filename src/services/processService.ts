@@ -3,6 +3,16 @@ import type { Process, CreateProcessDTO, UpdateProcessDTO, ProcessStatus } from 
 
 export const processService = {
   async createProcess(processData: CreateProcessDTO, userId: string, organizationId: string): Promise<Process> {
+    // Validate required fields
+    if (!processData.title || !processData.number || !processData.type) {
+      throw new Error('Title, number and type are required fields');
+    }
+    
+    // Validate organization ID format
+    if (!organizationId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)) {
+      throw new Error('Invalid organization ID format');
+    }
+
     const { data, error } = await supabase
       .from('processes')
       .insert({
@@ -13,7 +23,15 @@ export const processService = {
       })
       .select();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase createProcess error:', error);
+      throw new Error(`Failed to create process: ${error.message}`);
+    }
+    
+    if (!data || data.length === 0) {
+      throw new Error('No data returned after process creation');
+    }
+    
     return data[0];
   },
 
@@ -29,23 +47,44 @@ export const processService = {
   },
 
   async updateProcess(id: string, processData: UpdateProcessDTO): Promise<Process> {
+    // Validate process ID format
+    if (!id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)) {
+      throw new Error('Invalid process ID format');
+    }
+    
     const { data, error } = await supabase
       .from('processes')
       .update(processData)
       .eq('id', id)
       .select();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase updateProcess error:', error);
+      throw new Error(`Failed to update process: ${error.message}`);
+    }
+    
+    if (!data || data.length === 0) {
+      throw new Error('No data returned after process update');
+    }
+    
     return data[0];
   },
 
   async deleteProcess(id: string): Promise<void> {
+    // Validate process ID format
+    if (!id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)) {
+      throw new Error('Invalid process ID format');
+    }
+    
     const { error } = await supabase
       .from('processes')
       .delete()
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase deleteProcess error:', error);
+      throw new Error(`Failed to delete process: ${error.message}`);
+    }
   },
 
   async listProcesses(userRole?: string, organizationId?: string): Promise<Process[]> {
