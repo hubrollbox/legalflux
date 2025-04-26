@@ -1,8 +1,8 @@
 import { useContext, createContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import type { Permission, RolePermission, UserPermission } from "@/types/permissions";
-import { UserRole } from "@/types/permissions";
+import { useAuth } from "./useAuth";
+import type { Permission, RolePermission, UserPermission } from "../types/permissions";
+import { UserRole } from "../types/permissions";
 
 interface PermissionsContextType {
   hasPermission: (module: string, action: 'create' | 'read' | 'update' | 'delete') => boolean;
@@ -144,10 +144,4 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const usePermissions = () => {
-  const context = useContext(PermissionsContext);
-  if (context === undefined) {
-    throw new Error("usePermissions must be used within a PermissionsProvider");
-  }
-  return context;
-};
+// Moved to a separate file: usePermissionsHook.ts

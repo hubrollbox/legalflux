@@ -1,10 +1,6 @@
-
 import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-
-export const validateEmail = (email: string): boolean => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
+import { Input } from "../components/Input"; // Verify that src/components/Input.tsx exists or correct the path if necessary
+import { validateEmail } from "../utils/validation";
 
 // Main Register component
 const Register = () => {

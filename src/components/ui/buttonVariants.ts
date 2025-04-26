@@ -26,4 +26,7 @@ export const buttonVariants = cva(
   }
 );
 
+// Fallback for missing buttonVariants
+// Removed duplicate declaration of buttonVariants
+
 export type ButtonVariantProps = VariantProps<typeof buttonVariants>;

@@ -1,38 +1,19 @@
-
 import React from "react";
 import { 
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+  Form, 
+  FormField, 
+  FormItem, 
+  FormLabel, 
+  FormControl, 
+  FormMessage, 
+  FormDescription 
+} from "../../ui/form";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
+import { Switch } from "../../ui/switch";
 import type { UseFormReturn } from "react-hook-form";
-import * as z from "zod";
-
-export const userFormSchema = z.object({
-  email: z.string().email("Email inválido").min(1, "Email é obrigatório"),
-  name: z.string().min(1, "Nome é obrigatório"),
-  role: z.enum(["CLIENT", "LAWYER", "SENIOR_LAWYER", "ASSISTANT", "ADMIN"] as const),
-  isActive: z.boolean().default(true),
-  organizationId: z.string().optional(),
-  phone: z.string().optional(),
-  hasTwoFactorEnabled: z.boolean().default(false),
-});
-
-type UserFormValues = z.infer<typeof userFormSchema>;
+import { userFormSchema, UserFormValues } from "../../../schemas/userFormSchema";
 
 interface UserFormProps {
   form: UseFormReturn<UserFormValues>;

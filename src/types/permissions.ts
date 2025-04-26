@@ -1,52 +1,34 @@
-
-export enum UserRole {
-  CLIENT = "client",
-  LAWYER = "lawyer",
-  SENIOR_LAWYER = "senior_lawyer",
-  ASSISTANT = "assistant",
-  ADMIN = "admin"
-}
-
-export interface Permission {
+export type Permission = {
   id: string;
   name: string;
-  description: string;
-  module: string;
-}
+  description?: string;
+  module?: string; // Added module property
+};
 
-export interface RolePermission {
-  roleId: UserRole;
+export type RolePermission = {
+  roleId: string;
   permissionId: string;
-  canCreate: boolean;
-  canRead: boolean;
-  canUpdate: boolean;
-  canDelete: boolean;
-}
+  canCreate?: boolean; // Added permissions properties
+  canRead?: boolean;
+  canUpdate?: boolean;
+  canDelete?: boolean;
+};
 
-export interface UserPermission {
+export type UserPermission = {
   userId: string;
   permissionId: string;
-  canCreate: boolean;
-  canRead: boolean;
-  canUpdate: boolean;
-  canDelete: boolean;
-}
+  canCreate?: boolean; // Added permissions properties
+  canRead?: boolean;
+  canUpdate?: boolean;
+  canDelete?: boolean;
+};
 
-export interface SubscriptionPlan {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  currency: string;
-  interval: 'month' | 'year';
-  features: string[];
-  maxUsers: number;
-  isCustom: boolean;
-}
-
-export interface SubscriptionFeature {
-  id: string;
-  name: string;
-  description: string;
-  planIds: string[];
+export enum UserRole {
+  ADMIN = 'admin',
+  USER = 'user',
+  GUEST = 'guest',
+  SENIOR_LAWYER = 'senior_lawyer', // Added missing roles
+  LAWYER = 'lawyer',
+  ASSISTANT = 'assistant',
+  CLIENT = 'client',
 }

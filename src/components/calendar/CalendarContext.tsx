@@ -1,6 +1,5 @@
-import React from 'react';
-import type { CalendarEvent, CategoryKey } from '@/types';
-// Removed unused import: import { fetchEvents as fetchEventsUtil } from './calendar-utils';
+import { createContext, useState, useCallback, useEffect, useContext } from 'react';
+import type { CalendarEvent, CategoryKey } from '../../types/calendar'; // Adjusted import path
 
 type CalendarContextType = {
   events: CalendarEvent[];
@@ -114,24 +113,11 @@ export const CalendarProvider = ({ children }: CalendarProviderProps) => {
   );
 };
 
-export const useCalendar = () => {
-  const context = useContext(CalendarContext);
-  if (!context) {
-    throw new Error('useCalendar must be used within a CalendarProvider');
-  }
-  return context;
-};
+// Removed useCalendar hook. It has been moved to a separate file.
 
-type CalendarEvent = {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  description?: string;
-  category?: string;
-};
+// Removed local declaration of CalendarEvent to resolve conflict with imported type
 
-type CategoryKey = 'case' | 'meeting' | 'deadline' | 'hearing' | 'other';
+// Removed local declaration of CategoryKey to avoid conflict with imported type
 
 interface CalendarProviderProps {
   children: React.ReactNode;

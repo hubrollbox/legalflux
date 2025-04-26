@@ -1,12 +1,11 @@
-
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
-import { UserRole } from "@/types/permissions";
-import type { User } from "@/types";
-import type { RegisterData } from "@/types/auth";
-import { useToast } from "@/components/ui/use-toast";
+import { UserRole } from "../types/permissions";
+import type { User } from "../types";
+import type { RegisterData } from "../types/auth";
+import { useToast } from "../components/ui/use-toast";
 import { toast as sonnerToast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "../integrations/supabase/client";
 
 interface AuthContextType {
   user: User | null;
@@ -147,7 +146,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     if (error) toast.error(error);
@@ -519,10 +518,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (context === undefined) {
-      throw new Error("useAuth must be used within an AuthContextProviderComponent");
-    }
-    return context;
-  };
+  // Move useAuth to a separate file (useAuthHook.ts) to avoid Fast Refresh issues.
