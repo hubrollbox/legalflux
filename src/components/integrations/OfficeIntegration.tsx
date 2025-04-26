@@ -59,9 +59,11 @@ const OfficeIntegration = () => {
                 
                 <div className="flex items-center justify-between p-4 border rounded-md">
                   <div className="flex items-center">
-                    <img 
+                    <Image 
                       src="/img/integrations/excel.svg" 
                       alt="Microsoft Excel" 
+                      width={24}
+                      height={24}
                       className="w-6 h-6 mr-2"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=E";
@@ -81,9 +83,11 @@ const OfficeIntegration = () => {
                 
                 <div className="flex items-center justify-between p-4 border rounded-md">
                   <div className="flex items-center">
-                    <img 
+                    <Image 
                       src="/img/integrations/powerpoint.svg" 
                       alt="Microsoft PowerPoint" 
+                      width={24}
+                      height={24}
                       className="w-6 h-6 mr-2"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=P";
@@ -103,9 +107,11 @@ const OfficeIntegration = () => {
 
                 <div className="flex items-center justify-between p-4 border rounded-md">
                   <div className="flex items-center">
-                    <img 
+                    <Image 
                       src="/img/integrations/office365.svg" 
                       alt="Microsoft Office 365" 
+                      width={24}
+                      height={24}
                       className="w-6 h-6 mr-2"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=O365";
