@@ -31,7 +31,6 @@ const AIAssistant = () => {
   
   // Mensagem de boas-vindas para mostrar quando a tela é carregada pela primeira vez
   useEffect(() => {
-    messages.length;
     if (messages.length === 0) {
       setMessages([
         {
@@ -42,11 +41,10 @@ const AIAssistant = () => {
         }
       ]);
     }
-  }, []);
+  }, [messages.length]);
 
   // Scroll para a última mensagem quando novas mensagens são adicionadas
   useEffect(() => {
-    messages.length;
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
