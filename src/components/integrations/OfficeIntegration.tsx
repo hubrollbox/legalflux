@@ -35,9 +35,11 @@ const OfficeIntegration = () => {
             <div className="flex flex-col space-y-2">
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center">
-                  <img 
+                  <Image 
                     src="/img/integrations/word.svg" 
                     alt="Microsoft Word" 
+                    width={24}
+                    height={24}
                     className="w-6 h-6 mr-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=W";
@@ -156,8 +158,6 @@ const OfficeIntegration = () => {
 };
 
 export default OfficeIntegration;
-
-// Replace each img tag like this:
 <Image
   src="/icons/outlook.svg"
   alt="Outlook Integration"
