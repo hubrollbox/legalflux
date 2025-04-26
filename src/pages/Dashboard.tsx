@@ -95,24 +95,18 @@ const Dashboard = () => {
   const recentTasks = getRecentTasks();
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [processesData, documentsData] = await Promise.all([
-          getProcesses(filters),
-          getDocuments(filters)
-        ]);
+    setLoading(true);
+    Promise.all([getProcesses(), getDocuments()])
+      .then(([processesData, documentsData]) => {
         setProcesses(processesData);
         setDocuments(documentsData);
-        setError('');
-      } catch (err) {
-        setError('Erro ao carregar dados. Tente recarregar a página.');
-      } finally {
         setLoading(false);
-      }
-    };
-
-    loadData();
-  }, [filters]);
+      })
+      .catch((err) => {
+        setError('Failed to load dashboard data');
+        setLoading(false);
+      });
+  }, []);
 
   const handleFilterChange = (field: string, value: string) => {
     setFilters(prev => ({
@@ -120,9 +114,6 @@ const Dashboard = () => {
       [field]: value
     }));
   };
-
-    loadData();
-  }, []);
 
   // Função para salvar o layout personalizado
   const handleSaveLayout = (widgetIds: string[]) => {

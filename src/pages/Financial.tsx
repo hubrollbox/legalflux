@@ -50,8 +50,6 @@ const Financial = () => {
 
   // Simular carregamento de transações
   useEffect(() => {
-    // Em um cenário real, você buscaria os dados do backend
-    // Aqui estamos usando dados mockados
     setTransactions(MOCK_FINANCIAL_TRANSACTIONS);
   }, []);
 
