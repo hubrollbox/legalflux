@@ -518,4 +518,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  // Move useAuth to a separate file (useAuthHook.ts) to avoid Fast Refresh issues.
+// Moved to a separate file

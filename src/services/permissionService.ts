@@ -1,6 +1,15 @@
-import type { User } from '@/types/auth';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabase';
+import type { User } from "../types/auth";
+import { useContext } from "react";
+import { supabase } from "../lib/supabase-client";
+import { AuthContext } from "../contexts/AuthContext";
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}
 
 export const permissionService = {
   checkDocumentPermission: async (documentPath: string, user: User | null) => {

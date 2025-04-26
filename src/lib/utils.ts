@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { UserRole } from "../types/permissions";
-import { PriorityLevel } from "../types";
+import { PriorityLevel } from "../types/priority-level"; // Update the path to the correct file
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

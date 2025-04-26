@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Input } from "../components/Input"; // Verify that src/components/Input.tsx exists or correct the path if necessary
+import { Input } from "@/components/Input"; // Assuming you are using a baseUrl or path alias for '@' pointing to 'src'
 import { validateEmail } from "../utils/validation";
 
 // Main Register component
@@ -20,3 +20,14 @@ const Register = () => {
 };
 
 export default Register;
+
+// tsconfig.json
+{
+  "compilerOptions": {
+    // Other options
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}
