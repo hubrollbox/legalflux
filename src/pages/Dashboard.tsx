@@ -111,7 +111,6 @@ const Dashboard = () => {
       }
     };
 
-  useEffect(() => {
     loadData();
   }, [filters]);
 

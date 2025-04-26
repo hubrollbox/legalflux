@@ -4,6 +4,7 @@ import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Download, Printer, Share2 } from "lucide-react";
 import { Document } from "./DocumentTable";
+import Image from "next/image";
 
 interface DocumentPreviewModalProps {
   isOpen: boolean;
@@ -46,9 +47,11 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
       // In a real app, this would be a URL to the actual file
       return (
         <div className="flex justify-center py-6">
-          <img
+          <Image
             src={`https://placehold.co/800x600?text=${document.name}`}
             alt={document.name}
+            width={800}
+            height={600}
             className="max-w-full max-h-[60vh] object-contain rounded border"
           />
         </div>

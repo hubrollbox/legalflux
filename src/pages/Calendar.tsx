@@ -171,27 +171,4 @@ const CalendarPage = ({ initialEvents }: CalendarPageProps) => {
   );
 };
 
-export async function getServerSideProps() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/events`);
-    const events = await res.json();
-    return {
-      props: {
-        initialEvents: events.map((event: any) => ({
-          ...event,
-          start: new Date(event.start),
-          end: new Date(event.end)
-        }))
-      },
-    };
-  } catch (error) {
-    console.error('Error fetching events:', error);
-    return {
-      props: {
-        initialEvents: []
-      },
-    };
-  }
-}
-
 export default CalendarPage;
