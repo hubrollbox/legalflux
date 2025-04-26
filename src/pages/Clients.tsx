@@ -48,6 +48,9 @@ const Clients = () => {
 
   // Verificar autenticação e carregar clientes ao montar o componente
   useEffect(() => {
+    filterClients();
+    loadClients();
+    toast;
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession();
       if (!data || !data.session) {
@@ -67,6 +70,9 @@ const Clients = () => {
 
   // Filtrar clientes quando o termo de busca ou filtro de status mudar
   useEffect(() => {
+    filterClients();
+    loadClients();
+    toast;
     filterClients();
   }, [searchTerm, statusFilter, clients]);
 

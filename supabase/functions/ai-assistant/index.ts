@@ -142,7 +142,7 @@ serve(async (req: Request) => {
     });
 
     // Fix the type error by providing a default value for data
-    const data: OpenAIResponse = await response.json().catch(() => ({ 
+    const data: OpenAIResponse = await response.json().catch(() => ({ choices: [{ message: { content: "" } }] })) as OpenAIResponse;
       choices: [{ message: { content: "" } }] 
     }));
     

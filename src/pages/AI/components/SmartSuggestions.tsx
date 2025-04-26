@@ -25,6 +25,8 @@ const SmartSuggestions = ({ messages, contextInfo, isContextSet }: SmartSuggesti
 
   // Gerar sugestões automaticamente quando houver novas mensagens do usuário
   useEffect(() => {
+    generateSuggestions();
+    lastProcessedMessage;
     if (!isContextSet || messages.length === 0) return;
     
     const userMessages = messages.filter(msg => msg.role === 'user');
