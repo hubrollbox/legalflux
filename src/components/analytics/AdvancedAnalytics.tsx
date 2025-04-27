@@ -372,7 +372,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
   const exportReport = React.useCallback((format: 'pdf' | 'excel' | 'csv') => {
     // Implementação real dependeria de bibliotecas como jspdf, xlsx, etc.
     alert(`Exportando relatório em formato ${format}...`);
-  };
+  }, []);
 
   if (loading) return (
     <div className="flex items-center justify-center h-[80vh]">
@@ -518,7 +518,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Bar dataKey="processos" fill="#8884d8" name="Processos" />
                         <Bar dataKey="tarefas" fill="#82ca9d" name="Tarefas" />
                         <Bar dataKey="honorarios" fill="#ffc658" name="Honorários (€)" />
-                      </BarChart>
+                      </MemoizedBarChart>
                     ) : chartType === 'line' ? (
                       <MemoizedLineChart
                         data={lawyerPerformanceData}
@@ -532,7 +532,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Line type="monotone" dataKey="processos" stroke="#8884d8" name="Processos" />
                         <Line type="monotone" dataKey="tarefas" stroke="#82ca9d" name="Tarefas" />
                         <Line type="monotone" dataKey="honorarios" stroke="#ffc658" name="Honorários (€)" />
-                      </LineChart>
+                      </MemoizedLineChart>
                     ) : (
                       <MemoizedComposedChart
                         data={lawyerPerformanceData}
@@ -656,7 +656,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Line type="monotone" dataKey="novos" stroke="#8884d8" name="Novos" />
                         <Line type="monotone" dataKey="concluidos" stroke="#82ca9d" name="Concluídos" />
                         <Line type="monotone" dataKey="ativos" stroke="#ffc658" name="Ativos" />
-                      </LineChart>
+                      </MemoizedLineChart>
                     ) : chartType === 'area' ? (
                       <MemoizedAreaChart
                         data={caseTrendData}
@@ -684,7 +684,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Bar dataKey="novos" fill="#8884d8" name="Novos" />
                         <Bar dataKey="concluidos" fill="#82ca9d" name="Concluídos" />
                         <Bar dataKey="ativos" fill="#ffc658" name="Ativos" />
-                      </BarChart>
+                      </MemoizedBarChart>
                     )}
                   </ResponsiveContainer>
         </ErrorBoundary>
