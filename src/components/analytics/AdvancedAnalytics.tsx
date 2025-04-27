@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+// Remove duplicate import since it's already imported from @/components/icons/lucide
 import { Settings2, FileText } from '@/components/icons/lucide';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -504,7 +505,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               <CardContent>
                 <div className="h-[400px]">
                   <ErrorBoundary>
-          <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%">
                     {chartType === 'bar' ? (
                       <MemoizedBarChart
                         data={lawyerPerformanceData}
@@ -549,7 +550,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       </MemoizedComposedChart>
                     )}
                   </ResponsiveContainer>
-        </ErrorBoundary>
+                  </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -567,7 +568,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               <CardContent>
                 <div className="h-[400px]">
                   <ErrorBoundary>
-          <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%">
                     <MemoizedBarChart
                       data={resolutionTimeData}
                       layout="vertical"
@@ -581,7 +582,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       <Bar dataKey="tempo" fill="#8884d8" name="Dias" />
                     </MemoizedBarChart>
                   </ResponsiveContainer>
-        </ErrorBoundary>
+                  </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -604,7 +605,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               <CardContent>
                 <div className="h-[400px]">
                   <ErrorBoundary>
-          <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%">
                     <MemoizedPieChart data={caseTypeData} width={400} height={300} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                       <Pie
                         data={caseTypeData}
@@ -623,7 +624,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       {showLegend && <Legend />}
                     </MemoizedPieChart>
                   </ResponsiveContainer>
-        </ErrorBoundary>
+                  </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -641,7 +642,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               <CardContent>
                 <div className="h-[400px]">
                   <ErrorBoundary>
-          <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%">
                     {chartType === 'line' || chartType === 'area' ? (
                       <MemoizedLineChart
                         data={caseTrendData}
@@ -686,7 +687,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       </MemoizedBarChart>
                     )}
                   </ResponsiveContainer>
-        </ErrorBoundary>
+                  </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -709,7 +710,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               <CardContent>
                 <div className="h-[400px]">
                   <ErrorBoundary>
-          <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%">
                     <MemoizedPieChart>
                       <Pie
                         data={revenueByServiceData}
@@ -729,7 +730,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       {showLegend && <Legend />}
                     </MemoizedPieChart>
                   </ResponsiveContainer>
-        </ErrorBoundary>
+                  </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -747,7 +748,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               <CardContent>
                 <div className="h-[400px]">
                   <ErrorBoundary>
-          <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%">
                     <MemoizedBarChart
                       data={lawyerPerformanceData}
                       margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
@@ -760,7 +761,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       <Bar dataKey="honorarios" fill="#ffc658" name="Honorários (€)" />
                     </MemoizedBarChart>
                   </ResponsiveContainer>
-        </ErrorBoundary>
+                  </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -783,27 +784,27 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               <CardContent>
                 <div className="h-[400px]">
                   <ErrorBoundary>
-          <ResponsiveContainer width="100%" height="100%">
-                    <MemoizedLineChart
-                      data={clientSatisfactionData}
-                      margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="month" />
-                      <YAxis domain={[0, 5]} />
-                      {showLabels && <Tooltip formatter={(value) => `${value}/5`} />}
-                      {showLegend && <Legend />}
-                      <Line 
-                        type="monotone" 
-                        dataKey="satisfacao" 
-                        stroke="#8884d8" 
-                        name="Satisfação" 
-                        strokeWidth={2}
-                        dot={{ r: 6 }}
-                      />
-                    </MemoizedLineChart>
-                  </ResponsiveContainer>
-        </ErrorBoundary>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <MemoizedLineChart
+                        data={clientSatisfactionData}
+                        margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis domain={[0, 5]} />
+                        {showLabels && <Tooltip formatter={(value) => `${value}/5`} />}
+                        {showLegend && <Legend />}
+                        <Line 
+                          type="monotone" 
+                          dataKey="satisfacao" 
+                          stroke="#8884d8" 
+                          name="Satisfação" 
+                          strokeWidth={2}
+                          dot={{ r: 6 }}
+                        />
+                      </MemoizedLineChart>
+                    </ResponsiveContainer>
+                  </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -821,26 +822,26 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               <CardContent>
                 <div className="h-[400px]">
                   <ErrorBoundary>
-          <ResponsiveContainer width="100%" height="100%">
-                    <MemoizedBarChart
-                      data={[
-                        { name: 'Cliente A', processos: 5 },
-                        { name: 'Cliente B', processos: 3 },
-                        { name: 'Cliente C', processos: 7 },
-                        { name: 'Cliente D', processos: 2 },
-                        { name: 'Cliente E', processos: 4 },
-                      ]}
-                      margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" angle={-45} textAnchor="end" height={70} />
-                      <YAxis />
-                      {showLabels && <Tooltip />}
-                      {showLegend && <Legend />}
-                      <Bar dataKey="processos" fill="#8884d8" name="Processos Ativos" />
-                    </MemoizedBarChart>
-                  </ResponsiveContainer>
-        </ErrorBoundary>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <MemoizedBarChart
+                        data={[
+                          { name: 'Cliente A', processos: 5 },
+                          { name: 'Cliente B', processos: 3 },
+                          { name: 'Cliente C', processos: 7 },
+                          { name: 'Cliente D', processos: 2 },
+                          { name: 'Cliente E', processos: 4 },
+                        ]}
+                        margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" angle={-45} textAnchor="end" height={70} />
+                        <YAxis />
+                        {showLabels && <Tooltip />}
+                        {showLegend && <Legend />}
+                        <Bar dataKey="processos" fill="#8884d8" name="Processos Ativos" />
+                      </MemoizedBarChart>
+                    </ResponsiveContainer>
+                  </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
