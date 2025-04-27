@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Settings2, FileText } from 'lucide-react';
+import * as React from 'react';
+import { useState } from 'react';
+import { Settings2, FileText } from '@/components/icons/lucide';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -71,6 +72,47 @@ interface AdvancedAnalyticsProps {
 }
 
 const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) => {
+  // Memoized chart components
+  const MemoizedBarChart = React.memo(BarChart);
+  const MemoizedLineChart = React.memo(LineChart);
+  const MemoizedPieChart = React.memo(PieChart);
+  const MemoizedAreaChart = React.memo(AreaChart);
+  const MemoizedComposedChart = React.memo(ComposedChart);
+  const ErrorBoundary = React.memo(({ children }: { children: React.ReactNode }) => {
+    const [hasError, setHasError] = useState(false);
+
+    useEffect(() => {
+      const errorHandler = (error: Error) => {
+        console.error('Error caught by boundary:', error);
+        setHasError(true);
+      };
+      
+      window.addEventListener('error', (event) => {
+        errorHandler(event.error);
+        event.preventDefault();
+      });
+
+      return () => {
+        window.removeEventListener('error', (event) => {
+          errorHandler(event.error);
+          event.preventDefault();
+        });
+      };
+    }, []);
+
+    if (hasError) {
+      return (
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center p-4 bg-red-50 rounded-lg">
+            <h3 className="text-lg font-medium text-red-800">Chart Error</h3>
+            <p className="text-red-600">Failed to render this chart component</p>
+          </div>
+        </div>
+      );
+    }
+
+    return <>{children}</>;
+  };
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const cases = props.cases || [];
@@ -124,7 +166,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
   }
 
   // Dados para o gráfico de tipos de processos baseados nos casos reais
-  const caseTypeData: ChartDataTypes['CaseType'][] = React.useMemo(() => (() => {
+  const caseTypeData: ChartDataTypes['CaseType'][] = React.useMemo((): ChartDataTypes['CaseType'][] => {
     // Aqui estamos assumindo que a descrição do caso contém informações sobre o tipo
     // Em um cenário real, você teria um campo específico para o tipo de caso
     const caseTypes = cases.reduce((acc: Record<string, number>, c) => {
@@ -143,7 +185,8 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
     return Object.entries(caseTypes)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
-  })();
+  }, [cases]); // Added cases as dependency
+  
   
   // Fallback para dados estáticos se não houver dados dinâmicos
   if (caseTypeData.length === 0) {
@@ -219,7 +262,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
   }
 
   // Dados para o gráfico de receitas por tipo de serviço baseados nas transações reais
-  const revenueByServiceData: ChartDataTypes['RevenueByService'][] = (() => {
+  const revenueByServiceData: ChartDataTypes['RevenueByService'][] = React.useMemo((): ChartDataTypes['RevenueByService'][] => {
     // Filtra apenas transações completadas e do tipo invoice
     const completedInvoices = transactions.filter(
       t => t.status === 'completed' && t.type === 'invoice'
@@ -453,7 +496,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <BarChart2 className="h-5 w-5" />
+                  <MemoizedBarChart2 className="h-5 w-5" />
                   Desempenho por Advogado
                 </CardTitle>
                 <CardDescription>
@@ -462,9 +505,10 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               </CardHeader>
               <CardContent>
                 <div className="h-[400px]">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ErrorBoundary>
+          <ResponsiveContainer width="100%" height="100%">
                     {chartType === 'bar' ? (
-                      <BarChart
+                      <MemoizedBarChart
                         data={lawyerPerformanceData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
                       >
@@ -478,7 +522,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Bar dataKey="honorarios" fill="#ffc658" name="Honorários (€)" />
                       </BarChart>
                     ) : chartType === 'line' ? (
-                      <LineChart
+                      <MemoizedLineChart
                         data={lawyerPerformanceData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
                       >
@@ -492,7 +536,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Line type="monotone" dataKey="honorarios" stroke="#ffc658" name="Honorários (€)" />
                       </LineChart>
                     ) : (
-                      <ComposedChart
+                      <MemoizedComposedChart
                         data={lawyerPerformanceData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
                       >
@@ -507,6 +551,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       </ComposedChart>
                     )}
                   </ResponsiveContainer>
+        </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -523,8 +568,9 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               </CardHeader>
               <CardContent>
                 <div className="h-[400px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
+                  <ErrorBoundary>
+          <ResponsiveContainer width="100%" height="100%">
+                    <MemoizedBarChart
                       data={resolutionTimeData}
                       layout="vertical"
                       margin={{ top: 20, right: 30, left: 60, bottom: 20 }}
@@ -537,6 +583,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       <Bar dataKey="tempo" fill="#8884d8" name="Dias" />
                     </BarChart>
                   </ResponsiveContainer>
+        </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -549,7 +596,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <PieChartIcon className="h-5 w-5" />
+                  <MemoizedPieChartIcon className="h-5 w-5" />
                   Distribuição por Tipo de Processo
                 </CardTitle>
                 <CardDescription>
@@ -558,8 +605,9 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               </CardHeader>
               <CardContent>
                 <div className="h-[400px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
+                  <ErrorBoundary>
+          <ResponsiveContainer width="100%" height="100%">
+                    <MemoizedPieChart>
                       <Pie
                         data={caseTypeData}
                         cx="50%"
@@ -578,6 +626,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       {showLegend && <Legend />}
                     </PieChart>
                   </ResponsiveContainer>
+        </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -594,9 +643,10 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               </CardHeader>
               <CardContent>
                 <div className="h-[400px]">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ErrorBoundary>
+          <ResponsiveContainer width="100%" height="100%">
                     {chartType === 'line' || chartType === 'area' ? (
-                      <LineChart
+                      <MemoizedLineChart
                         data={caseTrendData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                       >
@@ -610,7 +660,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Line type="monotone" dataKey="ativos" stroke="#ffc658" name="Ativos" />
                       </LineChart>
                     ) : chartType === 'area' ? (
-                      <AreaChart
+                      <MemoizedAreaChart
                         data={caseTrendData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                       >
@@ -624,7 +674,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Area type="monotone" dataKey="ativos" stackId="3" stroke="#ffc658" fill="#ffc658" name="Ativos" />
                       </AreaChart>
                     ) : (
-                      <BarChart
+                      <MemoizedBarChart
                         data={caseTrendData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                       >
@@ -639,6 +689,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       </BarChart>
                     )}
                   </ResponsiveContainer>
+        </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -651,7 +702,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <PieChartIcon className="h-5 w-5" />
+                  <MemoizedPieChartIcon className="h-5 w-5" />
                   Receita por Tipo de Serviço
                 </CardTitle>
                 <CardDescription>
@@ -660,8 +711,9 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               </CardHeader>
               <CardContent>
                 <div className="h-[400px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
+                  <ErrorBoundary>
+          <ResponsiveContainer width="100%" height="100%">
+                    <MemoizedPieChart>
                       <Pie
                         data={revenueByServiceData}
                         cx="50%"
@@ -680,6 +732,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       {showLegend && <Legend />}
                     </PieChart>
                   </ResponsiveContainer>
+        </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -687,7 +740,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <BarChart2 className="h-5 w-5" />
+                  <MemoizedBarChart2 className="h-5 w-5" />
                   Análise de Honorários por Advogado
                 </CardTitle>
                 <CardDescription>
@@ -696,8 +749,9 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               </CardHeader>
               <CardContent>
                 <div className="h-[400px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
+                  <ErrorBoundary>
+          <ResponsiveContainer width="100%" height="100%">
+                    <MemoizedBarChart
                       data={lawyerPerformanceData}
                       margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
                     >
@@ -709,6 +763,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       <Bar dataKey="honorarios" fill="#ffc658" name="Honorários (€)" />
                     </BarChart>
                   </ResponsiveContainer>
+        </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -730,8 +785,9 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               </CardHeader>
               <CardContent>
                 <div className="h-[400px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
+                  <ErrorBoundary>
+          <ResponsiveContainer width="100%" height="100%">
+                    <MemoizedLineChart
                       data={clientSatisfactionData}
                       margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                     >
@@ -750,6 +806,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       />
                     </LineChart>
                   </ResponsiveContainer>
+        </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>
@@ -757,7 +814,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <BarChart2 className="h-5 w-5" />
+                  <MemoizedBarChart2 className="h-5 w-5" />
                   Processos por Cliente
                 </CardTitle>
                 <CardDescription>
@@ -766,8 +823,9 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
               </CardHeader>
               <CardContent>
                 <div className="h-[400px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
+                  <ErrorBoundary>
+          <ResponsiveContainer width="100%" height="100%">
+                    <MemoizedBarChart
                       data={[
                         { name: 'Cliente A', processos: 5 },
                         { name: 'Cliente B', processos: 3 },
@@ -785,6 +843,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       <Bar dataKey="processos" fill="#8884d8" name="Processos Ativos" />
                     </BarChart>
                   </ResponsiveContainer>
+        </ErrorBoundary>
                 </div>
               </CardContent>
             </Card>

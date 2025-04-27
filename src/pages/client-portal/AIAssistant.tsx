@@ -1,6 +1,6 @@
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2 } from '@radix-ui/react-icons';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -53,7 +53,7 @@ const AIAssistant = () => {
     
     if (!input.trim()) return;
     
-    // Adiciona a mensagem do usuário ao chat
+    // Add user message to chat
     const userMessageId = Date.now().toString();
     const userMessage: Message = {
       id: userMessageId,
@@ -65,6 +65,16 @@ const AIAssistant = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setLoading(true);
+    
+    // Add temporary loading message
+    const loadingMessageId = (Date.now() + 1).toString();
+    const loadingMessage: Message = {
+      id: loadingMessageId,
+      role: 'assistant',
+      content: 'Thinking...',
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, loadingMessage]);
 
     try {
       // Obtém o contexto do processo ativo (se selecionado)
@@ -101,10 +111,24 @@ const AIAssistant = () => {
         }
       ]);
     } catch (error) {
-      console.error('Erro ao chamar o assistente de IA:', error);
+      console.error('Error calling AI assistant:', error);
+      
+      // Remove loading message
+      setMessages(prev => prev.filter(msg => msg.content !== 'Thinking...'));
+      
+      // Add error message
+      const errorMessageId = (Date.now() + 2).toString();
+      const errorMessage: Message = {
+        id: errorMessageId,
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+      
       toast({
-        title: 'Erro',
-        description: 'Não foi possível obter uma resposta. Por favor, tente novamente.',
+        title: 'Error',
+        description: 'Failed to get a response. Please try again.',
         variant: 'destructive',
       });
     } finally {

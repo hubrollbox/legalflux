@@ -1,12 +1,12 @@
 
-import React from "react";
+import * as React from "react";
 import { useLocation } from "react-router-dom";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "../../../components/ui/avatar";
 import { LOGO } from "@/assets";
 import { cn } from "@/lib/utils";
 import type { SidebarItem } from "./SidebarItems";
 import { LogOut } from "lucide-react";
-import Image from 'next/image';
+// Using standard img tag since next/image is not available in this React project
 
 interface UserData {
   id: string;

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { UserPlus, Search, Filter, Download, MoreHorizontal, AlertCircle } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import EmptyState from "@/components/ui/EmptyState";
 import {
   DropdownMenu,
@@ -90,9 +90,7 @@ const Clients = () => {
   useEffect(() => {
     filterClients();
     loadClients();
-    toast;
-    filterClients();
-  }, [searchTerm, statusFilter, clients]);
+  }, [searchTerm, statusFilter, clients, filterClients, loadClients, toast]);
 
   // Função para carregar os clientes do serviço
   const loadClients = async () => {

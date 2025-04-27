@@ -137,7 +137,7 @@ serve(async (req: Request) => {
       throw new Error(errorMessage);
     }
     
-    const data: OpenAIResponse = await response.json();
+    const data = await response.json() as OpenAIResponse;
     
     const generatedText = data.choices[0].message.content;
 
@@ -154,4 +154,4 @@ serve(async (req: Request) => {
     });
   }
 },
-}, { port: 8000 });
+{ port: 8000 });
