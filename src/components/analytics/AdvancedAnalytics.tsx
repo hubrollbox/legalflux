@@ -246,8 +246,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
     });
     
     return Object.values(result);
-  })();
-  
+  })());
   // Fallback para dados estáticos se não houver dados dinâmicos
   if (caseTrendData.length === 0) {
     caseTrendData.push(
