@@ -801,7 +801,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         strokeWidth={2}
                         dot={{ r: 6 }}
                       />
-                    </LineChart>
+                    </MemoizedLineChart>
                   </ResponsiveContainer>
         </ErrorBoundary>
                 </div>
