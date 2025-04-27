@@ -605,24 +605,23 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                 <div className="h-[400px]">
                   <ErrorBoundary>
           <ResponsiveContainer width="100%" height="100%">
-                    <MemoizedPieChart>
+                    <MemoizedPieChart data={caseTypeData} width={400} height={300} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                       <Pie
                         data={caseTypeData}
+                        dataKey="value"
+                        nameKey="name"
                         cx="50%"
                         cy="50%"
-                        labelLine={false}
-                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                        outerRadius={150}
+                        outerRadius={80}
                         fill="#8884d8"
-                        dataKey="value"
+                        label={showLabels}
                       >
-                        {caseTypeData.map((_, index) => (
+                        {caseTypeData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
-                      {showLabels && <Tooltip formatter={(value) => `${value}`} />}
                       {showLegend && <Legend />}
-                    </PieChart>
+                    </MemoizedPieChart>
                   </ResponsiveContainer>
         </ErrorBoundary>
                 </div>
@@ -728,7 +727,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       </Pie>
                       {showLabels && <Tooltip formatter={(value) => `€${value}`} />}
                       {showLegend && <Legend />}
-                    </PieChart>
+                    </MemoizedPieChart>
                   </ResponsiveContainer>
         </ErrorBoundary>
                 </div>
