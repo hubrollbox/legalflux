@@ -1,39 +1,31 @@
-import React from "react";
+import NextImage, { ImageProps as NextImageProps } from "next/image";
 import { cn } from "./utils";
 
-export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+export interface ImageProps extends Omit<NextImageProps, "src" | "alt"> {
   src: string;
   alt: string;
   className?: string;
-  width?: number | string;
-  height?: number | string;
-  layout?: 'fixed' | 'intrinsic' | 'responsive' | 'fill';
   objectFit?: React.CSSProperties['objectFit'];
   objectPosition?: React.CSSProperties['objectPosition'];
 }
 
-const Image = React.forwardRef<HTMLImageElement, ImageProps>(
-  ({ src, alt, className, width, height, layout, objectFit, objectPosition, ...props }, ref) => {
-    const style = {
-      ...(objectFit && { objectFit }),
-      ...(objectPosition && { objectPosition })
-    };
-    
-    return (
-      <img
-        ref={ref}
-        src={src}
-        alt={alt}
-        className={cn("object-cover", className)}
-        width={width}
-        height={height}
-        style={Object.keys(style).length ? style : undefined}
-        {...props}
-      />
-    );
-  }
-);
+const Image = ({ src, alt, className, width, height, objectFit, objectPosition, ...props }: ImageProps) => {
+  const style = {
+    ...(objectFit && { objectFit }),
+    ...(objectPosition && { objectPosition })
+  };
 
-Image.displayName = "Image";
+  return (
+    <NextImage
+      src={src}
+      alt={alt}
+      className={cn("object-cover", className)}
+      width={width}
+      height={height}
+      style={Object.keys(style).length ? style : undefined}
+      {...props}
+    />
+  );
+};
 
 export { Image };

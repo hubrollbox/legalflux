@@ -46,10 +46,63 @@ const Clients = () => {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Função para carregar os clientes do serviço
+  const loadClients = React.useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await clientService.getClients();
+      if (!Array.isArray(data)) {
+        throw new Error('Invalid response format from server');
+      }
+      setClients(data);
+    } catch (error: any) {
+      console.error("Erro ao carregar clientes:", error);
+      setError(error.message || "Não foi possível carregar os clientes");
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: "Não foi possível carregar os clientes. Tente novamente.",
+      });
+      setClients([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [toast]);
+
+  // Função para filtrar clientes com base no termo de busca e filtro de status
+  const filterClients = React.useCallback(() => {
+    try {
+      if (!clients || clients.length === 0) {
+        setFilteredClients([]);
+        return;
+      }
+      let filtered = [...clients];
+      if (searchTerm && searchTerm.trim()) {
+        const term = searchTerm.toLowerCase().trim();
+        filtered = filtered.filter(
+          (client) =>
+            (client.name && client.name.toLowerCase().includes(term)) ||
+            (client.email && client.email.toLowerCase().includes(term)) ||
+            (client.nif && client.nif.includes(term)) ||
+            (client.phone && client.phone.includes(term))
+        );
+      }
+      if (statusFilter && statusFilter !== "all") {
+        filtered = filtered.filter(
+          (client) => client && client.status === statusFilter
+        );
+      }
+      setFilteredClients(filtered);
+    } catch (error) {
+      console.error('Error filtering clients:', error);
+      setFilteredClients([]);
+    }
+  }, [clients, searchTerm, statusFilter]);
+
   // Verificar autenticação e carregar clientes ao montar o componente
   useEffect(() => {
     let isMounted = true;
-    
     const checkAuth = async () => {
       try {
         const { data } = await supabase.auth.getSession();
@@ -62,10 +115,8 @@ const Clients = () => {
           });
           return;
         }
-        
         if (isMounted) {
           await loadClients();
-          filterClients();
         }
       } catch (error) {
         if (isMounted) {
@@ -78,86 +129,16 @@ const Clients = () => {
         }
       }
     };
-    
     checkAuth();
-    
     return () => {
       isMounted = false;
     };
-  }, [navigate]);
+  }, [navigate, toast, loadClients]);
 
-  // Filtrar clientes quando o termo de busca ou filtro de status mudar
+  // Filtrar clientes quando o termo de busca, filtro de status ou lista de clientes mudar
   useEffect(() => {
     filterClients();
-    loadClients();
-  }, [searchTerm, statusFilter, clients, filterClients, loadClients, toast]);
-
-  // Função para carregar os clientes do serviço
-  const loadClients = React.useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const data = await clientService.getClients();
-      
-      // Validate response data structure
-      if (!Array.isArray(data)) {
-        throw new Error('Invalid response format from server');
-      }
-      
-      setClients(data);
-    } catch (error: any) {
-      console.error("Erro ao carregar clientes:", error);
-      setError(error.message || "Não foi possível carregar os clientes");
-      toast({
-        variant: "destructive",
-        title: "Erro",
-        description: "Não foi possível carregar os clientes. Tente novamente.",
-      });
-      
-      // Return empty array to prevent UI errors
-      setClients([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [toast]);
-
-  // Função para filtrar clientes com base no termo de busca e filtro de status
-  const filterClients = React.useCallback(() => {
-    try {
-      // Early return if no clients
-      if (!clients || clients.length === 0) {
-        setFilteredClients([]);
-        return;
-      }
-
-      let filtered = [...clients];
-
-      // Apply search filter if term exists
-      if (searchTerm && searchTerm.trim()) {
-        const term = searchTerm.toLowerCase().trim();
-        filtered = filtered.filter(
-          (client) =>
-            (client.name && client.name.toLowerCase().includes(term)) ||
-            (client.email && client.email.toLowerCase().includes(term)) ||
-            (client.nif && client.nif.includes(term)) ||
-            (client.phone && client.phone.includes(term))
-        );
-      }
-
-      // Apply status filter if not 'all'
-      if (statusFilter && statusFilter !== "all") {
-        filtered = filtered.filter(
-          (client) => client && client.status === statusFilter
-        );
-      }
-
-      setFilteredClients(filtered);
-    } catch (error) {
-      console.error('Error filtering clients:', error);
-      setFilteredClients([]);
-    }
-  }, [clients, searchTerm, statusFilter]);
+  }, [searchTerm, statusFilter, clients, filterClients]);
 
   // Funções para gerenciar os diálogos
   const handleOpenCreateDialog = () => {
