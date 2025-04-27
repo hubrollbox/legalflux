@@ -1,5 +1,6 @@
 import { supabase } from "../../integrations/supabase/client";
-import type { Process, CreateProcessDTO, UpdateProcessDTO, ProcessStatus } from "./types/process";
+import type { Process } from "./types/process";
+import type { CreateProcessDTO, UpdateProcessDTO } from "@/types/processDTO";
 
 export const processService = {
   async createProcess(processData: CreateProcessDTO, userId: string, organizationId: string): Promise<Process> {

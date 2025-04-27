@@ -113,7 +113,6 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
 
     return <>{children}</>;
   });
-  };
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const cases = props.cases || [];
@@ -146,14 +145,13 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
         t.type === 'invoice' && 
         t.status === 'completed'
       );
-      
       return {
         name: lawyer.name,
         processos: lawyerCases.length,
         tarefas: lawyerTasks.length,
         honorarios: lawyerTransactions.reduce((sum, t) => sum + t.amount, 0)
       };
-    });
+    }), [users, tasks, cases, transactions]);
     
   // Fallback para dados estáticos se não houver dados dinâmicos suficientes
   if (lawyerPerformanceData.length === 0) {

@@ -137,14 +137,3 @@ const Register = () => {
 };
 
 export default Register;
-
-// tsconfig.json
-{
-  "compilerOptions": {
-    // Other options
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
-  }
-}

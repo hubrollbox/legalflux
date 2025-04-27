@@ -40,7 +40,7 @@ const Documents = () => {
 
       return matchesSearch && matchesType && matchesDate && matchesTags;
     });
-  }, [searchTerm, filters, mockDocuments]);
+  }, [searchTerm, filters]);
 
   const filteredTemplates = mockTemplates.filter(
     template => 
