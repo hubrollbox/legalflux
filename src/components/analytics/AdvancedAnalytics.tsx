@@ -379,7 +379,6 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
     </div>
   );
-);
 
   if (error) return (
     <div className="flex flex-col items-center justify-center h-[80vh] text-destructive">
@@ -547,7 +546,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Bar dataKey="processos" fill="#8884d8" name="Processos" />
                         <Line type="monotone" dataKey="tarefas" stroke="#82ca9d" name="Tarefas" />
                         <Line type="monotone" dataKey="honorarios" stroke="#ffc658" name="Honorários (€)" />
-                      </ComposedChart>
+                      </MemoizedComposedChart>
                     )}
                   </ResponsiveContainer>
         </ErrorBoundary>
