@@ -1,15 +1,16 @@
 
-import React, { useState, useEffect, useCallback } from "react";
+import * as React from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { LOGO } from "@/assets";
-import { Button } from "@/components/ui/button";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { LOGO } from "../../assets";
+import { Button } from "../../components/ui/button";
+import { SidebarProvider } from "../../components/ui/sidebar";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
-import { useIsMobile } from "@/hooks/use-mobile";
-import Image from 'next/image';
+import { useIsMobile } from "../../hooks/use-mobile";
+import { Image } from "@/components/ui/image";
 
 interface DashboardLayoutProps {
   children: ReactNode;

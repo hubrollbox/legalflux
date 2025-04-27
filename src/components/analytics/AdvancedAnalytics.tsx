@@ -112,6 +112,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
     }
 
     return <>{children}</>;
+  });
   };
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -93,7 +93,7 @@ const Clients = () => {
   }, [searchTerm, statusFilter, clients, filterClients, loadClients, toast]);
 
   // Função para carregar os clientes do serviço
-  const loadClients = async () => {
+  const loadClients = React.useCallback(async () => {
     setIsLoading(true);
     setError(null);
     
@@ -120,10 +120,10 @@ const Clients = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
 
   // Função para filtrar clientes com base no termo de busca e filtro de status
-  const filterClients = () => {
+  const filterClients = React.useCallback(() => {
     try {
       // Early return if no clients
       if (!clients || clients.length === 0) {
@@ -157,7 +157,7 @@ const Clients = () => {
       console.error('Error filtering clients:', error);
       setFilteredClients([]);
     }
-  };
+  }, [clients, searchTerm, statusFilter]);
 
   // Funções para gerenciar os diálogos
   const handleOpenCreateDialog = () => {

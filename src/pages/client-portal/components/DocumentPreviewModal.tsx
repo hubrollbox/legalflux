@@ -44,9 +44,22 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
       return (
         <div className="flex flex-col items-center justify-center h-[60vh] bg-gray-100 rounded border p-8">
           <div className="text-6xl mb-4">❌</div>
-          <p className="text-center mb-4">Documento não encontrado</p>
+          <p className="text-center mb-4">Document not found</p>
           <p className="text-sm text-muted-foreground text-center max-w-md">
-            O documento solicitado não está disponível.
+            The requested document is not available.
+          </p>
+        </div>
+      );
+    }
+    
+    // Validate document type exists
+    if (!document.type) {
+      return (
+        <div className="flex flex-col items-center justify-center h-[60vh] bg-gray-100 rounded border p-8">
+          <div className="text-6xl mb-4">⚠️</div>
+          <p className="text-center mb-4">Invalid document type</p>
+          <p className="text-sm text-muted-foreground text-center max-w-md">
+            This document has no type information and cannot be previewed.
           </p>
         </div>
       );
@@ -103,10 +116,13 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] bg-gray-100 rounded border p-8">
         <div className="text-6xl mb-4">⚠️</div>
-        <p className="text-center mb-4">Tipo de arquivo não suportado</p>
+        <p className="text-center mb-4">Unsupported file type</p>
         <p className="text-sm text-muted-foreground text-center max-w-md">
-          O tipo {type.toUpperCase()} não pode ser pré-visualizado. Por favor, descarregue o arquivo para visualizá-lo.
+          The {type.toUpperCase()} format cannot be previewed. Please download the file to view it.
         </p>
+        <div className="mt-4 text-xs text-muted-foreground">
+          Supported formats: PDF, DOCX, XLSX, PPTX, JPG, PNG
+        </div>
       </div>
     );
   };
