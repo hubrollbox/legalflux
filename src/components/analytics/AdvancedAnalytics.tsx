@@ -579,7 +579,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       {showLabels && <Tooltip formatter={(value) => `${value} dias`} />}
                       {showLegend && <Legend />}
                       <Bar dataKey="tempo" fill="#8884d8" name="Dias" />
-                    </BarChart>
+                    </MemoizedBarChart>
                   </ResponsiveContainer>
         </ErrorBoundary>
                 </div>
@@ -759,7 +759,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       {showLabels && <Tooltip formatter={(value) => `€${value}`} />}
                       {showLegend && <Legend />}
                       <Bar dataKey="honorarios" fill="#ffc658" name="Honorários (€)" />
-                    </BarChart>
+                    </MemoizedBarChart>
                   </ResponsiveContainer>
         </ErrorBoundary>
                 </div>
@@ -839,7 +839,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       {showLabels && <Tooltip />}
                       {showLegend && <Legend />}
                       <Bar dataKey="processos" fill="#8884d8" name="Processos Ativos" />
-                    </BarChart>
+                    </MemoizedBarChart>
                   </ResponsiveContainer>
         </ErrorBoundary>
                 </div>
