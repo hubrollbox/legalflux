@@ -659,17 +659,17 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                     ) : chartType === 'area' ? (
                       <MemoizedAreaChart
                         data={caseTrendData}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                        margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
                       >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="month" />
                         <YAxis />
-                        {showLabels && <Tooltip />}
+                        {showLabels && <Tooltip formatter={(value) => `${value}`} />}
                         {showLegend && <Legend />}
                         <Area type="monotone" dataKey="novos" stackId="1" stroke="#8884d8" fill="#8884d8" name="Novos" />
                         <Area type="monotone" dataKey="concluidos" stackId="2" stroke="#82ca9d" fill="#82ca9d" name="Concluídos" />
                         <Area type="monotone" dataKey="ativos" stackId="3" stroke="#ffc658" fill="#ffc658" name="Ativos" />
-                      </AreaChart>
+                      </MemoizedAreaChart>
                     ) : (
                       <MemoizedBarChart
                         data={caseTrendData}
