@@ -549,7 +549,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Line type="monotone" dataKey="honorarios" stroke="#ffc658" name="Honorários (€)" />
                       </MemoizedComposedChart>
                     )}
-                  </ResponsiveContainer>
+                    </ResponsiveContainer>
                   </ErrorBoundary>
                 </div>
               </CardContent>
@@ -581,7 +581,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       {showLegend && <Legend />}
                       <Bar dataKey="tempo" fill="#8884d8" name="Dias" />
                     </MemoizedBarChart>
-                  </ResponsiveContainer>
+                    </ResponsiveContainer>
                   </ErrorBoundary>
                 </div>
               </CardContent>
@@ -623,7 +623,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       </Pie>
                       {showLegend && <Legend />}
                     </MemoizedPieChart>
-                  </ResponsiveContainer>
+                    </ResponsiveContainer>
                   </ErrorBoundary>
                 </div>
               </CardContent>
@@ -643,7 +643,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                 <div className="h-[400px]">
                   <ErrorBoundary>
                     <ResponsiveContainer width="100%" height="100%">
-                    {chartType === 'line' || chartType === 'area' ? (
+                      {chartType === 'line' ? (
                       <MemoizedLineChart
                         data={caseTrendData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
@@ -686,7 +686,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Bar dataKey="ativos" fill="#ffc658" name="Ativos" />
                       </MemoizedBarChart>
                     )}
-                  </ResponsiveContainer>
+                    </ResponsiveContainer>
                   </ErrorBoundary>
                 </div>
               </CardContent>
@@ -729,7 +729,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       {showLabels && <Tooltip formatter={(value) => `€${value}`} />}
                       {showLegend && <Legend />}
                     </MemoizedPieChart>
-                  </ResponsiveContainer>
+                    </ResponsiveContainer>
                   </ErrorBoundary>
                 </div>
               </CardContent>
@@ -760,7 +760,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       {showLegend && <Legend />}
                       <Bar dataKey="honorarios" fill="#ffc658" name="Honorários (€)" />
                     </MemoizedBarChart>
-                  </ResponsiveContainer>
+                    </ResponsiveContainer>
                   </ErrorBoundary>
                 </div>
               </CardContent>
@@ -803,7 +803,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                           dot={{ r: 6 }}
                         />
                       </MemoizedLineChart>
-                    </ResponsiveContainer>
+                      </ResponsiveContainer>
                   </ErrorBoundary>
                 </div>
               </CardContent>
@@ -840,7 +840,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         {showLegend && <Legend />}
                         <Bar dataKey="processos" fill="#8884d8" name="Processos Ativos" />
                       </MemoizedBarChart>
-                    </ResponsiveContainer>
+                      </ResponsiveContainer>
                   </ErrorBoundary>
                 </div>
               </CardContent>
