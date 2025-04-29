@@ -1,5 +1,16 @@
-import { supabase } from '@/integrations/supabase/client';
-import type { Client } from '@/types/client';
+import { supabase } from '../lib/supabase-client';
+export interface Client {
+  id: string;
+  name: string;
+  taxId: string;
+  phone: string;
+  email: string;
+  address: string;
+  status: string;
+  createdAt: Date;
+  userId: string;
+  lawyerId: string;
+}
 
 // Export the clientService with minimal changes to fix the type issues
 export const clientService = {

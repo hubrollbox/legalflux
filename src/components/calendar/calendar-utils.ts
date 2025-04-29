@@ -1,4 +1,4 @@
-import type { CalendarEvent, CategoryKey } from '../../../types';
+import type { CalendarEvent, CategoryKey } from '@/types';
 
 export const fetchEvents = async (): Promise<CalendarEvent[]> => {
   try {

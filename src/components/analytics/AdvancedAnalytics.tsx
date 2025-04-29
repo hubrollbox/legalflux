@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-// Remove duplicate import since it's already imported from @/components/icons/lucide
-import { Settings2, FileText } from '@/components/icons/lucide';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -31,7 +29,7 @@ import {
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale/pt-BR';
 import type { DateRange } from "react-day-picker";
-import { Download, BarChart2, PieChart as PieChartIcon, TrendingUp, Calendar as CalendarIcon } from 'lucide-react';
+import { Download, BarChart2, PieChart as PieChartIcon, TrendingUp, Calendar as CalendarIcon, Settings2, FileText } from 'lucide-react';
 import type { Case, FinancialTransaction, Task, User } from '@/types';
 
 interface ChartDataTypes {
@@ -548,7 +546,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Line type="monotone" dataKey="tarefas" stroke="#82ca9d" name="Tarefas" />
                         <Line type="monotone" dataKey="honorarios" stroke="#ffc658" name="Honorários (€)" />
                       </MemoizedComposedChart>
-                    )}
+                    ))}
                     </ResponsiveContainer>
                   </ErrorBoundary>
                 </div>
@@ -685,7 +683,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Bar dataKey="concluidos" fill="#82ca9d" name="Concluídos" />
                         <Bar dataKey="ativos" fill="#ffc658" name="Ativos" />
                       </MemoizedBarChart>
-                    )}
+                    ))}
                     </ResponsiveContainer>
                   </ErrorBoundary>
                 </div>

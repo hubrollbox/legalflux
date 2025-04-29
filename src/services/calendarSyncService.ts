@@ -1,7 +1,7 @@
 import { calendarIntegrationService } from './calendarIntegrationService';
 // CalendarProvider import removed as it was unused
 // Remove unused CalendarProvider import
-import type { CalendarEvent } from '@/types';
+import type { CalendarEvent } from '../types';
 import { notifyUsers } from './notificationService';
 
 export interface ExternalCalendarConfig {

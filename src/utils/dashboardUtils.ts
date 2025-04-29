@@ -1,6 +1,6 @@
 
-import { UserRole } from "@/types/permissions";
-import { PriorityLevel } from "@/types";
+import { UserRole } from "../types/permissions";
+import { PriorityLevel } from "../types/priority-level";
 
 // Helper function to get user role name
 export const getUserRoleName = (role: UserRole): string => {
@@ -10,6 +10,8 @@ export const getUserRoleName = (role: UserRole): string => {
     [UserRole.SENIOR_LAWYER]: "Advogado Sênior",
     [UserRole.ASSISTANT]: "Assistente",
     [UserRole.ADMIN]: "Administrador",
+    [UserRole.USER]: "Utilizador",
+    [UserRole.GUEST]: "Convidado",
   };
   
   return roleNames[role] || "Utilizador";
