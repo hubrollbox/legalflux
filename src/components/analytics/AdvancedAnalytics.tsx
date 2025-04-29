@@ -683,7 +683,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Bar dataKey="concluidos" fill="#82ca9d" name="Concluídos" />
                         <Bar dataKey="ativos" fill="#ffc658" name="Ativos" />
                       </MemoizedBarChart>
-                    ))}
+                    )}
                     </ResponsiveContainer>
                   </ErrorBoundary>
                 </div>
