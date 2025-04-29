@@ -546,7 +546,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         <Line type="monotone" dataKey="tarefas" stroke="#82ca9d" name="Tarefas" />
                         <Line type="monotone" dataKey="honorarios" stroke="#ffc658" name="Honorários (€)" />
                       </MemoizedComposedChart>
-                    ))}
+                    )}
                     </ResponsiveContainer>
                   </ErrorBoundary>
                 </div>

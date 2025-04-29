@@ -20,6 +20,8 @@ export const AuthContext = createContext<AuthContextType>({
   signUp: async () => {}
 });
 
+// TODO: Este arquivo será refatorado para conter apenas a definição do contexto de autenticação.
+// A lógica do provider será movida para um novo arquivo AuthProvider.tsx.
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
