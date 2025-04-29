@@ -838,7 +838,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         {showLegend && <Legend />}
                         <Bar dataKey="processos" fill="#8884d8" name="Processos Ativos" />
                       </MemoizedBarChart>
-                      </ResponsiveContainer>
+                    </ResponsiveContainer>
                   </ErrorBoundary>
                 </div>
               </CardContent>
