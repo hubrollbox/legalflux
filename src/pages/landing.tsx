@@ -1,10 +1,24 @@
-import React from 'react';
+import * as React from "react";
+// Remove or comment out until framer-motion is properly installed
+// import { motion } from "framer-motion";
+import LandingNavbar from "./landing/components/LandingNavbar";
+import HeroSection from "./landing/sections/HeroSection";
+import FeaturesSection from "./landing/sections/FeaturesSection";
+import TestimonialsSection from "./landing/sections/TestimonialsSection";
+import CTASection from "./landing/sections/CTASection";
+import LandingFooter from "./landing/components/LandingFooter";
 
 export default function LandingPage() {
   return (
-    <div className="container">
-      <h1>Welcome to LegalFlux</h1>
-      <p>Your legal process management solution</p>
+    <div className="min-h-screen bg-gray-50">
+      <LandingNavbar />
+      <main>
+        <HeroSection />
+        <FeaturesSection />
+        <TestimonialsSection />
+        <CTASection />
+      </main>
+      <LandingFooter />
     </div>
   );
 }

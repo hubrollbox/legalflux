@@ -1,18 +1,18 @@
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import type { DropResult } from 'react-beautiful-dnd';
-import { format } from 'date-fns';
+import { format } from 'date-fns/format';
 import { pt } from 'date-fns/locale';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import SectionHeader from '@/components/layout/SectionHeader';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, Edit, GripVertical, AlertTriangle, Calendar } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { mockData } from '@/services/mockData';
+import { Plus, Trash2, Edit, GripVertical, AlertTriangle, Calendar } from '@radix-ui/react-icons';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Input } from '../components/ui/input';
+import { Textarea } from '../components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import { mockData } from '../services/mockData';
 
 interface Task {
   id: string;
