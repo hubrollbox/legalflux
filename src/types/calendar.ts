@@ -5,6 +5,11 @@ export type CalendarEvent = {
   end: Date;
   description?: string;
   category?: string;
+  type?: 'deadline' | 'hearing' | 'meeting' | 'other';
+  location?: string;
+  client?: string;
+  externalId?: string;
+  externalCalendarId?: string;
 };
 
 export type CategoryKey = 'case' | 'meeting' | 'deadline' | 'hearing' | 'other';

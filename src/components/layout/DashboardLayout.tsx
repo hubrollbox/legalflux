@@ -2,9 +2,9 @@
 import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import type { ReactNode } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { LOGO } from "../../assets";
+import { LOGO } from "../../../assets";
 import { Button } from "../../components/ui/button";
 import { SidebarProvider } from "../../components/ui/sidebar";
 import Sidebar from "./Sidebar";

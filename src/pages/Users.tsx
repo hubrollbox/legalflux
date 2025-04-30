@@ -1,13 +1,14 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import type { UserRole } from "@/types";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import type { User } from "../types";
-import { UserRole } from "@/types"; // Changed from type import to regular import
+import type { UserRole } from "@/types";
 import { UserPlus, Search } from "lucide-react";
 import { MOCK_USERS } from "@/services/mockData";
 import UsersTable from "@/components/users/UsersTable";

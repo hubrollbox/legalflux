@@ -12,7 +12,7 @@ export interface CalendarProvider {
   syncEvents?: (calendarId: string, events: CalendarEvent[]) => Promise<{ success: boolean; message?: string; errors?: string[] }>;
 }
 
-import type { CalendarEvent } from '@/types';
+import type { CalendarEvent } from '../types/calendar';
 
 
 

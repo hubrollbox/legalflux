@@ -7,7 +7,8 @@ export interface AuthContextType {
   error: Error | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  signUp: (email: string, password: string, userData: Partial<User>) => Promise<void>;
+  signUp: (userData: RegisterData | DetailedUserData) => Promise<void>;
+  checkEmailExists: (email: string) => Promise<boolean>;
 }
 
 export const AuthContext = createContext<AuthContextType>({

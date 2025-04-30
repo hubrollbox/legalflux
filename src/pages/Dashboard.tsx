@@ -1,29 +1,29 @@
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import DashboardLayout from "@/components/layout/DashboardLayout";
-import { Process, Document } from "@/types";
-import { getProcesses } from "@/services/processService";
-import { getDocuments } from "@/services/documentService";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { useIsMobile } from "@/hooks/use-mobile";
-import PageTransition from "@/components/PageTransition";
+import { useNavigate } from "react-router-dom"; // Correct import for v7.5.2
+import { useAuth } from "../hooks/useAuth";
+import DashboardLayout from "../components/layout/DashboardLayout";
+import { Process, Document } from "../types";
+import { getProcesses } from "../services/processService";
+import { getDocuments } from "../services/documentService";
+import { Input } from "../components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { Badge } from "../components/ui/badge";
+import { useIsMobile } from "../hooks/use-mobile";
+import PageTransition from "../components/PageTransition";
 
 // Import refactored components
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import StatisticsSection from "@/components/dashboard/StatisticsSection";
-import RecentActivity from "@/components/dashboard/RecentActivity";
-import FinancialSection from "@/components/dashboard/FinancialSection";
+import DashboardHeader from "../components/dashboard/DashboardHeader";
+import StatisticsSection from "../components/dashboard/StatisticsSection";
+import RecentActivity from "../components/dashboard/RecentActivity";
+import FinancialSection from "../components/dashboard/FinancialSection";
 
 // Import new widget components
-import DashboardWidget from "@/components/dashboard/DashboardWidget";
-import RecentDocumentsWidget from "@/components/dashboard/RecentDocumentsWidget";
-import PendingTasksWidget from "@/components/dashboard/PendingTasksWidget";
-import FinancialStatsWidget from "@/components/dashboard/FinancialStatsWidget";
-import DashboardCustomizer from "@/components/dashboard/DashboardCustomizer";
+import DashboardWidget from "../components/dashboard/DashboardWidget";
+import RecentDocumentsWidget from "../components/dashboard/RecentDocumentsWidget";
+import PendingTasksWidget from "../components/dashboard/PendingTasksWidget";
+import FinancialStatsWidget from "../components/dashboard/FinancialStatsWidget";
+import DashboardCustomizer from "../components/dashboard/DashboardCustomizer";
 
 // Import utility functions
 import { getUserRoleName, getChartData, getFinancialData, getPerformanceData, getStatisticsData } from "@/utils/dashboardUtils";

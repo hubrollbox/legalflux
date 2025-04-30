@@ -1,6 +1,7 @@
 
 import type { RecentCase, RecentTask } from "./types";
-import { PriorityLevel } from "@/types";
+import { PriorityLevel } from "./types";
+import { Case, Client, Task } from './types';
 
 // Recent cases data
 export const getRecentCases = (): RecentCase[] => [

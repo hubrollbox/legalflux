@@ -1,7 +1,7 @@
 import { calendarIntegrationService } from './calendarIntegrationService';
 // CalendarProvider import removed as it was unused
 // Remove unused CalendarProvider import
-import type { CalendarEvent } from '../types';
+import type { CalendarEvent, CategoryKey } from '../types/calendar';
 import { notifyUsers } from './notificationService';
 
 export interface ExternalCalendarConfig {
@@ -190,7 +190,7 @@ class CalendarSyncService {
 
       // Importar eventos, se configurado
       if (calendar.syncDirection === 'import' || calendar.syncDirection === 'bidirectional') {
-        const importResult = await this.importEvents(calendar, startDate, endDate);
+        const importResult = await this.importEvents(calendar);
         result.eventsImported = importResult.eventsImported || 0;
         
         if (!importResult.success && importResult.errors) {
@@ -200,7 +200,7 @@ class CalendarSyncService {
 
       // Exportar eventos, se configurado
       if (calendar.syncDirection === 'export' || calendar.syncDirection === 'bidirectional') {
-        const exportResult = await this.exportEvents(calendar, startDate, endDate);
+        const exportResult = await this.exportEvents(calendar);
         result.eventsExported = exportResult.eventsExported || 0;
         
         if (!exportResult.success && exportResult.errors) {

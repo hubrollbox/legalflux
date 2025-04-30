@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../contexts/AuthContext';
 
 import type { UserType } from '../../types/auth';
 
@@ -7,7 +7,7 @@ export const SignUpForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [userType, setUserType] = useState<UserType>('individual');
   const [error, setError] = useState('');
-  const { signUp, checkEmailExists } = useAuth();
+  const { signUp } = useAuth();
 
   const handleUserTypeSelect = (type: UserType) => {
     setUserType(type);

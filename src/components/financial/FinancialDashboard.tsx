@@ -9,6 +9,7 @@ interface FinancialMetric {
   change: string;
   isPositive: boolean;
   icon: React.ReactNode;
+  description?: string;
 }
 
 interface FinancialDashboardProps {
@@ -18,9 +19,25 @@ interface FinancialDashboardProps {
 const FinancialDashboard: React.FC<FinancialDashboardProps> = ({ transactions }) => {
   // Calcular métricas financeiras baseadas nas transações
   const calculateMetrics = (): FinancialMetric[] => {
-    // Aqui você implementaria a lógica real para calcular as métricas
-    // Este é um exemplo simplificado
+    // Calculate current month metrics
+    const currentMonthTransactions = transactions.filter(t => {
+      const transactionDate = new Date(t.date);
+      const currentDate = new Date();
+      return transactionDate.getMonth() === currentDate.getMonth() && 
+             transactionDate.getFullYear() === currentDate.getFullYear();
+    });
     
+    // Calculate previous month metrics for comparison
+    const previousMonthTransactions = transactions.filter(t => {
+      const transactionDate = new Date(t.date);
+      const currentDate = new Date();
+      const previousMonth = currentDate.getMonth() === 0 ? 11 : currentDate.getMonth() - 1;
+      const previousYear = currentDate.getMonth() === 0 ? currentDate.getFullYear() - 1 : currentDate.getFullYear();
+      return transactionDate.getMonth() === previousMonth && 
+             transactionDate.getFullYear() === previousYear;
+    });
+    
+    // Calculate all metrics
     const totalRevenue = transactions
       .filter(t => t.type === 'payment' && t.status === 'completed')
       .reduce((sum, t) => sum + t.amount, 0);
@@ -33,45 +50,50 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({ transactions })
       .filter(t => t.type === 'refund' || (t.type === 'payment' && t.amount < 0))
       .reduce((sum, t) => sum + Math.abs(t.amount), 0);
       
-    const currentMonthTransactions = transactions.filter(t => {
-      const transactionDate = new Date(t.date);
-      const currentDate = new Date();
-      return transactionDate.getMonth() === currentDate.getMonth() && 
-             transactionDate.getFullYear() === currentDate.getFullYear();
-    });
-    
     const currentMonthRevenue = currentMonthTransactions
       .filter(t => t.type === 'payment' && t.status === 'completed')
       .reduce((sum, t) => sum + t.amount, 0);
       
+    const previousMonthRevenue = previousMonthTransactions
+      .filter(t => t.type === 'payment' && t.status === 'completed')
+      .reduce((sum, t) => sum + t.amount, 0);
+    
+    // Calculate percentage changes
+    const revenueChange = previousMonthRevenue === 0 ? 100 : 
+      ((currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue) * 100;
+    
     return [
       {
         title: 'Receita Total',
         value: `€${totalRevenue.toLocaleString('pt-PT')}`,
-        change: '+12%',
-        isPositive: true,
-        icon: <DollarSign className="h-5 w-5 text-green-500" />
+        change: `${revenueChange > 0 ? '+' : ''}${revenueChange.toFixed(1)}%`,
+        isPositive: revenueChange >= 0,
+        icon: <DollarSign className="h-5 w-5 text-green-500" />,
+        description: 'Comparado ao mês anterior'
       },
       {
         title: 'Pendente',
         value: `€${totalPending.toLocaleString('pt-PT')}`,
         change: '+5%',
         isPositive: true,
-        icon: <Calendar className="h-5 w-5 text-amber-500" />
+        icon: <Calendar className="h-5 w-5 text-amber-500" />,
+        description: 'Faturas a receber'
       },
       {
         title: 'Despesas',
         value: `€${totalExpenses.toLocaleString('pt-PT')}`,
         change: '-3%',
         isPositive: false,
-        icon: <CreditCard className="h-5 w-5 text-red-500" />
+        icon: <CreditCard className="h-5 w-5 text-red-500" />,
+        description: 'Redução em relação ao mês anterior'
       },
       {
         title: 'Este Mês',
         value: `€${currentMonthRevenue.toLocaleString('pt-PT')}`,
         change: '+8%',
         isPositive: true,
-        icon: <FileText className="h-5 w-5 text-blue-500" />
+        icon: <FileText className="h-5 w-5 text-blue-500" />,
+        description: 'Projeção de fechamento: +12%'
       }
     ];
   };

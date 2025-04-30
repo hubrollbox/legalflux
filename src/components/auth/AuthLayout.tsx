@@ -1,8 +1,8 @@
 
-import React from "react";
+import * as React from "react";
 import type { ReactNode } from "react";
-import Link from "next/link";
-import Image from 'next/image';
+import { Link } from '@chakra-ui/next-js';
+import Image from "next/image";
 
 interface AuthLayoutProps {
   children: ReactNode;
