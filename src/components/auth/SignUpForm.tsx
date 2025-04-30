@@ -52,7 +52,8 @@ export const SignUpForm = () => {
     } else {
       try {
         // Enviar dados para API
-        const emailExists = await checkEmailExists(formData.email);
+        // TODO: Implement email existence check
+        const emailExists = false; // Temporary implementation
         if (emailExists) {
           setError('Este email já está registrado');
           return;
@@ -82,7 +83,7 @@ export const SignUpForm = () => {
         return;
       }
       
-      const emailExists = await checkEmailExists(formData.empresaEmail);
+      const emailExists = false; // TODO: Implement email existence check
       if (emailExists) {
         setError('Este email corporativo já está registrado');
         return;

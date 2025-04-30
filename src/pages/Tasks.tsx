@@ -7,7 +7,7 @@ import { pt } from 'date-fns/locale';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import SectionHeader from '@/components/layout/SectionHeader';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, Edit, GripVertical, AlertTriangle, Calendar } from '@radix-ui/react-icons';
+import { Plus, Trash2, Edit, GripVertical, AlertTriangle, Calendar } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';

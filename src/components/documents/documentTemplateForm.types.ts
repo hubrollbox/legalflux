@@ -1,4 +1,4 @@
-import * as z from "zod";
+import type { z } from "zod";
 
 export const documentTemplateFormSchema = z.object({
   templateId: z.string({
