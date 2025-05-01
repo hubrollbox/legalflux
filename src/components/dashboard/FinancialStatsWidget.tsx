@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { TrendingUp, TrendingDown, DollarSign, AlertCircle, CreditCard } from '@lucide/react';
 import { Card, CardContent } from '@/components/ui/card';
 import DashboardWidget from './DashboardWidget';
 
