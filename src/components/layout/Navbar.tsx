@@ -1,18 +1,17 @@
+
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
-import Image from 'next/image';
 
 const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <Image 
+          <img 
             src="/logo.png" 
             alt="Logo"
-            width={100}
-            height={50}
+            className="h-10 w-auto"
           />
           <span className="font-bold">LegalFlux</span>
         </Link>
