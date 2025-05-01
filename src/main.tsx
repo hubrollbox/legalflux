@@ -1,13 +1,14 @@
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { Workbox } from 'workbox-window';
 import { RouterProvider } from 'react-router-dom'
-import router from './router.tsx'
+import { Workbox } from 'workbox-window';
+import router from './router'
 import './index.css'
 import './styles/improved-interfaces.css'
-import AuthProvider from '@/components/auth/AuthProvider'
-import { PermissionsProvider } from '@/hooks/usePermissions'
+import { AuthProvider } from './contexts/AuthProvider'
+import { PermissionsProvider } from './hooks/usePermissions'
+import { Toaster } from './components/ui/sonner'
 
 // Register service worker
 if ('serviceWorker' in navigator) {
@@ -29,6 +30,7 @@ createRoot(document.getElementById("root")!).render(
     <AuthProvider>
       <PermissionsProvider>
         <RouterProvider router={router} />
+        <Toaster position="top-right" closeButton />
       </PermissionsProvider>
     </AuthProvider>
   </React.StrictMode>
