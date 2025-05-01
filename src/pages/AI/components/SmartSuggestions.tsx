@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '../../../components/ui/card';
+import { Button } from '../../../components/ui/button';
 import { Lightbulb, Loader2 } from 'lucide-react';
 import { useLegalSuggestions } from '../hooks/useLegalSuggestions';
 import SuggestionsList from './SuggestionsList';
-import { Message } from '../types';
+import { Message } from '../types/index';
 import { ContextualInfo } from '../hooks/useContextualAssistant';
 
 interface SmartSuggestionsProps {

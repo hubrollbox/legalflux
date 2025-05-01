@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { Shield, Zap, Users } from "lucide-react";
 import PageTransition from "../components/PageTransition";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import LandingNavbar from "@/pages/landing/components/LandingNavbar";
-import LandingFooter from "@/components/LandingFooter";
-import Image from 'next/image';
+import { Card, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import LandingNavbar from "./landing/components/LandingNavbar";
+import LandingFooter from "../components/LandingFooter";
+// Removido import de 'next/image' pois não é um projeto Next.js
 
 // Reusable StatisticCard component
 const StatisticCard = ({ percentage, description }) => (
@@ -41,7 +41,7 @@ const About = () => {
             </div>
           </div>
           <div className="rounded-lg overflow-hidden">
-            <Image 
+            <img 
               src="/img/about-mission.jpg" 
               alt="Nossa missão" 
               width={800}
@@ -123,7 +123,7 @@ const About = () => {
               </div>
             </div>
             <div className="flex justify-center">
-              <Image 
+              <img 
                 src="/img/about-cta.png" 
                 alt="App Interface" 
                 width={800}
@@ -140,11 +140,11 @@ const About = () => {
             Trabalhamos com empresas e instituições líderes para oferecer a melhor solução de gestão jurídica.
           </p>
           <div className="flex flex-wrap justify-center gap-12 items-center opacity-60">
-            <Image src="/img/partners/partner1.svg" alt="Partner 1" width={100} height={48} className="h-12" />
-            <Image src="/img/partners/partner2.svg" alt="Partner 2" width={100} height={48} className="h-12" />
-            <Image src="/img/partners/partner3.svg" alt="Partner 3" width={100} height={48} className="h-12" />
-            <Image src="/img/partners/partner4.svg" alt="Partner 4" width={100} height={48} className="h-12" />
-            <Image src="/img/partners/partner5.svg" alt="Partner 5" width={100} height={48} className="h-12" />
+            <img src="/img/partners/partner1.svg" alt="Partner 1" width={100} height={48} className="h-12" />
+            <img src="/img/partners/partner2.svg" alt="Partner 2" width={100} height={48} className="h-12" />
+            <img src="/img/partners/partner3.svg" alt="Partner 3" width={100} height={48} className="h-12" />
+            <img src="/img/partners/partner4.svg" alt="Partner 4" width={100} height={48} className="h-12" />
+            <img src="/img/partners/partner5.svg" alt="Partner 5" width={100} height={48} className="h-12" />
           </div>
         </div>
       </div>

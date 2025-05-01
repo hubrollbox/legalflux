@@ -996,6 +996,6 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
       </Tabs>
     </div>
   );
-}));
+});
 
 export default AdvancedAnalytics;
