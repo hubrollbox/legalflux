@@ -1,32 +1,37 @@
 
-import React from "react";
-import { cn } from "@/lib/utils";
+import React from 'react';
+import { cn } from '@/lib/utils';
 
-export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  src: string;
-  alt: string;
-  className?: string;
-  objectFit?: React.CSSProperties['objectFit'];
-  objectPosition?: React.CSSProperties['objectPosition'];
+interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  fallback?: string;
 }
 
-const Image = ({ src, alt, className, width, height, objectFit, objectPosition, ...props }: ImageProps) => {
-  const style = {
-    ...(objectFit && { objectFit }),
-    ...(objectPosition && { objectPosition })
-  };
+export const Image = React.forwardRef<HTMLImageElement, ImageProps>(
+  ({ className, src, alt, fallback = '/placeholder-image.png', ...props }, ref) => {
+    const [imgSrc, setImgSrc] = React.useState<string | undefined>(src);
+    const [error, setError] = React.useState(false);
 
-  return (
-    <img
-      src={src}
-      alt={alt}
-      className={cn("object-cover", className)}
-      width={width}
-      height={height}
-      style={Object.keys(style).length ? style : undefined}
-      {...props}
-    />
-  );
-};
+    React.useEffect(() => {
+      setImgSrc(src);
+      setError(false);
+    }, [src]);
 
-export { Image };
+    const handleError = () => {
+      setError(true);
+      setImgSrc(fallback);
+    };
+
+    return (
+      <img
+        ref={ref}
+        src={error ? fallback : imgSrc}
+        alt={alt || ''}
+        onError={handleError}
+        className={cn('object-cover', className)}
+        {...props}
+      />
+    );
+  }
+);
+
+Image.displayName = 'Image';
