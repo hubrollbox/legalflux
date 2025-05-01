@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Input } from "@/components/ui/input";
+import { Input } from "../components/ui/input";
 import { validateEmail } from "../utils/validation";
 import { Button } from "../components/ui/button";
 
