@@ -5,7 +5,7 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import LandingNavbar from "./landing/components/LandingNavbar";
 import LandingFooter from "../components/LandingFooter";
-// Removido import de 'next/image' pois não é um projeto Next.js
+import Image from "next/image";
 
 // Reusable StatisticCard component
 const StatisticCard = ({ percentage, description }) => (
@@ -41,7 +41,7 @@ const About = () => {
             </div>
           </div>
           <div className="rounded-lg overflow-hidden">
-            <img 
+            <Image 
               src="/img/about-mission.jpg" 
               alt="Nossa missão" 
               width={800}

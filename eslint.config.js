@@ -33,7 +33,6 @@ export default [
     rules: {
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": "error",
-      "@next/next/no-img-element": "error",
       "@typescript-eslint/no-empty-interface": "error",
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-explicit-any": "off"
