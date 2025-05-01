@@ -70,6 +70,7 @@ export default defineConfig((): UserConfig => ({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
+        globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js'],
         cleanupOutdatedCaches: true
       },
       devOptions: {
