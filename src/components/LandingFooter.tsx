@@ -1,5 +1,3 @@
-import Image from 'next/image';
-import Link from "next/link";
 import React from "react";
 
 const LandingFooter = () => {
@@ -32,7 +30,7 @@ const LandingFooter = () => {
           
           {/* ... other columns ... */}
           <a href="#" className="text-muted-foreground hover:text-foreground">
-            <Image 
+            <img 
               src="/logo.png" 
               alt="Logo"
               width={100}
@@ -40,7 +38,7 @@ const LandingFooter = () => {
             />
           </a>
           <a href="#" className="text-muted-foreground hover:text-foreground">
-            <Image 
+            <img 
               src="/google-play.svg" 
               alt="Google Play" 
               width={20}
