@@ -1,7 +1,7 @@
+
+import React from "react";
 import { Link } from "react-router-dom";
 import { Instagram, Linkedin, Mail, Phone, MapPin, Github } from "lucide-react";
-import Image from 'next/image';
-import { LOGO } from "@/assets";
 
 const LandingFooter = () => {
   return (
@@ -10,7 +10,7 @@ const LandingFooter = () => {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 lg:gap-12">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <Image src={LOGO.DEFAULT} alt="LegalFlux" width={48} height={48} className="h-12" />
+              <img src="/img/logo.svg" alt="LegalFlux" className="h-12" />
               <span className="font-bold">LegalFlux</span>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -20,13 +20,13 @@ const LandingFooter = () => {
               <h5 className="text-sm font-semibold mb-3">Disponível para:</h5>
               <div className="flex space-x-3 mt-2">
                 <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                  <Image src="/img/app-store.svg" alt="App Store" width={120} height={32} className="h-8" />
+                  <img src="/img/app-store.svg" alt="App Store" className="h-8" />
                 </a>
                 <a href="https://play.google.com" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                  <Image src="/img/google-play.svg" alt="Google Play" width={120} height={32} className="h-8" />
+                  <img src="/img/google-play.svg" alt="Google Play" className="h-8" />
                 </a>
                 <a href="https://www.microsoft.com/store/apps" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                  <Image src="/img/windows-store.svg" alt="Windows Store" width={120} height={32} className="h-8" />
+                  <img src="/img/windows-store.svg" alt="Windows Store" className="h-8" />
                 </a>
               </div>
             </div>

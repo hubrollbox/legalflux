@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -14,14 +15,6 @@ const FaqsTab = () => {
     {
       question: "Como contacto o meu advogado?",
       answer: "Use a secção de Comunicação no portal para enviar mensagens diretamente"
-    },
-    {
-      question: "Onde vejo os meus processos ativos?",
-      answer: "Todos os processos aparecem na dashboard principal do portal do cliente"
-    },
-    {
-      question: "Como posso alterar a minha senha?",
-      answer: "Aceda ao seu perfil e clique na opção 'Alterar senha'"
     }
   ];
 

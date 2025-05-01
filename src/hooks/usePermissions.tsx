@@ -1,138 +1,147 @@
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './useAuth';
-import { UserRole, Permission, RolePermission } from '../types/permissions';
+import { Permission, UserRole } from '@/types/permissions';
 
 interface PermissionsContextType {
-  hasPermission: (module: string, action?: 'create' | 'read' | 'update' | 'delete') => boolean;
-  hasRole: (role: UserRole) => boolean;
-  loading: boolean;
+  hasPermission: (module: string, action: 'create' | 'read' | 'update' | 'delete') => boolean;
+  userRole: UserRole | null;
+  permissions: Permission[];
+  isLoading: boolean;
 }
 
 const PermissionsContext = createContext<PermissionsContextType | undefined>(undefined);
 
-// Definição das permissões para cada role
-const rolePermissions: RolePermission[] = [
-  {
-    role: UserRole.ADMIN,
-    permissions: [
-      { module: '*', action: 'create' },
-      { module: '*', action: 'read' },
-      { module: '*', action: 'update' },
-      { module: '*', action: 'delete' }
-    ]
-  },
-  {
-    role: UserRole.SENIOR_LAWYER,
-    permissions: [
-      { module: 'process', action: 'create' },
-      { module: 'process', action: 'read' },
-      { module: 'process', action: 'update' },
-      { module: 'process', action: 'delete' },
-      { module: 'document', action: 'create' },
-      { module: 'document', action: 'read' },
-      { module: 'document', action: 'update' },
-      { module: 'document', action: 'delete' },
-      { module: 'client', action: 'create' },
-      { module: 'client', action: 'read' },
-      { module: 'client', action: 'update' },
-      { module: 'client', action: 'delete' },
-      { module: 'calendar', action: 'create' },
-      { module: 'calendar', action: 'read' },
-      { module: 'calendar', action: 'update' },
-      { module: 'calendar', action: 'delete' },
-      { module: 'financial', action: 'read' },
-      { module: 'lawyer', action: 'read' },
-      { module: 'assistant', action: 'create' },
-      { module: 'assistant', action: 'read' },
-      { module: 'assistant', action: 'update' },
-      { module: 'assistant', action: 'delete' }
-    ]
-  },
-  {
-    role: UserRole.LAWYER,
-    permissions: [
-      { module: 'process', action: 'create' },
-      { module: 'process', action: 'read' },
-      { module: 'process', action: 'update' },
-      { module: 'document', action: 'create' },
-      { module: 'document', action: 'read' },
-      { module: 'document', action: 'update' },
-      { module: 'client', action: 'create' },
-      { module: 'client', action: 'read' },
-      { module: 'client', action: 'update' },
-      { module: 'calendar', action: 'create' },
-      { module: 'calendar', action: 'read' },
-      { module: 'calendar', action: 'update' },
-      { module: 'financial', action: 'read' },
-      { module: 'assistant', action: 'read' }
-    ]
-  },
-  {
-    role: UserRole.ASSISTANT,
-    permissions: [
-      { module: 'process', action: 'read' },
-      { module: 'document', action: 'create' },
-      { module: 'document', action: 'read' },
-      { module: 'document', action: 'update' },
-      { module: 'client', action: 'read' },
-      { module: 'calendar', action: 'read' },
-      { module: 'calendar', action: 'update' }
-    ]
-  },
-  {
-    role: UserRole.CLIENT,
-    permissions: [
-      { module: 'process', action: 'read' },
-      { module: 'document', action: 'read' },
-      { module: 'calendar', action: 'read' },
-      { module: 'financial', action: 'read' }
-    ]
-  }
-];
-
-export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const PermissionsProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
+  // Definir o papel do usuário com base no usuário atual
+  const userRole = user?.role as UserRole || null;
+
+  // Buscar permissões com base no papel do usuário
   useEffect(() => {
-    // Simular um tempo de carregamento para verificação de permissões
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 500);
+    const fetchPermissions = async () => {
+      if (!userRole) {
+        setPermissions([]);
+        setIsLoading(false);
+        return;
+      }
+      
+      try {
+        setIsLoading(true);
+        
+        // Aqui implementaríamos a lógica real para buscar permissões da API
+        // Por enquanto, vamos usar uma implementação simulada
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Permissões simuladas baseadas no papel do usuário
+        const mockPermissions: Record<UserRole, Permission[]> = {
+          [UserRole.CLIENT]: [
+            { module: 'processes', action: 'read' },
+            { module: 'documents', action: 'read' },
+            { module: 'messages', action: 'create' },
+            { module: 'messages', action: 'read' },
+          ],
+          [UserRole.LAWYER]: [
+            { module: 'processes', action: 'create' },
+            { module: 'processes', action: 'read' },
+            { module: 'processes', action: 'update' },
+            { module: 'documents', action: 'create' },
+            { module: 'documents', action: 'read' },
+            { module: 'documents', action: 'update' },
+            { module: 'messages', action: 'create' },
+            { module: 'messages', action: 'read' },
+          ],
+          [UserRole.SENIOR_LAWYER]: [
+            { module: 'processes', action: 'create' },
+            { module: 'processes', action: 'read' },
+            { module: 'processes', action: 'update' },
+            { module: 'processes', action: 'delete' },
+            { module: 'documents', action: 'create' },
+            { module: 'documents', action: 'read' },
+            { module: 'documents', action: 'update' },
+            { module: 'documents', action: 'delete' },
+            { module: 'messages', action: 'create' },
+            { module: 'messages', action: 'read' },
+            { module: 'lawyers', action: 'read' },
+          ],
+          [UserRole.ASSISTANT]: [
+            { module: 'processes', action: 'read' },
+            { module: 'documents', action: 'read' },
+            { module: 'documents', action: 'create' },
+            { module: 'messages', action: 'create' },
+            { module: 'messages', action: 'read' },
+          ],
+          [UserRole.ADMIN]: [
+            { module: 'processes', action: 'create' },
+            { module: 'processes', action: 'read' },
+            { module: 'processes', action: 'update' },
+            { module: 'processes', action: 'delete' },
+            { module: 'documents', action: 'create' },
+            { module: 'documents', action: 'read' },
+            { module: 'documents', action: 'update' },
+            { module: 'documents', action: 'delete' },
+            { module: 'messages', action: 'create' },
+            { module: 'messages', action: 'read' },
+            { module: 'messages', action: 'delete' },
+            { module: 'lawyers', action: 'create' },
+            { module: 'lawyers', action: 'read' },
+            { module: 'lawyers', action: 'update' },
+            { module: 'lawyers', action: 'delete' },
+            { module: 'clients', action: 'create' },
+            { module: 'clients', action: 'read' },
+            { module: 'clients', action: 'update' },
+            { module: 'clients', action: 'delete' },
+            { module: 'assistants', action: 'create' },
+            { module: 'assistants', action: 'read' },
+            { module: 'assistants', action: 'update' },
+            { module: 'assistants', action: 'delete' },
+            { module: 'subscriptions', action: 'create' },
+            { module: 'subscriptions', action: 'read' },
+            { module: 'subscriptions', action: 'update' },
+            { module: 'subscriptions', action: 'delete' },
+            { module: 'system', action: 'read' },
+            { module: 'system', action: 'update' },
+          ],
+        };
+        
+        setPermissions(userRole ? mockPermissions[userRole] || [] : []);
+      } catch (error) {
+        console.error("Error fetching permissions:", error);
+        setPermissions([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPermissions();
+  }, [userRole]);
+
+  // Verificar se o usuário tem uma permissão específica
+  const hasPermission = (module: string, action: 'create' | 'read' | 'update' | 'delete') => {
+    if (!permissions.length) return false;
     
-    return () => clearTimeout(timer);
-  }, []);
-  
-  const hasPermission = (module: string, action: 'create' | 'read' | 'update' | 'delete' = 'read'): boolean => {
-    if (!user) return false;
-    
-    const userRolePermissions = rolePermissions.find(rp => rp.role === user.role);
-    if (!userRolePermissions) return false;
-    
-    return userRolePermissions.permissions.some(
-      permission => 
-        (permission.module === '*' || permission.module === module) && 
-        (permission.action === action)
+    return permissions.some(
+      (permission) => permission.module === module && permission.action === action
     );
   };
-  
-  const hasRole = (role: UserRole): boolean => {
-    if (!user) return false;
-    return user.role === role;
+
+  const value = {
+    hasPermission,
+    userRole,
+    permissions,
+    isLoading,
   };
-  
-  return (
-    <PermissionsContext.Provider value={{ hasPermission, hasRole, loading }}>
-      {children}
-    </PermissionsContext.Provider>
-  );
+
+  return <PermissionsContext.Provider value={value}>{children}</PermissionsContext.Provider>;
 };
 
-export const usePermissions = (): PermissionsContextType => {
+export const usePermissions = () => {
   const context = useContext(PermissionsContext);
   if (context === undefined) {
-    throw new Error('usePermissions must be used within a PermissionsProvider');
+    throw new Error('usePermissions deve ser usado dentro de um PermissionsProvider');
   }
   return context;
 };

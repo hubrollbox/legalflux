@@ -1,30 +1,18 @@
 
-import * as React from "react";
-// Remove this line:
-// import type { ReactNode } from "react";
+import React from 'react';
 
 interface SectionHeaderProps {
   title: string;
   description?: string;
-  className?: string;
-  children?: React.ReactNode;
 }
 
-const SectionHeader: React.FC<SectionHeaderProps> = ({
-  title,
-  description,
-  className = "",
-  children,
-}) => {
+const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description }) => {
   return (
-    <div className={`flex justify-between items-center mb-6 ${className}`}>
-      <div>
-        <h2 className="text-2xl font-semibold">{title}</h2>
-        {description && (
-          <p className="text-muted-foreground">{description}</p>
-        )}
-      </div>
-      {children && <div>{children}</div>}
+    <div className="mb-6">
+      <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+      {description && (
+        <p className="text-muted-foreground mt-1">{description}</p>
+      )}
     </div>
   );
 };
