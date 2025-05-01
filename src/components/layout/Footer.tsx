@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Linkedin, Twitter } from '@lucide/react';
+// import { Facebook, Instagram, Linkedin, Twitter } from '@lucide/react';
 // Remover: import Image from 'next/image';
 
 export const Footer = () => {
@@ -49,18 +49,6 @@ export const Footer = () => {
               4450-075 Matosinhos - Portugal
             </address>
             <div className="flex space-x-4 mt-4">
-              <a href="https://www.facebook.com" className="text-muted-foreground hover:text-foreground">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="https://www.instagram.com" className="text-muted-foreground hover:text-foreground">
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a href="https://www.twitter.com" className="text-muted-foreground hover:text-foreground">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="https://www.linkedin.com" className="text-muted-foreground hover:text-foreground">
-                <Linkedin className="h-5 w-5" />
-              </a>
               <a href="/img/app-store.svg" className="text-muted-foreground hover:text-foreground">
                 <img src="/img/app-store.svg" alt="App Store" width={20} height={20} className="h-5 w-5" />
               </a>
