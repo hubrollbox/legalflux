@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useRouter } from 'next/router';
+import { useNavigate } from 'react-router-dom';
 import { validateEmail, validatePassword, validateNIF } from '@/utils/validation';
 
 // This is the form component that handles the multi-step registration process
 const RegisterForm = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [error, setError] = useState<string>('');
   

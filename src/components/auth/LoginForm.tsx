@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { validateEmail, validatePassword, getErrorMessage } from '@/utils/utils';
 import { Button } from '@/components/ui/button';
@@ -14,7 +13,7 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { login, getRedirectPath } = useAuth();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +35,7 @@ const LoginForm = () => {
     try {
       await login(email, password);
       const redirectPath = getRedirectPath();
-      router.push(redirectPath); // Use router.push for navigation
+      navigate(redirectPath); // Use navigate para navegação
     } catch (error) {
       setErrorMessage(getErrorMessage("loginError"));
     } finally {
@@ -63,37 +62,24 @@ const LoginForm = () => {
         />
       </div>
       <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="password">Palavra-passe</Label>
-          <Link href="/forgot-password">
-            <a className="text-sm text-primary hover:text-highlight">
-              Esqueceu a palavra-passe?
-            </a>
-          </Link>
-        </div>
+        <Label htmlFor="password">Senha</Label>
         <Input
           id="password"
           type="password"
-          placeholder="••••••••"
+          placeholder="Sua senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
       </div>
-      <Button
-        type="submit"
-        className="w-full bg-primary hover:bg-primary/90"
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            A entrar...
-          </>
-        ) : (
-          "Entrar"
-        )}
+      <Button type="submit" className="w-full" disabled={isLoading}>
+        {isLoading ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : null}
+        Entrar
       </Button>
+      <div className="text-center text-sm mt-2">
+        Não tem uma conta?{' '}
+        <Link to="/register" className="text-blue-600 hover:underline">Cadastre-se</Link>
+      </div>
     </form>
   );
 };

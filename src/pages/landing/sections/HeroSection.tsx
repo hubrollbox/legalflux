@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import Image from 'next/image';
+// Remover: import Image from 'next/image';
 
 const HeroSection = () => {
   return (

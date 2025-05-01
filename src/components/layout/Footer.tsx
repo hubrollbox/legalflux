@@ -1,6 +1,6 @@
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
-import Image from 'next/image';
+// Remover: import Image from 'next/image';
 
 export const Footer = () => {
   return (
@@ -9,7 +9,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <Image 
+              <img 
                 src="/logo.png" 
                 alt="Company Logo"
                 width={120}
@@ -25,20 +25,20 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">Produto</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/features" className="text-muted-foreground hover:text-foreground">Recursos</Link></li>
-              <li><Link href="/subscriptions" className="text-muted-foreground hover:text-foreground">Preços</Link></li>
-              <li><Link href="/about" className="text-muted-foreground hover:text-foreground">Sobre</Link></li>
+              <li><Link to="/features" className="text-muted-foreground hover:text-foreground">Recursos</Link></li>
+              <li><Link to="/subscriptions" className="text-muted-foreground hover:text-foreground">Preços</Link></li>
+              <li><Link to="/about" className="text-muted-foreground hover:text-foreground">Sobre</Link></li>
             </ul>
           </div>
 
           <div>
             <h3 className="font-semibold mb-4">Central de Ajuda</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/help/docs" className="text-muted-foreground hover:text-foreground">Documentação</Link></li>
-              <li><Link href="/help/faqs" className="text-muted-foreground hover:text-foreground">FAQs</Link></li>
-              <li><Link href="/help/screenshots" className="text-muted-foreground hover:text-foreground">Screenshots</Link></li>
-              <li><Link href="/help/support" className="text-muted-foreground hover:text-foreground">Suporte</Link></li>
-              <li><Link href="/help/tutorials" className="text-muted-foreground hover:text-foreground">Tutoriais</Link></li>
+              <li><Link to="/help/docs" className="text-muted-foreground hover:text-foreground">Documentação</Link></li>
+              <li><Link to="/help/faqs" className="text-muted-foreground hover:text-foreground">FAQs</Link></li>
+              <li><Link to="/help/screenshots" className="text-muted-foreground hover:text-foreground">Screenshots</Link></li>
+              <li><Link to="/help/support" className="text-muted-foreground hover:text-foreground">Suporte</Link></li>
+              <li><Link to="/help/tutorials" className="text-muted-foreground hover:text-foreground">Tutoriais</Link></li>
             </ul>
           </div>
 
@@ -62,19 +62,22 @@ export const Footer = () => {
                 <Linkedin className="h-5 w-5" />
               </a>
               <a href="/img/app-store.svg" className="text-muted-foreground hover:text-foreground">
-                <Image src="/img/app-store.svg" alt="App Store" width={20} height={20} className="h-5 w-5" />
+                <img src="/img/app-store.svg" alt="App Store" width={20} height={20} className="h-5 w-5" />
               </a>
               <a href="/img/google-play.svg" className="text-muted-foreground hover:text-foreground">
-                <Image src="/img/google-play.svg" alt="Google Play" width={20} height={20} className="h-5 w-5" />
+                <img src="/img/google-play.svg" alt="Google Play" width={20} height={20} className="h-5 w-5" />
               </a>
               <a href="/img/windows-store.svg" className="text-muted-foreground hover:text-foreground">
-                <Image src="/img/windows-store.svg" alt="Windows Store" width={20} height={20} className="h-5 w-5" />
+                <img src="/img/windows-store.svg" alt="Windows Store" width={20} height={20} className="h-5 w-5" />
               </a>
             </div>
           </div>
         </div>
+        <div className="mt-8 text-center text-xs text-muted-foreground">
+          &copy; {new Date().getFullYear()} LegalFlux. Todos os direitos reservados.
+        </div>
       </div>
     </footer>
   );
-}
+};
 export default Footer;

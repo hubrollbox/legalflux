@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import React, { useEffect, useState } from "react";
-import Image from 'next/image';
+// Remover: import Image from 'next/image';
 import { getFileIcon, formatDate } from './documentCardUtils';
 
 interface DocumentCardProps {
@@ -131,7 +131,7 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ doc }) => {
         </div>
         {doc.preview && (
           <div className="relative aspect-video rounded-md overflow-hidden mb-3 bg-muted">
-            <Image 
+            <img 
               src={doc.fileUrl} 
               alt={doc.name}
               width={500}
