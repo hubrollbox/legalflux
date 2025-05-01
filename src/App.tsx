@@ -1,36 +1,20 @@
 
-import { Toaster } from "./components/ui/toaster";
-import { Toaster as Sonner } from "./components/ui/sonner";
-import { TooltipProvider } from "./components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import AuthProvider from "./components/auth/AuthProvider";
-import { PermissionsProvider } from "./hooks/usePermissions";
-import LandingPage from "./pages/landing";
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthProvider';
+import AppRoutes from './routes/AppRoutes';
+import { Toaster } from '@/components/ui/sonner';
+import './App.css';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
-      staleTime: 5 * 60 * 1000,
-    },
-  },
-});
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <PermissionsProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          {/* Next.js file-based routing automatically handles these pages */}
-          <LandingPage />
-
-        </TooltipProvider>
-      </PermissionsProvider>
-    </AuthProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+        <Toaster position="top-right" closeButton />
+      </AuthProvider>
+    </BrowserRouter>
+  );
+};
 
 export default App;
