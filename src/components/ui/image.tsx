@@ -1,7 +1,8 @@
-import NextImage, { ImageProps as NextImageProps } from "next/image";
-import { cn } from "./utils";
 
-export interface ImageProps extends Omit<NextImageProps, "src" | "alt"> {
+import React from "react";
+import { cn } from "@/lib/utils";
+
+export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   alt: string;
   className?: string;
@@ -16,7 +17,7 @@ const Image = ({ src, alt, className, width, height, objectFit, objectPosition, 
   };
 
   return (
-    <NextImage
+    <img
       src={src}
       alt={alt}
       className={cn("object-cover", className)}

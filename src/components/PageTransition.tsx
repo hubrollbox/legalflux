@@ -1,5 +1,5 @@
+
 import { type FC, type ReactNode } from 'react';
-import { motion } from 'framer-motion';
 
 interface PageTransitionProps {
   children: ReactNode;
@@ -14,55 +14,31 @@ const PageTransition: FC<PageTransitionProps> = ({
   delay = 0, 
   direction = 'none' 
 }) => {
-  const getAnimations = () => {
-    const distance = 30;
-    
+  const getAnimationClass = () => {
     switch (direction) {
       case 'up':
-        return {
-          initial: { opacity: 0, y: distance },
-          animate: { opacity: 1, y: 0 },
-          exit: { opacity: 0, y: -distance }
-        };
+        return 'animate-fade-up';
       case 'down':
-        return {
-          initial: { opacity: 0, y: -distance },
-          animate: { opacity: 1, y: 0 },
-          exit: { opacity: 0, y: distance }
-        };
+        return 'animate-fade-down';
       case 'left':
-        return {
-          initial: { opacity: 0, x: distance },
-          animate: { opacity: 1, x: 0 },
-          exit: { opacity: 0, x: -distance }
-        };
+        return 'animate-fade-left';
       case 'right':
-        return {
-          initial: { opacity: 0, x: -distance },
-          animate: { opacity: 1, x: 0 },
-          exit: { opacity: 0, x: distance }
-        };
+        return 'animate-fade-right';
       default:
-        return {
-          initial: { opacity: 0 },
-          animate: { opacity: 1 },
-          exit: { opacity: 0 }
-        };
+        return 'animate-fade';
     }
   };
 
-  const animations = getAnimations();
-
   return (
-    <motion.div
-      {...animations}
-      transition={{ 
-        duration, 
-        delay 
+    <div
+      className={getAnimationClass()}
+      style={{
+        animationDuration: `${duration}s`,
+        animationDelay: `${delay}s`
       }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 };
 

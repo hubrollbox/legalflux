@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const LandingFooter = () => {
   return (
@@ -11,19 +12,19 @@ const LandingFooter = () => {
             <h3 className="text-lg font-semibold mb-4">Central de Ajuda</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/central-de-ajuda/docs" className="hover:text-primary">Documentação</Link>
+                <Link to="/central-de-ajuda/docs" className="hover:text-primary">Documentação</Link>
               </li>
               <li>
-                <Link href="/central-de-ajuda/faqs" className="hover:text-primary">FAQs</Link>
+                <Link to="/central-de-ajuda/faqs" className="hover:text-primary">FAQs</Link>
               </li>
               <li>
-                <Link href="/central-de-ajuda/screenshots" className="hover:text-primary">Screenshots</Link>
+                <Link to="/central-de-ajuda/screenshots" className="hover:text-primary">Screenshots</Link>
               </li>
               <li>
-                <Link href="/central-de-ajuda/support" className="hover:text-primary">Suporte</Link>
+                <Link to="/central-de-ajuda/support" className="hover:text-primary">Suporte</Link>
               </li>
               <li>
-                <Link href="/central-de-ajuda/tutorials" className="hover:text-primary">Tutoriais</Link>
+                <Link to="/central-de-ajuda/tutorials" className="hover:text-primary">Tutoriais</Link>
               </li>
             </ul>
           </div>

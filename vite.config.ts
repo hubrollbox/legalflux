@@ -3,10 +3,11 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { VitePWA } from 'vite-plugin-pwa';
-import type { UserConfig } from 'vite'
+import { componentTagger } from "lovable-tagger";
+import type { UserConfig } from 'vite';
 
 // https://vitejs.dev/config/
-export default defineConfig((): UserConfig => ({
+export default defineConfig(({ mode }): UserConfig => ({
   server: {
     host: "::",
     port: 8080,
@@ -18,6 +19,7 @@ export default defineConfig((): UserConfig => ({
   },
   plugins: [
     react(),
+    mode === 'development' && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
@@ -86,7 +88,7 @@ export default defineConfig((): UserConfig => ({
   build: {
     outDir: "dist",
     sourcemap: true,
-    minify: "terser", // Changed to use the specific allowed value
+    minify: "terser",
     terserOptions: {
       compress: {
         drop_console: true,

@@ -1,110 +1,77 @@
 
 import { createBrowserRouter } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import LandingPage from './pages/landing/LandingPage';
+import Dashboard from './pages/Dashboard';
+import About from './pages/About';
+import Features from './pages/Features';
+import Pricing from './pages/Pricing';
 import NotFound from './pages/NotFound';
-import Processes from './pages/Processes';
-import Clients from './pages/Clients';
-import Documents from './pages/Documents';
-import Calendar from './pages/Calendar';
-import Financial from './pages/Financial';
-import UserManagement from './pages/client-portal/UserManagement';
-import ClientPortal from './pages/client-portal/ClientPortal';
-import ProcessesPage from './pages/client-portal/ProcessesPage';
-import DocumentsPage from './pages/client-portal/DocumentsPage';
-import BillingPage from './pages/client-portal/BillingPage';
-import CommunicationsPage from './pages/client-portal/CommunicationsPage';
-import ProfilePage from './pages/client-portal/ProfilePage';
-
-import AuthLayout from './components/layout/AuthLayout';
-import DashboardLayout from './components/layout/DashboardLayout';
+import Support from './pages/Central de Ajuda/Support';
+import Screenshots from './pages/Central de Ajuda/Screenshots';
+import Tutorials from './pages/Central de Ajuda/Tutorials';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 const router = createBrowserRouter([
-  // Rotas públicas
   {
-    path: "/login",
-    element: <AuthLayout title="Iniciar Sessão"><Login /></AuthLayout>
+    path: '/',
+    element: <LandingPage />,
   },
   {
-    path: "/register",
-    element: <AuthLayout title="Registar Conta"><Register /></AuthLayout>
+    path: '/login',
+    element: <Login />,
   },
-  
-  // Rotas protegidas para o dashboard principal
   {
-    path: "/",
-    element: <ProtectedRoute><DashboardLayout /></ProtectedRoute>,
-    children: [
-      {
-        index: true,
-        element: <Dashboard />
-      },
-      {
-        path: "processos",
-        element: <Processes />
-      },
-      {
-        path: "clientes",
-        element: <Clients />
-      },
-      {
-        path: "documentos",
-        element: <Documents />
-      },
-      {
-        path: "calendario",
-        element: <Calendar />
-      },
-      {
-        path: "financeiro",
-        element: <Financial />
-      },
-      {
-        path: "gestao-utilizadores",
-        element: <UserManagement />
-      }
-    ]
+    path: '/register',
+    element: <Register />,
   },
-  
-  // Rotas para o portal do cliente
   {
-    path: "/portal-cliente",
-    element: <ProtectedRoute><ClientPortal /></ProtectedRoute>,
-    children: [
-      {
-        index: true,
-        element: <ProcessesPage />
-      },
-      {
-        path: "processos",
-        element: <ProcessesPage />
-      },
-      {
-        path: "documentos",
-        element: <DocumentsPage />
-      },
-      {
-        path: "faturacao",
-        element: <BillingPage />
-      },
-      {
-        path: "comunicacoes",
-        element: <CommunicationsPage />
-      },
-      {
-        path: "perfil",
-        element: <ProfilePage />
-      }
-    ]
+    path: '/forgot-password',
+    element: <ForgotPassword />,
   },
-  
-  // Rota para 404
   {
-    path: "*",
-    element: <NotFound />
-  }
+    path: '/reset-password',
+    element: <ResetPassword />,
+  },
+  {
+    path: '/dashboard',
+    element: (
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/about',
+    element: <About />,
+  },
+  {
+    path: '/features',
+    element: <Features />,
+  },
+  {
+    path: '/pricing',
+    element: <Pricing />,
+  },
+  {
+    path: '/central-de-ajuda/support',
+    element: <Support />,
+  },
+  {
+    path: '/central-de-ajuda/screenshots',
+    element: <Screenshots />,
+  },
+  {
+    path: '/central-de-ajuda/tutorials',
+    element: <Tutorials />,
+  },
+  {
+    path: '*',
+    element: <NotFound />,
+  },
 ]);
 
 export default router;
