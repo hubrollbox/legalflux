@@ -1,9 +1,9 @@
+
 import React from 'react';
-import LandingNavbar from "@/pages/landing/components/LandingNavbar";
-import LandingFooter from "@/pages/landing/components/LandingFooter";
+import LandingNavbar from "../landing/components/LandingNavbar";
+import LandingFooter from "../landing/components/LandingFooter";
 import { Container } from "@/components/ui/container";
 import { Link } from "react-router-dom";
-// Remove the Button import if it's not used elsewhere in the file
 
 const Support = () => {
   return (

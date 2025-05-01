@@ -1,144 +1,85 @@
 
-import React from "react";
-import { Link } from "react-router-dom";
-import { Instagram, Linkedin, Mail, Phone, MapPin, Github } from "lucide-react";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const LandingFooter = () => {
+const LandingFooter: React.FC = () => {
   return (
-    <footer className="bg-background border-t border-border py-6 sm:py-8 md:py-12">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 lg:gap-12">
+    <footer className="bg-gray-900 text-white py-12">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <img src="/img/logo.svg" alt="LegalFlux" className="h-12" />
-              <span className="font-bold">LegalFlux</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Sistema completo de gestão jurídica para escritórios modernos.
+            <h3 className="text-lg font-semibold mb-4">LegalFlux</h3>
+            <p className="text-gray-300 text-sm">
+              Plataforma de gestão jurídica para escritórios modernos. Simplifique seus processos, aumente sua produtividade.
             </p>
-            <div className="mt-6">
-              <h5 className="text-sm font-semibold mb-3">Disponível para:</h5>
-              <div className="flex space-x-3 mt-2">
-                <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                  <img src="/img/app-store.svg" alt="App Store" className="h-8" />
-                </a>
-                <a href="https://play.google.com" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                  <img src="/img/google-play.svg" alt="Google Play" className="h-8" />
-                </a>
-                <a href="https://www.microsoft.com/store/apps" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
-                  <img src="/img/windows-store.svg" alt="Windows Store" className="h-8" />
-                </a>
-              </div>
+            <div className="flex space-x-4 mt-4">
+              <a href="#" className="text-gray-400 hover:text-white">
+                <span className="sr-only">LinkedIn</span>
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-0.966 0-1.75-0.79-1.75-1.764s0.784-1.764 1.75-1.764 1.75 0.79 1.75 1.764-0.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white">
+                <span className="sr-only">Twitter</span>
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.054 10.054 0 01-3.127 1.184 4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                </svg>
+              </a>
             </div>
           </div>
+          
           <div>
-            <h3 className="font-semibold mb-4">Produto</h3>
-            <ul className="space-y-3">
+            <h3 className="text-lg font-semibold mb-4">Recursos</h3>
+            <ul className="space-y-2">
+              <li><Link to="/features" className="hover:text-primary">Gestão de Processos</Link></li>
+              <li><Link to="/features" className="hover:text-primary">Gestão de Documentos</Link></li>
+              <li><Link to="/features" className="hover:text-primary">Automatização</Link></li>
+              <li><Link to="/features" className="hover:text-primary">Inteligência Artificial</Link></li>
+              <li><Link to="/features" className="hover:text-primary">Portal do Cliente</Link></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Central de Ajuda</h3>
+            <ul className="space-y-2">
               <li>
-                <Link to="/about" className="text-muted-foreground hover:text-foreground">
-                  Sobre
-                </Link>
+                <Link to="/central-de-ajuda/docs" className="hover:text-primary">Documentação</Link>
               </li>
               <li>
-                <Link to="/#features" className="text-muted-foreground hover:text-foreground">
-                  Funcionalidades
-                </Link>
+                <Link to="/central-de-ajuda/faqs" className="hover:text-primary">FAQs</Link>
               </li>
               <li>
-                <Link to="/integrations" className="text-muted-foreground hover:text-foreground">
-                  Integrações
-                </Link>
+                <Link to="/central-de-ajuda/screenshots" className="hover:text-primary">Screenshots</Link>
               </li>
               <li>
-                <Link to="/subscriptions" className="text-muted-foreground hover:text-foreground">
-                  Planos
-                </Link>
+                <Link to="/central-de-ajuda/support" className="hover:text-primary">Suporte</Link>
               </li>
               <li>
-                <Link to="/security" className="text-muted-foreground hover:text-foreground">
-                  Segurança
-                </Link>
+                <Link to="/central-de-ajuda/tutorials" className="hover:text-primary">Tutoriais</Link>
               </li>
             </ul>
           </div>
+          
           <div>
-            <h3 className="font-semibold mb-4">Central de Ajuda</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link to="/central-de-ajuda?tab=faqs" className="text-muted-foreground hover:text-foreground">
-                  FAQs
-                </Link>
-              </li>
-              <li>
-                <Link to="/central-de-ajuda?tab=tutorials" className="text-muted-foreground hover:text-foreground">
-                  Tutoriais
-                </Link>
-              </li>
-              <li>
-                <Link to="/central-de-ajuda?tab=documentation" className="text-muted-foreground hover:text-foreground">
-                  Documentação
-                </Link>
-              </li>
-              <li>
-                <Link to="/central-de-ajuda?tab=screenshots" className="text-muted-foreground hover:text-foreground">
-                  Screenshots
-                </Link>
-              </li>
-              <li>
-                <Link to="/support" className="text-muted-foreground hover:text-foreground">
-                  Suporte
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-semibold mb-4">Contactos</h3>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3 text-muted-foreground">
-                <MapPin size={18} className="text-primary mt-1 flex-shrink-0" />
-                <span>Edifício Diplomata<br />
-                  4450-075 Matosinhos<br />
-                  PORTUGAL</span>
-              </li>
-              <li className="flex items-center gap-3 text-muted-foreground">
-                <Phone size={18} className="text-primary flex-shrink-0" />
-                <span>+351 220 145 169</span>
-              </li>
-              <li className="flex items-center gap-3 text-muted-foreground">
-                <Mail size={18} className="text-primary flex-shrink-0" />
-                <span>suporte@legalflux.pt</span>
-              </li>
-              <li className="mt-4 flex space-x-3">
-                <a href="https://vimeo.com/user119294787" target="_blank" rel="noopener noreferrer" aria-label="Vimeo" className="text-muted-foreground hover:text-foreground">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-                </a>
-                <a href="https://www.instagram.com/legalflux.pt/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-muted-foreground hover:text-foreground">
-                  <Instagram size={18} />
-                </a>
-                <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-muted-foreground hover:text-foreground">
-                  <Linkedin size={18} />
-                </a>
-                <a href="https://github.com/hubrollbox/legalflux" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-muted-foreground hover:text-foreground">
-                  <Github size={18} />
-                </a>
-              </li>
+            <h3 className="text-lg font-semibold mb-4">Empresa</h3>
+            <ul className="space-y-2">
+              <li><Link to="/about" className="hover:text-primary">Sobre Nós</Link></li>
+              <li><Link to="/contact" className="hover:text-primary">Contacto</Link></li>
+              <li><Link to="/blog" className="hover:text-primary">Blog</Link></li>
+              <li><Link to="/terms" className="hover:text-primary">Termos de Serviço</Link></li>
+              <li><Link to="/privacy" className="hover:text-primary">Política de Privacidade</Link></li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-border mt-6 sm:mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-muted-foreground text-center sm:text-left">
-            &copy; {new Date().getFullYear()} LegalFlux. Todos os direitos reservados.
-          </p>
-          <div className="flex flex-wrap justify-center sm:justify-end gap-4 sm:gap-6">
-            <Link to="/terms" className="text-muted-foreground hover:text-foreground">
-              Termos
-            </Link>
-            <Link to="/privacy" className="text-muted-foreground hover:text-foreground">
-              Privacidade
-            </Link>
-            <Link to="/cookies" className="text-muted-foreground hover:text-foreground">
-              Cookies
-            </Link>
+        
+        <div className="border-t border-gray-700 mt-8 pt-8 text-sm text-gray-400">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p>&copy; {new Date().getFullYear()} LegalFlux. Todos os direitos reservados.</p>
+            <div className="mt-4 md:mt-0 flex space-x-4">
+              <Link to="/terms" className="hover:text-white">Termos</Link>
+              <Link to="/privacy" className="hover:text-white">Privacidade</Link>
+              <Link to="/cookies" className="hover:text-white">Cookies</Link>
+            </div>
           </div>
         </div>
       </div>

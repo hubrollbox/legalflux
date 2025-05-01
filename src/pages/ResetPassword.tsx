@@ -1,170 +1,116 @@
 
-import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams, Link } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import AuthLayout from "@/components/auth/AuthLayout";
-import { Loader2, AlertCircle, Shield } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { isValidPassword } from "@/lib/utils";
+import React, { useState } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import AuthLayout from '../components/layout/AuthLayout';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { useAuth } from '../hooks/useAuth';
+import { AlertCircle } from 'lucide-react';
+import { isValidPassword } from '../lib/utils';
 
-const ResetPassword = () => {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+const ResetPassword: React.FC = () => {
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
-  
-  const { resetPassword } = useAuth();
+  const [success, setSuccess] = useState(false);
+  const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
-  
-  useEffect(() => {
-    if (!token) {
-      setError("Token de redefinição de senha inválido ou expirado.");
-    }
-  }, [token]);
+  const { resetPassword } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    
-    if (!token) {
-      setError("Token de redefinição de senha inválido ou expirado.");
-      return;
-    }
-    
+
+    // Validate password
     if (!isValidPassword(password)) {
-      setError("A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial.");
+      setError('A password deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, um número e um caractere especial.');
       return;
     }
-    
+
+    // Validate password match
     if (password !== confirmPassword) {
-      setError("As senhas não coincidem.");
+      setError('As passwords não coincidem.');
       return;
     }
-    
-    setIsLoading(true);
-    
+
+    setIsSubmitting(true);
     try {
+      if (!token) {
+        throw new Error('Token inválido');
+      }
       await resetPassword(token, password);
-      setIsSubmitted(true);
-      
-      // Redirect to login after 3 seconds
+      setSuccess(true);
       setTimeout(() => {
-        navigate("/login");
+        navigate('/login');
       }, 3000);
-    } catch (error) {
-      console.error("Password reset error:", error);
-      setError("Ocorreu um erro ao redefinir sua senha. Tente novamente.");
+    } catch (err) {
+      setError('Não foi possível redefinir a password. O link pode ter expirado.');
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
-  if (!token && !error) {
-    return (
-      <AuthLayout 
-        title="Redefinir Senha" 
-        subtitle="Crie uma nova senha para sua conta"
-      >
-        <div className="text-center">
-          <Loader2 className="h-10 w-10 text-primary-600 mx-auto animate-spin" />
-          <p className="mt-4">Validando o token de redefinição...</p>
-        </div>
-      </AuthLayout>
-    );
-  }
-
   return (
     <AuthLayout 
-      title="Redefinir Senha" 
-      subtitle="Crie uma nova senha para sua conta"
+      title="Redefinir Password" 
+      subtitle="Crie uma nova password para a sua conta"
     >
-      {isSubmitted ? (
-        <div className="space-y-4">
-          <Alert className="bg-green-50 border-green-100">
-            <Shield className="h-4 w-4 text-green-600" />
-            <AlertTitle className="text-green-800">Senha redefinida</AlertTitle>
-            <AlertDescription className="text-green-700">
-              Sua senha foi redefinida com sucesso. Você será redirecionado para a página de login.
-            </AlertDescription>
-          </Alert>
-          
-          <div className="text-center mt-6">
-            <Link
-              to="/login"
-              className="text-primary-600 hover:text-primary-800 font-medium"
-            >
-              Ir para login
-            </Link>
+      {success ? (
+        <div className="text-center space-y-4">
+          <div className="bg-green-100 p-4 rounded-md text-green-800">
+            <p>Password redefinida com sucesso!</p>
+            <p className="text-sm mt-2">
+              A redirecionar para a página de login...
+            </p>
           </div>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Erro</AlertTitle>
-              <AlertDescription>
-                {error}
-              </AlertDescription>
-            </Alert>
+            <div className="bg-destructive/15 p-3 rounded-md flex items-start space-x-2">
+              <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
+              <div className="text-sm text-destructive">{error}</div>
+            </div>
           )}
-          
+
           <div className="space-y-2">
-            <Label htmlFor="password">Nova Senha</Label>
+            <Label htmlFor="password">Nova Password</Label>
             <Input
               id="password"
               type="password"
-              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
               required
-              disabled={!token || isLoading}
+              minLength={8}
             />
-            <p className="text-xs text-gray-500">
-              A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial.
+            <p className="text-xs text-muted-foreground">
+              Mínimo de 8 caracteres, incluindo maiúsculas, números e símbolos.
             </p>
           </div>
-          
+
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirmar Nova Senha</Label>
+            <Label htmlFor="confirmPassword">Confirmar Password</Label>
             <Input
               id="confirmPassword"
               type="password"
-              placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="••••••••"
               required
-              disabled={!token || isLoading}
+              minLength={8}
             />
           </div>
-          
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={!token || isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Redefinindo...
-              </>
-            ) : (
-              "Redefinir Senha"
-            )}
+
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? 'A processar...' : 'Redefinir Password'}
           </Button>
-          
+
           <div className="text-center mt-4">
-            <Link
-              to="/login"
-              className="text-primary-600 hover:text-primary-800 text-sm"
-            >
-              Voltar para o login
+            <Link to="/login" className="text-sm text-primary hover:underline">
+              Voltar ao Login
             </Link>
           </div>
         </form>

@@ -1,108 +1,44 @@
 
-import React from "react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
-import { LOGO } from "@/assets";
-import { useAuth } from "@/hooks/useAuth";
-import Image from "next/image";
-// Remove duplicate Image import since we're already using @chunmincms/ui Image component
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Menu } from 'lucide-react';
 
-const LandingNavbar: React.FC = () => {
-  const { isAuthenticated, user, getRedirectPath } = useAuth();
-  const redirectPath = getRedirectPath();
-  
-  const navLinks = [
-    { title: "Funcionalidades", href: "/features" },
-    { title: "Integrações", href: "/integrations" },
-    { title: "Planos", href: "/subscriptions" },
-    { title: "Segurança", href: "/security" },
-    { title: "Suporte", href: "/support" },
-  ];
-
+const LandingNavbar = () => {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <Image
-            src={LOGO.DEFAULT}
-            alt="LegalFlux"
-            width={32}
-            height={32}
-            className="h-8 w-8"
+          <img 
+            src="/lovable-uploads/2e2650ad-d2c9-49ca-ba40-8c19627e97aa.png" 
+            alt="Logo"
+            className="h-10 w-auto"
           />
           <span className="font-bold">LegalFlux</span>
         </Link>
 
-        {/* Navigation - Desktop */}
         <div className="hidden md:flex items-center space-x-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              className="text-sm font-medium hover:text-primary"
-            >
-              {link.title}
-            </Link>
-          ))}
+          <Link to="/features" className="text-sm font-medium hover:text-primary">Recursos</Link>
+          <Link to="/pricing" className="text-sm font-medium hover:text-primary">Preços</Link>
+          <Link to="/central-de-ajuda/support" className="text-sm font-medium hover:text-primary">Suporte</Link>
+          <Link to="/about" className="text-sm font-medium hover:text-primary">Sobre</Link>
+          <Link to="/contact" className="text-sm font-medium hover:text-primary">Contato</Link>
         </div>
 
-        {/* Auth Buttons or User Menu */}
         <div className="flex items-center space-x-4">
-          {isAuthenticated ? (
-            <Link to={redirectPath}>
-              <Button>
-                {user?.role === "client" ? "Portal do Cliente" : "Dashboard"}
-              </Button>
-            </Link>
-          ) : (
-            <>
-              <Link to="/login">
-                <Button variant="ghost" size="sm">Iniciar Sessão</Button>
-              </Link>
-              <Link to="/register">
-                <Button size="sm">Registar</Button>
-              </Link>
-            </>
-          )}
-
-          {/* Mobile Menu */}
-          <div className="md:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right">
-                <nav className="flex flex-col space-y-4 mt-6">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      to={link.href}
-                      className="text-sm font-medium hover:text-primary py-2"
-                    >
-                      {link.title}
-                    </Link>
-                  ))}
-                  {!isAuthenticated && (
-                    <Link to="/login" className="text-sm font-medium py-2">
-                      Iniciar Sessão
-                    </Link>
-                  )}
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
+          <Link to="/login">
+            <Button variant="ghost" size="sm">Entrar</Button>
+          </Link>
+          <Link to="/register">
+            <Button size="sm">Começar</Button>
+          </Link>
+          <Button variant="ghost" size="icon" className="md:hidden">
+            <Menu className="h-5 w-5" />
+          </Button>
         </div>
       </div>
-    </header>
+    </nav>
   );
-}
+};
 
 export default LandingNavbar;

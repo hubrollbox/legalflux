@@ -1,18 +1,21 @@
 
-export enum UserRole {
-  CLIENT = 'client',
-  LAWYER = 'lawyer',
-  SENIOR_LAWYER = 'senior_lawyer',
-  ASSISTANT = 'assistant',
-  ADMIN = 'admin'
+export type UserRole = 'client' | 'lawyer' | 'senior_lawyer' | 'assistant' | 'admin';
+
+export interface Permission {
+  id: string;
+  name: string;
+  description: string;
+  module: string;
 }
 
-export type Permission = {
-  module: string;
-  action: 'create' | 'read' | 'update' | 'delete';
-};
+export interface RolePermission {
+  roleId: string;
+  permissionId: string;
+}
 
-export type RolePermission = {
-  role: UserRole;
+export interface Role {
+  id: string;
+  name: string;
+  description: string;
   permissions: Permission[];
-};
+}
