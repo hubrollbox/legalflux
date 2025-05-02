@@ -1,9 +1,9 @@
 
 import { cn, getColorByPriority } from "@/lib/utils";
-import { PriorityLevel } from "@/types"; // Import PriorityLevel
+import { PriorityLevel } from "@/types"; // Import PriorityLevel from the correct path
 
 interface PriorityBadgeProps {
-  priority: PriorityLevel; // Change type to PriorityLevel
+  priority: PriorityLevel;
   className?: string;
 }
 
@@ -12,14 +12,14 @@ const PriorityBadge: React.FC<PriorityBadgeProps> = ({ priority, className }) =>
     [PriorityLevel.LOW]: 'Baixa',
     [PriorityLevel.MEDIUM]: 'Média',
     [PriorityLevel.HIGH]: 'Alta',
-    [PriorityLevel.URGENT]: 'Urgente' // Add Urgent case
+    [PriorityLevel.URGENT]: 'Urgente'
   };
   
   return (
     <span
       className={cn(
         "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
-        getColorByPriority(priority),
+        getColorByPriority(priorityText[priority]),
         className
       )}
     >

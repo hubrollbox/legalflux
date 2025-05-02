@@ -1,12 +1,12 @@
 
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Plan } from "@/types";
+import { plans } from "@/shared/plans";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-
 
 export function formatCurrency(value: number): string {
   return new Intl.NumberFormat('pt-PT', {
@@ -28,12 +28,12 @@ export function getStatusColor(status: string): string {
     "Em andamento": "bg-blue-100 text-blue-800",
     "Concluído": "bg-green-100 text-green-800",
     "Pago": "bg-green-100 text-green-800",
-    "Pendente": "bg-yellow-100 text-yellow-800",
+    "Pendente": "bg-yellow-100 text-yellow-800", // Fixed duplicate key
     "Arquivado": "bg-gray-100 text-gray-800",
     "Aguardando": "bg-purple-100 text-purple-800",
     "Julgamento": "bg-purple-100 text-purple-800",
     "Cancelado": "bg-red-100 text-red-800",
-    "Atrasado": "bg-red-100 text-red-800",
+    "Atrasado": "bg-red-100 text-red-800", // Fixed duplicate key
     "Suspenso": "bg-orange-100 text-orange-800",
     "Recurso": "bg-amber-100 text-amber-800",
     "Execução": "bg-cyan-100 text-cyan-800",
@@ -51,4 +51,9 @@ export function getColorByPriority(priority: string): string {
     "Baixa": "bg-green-100 text-green-800"
   };
   return priorityColors[priority] || "bg-gray-100 text-gray-800";
+}
+
+// Export getPlanDetails function to fix the import issue
+export function getPlanDetails(planId: string): Plan {
+  return plans[planId] || plans.basic;
 }

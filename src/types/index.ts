@@ -8,6 +8,7 @@ export interface Plan {
   maxUsers?: number;
   maxStorage?: number;
   maxCases?: number;
+  priceId?: string; // Add priceId to match PlanCard component
 }
 
 export interface NavItem {
@@ -55,6 +56,7 @@ export interface MobileNavItemProps {
   href: string;
 }
 
+// Export PriorityLevel enum directly from the main types file
 export enum PriorityLevel {
   LOW = 'low',
   MEDIUM = 'medium',
