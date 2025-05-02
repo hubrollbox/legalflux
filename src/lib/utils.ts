@@ -116,3 +116,13 @@ export function getStatusColor(status: string): string {
   
   return statusColors[status] || "bg-gray-100 text-gray-800"; // Default color
 }
+
+// Função para obter a cor com base na prioridade
+export function getColorByPriority(priority: string): string {
+  const priorityColors: Record<string, string> = {
+    "Alta": "bg-red-100 text-red-800",
+    "Média": "bg-yellow-100 text-yellow-800",
+    "Baixa": "bg-green-100 text-green-800"
+  };
+  return priorityColors[priority] || "bg-gray-100 text-gray-800";
+}
