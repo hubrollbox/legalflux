@@ -1,23 +1,46 @@
 
-import { UserRole } from './permissions';
-
-export interface User {
+export interface AuthUser {
   id: string;
   email: string;
-  name?: string;
-  role: UserRole;
+  name: string;
+  role: string;
+  avatar?: string;
+  createdAt: string;
+  lastLogin?: string;
 }
 
-export interface AuthState {
-  user: User | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
+export interface LoginCredentials {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
 }
 
-export interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  signup: (email: string, password: string, name: string, role: UserRole) => Promise<void>;
-  resetPassword: (token: string, password: string) => Promise<void>;
-  forgotPassword: (email: string) => Promise<void>;
+export interface RegisterData {
+  email: string;
+  password: string;
+  name: string;
+  role?: string;
+}
+
+export interface PersonalData {
+  name: string;
+  email: string;
+  phone?: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface ProfessionalData {
+  expertise: string[];
+  licenseNumber?: string;
+  experience: number;
+  acceptTerms: boolean;
+}
+
+export interface CompanyData {
+  companyName: string;
+  taxId: string;
+  address: string;
+  postalCode: string;
+  city: string;
 }

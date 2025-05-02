@@ -1,11 +1,11 @@
 
 # Instruções de Configuração do LegalFlux
 
-Para corrigir os problemas de build, siga estas instruções:
+Para corrigir os problemas de build, siga estas instruções detalhadas:
 
-## 1. Configuração do TypeScript
+## 1. Configuração do TypeScript (CRÍTICO)
 
-Como o arquivo `tsconfig.json` é somente leitura, você precisa copiar o conteúdo de `src/tsconfig.json.temp` para o seu arquivo `tsconfig.json` para garantir que todas as configurações necessárias estejam presentes:
+Como o arquivo `tsconfig.json` é somente leitura, você precisa copiar manualmente o conteúdo de `src/tsconfig.json.temp` para o seu arquivo `tsconfig.json`, ou adicionar estas configurações essenciais ao tsconfig.json existente:
 
 ```json
 {
@@ -41,62 +41,64 @@ Como o arquivo `tsconfig.json` é somente leitura, você precisa copiar o conte�
 }
 ```
 
-Configurações críticas que foram adicionadas:
+Não prossiga sem esta configuração, pois ela é essencial para resolver os erros de importação e alias de caminho (@/).
 
-- `"allowSyntheticDefaultImports": true` - Necessário para importar React corretamente
-- `"downlevelIteration": true` - Necessário para iterar através de Sets
-- `"baseUrl": "."` e as configurações de path - Para suportar importações com `@/`
+## 2. Dependências Instaladas
 
-## 2. Dependências instaladas
+As seguintes dependências foram adicionadas ao projeto:
 
-As seguintes dependências foram instaladas para o projeto:
+- date-fns: Utilizada para formatação e manipulação de datas
+- lucide-react: Biblioteca de ícones usada no AdvancedAnalytics
+- react-hook-form: Para manipulação de formulários 
+- zod: Para validação de esquemas
+- @hookform/resolvers: Integração entre react-hook-form e zod
+- sonner: Sistema de toast/notificações
+- Componentes Radix UI: para input, select, checkbox, etc.
 
-- date-fns
-- recharts
-- react-day-picker
-- @radix-ui/react-label
-- @radix-ui/react-popover
-- @radix-ui/react-select
-- @radix-ui/react-switch
-- @radix-ui/react-tabs
+## 3. Componentes UI Criados
 
-## 3. Componentes UI criados
+Foram criados os seguintes componentes UI conforme o padrão shadcn:
 
-Foram criados os seguintes componentes UI para suportar a aplicação:
-
-- Card e variantes
-- Tabs
+- Button
+- Input
+- Textarea
+- Label
 - Select
+- Form
+- Checkbox
+- Card
+- Tabs
 - Calendar
 - Popover
 - Switch
 
-## 4. Tipos adicionados
+## 4. Utilitários e Hooks
 
-Foi criado o arquivo `src/types/index.ts` com tipos para:
+- `src/lib/utils.ts`: Contém a função `getPlanDetails` e utilitários comuns
+- `src/hooks/useAuth.tsx`: Hook para autenticação 
+- `src/hooks/usePermissions.tsx`: Hook para controle de permissões
 
-- Usuários e Papéis
-- Processos e Estados
-- Tarefas
-- Documentos
-- Transações Financeiras
-- Clientes
-- Assinaturas
+## 5. Arquivos de Tipos
 
-## 5. Utilidades adicionadas
+- `src/types/auth.ts`: Tipos para autenticação
+- `src/types/permissions.ts`: Tipos para controle de permissões
+- `src/types/index.ts`: Tipos gerais da aplicação
 
-- Adicionada a função `getPlanDetails` em `src/lib/utils.ts` para obter detalhes dos planos
-- Criado `src/utils/dashboardUtils.ts` com `getUserRoleName` e outras funções de utilidade
+## Fluxo de Resolução de Problemas
 
-## 6. Mock Data
+Se ainda enfrentar erros após estas alterações, siga este fluxo de resolução:
 
-Criado o arquivo `src/services/mockData.ts` com dados fictícios para desenvolvimento
+1. **Erros de importação (@/)**: Certifique-se que o tsconfig.json tenha a configuração de paths para os aliases
+2. **Erros de iteração em Sets**: Verifique que downlevelIteration está habilitado no tsconfig.json
+3. **Erros de importação React**: Confirme que allowSyntheticDefaultImports está ativado
+4. **Erros de componentes faltando**: Verifique se todos os arquivos de componentes foram criados
 
-## Problemas resolvidos:
+## Componentes a Implementar em Próximas Fases
 
-1. Resolvidos erros de TypeScript relacionados a importações com alias `@/`
-2. Corrigida a falta da função `getPlanDetails` no arquivo utils
-3. Corrigidos problemas na renderização de gráficos no AdvancedAnalytics
-4. Adicionados tipos para garantir consistência no código
-
-Se encontrar outros problemas, certifique-se de que todas as importações estão corretas e que os caminhos estão corretamente configurados.
+- Accordion
+- Alert
+- Avatar
+- Badge
+- Dialog
+- Dropdown Menu
+- Tooltip

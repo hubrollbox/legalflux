@@ -1,125 +1,103 @@
 
-import React, { createContext, useContext, useMemo } from 'react';
-import { useAuth, UserRole } from './useAuth';
+import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import type { Permission, UserPermission } from "@/types/permissions";
 
-// Define permission types
-export enum Permission {
-  // User management
-  ViewUsers = 'view_users',
-  CreateUser = 'create_user',
-  EditUser = 'edit_user',
-  DeleteUser = 'delete_user',
-  
-  // Process management
-  ViewAllProcesses = 'view_all_processes',
-  ViewOwnProcesses = 'view_own_processes',
-  CreateProcess = 'create_process',
-  EditProcess = 'edit_process',
-  DeleteProcess = 'delete_process',
-  AssignProcess = 'assign_process',
-  
-  // Document management
-  ViewAllDocuments = 'view_all_documents',
-  ViewOwnDocuments = 'view_own_documents',
-  CreateDocument = 'create_document',
-  EditDocument = 'edit_document',
-  DeleteDocument = 'delete_document',
-  
-  // Financial
-  ViewFinancials = 'view_financials',
-  ManageBilling = 'manage_billing',
-  
-  // Settings
-  ManageSettings = 'manage_settings',
+interface UsePermissionsReturn {
+  hasPermission: (module: string, action: Permission) => boolean;
+  userPermissions: UserPermission[];
+  isLoading: boolean;
 }
 
-type UserPermissions = Record<Permission, boolean>;
-
-interface PermissionsContextType {
-  hasPermission: (permission: Permission) => boolean;
-  userPermissions: UserPermissions;
-}
-
-const PermissionsContext = createContext<PermissionsContextType>({
-  hasPermission: () => false,
-  userPermissions: {} as UserPermissions,
-});
-
-export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ 
-  children 
-}) => {
+export const usePermissions = (): UsePermissionsReturn => {
   const { user } = useAuth();
+  const [userPermissions, setUserPermissions] = useState<UserPermission[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const userPermissions = useMemo(() => {
-    const allPermissions = Object.values(Permission).reduce(
-      (acc, permission) => ({ ...acc, [permission]: false }),
-      {} as UserPermissions
-    );
+  useEffect(() => {
+    const loadPermissions = async () => {
+      if (!user) {
+        setUserPermissions([]);
+        setIsLoading(false);
+        return;
+      }
 
-    if (!user) return allPermissions;
+      try {
+        // Em uma aplicação real, buscaríamos as permissões da API
+        // Aqui estamos simulando com permissões baseadas no role
+        let permissions: UserPermission[] = [];
 
-    // Define role-based permissions
-    const rolePermissions: Record<UserRole, Permission[]> = {
-      admin: Object.values(Permission), // Admins have all permissions
-      
-      senior_lawyer: [
-        Permission.ViewAllProcesses,
-        Permission.ViewOwnProcesses,
-        Permission.CreateProcess,
-        Permission.EditProcess,
-        Permission.DeleteProcess,
-        Permission.AssignProcess,
-        Permission.ViewAllDocuments,
-        Permission.ViewOwnDocuments,
-        Permission.CreateDocument,
-        Permission.EditDocument,
-        Permission.DeleteDocument,
-        Permission.ViewFinancials,
-        Permission.ManageBilling,
-      ],
-      
-      lawyer: [
-        Permission.ViewOwnProcesses,
-        Permission.CreateProcess,
-        Permission.EditProcess,
-        Permission.ViewOwnDocuments,
-        Permission.CreateDocument,
-        Permission.EditDocument,
-      ],
-      
-      assistant: [
-        Permission.ViewOwnProcesses,
-        Permission.ViewOwnDocuments,
-        Permission.CreateDocument,
-      ],
-      
-      client: [
-        Permission.ViewOwnProcesses,
-        Permission.ViewOwnDocuments,
-      ],
+        switch (user.role) {
+          case 'admin':
+            permissions = [
+              { module: 'users', permissions: ['create', 'read', 'update', 'delete'] },
+              { module: 'cases', permissions: ['create', 'read', 'update', 'delete'] },
+              { module: 'documents', permissions: ['create', 'read', 'update', 'delete'] },
+              { module: 'billing', permissions: ['create', 'read', 'update', 'delete'] },
+              { module: 'reports', permissions: ['create', 'read', 'update', 'delete'] },
+              { module: 'settings', permissions: ['create', 'read', 'update', 'delete'] },
+            ];
+            break;
+          case 'senior_lawyer':
+            permissions = [
+              { module: 'users', permissions: ['read'] },
+              { module: 'cases', permissions: ['create', 'read', 'update', 'delete'] },
+              { module: 'documents', permissions: ['create', 'read', 'update', 'delete'] },
+              { module: 'billing', permissions: ['read'] },
+              { module: 'reports', permissions: ['read'] },
+              { module: 'settings', permissions: ['read'] },
+            ];
+            break;
+          case 'lawyer':
+            permissions = [
+              { module: 'cases', permissions: ['create', 'read', 'update'] },
+              { module: 'documents', permissions: ['create', 'read', 'update'] },
+              { module: 'billing', permissions: ['read'] },
+            ];
+            break;
+          case 'assistant':
+            permissions = [
+              { module: 'cases', permissions: ['read'] },
+              { module: 'documents', permissions: ['create', 'read'] },
+            ];
+            break;
+          case 'client':
+            permissions = [
+              { module: 'cases', permissions: ['read'] },
+              { module: 'documents', permissions: ['read'] },
+              { module: 'billing', permissions: ['read'] },
+            ];
+            break;
+          default:
+            permissions = [];
+        }
+
+        setUserPermissions(permissions);
+      } catch (error) {
+        console.error("Erro ao carregar permissões:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    // Assign permissions based on user role
-    const permissionsForRole = rolePermissions[user.role] || [];
-    
-    return {
-      ...allPermissions,
-      ...permissionsForRole.reduce(
-        (acc, permission) => ({ ...acc, [permission]: true }),
-        {} as UserPermissions
-      ),
-    };
+    loadPermissions();
   }, [user]);
 
-  const hasPermission = (permission: Permission): boolean => {
-    return !!userPermissions[permission];
+  const hasPermission = (module: string, action: Permission): boolean => {
+    if (!user) return false;
+    
+    // Admins têm todas as permissões
+    if (user.role === 'admin') return true;
+    
+    const modulePermissions = userPermissions.find(p => p.module === module);
+    if (!modulePermissions) return false;
+    
+    return modulePermissions.permissions.includes(action);
   };
 
-  return (
-    <PermissionsContext.Provider value={{ hasPermission, userPermissions }}>
-      {children}
-    </PermissionsContext.Provider>
-  );
+  return {
+    hasPermission,
+    userPermissions,
+    isLoading
+  };
 };
-
-export const usePermissions = () => useContext(PermissionsContext);
