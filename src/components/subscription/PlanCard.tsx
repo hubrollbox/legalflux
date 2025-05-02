@@ -6,16 +6,10 @@ import { Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { Plan } from "@/types";
 
 interface PlanCardProps {
-  plan: {
-    name: string;
-    price: string;
-    description: string;
-    features: string[];
-    highlight: boolean;
-    priceId: string;
-  };
+  plan: Plan;
   isCurrentPlan?: boolean;
   publicView?: boolean;
 }
@@ -58,8 +52,8 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, isCurrentPlan = false, public
           )}
         </div>
         <div className="mt-2">
-          <span className="text-3xl font-bold">{plan.price}</span>
-          {plan.name !== "Personalizado" && <span className="text-muted-foreground">/mês</span>}
+          <span className="text-3xl font-bold">{plan.price !== null ? `${plan.price}€` : "Sob orçamento"}</span>
+          {plan.name !== "Personalizado" && plan.price !== null && <span className="text-muted-foreground">/mês</span>}
         </div>
         <CardDescription className="mt-2">{plan.description}</CardDescription>
       </CardHeader>
