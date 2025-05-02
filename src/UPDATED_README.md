@@ -1,11 +1,11 @@
 
-# LegalFlux - Plataforma de Gestão Jurídica
+# Instruções de Configuração do LegalFlux
 
-## Instruções Importantes para Configuração do Projeto
+Para corrigir os problemas de build, siga estas instruções:
 
-### 1. Configuração do TypeScript
+## 1. Configuração do TypeScript
 
-Devido às restrições do projeto, o arquivo `tsconfig.json` está marcado como somente leitura. Por favor, atualize manualmente o arquivo com o seguinte conteúdo:
+Como o arquivo `tsconfig.json` é somente leitura, você precisa copiar o conteúdo de `src/tsconfig.json.temp` para o seu arquivo `tsconfig.json` para garantir que todas as configurações necessárias estejam presentes:
 
 ```json
 {
@@ -41,38 +41,62 @@ Devido às restrições do projeto, o arquivo `tsconfig.json` está marcado como
 }
 ```
 
-### 2. Componentes faltantes
+Configurações críticas que foram adicionadas:
 
-Vários componentes e arquivos foram adicionados para resolver erros de importação:
+- `"allowSyntheticDefaultImports": true` - Necessário para importar React corretamente
+- `"downlevelIteration": true` - Necessário para iterar através de Sets
+- `"baseUrl": "."` e as configurações de path - Para suportar importações com `@/`
 
-- Componentes UI básicos (Button, Input, Label, Alert, etc.)
-- Funções de utilidade para validação
-- Funções para mock data
+## 2. Dependências instaladas
 
-### 3. Problemas Conhecidos
+As seguintes dependências foram instaladas para o projeto:
 
-- O componente `AdvancedAnalytics.tsx` possui vários erros de tipo que precisam ser resolvidos. É recomendável refatorar esse arquivo.
-- Alguns arquivos estão importando de "@/" que precisa ser configurado corretamente após a atualização do tsconfig.json.
+- date-fns
+- recharts
+- react-day-picker
+- @radix-ui/react-label
+- @radix-ui/react-popover
+- @radix-ui/react-select
+- @radix-ui/react-switch
+- @radix-ui/react-tabs
 
-### 4. Próximos Passos
+## 3. Componentes UI criados
 
-1. Atualize o tsconfig.json conforme as instruções acima
-2. Reinicie o servidor de desenvolvimento após as alterações
-3. Verifique se ainda existem erros de importação e tipos
-4. Considere refatorar componentes complexos como `AdvancedAnalytics.tsx`
+Foram criados os seguintes componentes UI para suportar a aplicação:
 
-## Dependências Principais
+- Card e variantes
+- Tabs
+- Select
+- Calendar
+- Popover
+- Switch
 
-- React Router Dom para navegação
-- Shadcn/UI para componentes de interface
-- Lucide React para ícones
-- date-fns para manipulação de datas
+## 4. Tipos adicionados
 
-## Estrutura do Projeto
+Foi criado o arquivo `src/types/index.ts` com tipos para:
 
-- `/src/components` - Componentes reutilizáveis
-- `/src/hooks` - Hooks personalizados como useAuth
-- `/src/lib` - Utilitários e funções compartilhadas
-- `/src/pages` - Páginas principais da aplicação
-- `/src/types` - Definições de tipos TypeScript
-- `/src/utils` - Funções utilitárias adicionais
+- Usuários e Papéis
+- Processos e Estados
+- Tarefas
+- Documentos
+- Transações Financeiras
+- Clientes
+- Assinaturas
+
+## 5. Utilidades adicionadas
+
+- Adicionada a função `getPlanDetails` em `src/lib/utils.ts` para obter detalhes dos planos
+- Criado `src/utils/dashboardUtils.ts` com `getUserRoleName` e outras funções de utilidade
+
+## 6. Mock Data
+
+Criado o arquivo `src/services/mockData.ts` com dados fictícios para desenvolvimento
+
+## Problemas resolvidos:
+
+1. Resolvidos erros de TypeScript relacionados a importações com alias `@/`
+2. Corrigida a falta da função `getPlanDetails` no arquivo utils
+3. Corrigidos problemas na renderização de gráficos no AdvancedAnalytics
+4. Adicionados tipos para garantir consistência no código
+
+Se encontrar outros problemas, certifique-se de que todas as importações estão corretas e que os caminhos estão corretamente configurados.

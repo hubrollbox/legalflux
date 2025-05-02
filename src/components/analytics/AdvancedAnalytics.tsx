@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,8 +30,44 @@ import {
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale/pt-BR';
 import type { DateRange } from "react-day-picker";
-import { Download, BarChart2, PieChart as PieChartIcon, TrendingUp, Calendar as CalendarIcon, Settings2, FileText } from 'lucide-react';
-import type { Case, FinancialTransaction, Task, User } from '@/types';
+import { Download, AlertCircle, BarChart2, PieChart as PieChartIcon, TrendingUp, Calendar as CalendarIcon, Settings2, FileText } from 'lucide-react';
+
+// Define necessary types
+interface Case {
+  id: string;
+  title: string;
+  description?: string;
+  status: string;
+  clientId: string;
+  assignedLawyerId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface FinancialTransaction {
+  id: string;
+  caseId: string;
+  amount: number;
+  status: string;
+  type: string;
+  description?: string;
+  createdAt: string;
+}
+
+interface Task {
+  id: string;
+  title: string;
+  assignedToId: string;
+  status: string;
+  dueDate: string;
+  createdAt: string;
+}
+
+interface User {
+  id: string;
+  name: string;
+  role: string;
+}
 
 interface ChartDataTypes {
   LawyerPerformance: {
@@ -153,21 +190,19 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
     }), [users, tasks, cases, transactions]);
     
   // Fallback para dados estáticos se não houver dados dinâmicos suficientes
-  if (lawyerPerformanceData.length === 0) {
-    lawyerPerformanceData.push(
-      { name: 'Advogado 1', processos: 12, tarefas: 45, honorarios: 15000 },
-      { name: 'Advogado 2', processos: 8, tarefas: 30, honorarios: 12000 },
-      { name: 'Advogado 3', processos: 15, tarefas: 60, honorarios: 18000 },
-      { name: 'Advogado 4', processos: 10, tarefas: 40, honorarios: 14000 },
-      { name: 'Advogado 5', processos: 7, tarefas: 25, honorarios: 9000 }
-    );
-  }
+  const finalLawyerPerformanceData = lawyerPerformanceData.length === 0 ? [
+    { name: 'Advogado 1', processos: 12, tarefas: 45, honorarios: 15000 },
+    { name: 'Advogado 2', processos: 8, tarefas: 30, honorarios: 12000 },
+    { name: 'Advogado 3', processos: 15, tarefas: 60, honorarios: 18000 },
+    { name: 'Advogado 4', processos: 10, tarefas: 40, honorarios: 14000 },
+    { name: 'Advogado 5', processos: 7, tarefas: 25, honorarios: 9000 }
+  ] : lawyerPerformanceData;
 
   // Dados para o gráfico de tipos de processos baseados nos casos reais
   const caseTypeData: ChartDataTypes['CaseType'][] = React.useMemo((): ChartDataTypes['CaseType'][] => {
     // Aqui estamos assumindo que a descrição do caso contém informações sobre o tipo
     // Em um cenário real, você teria um campo específico para o tipo de caso
-    const caseTypes = cases.reduce((acc: Record<string, number>, c) => {
+    const caseTypes: Record<string, number> = cases.reduce((acc: Record<string, number>, c) => {
       // Extraindo o tipo do caso da descrição ou usando um valor padrão
       const type = c.description?.includes('Cível') ? 'Cível' :
                   c.description?.includes('Família') ? 'Família' :
@@ -183,22 +218,20 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
     return Object.entries(caseTypes)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
-  }, [cases]); // Added cases as dependency
+  }, [cases]);
   
   
   // Fallback para dados estáticos se não houver dados dinâmicos
-  if (caseTypeData.length === 0) {
-    caseTypeData.push(
-      { name: 'Cível', value: 35 },
-      { name: 'Família', value: 25 },
-      { name: 'Trabalhista', value: 20 },
-      { name: 'Criminal', value: 10 },
-      { name: 'Tributário', value: 10 }
-    );
-  }
+  const finalCaseTypeData = caseTypeData.length === 0 ? [
+    { name: 'Cível', value: 35 },
+    { name: 'Família', value: 25 },
+    { name: 'Trabalhista', value: 20 },
+    { name: 'Criminal', value: 10 },
+    { name: 'Tributário', value: 10 }
+  ] : caseTypeData;
 
   // Dados para o gráfico de tendências de processos baseados nos casos reais
-  const caseTrendData: ChartDataTypes['CaseTrend'][] = React.useMemo(() => (() => {
+  const caseTrendData: ChartDataTypes['CaseTrend'][] = React.useMemo(() => {
     const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     const currentYear = new Date().getFullYear();
     const result: Record<string, { month: string; novos: number; concluidos: number; ativos: number }> = {};
@@ -223,7 +256,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
       const updatedMonth = months[updatedDate.getMonth()];
       
       // Verifica se o mês está nos últimos 6 meses e existe no resultado
-      if (createdMonth && typeof result[createdMonth] === 'object' && result[createdMonth] !== null) {
+      if (createdMonth && result[createdMonth]) {
         result[createdMonth].novos++;
       }
       
@@ -245,18 +278,17 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
     });
     
     return Object.values(result);
-  })());
+  }, [cases]);
+  
   // Fallback para dados estáticos se não houver dados dinâmicos
-  if (caseTrendData.length === 0) {
-    caseTrendData.push(
-      { month: 'Jan', novos: 5, concluidos: 3, ativos: 20 },
-      { month: 'Fev', novos: 7, concluidos: 4, ativos: 23 },
-      { month: 'Mar', novos: 6, concluidos: 5, ativos: 24 },
-      { month: 'Abr', novos: 9, concluidos: 7, ativos: 26 },
-      { month: 'Mai', novos: 8, concluidos: 6, ativos: 28 },
-      { month: 'Jun', novos: 11, concluidos: 8, ativos: 31 }
-    );
-  }
+  const finalCaseTrendData = caseTrendData.length === 0 ? [
+    { month: 'Jan', novos: 5, concluidos: 3, ativos: 20 },
+    { month: 'Fev', novos: 7, concluidos: 4, ativos: 23 },
+    { month: 'Mar', novos: 6, concluidos: 5, ativos: 24 },
+    { month: 'Abr', novos: 9, concluidos: 7, ativos: 26 },
+    { month: 'Mai', novos: 8, concluidos: 6, ativos: 28 },
+    { month: 'Jun', novos: 11, concluidos: 8, ativos: 31 }
+  ] : caseTrendData;
 
   // Dados para o gráfico de receitas por tipo de serviço baseados nas transações reais
   const revenueByServiceData: ChartDataTypes['RevenueByService'][] = React.useMemo((): ChartDataTypes['RevenueByService'][] => {
@@ -266,7 +298,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
     );
     
     // Categoriza as transações baseado na descrição
-    const serviceRevenue = completedInvoices.reduce((acc: Record<string, number>, t) => {
+    const serviceRevenue: Record<string, number> = completedInvoices.reduce((acc: Record<string, number>, t) => {
       const serviceType = t.description?.includes('Consultoria') ? 'Consultoria' :
                          t.description?.includes('Processo') ? 'Processos' :
                          t.description?.includes('Contrato') ? 'Contratos' :
@@ -280,21 +312,19 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
     return Object.entries(serviceRevenue)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
-  })();
+  }, [transactions]);
   
   // Fallback para dados estáticos se não houver dados dinâmicos
-  if (revenueByServiceData.length === 0) {
-    revenueByServiceData.push(
-      { name: 'Consultoria', value: 30000 },
-      { name: 'Processos', value: 45000 },
-      { name: 'Contratos', value: 25000 },
-      { name: 'Audiências', value: 20000 },
-      { name: 'Outros', value: 10000 }
-    );
-  }
+  const finalRevenueByServiceData = revenueByServiceData.length === 0 ? [
+    { name: 'Consultoria', value: 30000 },
+    { name: 'Processos', value: 45000 },
+    { name: 'Contratos', value: 25000 },
+    { name: 'Audiências', value: 20000 },
+    { name: 'Outros', value: 10000 }
+  ] : revenueByServiceData;
 
   // Dados para o gráfico de tempo médio de resolução baseados nos casos reais
-  const resolutionTimeData: ChartDataTypes['ResolutionTime'][] = (() => {
+  const resolutionTimeData: ChartDataTypes['ResolutionTime'][] = React.useMemo(() => {
     // Filtra apenas casos fechados
     const closedCases = cases.filter(c => c.status === 'closed');
     
@@ -328,23 +358,21 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
         tempo: Math.round(total / count) 
       }))
       .sort((a, b) => a.tempo - b.tempo);
-  })();
+  }, [cases]);
   
   // Fallback para dados estáticos se não houver dados dinâmicos
-  if (resolutionTimeData.length === 0) {
-    resolutionTimeData.push(
-      { tipo: 'Cível', tempo: 180 },
-      { tipo: 'Família', tempo: 120 },
-      { tipo: 'Trabalhista', tempo: 90 },
-      { tipo: 'Criminal', tempo: 240 },
-      { tipo: 'Tributário', tempo: 150 }
-    );
-  }
+  const finalResolutionTimeData = resolutionTimeData.length === 0 ? [
+    { tipo: 'Cível', tempo: 180 },
+    { tipo: 'Família', tempo: 120 },
+    { tipo: 'Trabalhista', tempo: 90 },
+    { tipo: 'Criminal', tempo: 240 },
+    { tipo: 'Tributário', tempo: 150 }
+  ] : resolutionTimeData;
 
   // Dados para o gráfico de satisfação de clientes
   // Nota: Em uma implementação real, esses dados viriam de uma API de feedback ou avaliações
   // Por enquanto, usamos dados estáticos, mas poderíamos correlacionar com os clientes reais
-  const clientSatisfactionData: ChartDataTypes['ClientSatisfaction'][] = (() => {
+  const clientSatisfactionData: ChartDataTypes['ClientSatisfaction'][] = React.useMemo(() => {
     // Se tivéssemos dados de satisfação, poderíamos processá-los aqui
     // Por exemplo, calculando a média de satisfação por mês baseada em avaliações de clientes
     
@@ -362,7 +390,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
       { month: 'Mai', satisfacao: 4.6 },
       { month: 'Jun', satisfacao: 4.5 },
     ];
-  })();
+  }, [cases]);
 
   // Cores para os gráficos
   const COLORS = React.useMemo(() => ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'], []);
@@ -493,7 +521,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <MemoizedBarChart2 className="h-5 w-5" />
+                  <BarChart2 className="h-5 w-5" />
                   Desempenho por Advogado
                 </CardTitle>
                 <CardDescription>
@@ -506,7 +534,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                     <ResponsiveContainer width="100%" height="100%">
                     {chartType === 'bar' ? (
                       <MemoizedBarChart
-                        data={lawyerPerformanceData}
+                        data={finalLawyerPerformanceData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
                       >
                         <CartesianGrid strokeDasharray="3 3" />
@@ -520,7 +548,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       </MemoizedBarChart>
                     ) : chartType === 'line' ? (
                       <MemoizedLineChart
-                        data={lawyerPerformanceData}
+                        data={finalLawyerPerformanceData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
                       >
                         <CartesianGrid strokeDasharray="3 3" />
@@ -534,7 +562,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       </MemoizedLineChart>
                     ) : (
                       <MemoizedComposedChart
-                        data={lawyerPerformanceData}
+                        data={finalLawyerPerformanceData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
                       >
                         <CartesianGrid strokeDasharray="3 3" />
@@ -568,7 +596,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                   <ErrorBoundary>
                     <ResponsiveContainer width="100%" height="100%">
                     <MemoizedBarChart
-                      data={resolutionTimeData}
+                      data={finalResolutionTimeData}
                       layout="vertical"
                       margin={{ top: 20, right: 30, left: 60, bottom: 20 }}
                     >
@@ -593,7 +621,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <MemoizedPieChartIcon className="h-5 w-5" />
+                  <PieChartIcon className="h-5 w-5" />
                   Distribuição por Tipo de Processo
                 </CardTitle>
                 <CardDescription>
@@ -604,9 +632,9 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                 <div className="h-[400px]">
                   <ErrorBoundary>
                     <ResponsiveContainer width="100%" height="100%">
-                    <MemoizedPieChart data={caseTypeData} width={400} height={300} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                    <MemoizedPieChart>
                       <Pie
-                        data={caseTypeData}
+                        data={finalCaseTypeData}
                         dataKey="value"
                         nameKey="name"
                         cx="50%"
@@ -615,11 +643,12 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         fill="#8884d8"
                         label={showLabels}
                       >
-                        {caseTypeData.map((entry, index) => (
+                        {finalCaseTypeData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
                       {showLegend && <Legend />}
+                      {showLabels && <Tooltip />}
                     </MemoizedPieChart>
                     </ResponsiveContainer>
                   </ErrorBoundary>
@@ -643,7 +672,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                     <ResponsiveContainer width="100%" height="100%">
                       {chartType === 'line' ? (
                       <MemoizedLineChart
-                        data={caseTrendData}
+                        data={finalCaseTrendData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                       >
                         <CartesianGrid strokeDasharray="3 3" />
@@ -657,7 +686,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       </MemoizedLineChart>
                     ) : chartType === 'area' ? (
                       <MemoizedAreaChart
-                        data={caseTrendData}
+                        data={finalCaseTrendData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
                       >
                         <CartesianGrid strokeDasharray="3 3" />
@@ -671,7 +700,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                       </MemoizedAreaChart>
                     ) : (
                       <MemoizedBarChart
-                        data={caseTrendData}
+                        data={finalCaseTrendData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                       >
                         <CartesianGrid strokeDasharray="3 3" />
@@ -698,7 +727,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <MemoizedPieChartIcon className="h-5 w-5" />
+                  <PieChartIcon className="h-5 w-5" />
                   Receita por Tipo de Serviço
                 </CardTitle>
                 <CardDescription>
@@ -711,7 +740,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                     <ResponsiveContainer width="100%" height="100%">
                     <MemoizedPieChart>
                       <Pie
-                        data={revenueByServiceData}
+                        data={finalRevenueByServiceData}
                         cx="50%"
                         cy="50%"
                         labelLine={false}
@@ -720,7 +749,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         fill="#8884d8"
                         dataKey="value"
                       >
-                        {revenueByServiceData.map((_, index) => (
+                        {finalRevenueByServiceData.map((_, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
@@ -736,7 +765,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <MemoizedBarChart2 className="h-5 w-5" />
+                  <BarChart2 className="h-5 w-5" />
                   Análise de Honorários por Advogado
                 </CardTitle>
                 <CardDescription>
@@ -748,7 +777,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                   <ErrorBoundary>
                     <ResponsiveContainer width="100%" height="100%">
                     <MemoizedBarChart
-                      data={lawyerPerformanceData}
+                      data={finalLawyerPerformanceData}
                       margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
@@ -810,7 +839,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <MemoizedBarChart2 className="h-5 w-5" />
+                  <BarChart2 className="h-5 w-5" />
                   Processos por Cliente
                 </CardTitle>
                 <CardDescription>

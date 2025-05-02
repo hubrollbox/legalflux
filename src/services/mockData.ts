@@ -1,76 +1,88 @@
 
-export const getRecentCases = () => {
+import { Case, Task } from "@/types";
+
+/**
+ * Get recent cases for the dashboard
+ */
+export const getRecentCases = (): Partial<Case>[] => {
   return [
     {
-      id: '1',
-      title: 'Processo 12345/2023',
-      date: new Date(2023, 6, 15),
-      client: 'João Silva',
-      status: 'ativo'
+      id: "case-1",
+      title: "Processo de Divórcio - Silva",
+      status: "in_progress",
+      priority: "high",
+      updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     },
     {
-      id: '2',
-      title: 'Processo 23456/2023',
-      date: new Date(2023, 6, 10),
-      client: 'Maria Oliveira',
-      status: 'pendente'
+      id: "case-2",
+      title: "Disputa Trabalhista - Ferreira vs. ABC Ltd",
+      status: "waiting",
+      priority: "medium",
+      updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
     },
     {
-      id: '3',
-      title: 'Processo 34567/2023',
-      date: new Date(2023, 6, 5),
-      client: 'António Santos',
-      status: 'concluído'
-    }
+      id: "case-3",
+      title: "Recuperação de Dívida - Empresa XYZ",
+      status: "open",
+      priority: "medium",
+      updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: "case-4",
+      title: "Regularização de Imóvel - Costa",
+      status: "in_progress",
+      priority: "low",
+      updatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: "case-5",
+      title: "Defesa Criminal - João Santos",
+      status: "waiting",
+      priority: "high",
+      updatedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+    },
   ];
 };
 
-export const getRecentTasks = () => {
+/**
+ * Get recent tasks for the dashboard
+ */
+export const getRecentTasks = (): Partial<Task>[] => {
   return [
     {
-      id: '1',
-      title: 'Revisão de contrato',
-      dueDate: new Date(2023, 6, 20),
-      priority: 'alta',
-      assignee: 'Manuel Costa'
+      id: "task-1",
+      title: "Preparar contestação",
+      status: "todo",
+      priority: "high",
+      dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
     },
     {
-      id: '2',
-      title: 'Preparar audiência',
-      dueDate: new Date(2023, 6, 18),
-      priority: 'alta',
-      assignee: 'Ana Ferreira'
+      id: "task-2",
+      title: "Revisar contrato de locação",
+      status: "in_progress",
+      priority: "medium",
+      dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
     },
     {
-      id: '3',
-      title: 'Submeter documentos',
-      dueDate: new Date(2023, 6, 25),
-      priority: 'média',
-      assignee: 'Carlos Rodrigues'
-    }
+      id: "task-3",
+      title: "Contatar testemunhas",
+      status: "todo",
+      priority: "medium",
+      dueDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: "task-4",
+      title: "Finalizar petição inicial",
+      status: "review",
+      priority: "high",
+      dueDate: new Date(Date.now() + 0.5 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: "task-5",
+      title: "Agendar reunião com cliente",
+      status: "todo",
+      priority: "low",
+      dueDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(),
+    },
   ];
 };
-
-export const tasks = [
-  {
-    id: '1',
-    title: 'Revisão de contrato',
-    dueDate: new Date(2023, 6, 20),
-    priority: 'alta',
-    assignee: 'Manuel Costa'
-  },
-  {
-    id: '2',
-    title: 'Preparar audiência',
-    dueDate: new Date(2023, 6, 18),
-    priority: 'alta',
-    assignee: 'Ana Ferreira'
-  },
-  {
-    id: '3',
-    title: 'Submeter documentos',
-    dueDate: new Date(2023, 6, 25),
-    priority: 'média',
-    assignee: 'Carlos Rodrigues'
-  }
-];

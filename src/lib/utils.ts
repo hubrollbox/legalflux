@@ -74,3 +74,62 @@ export const isValidPassword = (password: string): boolean => {
     /[0-9]/.test(password) && 
     /[^A-Za-z0-9]/.test(password);
 };
+
+// Add getPlanDetails function
+export const getPlanDetails = (planId: string) => {
+  const plans = {
+    basic: {
+      name: "Básico",
+      price: 49,
+      description: "Para advogados individuais com necessidades básicas de gestão.",
+      features: [
+        "Gestão de processos básica",
+        "Calendário de prazos",
+        "Portal do cliente básico",
+        "Até 50 processos",
+        "Armazenamento de 5GB"
+      ]
+    },
+    solo: {
+      name: "Solo",
+      price: 99,
+      description: "Para advogados independentes que precisam de mais recursos.",
+      features: [
+        "Tudo no plano Básico",
+        "Até 3 utilizadores",
+        "Gestão financeira",
+        "Modelos de documentos",
+        "Até 200 processos",
+        "Armazenamento de 15GB"
+      ]
+    },
+    enterprise: {
+      name: "Empresarial",
+      price: 199,
+      description: "Para escritórios com equipas e necessidades avançadas.",
+      features: [
+        "Tudo no plano Solo",
+        "Até 10 utilizadores",
+        "Relatórios avançados",
+        "Integrações com tribunais",
+        "Casos ilimitados",
+        "Armazenamento de 50GB"
+      ]
+    },
+    custom: {
+      name: "Personalizado",
+      price: null,
+      description: "Para grandes escritórios com necessidades específicas.",
+      features: [
+        "Soluções personalizadas",
+        "Utilizadores ilimitados",
+        "API dedicada e integrações personalizadas",
+        "Treinamento e suporte VIP",
+        "Armazenamento ilimitado",
+        "Implantação on-premises disponível"
+      ]
+    }
+  };
+
+  return plans[planId as keyof typeof plans] || plans.basic;
+};

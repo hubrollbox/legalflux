@@ -1,147 +1,94 @@
 
-import { UserRole } from "../hooks/useAuth";
-import { PriorityLevel } from "../types/priority-level";
+import { UserRole } from "@/types";
 
-export const getDefaultPermissions = (role: UserRole) => {
+/**
+ * Get a user-friendly name for the user role
+ */
+export const getUserRoleName = (role: UserRole): string => {
   switch (role) {
-    case UserRole.ADMIN:
-      return {
-        canCreateCase: true,
-        canEditCase: true,
-        canDeleteCase: true,
-        canAssignCase: true,
-        canViewAllCases: true,
-        canViewReports: true,
-        canManageUsers: true,
-        canAccessBilling: true,
-      };
-    case UserRole.SENIOR_LAWYER:
-      return {
-        canCreateCase: true,
-        canEditCase: true,
-        canDeleteCase: false,
-        canAssignCase: true,
-        canViewAllCases: true,
-        canViewReports: true,
-        canManageUsers: false,
-        canAccessBilling: true,
-      };
-    case UserRole.LAWYER:
-      return {
-        canCreateCase: true,
-        canEditCase: true,
-        canDeleteCase: false,
-        canAssignCase: false,
-        canViewAllCases: false,
-        canViewReports: false,
-        canManageUsers: false,
-        canAccessBilling: false,
-      };
-    case UserRole.ASSISTANT:
-      return {
-        canCreateCase: false,
-        canEditCase: true,
-        canDeleteCase: false,
-        canAssignCase: false,
-        canViewAllCases: false,
-        canViewReports: false,
-        canManageUsers: false,
-        canAccessBilling: false,
-      };
-    case UserRole.CLIENT:
-      return {
-        canCreateCase: false,
-        canEditCase: false,
-        canDeleteCase: false,
-        canAssignCase: false,
-        canViewAllCases: false,
-        canViewReports: false,
-        canManageUsers: false,
-        canAccessBilling: false,
-      };
-    default:
-      return {
-        canCreateCase: false,
-        canEditCase: false,
-        canDeleteCase: false,
-        canAssignCase: false,
-        canViewAllCases: false,
-        canViewReports: false,
-        canManageUsers: false,
-        canAccessBilling: false,
-      };
-  }
-};
-
-export const getPriorityColor = (priority: PriorityLevel) => {
-  switch (priority) {
-    case PriorityLevel.HIGH:
-      return 'bg-red-100 text-red-800';
-    case PriorityLevel.MEDIUM:
-      return 'bg-yellow-100 text-yellow-800';
-    case PriorityLevel.LOW:
-      return 'bg-green-100 text-green-800';
-    default:
-      return 'bg-gray-100 text-gray-800';
-  }
-};
-
-export function getUserRoleName(role: UserRole): string {
-  switch (role) {
-    case UserRole.ADMIN:
-      return "Administrador";
-    case UserRole.SENIOR_LAWYER:
-      return "Advogado Sénior";
-    case UserRole.LAWYER:
-      return "Advogado";
-    case UserRole.ASSISTANT:
-      return "Assistente";
     case UserRole.CLIENT:
       return "Cliente";
+    case UserRole.LAWYER:
+      return "Advogado";
+    case UserRole.SENIOR_LAWYER:
+      return "Advogado Sénior";
+    case UserRole.ASSISTANT:
+      return "Assistente";
+    case UserRole.ADMIN:
+      return "Administrador";
     default:
       return "Utilizador";
   }
-}
+};
 
-// Functions needed by Dashboard.tsx
+/**
+ * Get chart data for the dashboard
+ */
 export const getChartData = () => {
-  return [
-    { name: 'Jan', value: 400 },
-    { name: 'Fev', value: 300 },
-    { name: 'Mar', value: 600 },
-    { name: 'Abr', value: 800 },
-    { name: 'Mai', value: 500 },
-    { name: 'Jun', value: 350 },
-    { name: 'Jul', value: 670 }
-  ];
+  return {
+    casesByMonth: [
+      { month: "Jan", count: 10 },
+      { month: "Fev", count: 15 },
+      { month: "Mar", count: 8 },
+      { month: "Abr", count: 12 },
+      { month: "Mai", count: 19 },
+      { month: "Jun", count: 14 },
+    ],
+    casesByType: [
+      { type: "Cível", count: 35 },
+      { type: "Família", count: 25 },
+      { type: "Trabalhista", count: 20 },
+      { type: "Criminal", count: 10 },
+      { type: "Tributário", count: 10 },
+    ],
+  };
 };
 
+/**
+ * Get financial data for the dashboard
+ */
 export const getFinancialData = () => {
-  return [
-    { name: 'Jan', revenue: 4000, expenses: 2400 },
-    { name: 'Fev', revenue: 3000, expenses: 1398 },
-    { name: 'Mar', revenue: 2000, expenses: 9800 },
-    { name: 'Abr', revenue: 2780, expenses: 3908 },
-    { name: 'Mai', revenue: 1890, expenses: 4800 },
-    { name: 'Jun', revenue: 2390, expenses: 3800 },
-    { name: 'Jul', revenue: 3490, expenses: 4300 }
-  ];
+  return {
+    revenue: {
+      total: 35000,
+      pending: 8000,
+      overdue: 2000,
+    },
+    revenueByMonth: [
+      { month: "Jan", value: 12000 },
+      { month: "Fev", value: 15000 },
+      { month: "Mar", value: 10000 },
+      { month: "Abr", value: 18000 },
+      { month: "Mai", value: 20000 },
+      { month: "Jun", value: 17000 },
+    ],
+  };
 };
 
+/**
+ * Get performance data for the dashboard
+ */
 export const getPerformanceData = () => {
-  return [
-    { name: 'Processos', value: 78 },
-    { name: 'Audiências', value: 45 },
-    { name: 'Prazos', value: 35 },
-    { name: 'Horas', value: 122 }
-  ];
+  return {
+    completionRate: 85,
+    tasksByStatus: {
+      todo: 12,
+      inProgress: 8,
+      review: 5,
+      done: 25,
+    },
+    averageResolutionTime: 18, // in days
+  };
 };
 
+/**
+ * Get statistics data for the dashboard
+ */
 export const getStatisticsData = () => {
   return {
-    activeProcesses: 24,
-    pendingDocuments: 12,
-    completedCases: 32,
-    averageResolutionTime: 45
+    activeCases: 48,
+    pendingTasks: 25,
+    upcomingDeadlines: 7,
+    clientSatisfaction: 4.7,
   };
 };
