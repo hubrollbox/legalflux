@@ -31,25 +31,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Check, CreditCard, Calendar, Users, HardDrive, FileText, ArrowRight, AlertCircle } from 'lucide-react';
 
+import { plans } from "@/shared/plans";
+import type { Plan } from "@/types";
+
 interface PlanFeature {
   name: string;
   included: boolean;
   details?: string;
 }
 
-interface Plan {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  billingCycle: 'monthly' | 'yearly';
-  features: PlanFeature[];
-  maxUsers: number;
-  storage: string;
-  popular?: boolean;
-}
-
-const plans: Plan[] = [
+const subscriptionPlans: Plan[] = [
   {
     id: 'basic',
     name: 'Basic',
@@ -152,7 +143,7 @@ const SubscriptionManagement: React.FC = () => {
   const [isUpgradeDialogOpen, setIsUpgradeDialogOpen] = useState(false);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   
-  const currentPlan = plans.find(plan => plan.id === currentSubscription.plan);
+  const currentPlan = subscriptionPlans.find(plan => plan.id === currentSubscription.plan);
   
   return (
     <div className="container px-4 py-8 mx-auto">

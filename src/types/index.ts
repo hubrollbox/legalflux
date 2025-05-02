@@ -55,4 +55,9 @@ export interface MobileNavItemProps {
   href: string;
 }
 
-export { PriorityLevel } from "./priority-level";
+export enum PriorityLevel {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  URGENT = 'urgent'
+}

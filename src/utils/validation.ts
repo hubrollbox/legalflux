@@ -20,3 +20,5 @@ export const getErrorMessage = (errorType: string): string => {
   };
   return errorMessages[errorType] || "Ocorreu um erro.";
 };
+
+// O conteúdo atual será verificado para garantir conformidade com os requisitos

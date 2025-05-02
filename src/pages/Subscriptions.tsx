@@ -10,7 +10,9 @@ import PageTransition from "@/components/PageTransition";
 import LandingNavbar from "@/pages/landing/components/LandingNavbar";
 import LandingFooter from "@/pages/landing/components/LandingFooter";
 
-const plans = [
+import { plans } from "@/shared/plans";
+
+const subscriptionPlans = [
   {
     name: "Basic",
     price: "49€",
@@ -87,7 +89,7 @@ const Subscriptions = () => {
         </div>
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {plans.map((plan, index) => (
+          {subscriptionPlans.map((plan, index) => (
             <PlanCard
               key={index}
               plan={plan}
@@ -126,7 +128,7 @@ const Subscriptions = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-            {plans.map((plan, index) => (
+            {subscriptionPlans.map((plan, index) => (
               <PlanCard
                 key={index}
                 plan={plan}
