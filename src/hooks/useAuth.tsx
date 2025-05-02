@@ -1,8 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
-// Types for the authentication context
-export type UserRole = 'client' | 'lawyer' | 'senior_lawyer' | 'assistant' | 'admin';
+import { supabase } from '../lib/supabase-client';
+import { UserRole } from '../types/permissions';
 
 export interface User {
   id: string;
@@ -19,10 +18,19 @@ interface AuthContextType {
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  register: (userData: any) => Promise<void>;
+  register: (userData: RegisterData) => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   resetPassword: (token: string, password: string) => Promise<void>;
   getRedirectPath: () => string;
+}
+
+export interface RegisterData {
+  name: string;
+  email: string;
+  password: string;
+  nif: string;
+  role?: UserRole;
+  phone?: string;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -38,25 +46,26 @@ const AuthContext = createContext<AuthContextType>({
   getRedirectPath: () => '/',
 });
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Check if user is already logged in on mount
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        // Verificar se existe sessão no localStorage
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
           setUser(JSON.parse(storedUser));
         }
+        
+        // Verificar se existe sessão no Supabase (para futuras implementações)
+        // const { data, error } = await supabase.auth.getSession();
+        // if (data.session) { ... }
+        
       } catch (error) {
-        console.error('Authentication error:', error);
+        console.error('Erro ao verificar autenticação:', error);
       } finally {
         setIsLoading(false);
       }
@@ -70,10 +79,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setError(null);
     
     try {
-      // Mock login for development purposes
-      // In production, this would call an API endpoint
+      // Mock de login para desenvolvimento (substituir por chamada real ao Supabase no futuro)
       if (email && password) {
-        // For demo purposes only - INSECURE for production
         const mockUser: User = {
           id: '1',
           name: 'Utilizador Demo',
@@ -86,12 +93,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         
         setUser(mockUser);
         localStorage.setItem('user', JSON.stringify(mockUser));
-      } else {
-        throw new Error('Credenciais inválidas');
+        return;
       }
+      
+      throw new Error('Credenciais inválidas');
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Erro ao iniciar sessão');
-      throw error;
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao iniciar sessão';
+      setError(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -102,16 +111,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(null);
   };
 
-  const register = async (userData: any) => {
+  const register = async (userData: RegisterData) => {
     setIsLoading(true);
     setError(null);
     
     try {
-      // Mock registration
-      // Would make an API call in production
+      // Mock de registo (substituir por chamada real ao Supabase no futuro)
       const mockUser: User = {
-        id: '2',
-        name: userData.name || 'Novo Utilizador',
+        id: Date.now().toString(),
+        name: userData.name,
         email: userData.email,
         role: userData.role || 'client',
       };
@@ -119,8 +127,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(mockUser);
       localStorage.setItem('user', JSON.stringify(mockUser));
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Erro no registo');
-      throw error;
+      const errorMessage = error instanceof Error ? error.message : 'Erro no registo';
+      setError(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -131,12 +140,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setError(null);
     
     try {
-      // Mock password reset request
-      console.log(`Password reset requested for: ${email}`);
-      // Would make an API call in production
+      // Mock de pedido de recuperação de password
+      console.log(`Pedido de recuperação de password para: ${email}`);
+      // Implementação futura com Supabase
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Erro ao processar pedido');
-      throw error;
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao processar pedido';
+      setError(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -147,12 +157,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setError(null);
     
     try {
-      // Mock password reset
-      console.log(`Password reset with token: ${token}`);
-      // Would make an API call in production
+      // Mock de reposição de password
+      console.log(`Reposição de password com token: ${token}`);
+      // Implementação futura com Supabase
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Erro ao repor a senha');
-      throw error;
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao repor a password';
+      setError(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -196,4 +207,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
+  }
+  return context;
+};

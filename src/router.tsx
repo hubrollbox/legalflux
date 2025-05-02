@@ -2,20 +2,31 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 
-// Importe suas páginas
-import Login from "@/pages/Login";
-import ForgotPassword from "@/pages/ForgotPassword";
-import ResetPassword from "@/pages/ResetPassword";
-import Analytics from "@/pages/Analytics";
+// Páginas de Autenticação
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
-// Importe componentes da Central de Ajuda
-import Support from "@/pages/Central de Ajuda/Support";
-import Screenshots from "@/pages/Central de Ajuda/Screenshots";
+// Páginas da Aplicação
+import Analytics from "./pages/Analytics";
+import Dashboard from "./pages/Dashboard";
+
+// Páginas de Central de Ajuda
+import Support from "./pages/Central de Ajuda/Support";
+import Screenshots from "./pages/Central de Ajuda/Screenshots";
+
+// Páginas Landing
+import LandingPage from "./pages/landing/LandingPage";
 
 const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
   {
     path: "/forgot-password",
@@ -24,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: "/reset-password",
     element: <ResetPassword />,
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
   },
   {
     path: "/analytics",
@@ -37,10 +52,10 @@ const router = createBrowserRouter([
     path: "/central-de-ajuda/screenshots",
     element: <Screenshots />,
   },
-  // Redirecionamento para login como página padrão (temporário)
+  // Página inicial é a Landing Page
   {
     path: "/",
-    element: <Login />,
+    element: <LandingPage />,
   }
 ]);
 

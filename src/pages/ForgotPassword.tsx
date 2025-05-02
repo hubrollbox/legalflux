@@ -6,7 +6,9 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { useAuth } from '../hooks/useAuth';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { validateEmail } from '../utils/validation';
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -18,11 +20,18 @@ const ForgotPassword: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    
+    if (!email || !validateEmail(email)) {
+      setError('Por favor, forneça um email válido.');
+      return;
+    }
+    
     setIsSubmitting(true);
 
     try {
       await forgotPassword(email);
       setSuccess(true);
+      toast.success('Email enviado com sucesso!');
     } catch (err) {
       setError('Ocorreu um erro. Por favor, tente novamente.');
     } finally {
@@ -69,7 +78,12 @@ const ForgotPassword: React.FC = () => {
           </div>
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? 'A processar...' : 'Enviar Instruções'}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                A processar...
+              </>
+            ) : 'Enviar Instruções'}
           </Button>
 
           <div className="text-center mt-4">

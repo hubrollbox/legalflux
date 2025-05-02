@@ -7,6 +7,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { useAuth } from '../hooks/useAuth';
 import { AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -23,8 +24,10 @@ const Login: React.FC = () => {
 
     try {
       await login(email, password);
+      toast.success('Login realizado com sucesso!');
       navigate('/dashboard');
     } catch (err) {
+      console.error('Erro de login:', err);
       setError('Credenciais inválidas. Por favor, tente novamente.');
     } finally {
       setIsSubmitting(false);
