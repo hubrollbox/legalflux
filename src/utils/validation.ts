@@ -1,8 +1,6 @@
 
 /**
- * Validates an email address format
- * @param email Email to validate
- * @returns Boolean indicating if the email is valid
+ * Valida se um email está em formato válido
  */
 export const validateEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -10,13 +8,11 @@ export const validateEmail = (email: string): boolean => {
 };
 
 /**
- * Validates a password format
- * - At least 8 characters
- * - At least one uppercase letter
- * - At least one digit
- * - At least one special character
- * @param password Password to validate
- * @returns Boolean indicating if the password is valid
+ * Valida se uma password atende aos requisitos mínimos
+ * - Pelo menos 8 caracteres
+ * - Pelo menos uma letra maiúscula
+ * - Pelo menos um número
+ * - Pelo menos um caractere especial
  */
 export const validatePassword = (password: string): boolean => {
   return password.length >= 8 && 
@@ -26,60 +22,32 @@ export const validatePassword = (password: string): boolean => {
 };
 
 /**
- * Validates a Portuguese NIF (Número de Identificação Fiscal)
- * @param nif NIF to validate
- * @returns Boolean indicating if the NIF is valid
+ * Valida se um número de telefone está em formato válido
+ */
+export const validatePhone = (phone: string): boolean => {
+  const phoneRegex = /^(\+\d{1,3}\s?)?\(?\d{2,3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+  return phoneRegex.test(phone);
+};
+
+/**
+ * Valida se um NIF (Número de Identificação Fiscal) português é válido
  */
 export const validateNIF = (nif: string): boolean => {
-  // Remove spaces and other non-digit characters
-  const cleanNIF = nif.replace(/\D/g, '');
+  // Deve ter 9 dígitos
+  if (!/^\d{9}$/.test(nif)) return false;
   
-  // Check if it has exactly 9 digits and starts with valid digits (1, 2, 3, 5, 6, 8)
-  const validStart = /^[123568]\d{8}$/.test(cleanNIF);
+  const firstDigit = parseInt(nif.charAt(0), 10);
+  // Primeiro dígito deve ser 1, 2, 5, 6, 8 ou 9
+  if (![1, 2, 5, 6, 8, 9].includes(firstDigit)) return false;
   
-  if (!validStart) return false;
-  
-  // Calculate checksum for validation
+  // Cálculo do dígito de controle
   let sum = 0;
   for (let i = 0; i < 8; i++) {
-    sum += parseInt(cleanNIF[i]) * (9 - i);
+    sum += parseInt(nif.charAt(i), 10) * (9 - i);
   }
   
-  const controlDigit = 11 - (sum % 11);
-  const checkDigit = controlDigit >= 10 ? 0 : controlDigit;
+  let checkDigit = 11 - (sum % 11);
+  if (checkDigit >= 10) checkDigit = 0;
   
-  return checkDigit === parseInt(cleanNIF[8]);
-};
-
-/**
- * Validates a Portuguese phone number
- * @param phone Phone number to validate
- * @returns Boolean indicating if the phone number is valid
- */
-export const validatePortuguesePhone = (phone: string): boolean => {
-  // Remove spaces, hyphens, etc.
-  const cleanPhone = phone.replace(/\D/g, '');
-  
-  // Portuguese mobile numbers start with 9 and have 9 digits
-  // Portuguese landline numbers start with 2 and have 9 digits
-  return /^(9[1236]\d{7}|2\d{8})$/.test(cleanPhone);
-};
-
-/**
- * Checks if two passwords match
- * @param password Original password
- * @param confirmPassword Password confirmation
- * @returns Boolean indicating if passwords match
- */
-export const passwordsMatch = (password: string, confirmPassword: string): boolean => {
-  return password === confirmPassword;
-};
-
-/**
- * Checks if a string is empty (after trimming)
- * @param value String to check
- * @returns Boolean indicating if the string is empty
- */
-export const isEmpty = (value: string): boolean => {
-  return value.trim() === '';
+  return checkDigit === parseInt(nif.charAt(8), 10);
 };

@@ -1,67 +1,78 @@
 
-# Instruções Importantes para Configuração do TypeScript
+# LegalFlux - Plataforma de Gestão Jurídica
 
-Devido às restrições do projeto, o arquivo `tsconfig.json` está marcado como somente leitura. Por favor, atualize manualmente o arquivo com o conteúdo do arquivo `src/tsconfig.json.temp`.
+## Instruções Importantes para Configuração do Projeto
 
-## Alterações Necessárias:
+### 1. Configuração do TypeScript
 
-1. Adicionar `"allowSyntheticDefaultImports": true` às opções do compilador
-2. Adicionar `"downlevelIteration": true` às opções do compilador
-3. Adicionar mapeamento de caminhos para "@" apontar para "./src/*"
+Devido às restrições do projeto, o arquivo `tsconfig.json` está marcado como somente leitura. Por favor, atualize manualmente o arquivo com o seguinte conteúdo:
 
-Estas alterações corrigirão os problemas de importação do React e os problemas de resolução de módulos.
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
 
-## Instruções para Atualização Manual do tsconfig.json:
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
 
-1. Abra o arquivo tsconfig.json do seu projeto
-2. Adicione estas opções do compilador se elas não existirem:
-   ```json
-   "allowSyntheticDefaultImports": true,
-   "downlevelIteration": true,
-   ```
-3. Adicione mapeamento de caminhos:
-   ```json
-   "baseUrl": ".",
-   "paths": {
-     "@/*": ["./src/*"]
-   }
-   ```
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "downlevelIteration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
+```
 
-Após fazer essas alterações, reinicie o servidor de desenvolvimento e os problemas de caminho alias devem ser resolvidos.
+### 2. Componentes faltantes
 
-## Importante: Dependências
+Vários componentes e arquivos foram adicionados para resolver erros de importação:
 
-Este projeto utiliza várias dependências do shadcn/ui que devem ser instaladas. As mais importantes são:
+- Componentes UI básicos (Button, Input, Label, Alert, etc.)
+- Funções de utilidade para validação
+- Funções para mock data
 
-- @radix-ui/react-label
-- @radix-ui/react-select
-- @radix-ui/react-tabs
-- @radix-ui/react-popover
-- @radix-ui/react-switch
-- date-fns
+### 3. Problemas Conhecidos
 
-## Resolução de Problemas Comuns
+- O componente `AdvancedAnalytics.tsx` possui vários erros de tipo que precisam ser resolvidos. É recomendável refatorar esse arquivo.
+- Alguns arquivos estão importando de "@/" que precisa ser configurado corretamente após a atualização do tsconfig.json.
 
-- Se você ainda vir erros sobre importações @/, verifique se o tsconfig.json foi corretamente atualizado
-- Para erros sobre módulos não encontrados, verifique se todas as dependências necessárias foram instaladas
-- Para problemas de tipagem, verifique se você está seguindo as definições de tipo fornecidas
+### 4. Próximos Passos
 
-## Navegação do Projeto
+1. Atualize o tsconfig.json conforme as instruções acima
+2. Reinicie o servidor de desenvolvimento após as alterações
+3. Verifique se ainda existem erros de importação e tipos
+4. Considere refatorar componentes complexos como `AdvancedAnalytics.tsx`
 
-O projeto segue uma estrutura de diretórios organizada:
+## Dependências Principais
+
+- React Router Dom para navegação
+- Shadcn/UI para componentes de interface
+- Lucide React para ícones
+- date-fns para manipulação de datas
+
+## Estrutura do Projeto
+
 - `/src/components` - Componentes reutilizáveis
 - `/src/hooks` - Hooks personalizados como useAuth
 - `/src/lib` - Utilitários e funções compartilhadas
 - `/src/pages` - Páginas principais da aplicação
 - `/src/types` - Definições de tipos TypeScript
 - `/src/utils` - Funções utilitárias adicionais
-
-## Autenticação
-
-O sistema usa um hook `useAuth` personalizado que fornece:
-- Login/Logout
-- Registro de usuários
-- Redefinição de senha
-- Verificação de estado de autenticação
-
-Verifique `src/hooks/useAuth.tsx` para detalhes da implementação.
