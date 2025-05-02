@@ -111,9 +111,7 @@ export function getStatusColor(status: string): string {
     
     // Status específicos de pagamento
     "Pago": "bg-green-100 text-green-800",
-    "Parcial": "bg-amber-100 text-amber-800",
-    "Pendente": "bg-yellow-100 text-yellow-800",
-    "Atrasado": "bg-red-100 text-red-800"
+    "Parcial": "bg-amber-100 text-amber-800"
   };
   
   return statusColors[status] || "bg-gray-100 text-gray-800"; // Default color
