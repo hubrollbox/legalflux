@@ -85,3 +85,20 @@ export const getPriorityColor = (priority: PriorityLevel) => {
       return 'bg-gray-100 text-gray-800';
   }
 };
+
+export function getUserRoleName(role: UserRole): string {
+  switch (role) {
+    case UserRole.ADMIN:
+      return "Administrator";
+    case UserRole.SENIOR_LAWYER:
+      return "Senior Lawyer";
+    case UserRole.LAWYER:
+      return "Lawyer";
+    case UserRole.ASSISTANT:
+      return "Assistant";
+    case UserRole.CLIENT:
+      return "Client";
+    default:
+      return "User";
+  }
+}
