@@ -6,7 +6,7 @@
     "module": "ESNext",
     "jsx": "preserve",
     "moduleDetection": "force",
-    "types": ["vite/client", "node"],
+    "types": ["vite/client", "node", "react", "react-dom"]
     "rootDir": "./src",
     "outDir": "./dist",
     "declaration": true,
