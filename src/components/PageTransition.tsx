@@ -1,44 +1,35 @@
 
-import { type FC, type ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
+import { motion, AnimatePresence } from "framer-motion";
 
 interface PageTransitionProps {
   children: ReactNode;
-  duration?: number;
-  delay?: number;
-  direction?: 'up' | 'down' | 'left' | 'right' | 'none';
+  className?: string;
 }
 
-const PageTransition: FC<PageTransitionProps> = ({ 
+const PageTransition: React.FC<PageTransitionProps> = ({ 
   children, 
-  duration = 0.3, 
-  delay = 0, 
-  direction = 'none' 
+  className = "" 
 }) => {
-  const getAnimationClass = () => {
-    switch (direction) {
-      case 'up':
-        return 'animate-fade-up';
-      case 'down':
-        return 'animate-fade-down';
-      case 'left':
-        return 'animate-fade-left';
-      case 'right':
-        return 'animate-fade-right';
-      default:
-        return 'animate-fade';
-    }
-  };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
-    <div
-      className={getAnimationClass()}
-      style={{
-        animationDuration: `${duration}s`,
-        animationDelay: `${delay}s`
-      }}
-    >
-      {children}
-    </div>
+    <AnimatePresence mode="wait">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 20 }}
+        transition={{ 
+          duration: 0.3,
+          ease: "easeInOut" 
+        }}
+        className={className}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

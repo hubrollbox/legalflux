@@ -1,17 +1,22 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
+import Image from '@/components/ui/image';
 
 const LandingNavbar = () => {
+  const navigate = useNavigate();
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <img 
+          <Image 
             src="/lovable-uploads/2e2650ad-d2c9-49ca-ba40-8c19627e97aa.png" 
             alt="Logo"
+            width={40}
+            height={40}
             className="h-10 w-auto"
           />
           <span className="font-bold">LegalFlux</span>
@@ -26,12 +31,12 @@ const LandingNavbar = () => {
         </div>
 
         <div className="flex items-center space-x-4">
-          <Link to="/login">
-            <Button variant="ghost" size="sm">Entrar</Button>
-          </Link>
-          <Link to="/register">
-            <Button size="sm">Começar</Button>
-          </Link>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/login')}>
+            Entrar
+          </Button>
+          <Button size="sm" onClick={() => navigate('/register')}>
+            Começar
+          </Button>
           <Button variant="ghost" size="icon" className="md:hidden">
             <Menu className="h-5 w-5" />
           </Button>

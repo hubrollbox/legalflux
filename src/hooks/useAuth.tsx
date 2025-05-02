@@ -1,100 +1,62 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'lawyer' | 'assistant' | 'client';
+  role: string;
+  avatar?: string;
 }
 
 interface AuthContextType {
-  isAuthenticated: boolean;
   user: User | null;
+  isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  register: (userData: any) => Promise<void>;
-  getRedirectPath: () => string;
-  isLoading: boolean; // Add isLoading state
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false); // Initialize loading state
-
+  const [loading, setLoading] = useState(false);
+  
+  // Funções simuladas para autenticação
   const login = async (email: string, password: string) => {
-    setIsLoading(true);
+    setLoading(true);
     try {
-      // Simulação de login - em produção, isto seria uma chamada à API
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      // Aqui seria validado o login e definido o utilizador
-      setUser({
+      // Simulação de login
+      const mockUser = {
         id: '1',
-        name: 'João Silva',
+        name: 'Utilizador Teste',
         email: email,
-        role: 'lawyer'
-      });
-      setIsAuthenticated(true);
+        role: 'CLIENT',
+        avatar: '/img/avatar1.jpg'
+      };
+      setUser(mockUser);
     } catch (error) {
-      console.error('Login failed:', error);
-      throw error;
+      console.error('Erro ao fazer login:', error);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   const logout = () => {
     setUser(null);
-    setIsAuthenticated(false);
-  };
-
-  const register = async (userData: any) => {
-    setIsLoading(true);
-    try {
-      // Simulação de registo - em produção, isto seria uma chamada à API
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      console.log('Registering user:', userData);
-      
-      // Após registo bem-sucedido, faça login automático do utilizador
-      setUser({
-        id: '2',
-        name: `${userData.firstName} ${userData.lastName}`,
-        email: userData.email,
-        role: userData.role || 'client'
-      });
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.error('Registration failed:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getRedirectPath = () => {
-    if (!user) return '/login';
-    
-    switch (user.role) {
-      case 'admin':
-        return '/dashboard';
-      case 'lawyer':
-        return '/dashboard';
-      case 'assistant':
-        return '/tasks';
-      case 'client':
-        return '/client-portal';
-      default:
-        return '/dashboard';
-    }
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, register, getRedirectPath, isLoading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
+        login,
+        logout,
+        loading
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

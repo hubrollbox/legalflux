@@ -11,6 +11,9 @@ import ResetPassword from "./pages/ResetPassword";
 // Páginas da Aplicação
 import Analytics from "./pages/Analytics";
 import Dashboard from "./pages/Dashboard";
+import Features from "./pages/Features";
+import Pricing from "./pages/Pricing";
+import Integrations from "./pages/Integrations";
 
 // Páginas de Central de Ajuda
 import Support from "./pages/Central de Ajuda/Support";
@@ -43,6 +46,18 @@ const router = createBrowserRouter([
   {
     path: "/analytics",
     element: <Analytics />,
+  },
+  {
+    path: "/features",
+    element: <Features />,
+  },
+  {
+    path: "/pricing",
+    element: <Pricing />,
+  },
+  {
+    path: "/integrations",
+    element: <Integrations />,
   },
   {
     path: "/central-de-ajuda/support",
