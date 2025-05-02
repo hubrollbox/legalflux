@@ -1,46 +1,54 @@
 
-export interface AuthUser {
+export interface UserData {
   id: string;
   email: string;
-  name: string;
+  name?: string;
   role: string;
-  avatar?: string;
-  createdAt: string;
-  lastLogin?: string;
+  avatarUrl?: string;
+  createdAt?: string;
 }
 
 export interface LoginCredentials {
   email: string;
   password: string;
-  rememberMe?: boolean;
 }
 
 export interface RegisterData {
   email: string;
   password: string;
   name: string;
-  role?: string;
+  role: string;
+  companyName?: string;
+  nif?: string;
+  phone?: string;
+  address?: string;
+  acceptTerms: boolean;
 }
 
 export interface PersonalData {
   name: string;
   email: string;
-  phone?: string;
-  password: string;
-  confirmPassword: string;
-}
-
-export interface ProfessionalData {
-  expertise: string[];
-  licenseNumber?: string;
-  experience: number;
-  acceptTerms: boolean;
+  phone: string;
+  nif: string;
+  address?: string;
+  city?: string;
+  postalCode?: string;
 }
 
 export interface CompanyData {
   companyName: string;
-  taxId: string;
-  address: string;
-  postalCode: string;
-  city: string;
+  companyNIF: string;
+  companyAddress: string;
+  companyPhone: string;
+  companySize: string;
+  industry: string;
+}
+
+export interface ProfessionalData {
+  professionalTitle: string;
+  specialization: string;
+  yearsOfExperience: number;
+  barAssociation: string;
+  barNumber: string;
+  acceptTerms: boolean;
 }

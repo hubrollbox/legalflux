@@ -1,132 +1,90 @@
 
-import { useState, useEffect, createContext, useContext, ReactNode } from "react";
-import { UserRole, UserPermission } from "@/types/permissions";
+import { createContext, useContext, useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "./useAuth";
+import { Permission, DEFAULT_ROLE_PERMISSIONS } from "@/types/permissions";
 
 interface PermissionsContextType {
-  userRole: UserRole | null;
-  permissions: UserPermission[];
-  hasPermission: (module: string, permission: string) => boolean;
-  setUserRole: (role: UserRole) => void;
-  isLoading: boolean;
+  userPermissions: Permission[];
+  hasPermission: (permission: Permission) => boolean;
+  loading: boolean;
+  error: string | null;
+  fetchPermissions: () => Promise<void>;
 }
 
-const PermissionsContext = createContext<PermissionsContextType>({
-  userRole: null,
-  permissions: [],
-  hasPermission: () => false,
-  setUserRole: () => {},
-  isLoading: true
-});
+const PermissionsContext = createContext<PermissionsContextType | undefined>(undefined);
 
-export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
-  const [userRole, setUserRole] = useState<UserRole | null>(null);
-  const [permissions, setPermissions] = useState<UserPermission[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
+  const [userPermissions, setUserPermissions] = useState<Permission[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchPermissions = async () => {
-      try {
-        // Simular carregamento de permissões baseado no papel do utilizador
-        if (userRole) {
-          const userPermissions = await getPermissionsForRole(userRole);
-          setPermissions(userPermissions);
-        }
-      } catch (error) {
-        console.error("Erro ao obter permissões:", error);
-      } finally {
-        setIsLoading(false);
+  const fetchPermissions = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      if (!user) {
+        setUserPermissions([]);
+        return;
       }
-    };
 
-    if (userRole) {
-      fetchPermissions();
+      // Attempt to fetch custom permissions for the user from the permissions table
+      const { data: customPermissions, error: permissionsError } = await supabase
+        .from('permissions')
+        .select('*')
+        .eq('user_id', user.id);
+
+      if (permissionsError) {
+        console.error('Error fetching permissions:', permissionsError);
+        throw permissionsError;
+      }
+
+      if (customPermissions && customPermissions.length > 0) {
+        // User has custom permissions
+        setUserPermissions(customPermissions[0].permissions as Permission[]);
+      } else {
+        // Fall back to role-based default permissions
+        const role = user.role || 'client';
+        setUserPermissions(DEFAULT_ROLE_PERMISSIONS[role] || []);
+      }
+    } catch (err: any) {
+      console.error('Permissions fetch error:', err);
+      setError(err.message || 'Failed to load permissions');
+    } finally {
+      setLoading(false);
     }
-  }, [userRole]);
+  };
 
-  const hasPermission = (module: string, permission: string): boolean => {
-    if (!userRole) return false;
-    
-    // Administrador tem acesso total
-    if (userRole === 'admin') return true;
-    
-    const modulePermissions = permissions.find(p => p.module === module);
-    return modulePermissions ? modulePermissions.permissions.includes(permission as any) : false;
+  // When user changes, fetch updated permissions
+  useEffect(() => {
+    fetchPermissions();
+  }, [user]);
+
+  const hasPermission = (permission: Permission): boolean => {
+    return userPermissions.includes(permission) || userPermissions.includes('ADMIN_ACCESS');
+  };
+
+  const value = {
+    userPermissions,
+    hasPermission,
+    loading,
+    error,
+    fetchPermissions
   };
 
   return (
-    <PermissionsContext.Provider
-      value={{
-        userRole,
-        permissions,
-        hasPermission,
-        setUserRole,
-        isLoading
-      }}
-    >
+    <PermissionsContext.Provider value={value}>
       {children}
     </PermissionsContext.Provider>
   );
 };
 
-// Função simulada para obter permissões baseadas no papel do utilizador
-async function getPermissionsForRole(role: UserRole): Promise<UserPermission[]> {
-  // Simulação de chamada à API
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      switch (role) {
-        case 'client':
-          resolve([
-            { module: 'cases', permissions: ['read'] },
-            { module: 'documents', permissions: ['read', 'create'] },
-            { module: 'billing', permissions: ['read'] },
-            { module: 'messages', permissions: ['read', 'create'] },
-          ]);
-          break;
-        case 'lawyer':
-          resolve([
-            { module: 'cases', permissions: ['read', 'create', 'update'] },
-            { module: 'documents', permissions: ['read', 'create', 'update', 'delete'] },
-            { module: 'billing', permissions: ['read', 'create'] },
-            { module: 'messages', permissions: ['read', 'create'] },
-            { module: 'calendar', permissions: ['read', 'create', 'update'] },
-          ]);
-          break;
-        case 'senior_lawyer':
-          resolve([
-            { module: 'cases', permissions: ['read', 'create', 'update', 'delete'] },
-            { module: 'documents', permissions: ['read', 'create', 'update', 'delete'] },
-            { module: 'billing', permissions: ['read', 'create', 'update'] },
-            { module: 'messages', permissions: ['read', 'create'] },
-            { module: 'calendar', permissions: ['read', 'create', 'update', 'delete'] },
-            { module: 'users', permissions: ['read', 'update'] },
-          ]);
-          break;
-        case 'assistant':
-          resolve([
-            { module: 'cases', permissions: ['read', 'update'] },
-            { module: 'documents', permissions: ['read', 'create', 'update'] },
-            { module: 'messages', permissions: ['read', 'create'] },
-            { module: 'calendar', permissions: ['read', 'create', 'update'] },
-          ]);
-          break;
-        case 'admin':
-          resolve([
-            { module: 'cases', permissions: ['read', 'create', 'update', 'delete'] },
-            { module: 'documents', permissions: ['read', 'create', 'update', 'delete'] },
-            { module: 'billing', permissions: ['read', 'create', 'update', 'delete'] },
-            { module: 'messages', permissions: ['read', 'create', 'delete'] },
-            { module: 'calendar', permissions: ['read', 'create', 'update', 'delete'] },
-            { module: 'users', permissions: ['read', 'create', 'update', 'delete'] },
-            { module: 'settings', permissions: ['read', 'update'] },
-            { module: 'analytics', permissions: ['read'] },
-            { module: 'subscriptions', permissions: ['read', 'create', 'update', 'delete'] },
-          ]);
-          break;
-        default:
-          resolve([]);
-      }
-    }, 300);
-  });
-}
-
-export const usePermissions = () => useContext(PermissionsContext);
+export const usePermissions = () => {
+  const context = useContext(PermissionsContext);
+  if (context === undefined) {
+    throw new Error('usePermissions must be used within a PermissionsProvider');
+  }
+  return context;
+};

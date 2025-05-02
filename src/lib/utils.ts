@@ -90,3 +90,31 @@ export function isValidPassword(password: string): boolean {
   return /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 }
 
+// Função para obter a cor com base no status
+export function getStatusColor(status: string): string {
+  const statusColors: Record<string, string> = {
+    "Em andamento": "bg-blue-100 text-blue-800",
+    "Concluído": "bg-green-100 text-green-800",
+    "Pendente": "bg-yellow-100 text-yellow-800",
+    "Atrasado": "bg-red-100 text-red-800",
+    "Arquivado": "bg-gray-100 text-gray-800",
+    "Aguardando": "bg-purple-100 text-purple-800",
+    "Cancelado": "bg-red-100 text-red-800",
+    "Suspenso": "bg-orange-100 text-orange-800",
+    
+    // Status específicos de processos
+    "Andamento": "bg-blue-100 text-blue-800",
+    "Julgamento": "bg-purple-100 text-purple-800",
+    "Recurso": "bg-amber-100 text-amber-800",
+    "Execução": "bg-cyan-100 text-cyan-800",
+    "Encerrado": "bg-green-100 text-green-800",
+    
+    // Status específicos de pagamento
+    "Pago": "bg-green-100 text-green-800",
+    "Parcial": "bg-amber-100 text-amber-800",
+    "Pendente": "bg-yellow-100 text-yellow-800",
+    "Atrasado": "bg-red-100 text-red-800"
+  };
+  
+  return statusColors[status] || "bg-gray-100 text-gray-800"; // Default color
+}
