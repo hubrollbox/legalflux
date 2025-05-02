@@ -1,216 +1,172 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase-client';
-import { UserRole } from '../types/permissions';
+import { useNavigate } from 'react-router-dom';
 
-export interface User {
+export enum UserRole {
+  CLIENT = 'client',
+  LAWYER = 'lawyer',
+  SENIOR_LAWYER = 'senior_lawyer',
+  ASSISTANT = 'assistant',
+  ADMIN = 'admin',
+  USER = 'user',
+  GUEST = 'guest'
+}
+
+interface User {
   id: string;
-  name: string;
   email: string;
+  name: string;
   role: UserRole;
-  avatar?: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-  register: (userData: RegisterData) => Promise<void>;
-  forgotPassword: (email: string) => Promise<void>;
-  resetPassword: (token: string, password: string) => Promise<void>;
-  getRedirectPath: () => string;
-}
-
-export interface RegisterData {
-  name: string;
-  email: string;
-  password: string;
-  nif: string;
-  role?: UserRole;
-  phone?: string;
+  logout: () => Promise<void>;
+  register: (email: string, password: string, name: string, role?: UserRole) => Promise<void>;
+  loading: boolean;
+  error: string | null;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  isAuthenticated: false,
-  isLoading: true,
-  error: null,
   login: async () => {},
-  logout: () => {},
+  logout: async () => {},
   register: async () => {},
-  forgotPassword: async () => {},
-  resetPassword: async () => {},
-  getRedirectPath: () => '/',
+  loading: false,
+  error: null,
 });
 
-export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuth = async () => {
+    // Check for user in local storage on mount
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
       try {
-        // Verificar se existe sessão no localStorage
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-        
-        // Verificar se existe sessão no Supabase (para futuras implementações)
-        // const { data, error } = await supabase.auth.getSession();
-        // if (data.session) { ... }
-        
-      } catch (error) {
-        console.error('Erro ao verificar autenticação:', error);
-      } finally {
-        setIsLoading(false);
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+      } catch (e) {
+        console.error('Error parsing stored user:', e);
+        localStorage.removeItem('user');
       }
-    };
-
-    checkAuth();
+    }
+    setLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
-    setIsLoading(true);
+    setLoading(true);
     setError(null);
     
     try {
-      // Mock de login para desenvolvimento (substituir por chamada real ao Supabase no futuro)
-      if (email && password) {
-        const mockUser: User = {
-          id: '1',
-          name: 'Utilizador Demo',
-          email,
-          role: email.includes('admin') ? 'admin' : 
-                email.includes('lawyer') ? 'lawyer' : 
-                email.includes('senior') ? 'senior_lawyer' : 
-                email.includes('assistant') ? 'assistant' : 'client',
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Mock validation
+      if (email === 'admin@example.com' && password === 'password123') {
+        const user = { 
+          id: '1', 
+          email: 'admin@example.com', 
+          name: 'Administrador',
+          role: UserRole.ADMIN 
         };
         
-        setUser(mockUser);
-        localStorage.setItem('user', JSON.stringify(mockUser));
+        setUser(user);
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate('/dashboard');
+        return;
+      }
+      
+      if (email === 'lawyer@example.com' && password === 'password123') {
+        const user = { 
+          id: '2', 
+          email: 'lawyer@example.com', 
+          name: 'Advogado',
+          role: UserRole.LAWYER 
+        };
+        
+        setUser(user);
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate('/dashboard');
+        return;
+      }
+      
+      if (email === 'client@example.com' && password === 'password123') {
+        const user = { 
+          id: '3', 
+          email: 'client@example.com', 
+          name: 'Cliente',
+          role: UserRole.CLIENT 
+        };
+        
+        setUser(user);
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate('/dashboard');
         return;
       }
       
       throw new Error('Credenciais inválidas');
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Erro ao iniciar sessão';
-      setError(errorMessage);
-      throw new Error(errorMessage);
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err instanceof Error ? err.message : 'Erro ao fazer login');
+      throw err;
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('user');
-    setUser(null);
+  const logout = async () => {
+    setLoading(true);
+    try {
+      // Clear user from state and local storage
+      setUser(null);
+      localStorage.removeItem('user');
+      navigate('/login');
+    } catch (err) {
+      console.error('Logout error:', err);
+      setError(err instanceof Error ? err.message : 'Erro ao fazer logout');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const register = async (userData: RegisterData) => {
-    setIsLoading(true);
+  const register = async (email: string, password: string, name: string, role: UserRole = UserRole.CLIENT) => {
+    setLoading(true);
     setError(null);
     
     try {
-      // Mock de registo (substituir por chamada real ao Supabase no futuro)
-      const mockUser: User = {
-        id: Date.now().toString(),
-        name: userData.name,
-        email: userData.email,
-        role: userData.role || 'client',
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Mock registration
+      const newUser = { 
+        id: Date.now().toString(), 
+        email, 
+        name,
+        role 
       };
       
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Erro no registo';
-      setError(errorMessage);
-      throw new Error(errorMessage);
+      setUser(newUser);
+      localStorage.setItem('user', JSON.stringify(newUser));
+      navigate('/dashboard');
+    } catch (err) {
+      console.error('Registration error:', err);
+      setError(err instanceof Error ? err.message : 'Erro ao registrar');
+      throw err;
     } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const forgotPassword = async (email: string) => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      // Mock de pedido de recuperação de password
-      console.log(`Pedido de recuperação de password para: ${email}`);
-      // Implementação futura com Supabase
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Erro ao processar pedido';
-      setError(errorMessage);
-      throw new Error(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const resetPassword = async (token: string, password: string) => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      // Mock de reposição de password
-      console.log(`Reposição de password com token: ${token}`);
-      // Implementação futura com Supabase
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Erro ao repor a password';
-      setError(errorMessage);
-      throw new Error(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getRedirectPath = () => {
-    if (!user) return '/login';
-    
-    switch(user.role) {
-      case 'admin':
-        return '/dashboard';
-      case 'lawyer':
-      case 'senior_lawyer':
-        return '/processes';
-      case 'assistant':
-        return '/tasks';
-      case 'client':
-        return '/client-portal';
-      default:
-        return '/';
+      setLoading(false);
     }
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        isLoading,
-        error,
-        login,
-        logout,
-        register,
-        forgotPassword,
-        resetPassword,
-        getRedirectPath,
-      }}
-    >
+    <AuthContext.Provider value={{ user, login, logout, register, loading, error }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);

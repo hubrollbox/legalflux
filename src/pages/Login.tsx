@@ -1,20 +1,18 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import AuthLayout from '../components/layout/AuthLayout';
+import { Link } from 'react-router-dom';
+import AuthLayout from '../components/auth/AuthLayout';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { useAuth } from '../hooks/useAuth';
 import { AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -24,8 +22,6 @@ const Login: React.FC = () => {
 
     try {
       await login(email, password);
-      toast.success('Login realizado com sucesso!');
-      navigate('/dashboard');
     } catch (err) {
       console.error('Erro de login:', err);
       setError('Credenciais inválidas. Por favor, tente novamente.');

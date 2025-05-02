@@ -1,27 +1,65 @@
 
-export const validateEmail = (email: string): boolean => {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(email);
+/**
+ * Validates an email address format
+ * @param email Email to validate
+ * @returns Boolean indicating if the email is valid
+ */
+export const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 };
 
-export const validatePassword = (password: string): boolean => {
-  return password.length >= 8;
+/**
+ * Validates a password format
+ * - At least 8 characters
+ * - At least one uppercase letter
+ * - At least one digit
+ * - At least one special character
+ * @param password Password to validate
+ * @returns Boolean indicating if the password is valid
+ */
+export const isValidPassword = (password: string): boolean => {
+  return password.length >= 8 && 
+    /[A-Z]/.test(password) && 
+    /[0-9]/.test(password) && 
+    /[^A-Za-z0-9]/.test(password);
 };
 
-export const validateNIF = (nif: string): boolean => {
-  return /^\d{9}$/.test(nif);
+/**
+ * Checks if a string is empty (after trimming)
+ * @param value Value to check
+ * @returns Boolean indicating if the string is empty
+ */
+export const isEmpty = (value: string): boolean => {
+  return value.trim() === '';
 };
 
-export const getErrorMessage = (errorCode: string): string => {
-  const errorMessages: Record<string, string> = {
-    invalidEmail: "Por favor, forneça um endereço de email válido.",
-    invalidPassword: "A senha deve ter pelo menos 8 caracteres.",
-    loginError: "Email ou senha incorretos. Tente novamente.",
-    networkError: "Erro de conexão. Verifique sua internet e tente novamente.",
-    serverError: "Erro no servidor. Tente novamente mais tarde.",
-    accountExists: "Já existe uma conta com este email.",
-    invalidCredentials: "Credenciais inválidas. Verifique seus dados e tente novamente."
-  };
-  
-  return errorMessages[errorCode] || "Ocorreu um erro. Tente novamente.";
+/**
+ * Validates a Portuguese phone number
+ * @param phone Phone number to validate
+ * @returns Boolean indicating if the phone number is valid
+ */
+export const isValidPortuguesePhone = (phone: string): boolean => {
+  const phoneRegex = /^(9[1236]\d{7}|2\d{8})$/;
+  return phoneRegex.test(phone.replace(/\s+/g, ''));
+};
+
+/**
+ * Validates a Portuguese NIF (Número de Identificação Fiscal)
+ * @param nif NIF to validate
+ * @returns Boolean indicating if the NIF is valid
+ */
+export const isValidNIF = (nif: string): boolean => {
+  const nifRegex = /^[123568]\d{8}$/;
+  return nifRegex.test(nif);
+};
+
+/**
+ * Validates a password confirmation matches the password
+ * @param password Original password
+ * @param confirmPassword Password confirmation to validate
+ * @returns Boolean indicating if the passwords match
+ */
+export const passwordsMatch = (password: string, confirmPassword: string): boolean => {
+  return password === confirmPassword;
 };

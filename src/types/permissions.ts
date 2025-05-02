@@ -1,5 +1,13 @@
 
-export type UserRole = 'client' | 'lawyer' | 'senior_lawyer' | 'assistant' | 'admin';
+export enum UserRole {
+  CLIENT = 'client',
+  LAWYER = 'lawyer',
+  SENIOR_LAWYER = 'senior_lawyer',
+  ASSISTANT = 'assistant',
+  ADMIN = 'admin',
+  USER = 'user',
+  GUEST = 'guest'
+}
 
 export interface Permission {
   id: string;
