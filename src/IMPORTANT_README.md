@@ -52,8 +52,7 @@ Como o arquivo `tsconfig.json` é somente leitura neste ambiente, você precisa 
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src"]
 }
 ```
 
@@ -63,6 +62,13 @@ Como o arquivo `tsconfig.json` é somente leitura neste ambiente, você precisa 
 2. **downlevelIteration: true** - Para suportar iteração em conjuntos (Sets)
 3. **baseUrl: "."** - Define a pasta raiz do projeto
 4. **paths: { "@/*": ["./src/*"] }** - Configura o alias @/ para apontar para a pasta src
+
+## IMPORTANTE: Remoção da referência problemática
+
+A configuração atualizada remove a referência para `tsconfig.node.json` que estava causando o erro:
+```
+tsconfig.json(26,18): error TS6310: Referenced project '/dev-server/tsconfig.node.json' may not disable emit.
+```
 
 ## Como aplicar esta configuração
 
