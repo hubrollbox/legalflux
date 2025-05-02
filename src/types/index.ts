@@ -49,6 +49,8 @@ export interface FooterItem {
   }[];
 }
 
+export type { CalendarEvent, CategoryKey } from './calendar';
+
 export interface MobileNavItemProps {
   children?: React.ReactNode;
   closeMenu: () => void;

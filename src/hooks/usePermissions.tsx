@@ -7,7 +7,9 @@ import { Permission, DEFAULT_ROLE_PERMISSIONS } from "@/types/permissions";
 interface PermissionsContextType {
   userPermissions: Permission[];
   hasPermission: (permission: Permission) => boolean;
+  hasRole: (role: string) => boolean;
   loading: boolean;
+  isLoading: boolean;
   error: string | null;
   fetchPermissions: () => Promise<void>;
 }
@@ -66,10 +68,16 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return userPermissions.includes(permission) || userPermissions.includes('ADMIN_ACCESS');
   };
 
+  const hasRole = (role: string): boolean => {
+    return user?.role === role;
+  };
+
   const value = {
     userPermissions,
     hasPermission,
+    hasRole,
     loading,
+    isLoading: loading,
     error,
     fetchPermissions
   };
