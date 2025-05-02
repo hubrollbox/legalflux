@@ -1,37 +1,38 @@
 
-import React from 'react';
-import { cn } from '@/lib/utils';
+import React from "react";
 
-interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  fallback?: string;
+interface ImageProps {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  className?: string;
+  onError?: React.ReactEventHandler<HTMLImageElement>;
 }
 
-export const Image = React.forwardRef<HTMLImageElement, ImageProps>(
-  ({ className, src, alt, fallback = '/placeholder-image.png', ...props }, ref) => {
-    const [imgSrc, setImgSrc] = React.useState<string | undefined>(src);
-    const [error, setError] = React.useState(false);
+const Image: React.FC<ImageProps> = ({
+  src,
+  alt,
+  width,
+  height,
+  className,
+  onError
+}) => {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      className={className}
+      onError={onError}
+      style={{ 
+        maxWidth: "100%", 
+        height: "auto",
+        objectFit: "cover" 
+      }}
+    />
+  );
+};
 
-    React.useEffect(() => {
-      setImgSrc(src);
-      setError(false);
-    }, [src]);
-
-    const handleError = () => {
-      setError(true);
-      setImgSrc(fallback);
-    };
-
-    return (
-      <img
-        ref={ref}
-        src={error ? fallback : imgSrc}
-        alt={alt || ''}
-        onError={handleError}
-        className={cn('object-cover', className)}
-        {...props}
-      />
-    );
-  }
-);
-
-Image.displayName = 'Image';
+export default Image;
