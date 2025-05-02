@@ -1,227 +1,171 @@
 
-import * as React from "react";
-import { createContext, useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 export enum UserRole {
-  CLIENT = 'client',
-  LAWYER = 'lawyer',
-  SENIOR_LAWYER = 'senior_lawyer',
-  ASSISTANT = 'assistant',
   ADMIN = 'admin',
-  USER = 'user',
-  GUEST = 'guest'
+  SENIOR_LAWYER = 'senior_lawyer',
+  LAWYER = 'lawyer',
+  ASSISTANT = 'assistant',
+  CLIENT = 'client',
 }
 
-interface User {
+export interface User {
   id: string;
   email: string;
-  name: string;
+  name?: string;
   role: UserRole;
 }
 
 interface AuthContextType {
   user: User | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  register: (email: string, password: string, name: string, role?: UserRole) => Promise<void>;
-  forgotPassword: (email: string) => Promise<void>;
+  signup: (email: string, password: string, name: string, role: UserRole) => Promise<void>;
   resetPassword: (token: string, password: string) => Promise<void>;
-  loading: boolean;
-  isLoading: boolean;
-  error: string | null;
+  forgotPassword: (email: string) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  login: async () => {},
-  logout: async () => {},
-  register: async () => {},
-  forgotPassword: async () => {},
-  resetPassword: async () => {},
-  loading: false,
-  isLoading: false,
-  error: null,
-});
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  // Check if the user is already logged in on mount
   useEffect(() => {
-    // Check for user in local storage on mount
-    const storedUser = localStorage.getItem('user');
+    // Simulate checking local storage or session for an existing user
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-      } catch (e) {
-        console.error('Error parsing stored user:', e);
-        localStorage.removeItem('user');
-      }
+      setUser(JSON.parse(storedUser));
     }
-    setLoading(false);
+    setIsLoading(false);
   }, []);
 
+  // Login function
   const login = async (email: string, password: string) => {
-    setLoading(true);
-    setError(null);
-    
+    setIsLoading(true);
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Mock validation
-      if (email === 'admin@example.com' && password === 'password123') {
-        const user = { 
-          id: '1', 
-          email: 'admin@example.com', 
-          name: 'Administrador',
-          role: UserRole.ADMIN 
-        };
-        
-        setUser(user);
-        localStorage.setItem('user', JSON.stringify(user));
-        navigate('/dashboard');
-        return;
-      }
-      
-      if (email === 'lawyer@example.com' && password === 'password123') {
-        const user = { 
-          id: '2', 
-          email: 'lawyer@example.com', 
-          name: 'Advogado',
-          role: UserRole.LAWYER 
-        };
-        
-        setUser(user);
-        localStorage.setItem('user', JSON.stringify(user));
-        navigate('/dashboard');
-        return;
-      }
-      
-      if (email === 'client@example.com' && password === 'password123') {
-        const user = { 
-          id: '3', 
-          email: 'client@example.com', 
-          name: 'Cliente',
-          role: UserRole.CLIENT 
-        };
-        
-        setUser(user);
-        localStorage.setItem('user', JSON.stringify(user));
-        navigate('/dashboard');
-        return;
-      }
-      
-      throw new Error('Credenciais inválidas');
-    } catch (err) {
-      console.error('Login error:', err);
-      setError(err instanceof Error ? err.message : 'Erro ao fazer login');
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const logout = async () => {
-    setLoading(true);
-    try {
-      // Clear user from state and local storage
-      setUser(null);
-      localStorage.removeItem('user');
-      navigate('/login');
-    } catch (err) {
-      console.error('Logout error:', err);
-      setError(err instanceof Error ? err.message : 'Erro ao fazer logout');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const register = async (email: string, password: string, name: string, role: UserRole = UserRole.CLIENT) => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock registration
-      const newUser = { 
-        id: Date.now().toString(), 
-        email, 
-        name,
-        role 
+      // Mock successful login
+      const mockUser = {
+        id: "123",
+        email,
+        name: "Utilizador Exemplo",
+        role: UserRole.LAWYER,
       };
       
-      setUser(newUser);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      navigate('/dashboard');
-    } catch (err) {
-      console.error('Registration error:', err);
-      setError(err instanceof Error ? err.message : 'Erro ao registrar');
-      throw err;
+      setUser(mockUser);
+      localStorage.setItem("user", JSON.stringify(mockUser));
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const forgotPassword = async (email: string) => {
-    setLoading(true);
-    setError(null);
-    
+  // Logout function
+  const logout = async () => {
+    setIsLoading(true);
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      // In a real app, this would trigger a password reset email
-      console.log(`Password reset requested for: ${email}`);
-    } catch (err) {
-      console.error('Forgot password error:', err);
-      setError(err instanceof Error ? err.message : 'Erro ao processar pedido');
-      throw err;
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setUser(null);
+      localStorage.removeItem("user");
+    } catch (error) {
+      console.error("Logout error:", error);
+      throw error;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
+  // Signup function
+  const signup = async (email: string, password: string, name: string, role: UserRole) => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Mock successful signup
+      const mockUser = {
+        id: "456",
+        email,
+        name,
+        role,
+      };
+      
+      setUser(mockUser);
+      localStorage.setItem("user", JSON.stringify(mockUser));
+    } catch (error) {
+      console.error("Signup error:", error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Reset password function
   const resetPassword = async (token: string, password: string) => {
-    setLoading(true);
-    setError(null);
-    
+    setIsLoading(true);
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
-      // In a real app, this would verify the token and reset the password
-      console.log(`Password reset with token: ${token}`);
-    } catch (err) {
-      console.error('Reset password error:', err);
-      setError(err instanceof Error ? err.message : 'Erro ao redefinir password');
-      throw err;
+      // Normally would validate token and update password
+      console.log("Password reset with token:", token);
+    } catch (error) {
+      console.error("Reset password error:", error);
+      throw error;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
+    }
+  };
+
+  // Forgot password function
+  const forgotPassword = async (email: string) => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Normally would send password reset email
+      console.log("Forgot password request for:", email);
+    } catch (error) {
+      console.error("Forgot password error:", error);
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      login, 
-      logout, 
-      register, 
-      forgotPassword,
-      resetPassword,
-      loading, 
-      isLoading: loading,
-      error 
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isLoading,
+        isAuthenticated: !!user,
+        login,
+        logout,
+        signup,
+        resetPassword,
+        forgotPassword,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
 
-export default useAuth;
+export default AuthContext;

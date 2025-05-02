@@ -67,3 +67,10 @@ export const formatDateTime = (date: Date | string): string => {
     timeStyle: 'short'
   }).format(dateObj);
 };
+
+export const isValidPassword = (password: string): boolean => {
+  return password.length >= 8 && 
+    /[A-Z]/.test(password) && 
+    /[0-9]/.test(password) && 
+    /[^A-Za-z0-9]/.test(password);
+};

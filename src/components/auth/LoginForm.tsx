@@ -1,20 +1,19 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Link } from 'react-router-dom';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
 import { Loader2, AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { useAuth } from '@/hooks/useAuth';
-import { validateEmail } from '@/utils/validation';
+import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert';
+import { useAuth } from '../../hooks/useAuth';
+import { validateEmail } from '../../utils/validation';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const { login, isLoading } = useAuth();
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,8 +34,8 @@ const LoginForm = () => {
     
     try {
       await login(email, password);
-      // Após login bem-sucedido, redirecionamos para o dashboard
-      navigate('/dashboard');
+      // After successful login, we would typically redirect to the dashboard
+      window.location.href = '/dashboard';
     } catch (error) {
       console.error('Login error:', error);
       setError('Email ou senha incorretos. Por favor, tente novamente.');
