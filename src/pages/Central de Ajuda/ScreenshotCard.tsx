@@ -1,5 +1,6 @@
+
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 interface ScreenshotCardProps {

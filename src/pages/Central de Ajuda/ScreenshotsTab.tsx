@@ -1,5 +1,6 @@
+
 import React from "react";
-import Image from "next/image";
+import Image from "@/components/ui/Image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const ScreenshotsTab = () => {
