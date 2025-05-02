@@ -1,13 +1,10 @@
 
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthLayout from '../components/auth/AuthLayout';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { useAuth } from '../hooks/useAuth';
 import { AlertCircle } from 'lucide-react';
-import { isValidEmail, isValidPassword } from '../utils/validation';
+import { useAuth } from '../hooks/useAuth';
 
 const Register: React.FC = () => {
   const [name, setName] = useState('');
@@ -17,6 +14,18 @@ const Register: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { register } = useAuth();
+
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isValidPassword = (password: string): boolean => {
+    return password.length >= 8 && 
+      /[A-Z]/.test(password) && 
+      /[0-9]/.test(password) && 
+      /[^A-Za-z0-9]/.test(password);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,32 +75,34 @@ const Register: React.FC = () => {
         )}
 
         <div className="space-y-2">
-          <Label htmlFor="name">Nome Completo</Label>
-          <Input
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nome Completo</label>
+          <input
             id="name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Seu Nome Completo"
             required
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+          <input
             id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="seu.email@exemplo.com"
             required
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
-          <Input
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+          <input
             id="password"
             type="password"
             value={password}
@@ -99,15 +110,16 @@ const Register: React.FC = () => {
             placeholder="••••••••"
             required
             minLength={8}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
           />
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-gray-500">
             A password deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, um número e um caractere especial.
           </p>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="confirmPassword">Confirmar Password</Label>
-          <Input
+          <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirmar Password</label>
+          <input
             id="confirmPassword"
             type="password"
             value={confirmPassword}
@@ -115,16 +127,21 @@ const Register: React.FC = () => {
             placeholder="••••••••"
             required
             minLength={8}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
           />
         </div>
 
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
+        <button 
+          type="submit" 
+          className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? 'A processar...' : 'Registar'}
-        </Button>
+        </button>
       </form>
 
       <div className="mt-6 text-center text-sm">
-        <span className="text-muted-foreground">Já tem uma conta?</span>{' '}
+        <span className="text-gray-600">Já tem uma conta?</span>{' '}
         <Link to="/login" className="text-primary hover:underline">
           Iniciar Sessão
         </Link>

@@ -1,12 +1,10 @@
 
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthLayout from '../components/auth/AuthLayout';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { useAuth } from '../hooks/useAuth';
 import { AlertCircle } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -41,25 +39,26 @@ const Login: React.FC = () => {
         )}
 
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+          <input
             id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="seu.email@exemplo.com"
             required
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
             <Link to="/forgot-password" className="text-sm text-primary hover:underline">
               Esqueceu a password?
             </Link>
           </div>
-          <Input
+          <input
             id="password"
             type="password"
             value={password}
@@ -67,16 +66,21 @@ const Login: React.FC = () => {
             placeholder="••••••••"
             required
             minLength={8}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
           />
         </div>
 
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
+        <button 
+          type="submit" 
+          className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? 'A processar...' : 'Entrar'}
-        </Button>
+        </button>
       </form>
 
       <div className="mt-6 text-center text-sm">
-        <span className="text-muted-foreground">Ainda não tem conta?</span>{' '}
+        <span className="text-gray-600">Ainda não tem conta?</span>{' '}
         <Link to="/register" className="text-primary hover:underline">
           Registar
         </Link>

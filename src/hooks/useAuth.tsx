@@ -1,6 +1,7 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import * as React from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export enum UserRole {
   CLIENT = 'client',
@@ -24,7 +25,10 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   register: (email: string, password: string, name: string, role?: UserRole) => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (token: string, password: string) => Promise<void>;
   loading: boolean;
+  isLoading: boolean;
   error: string | null;
 }
 
@@ -33,7 +37,10 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   logout: async () => {},
   register: async () => {},
+  forgotPassword: async () => {},
+  resetPassword: async () => {},
   loading: false,
+  isLoading: false,
   error: null,
 });
 
@@ -162,11 +169,59 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const forgotPassword = async (email: string) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      // In a real app, this would trigger a password reset email
+      console.log(`Password reset requested for: ${email}`);
+    } catch (err) {
+      console.error('Forgot password error:', err);
+      setError(err instanceof Error ? err.message : 'Erro ao processar pedido');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetPassword = async (token: string, password: string) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      // In a real app, this would verify the token and reset the password
+      console.log(`Password reset with token: ${token}`);
+    } catch (err) {
+      console.error('Reset password error:', err);
+      setError(err instanceof Error ? err.message : 'Erro ao redefinir password');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, register, loading, error }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      login, 
+      logout, 
+      register, 
+      forgotPassword,
+      resetPassword,
+      loading, 
+      isLoading: loading,
+      error 
+    }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+
+export default useAuth;

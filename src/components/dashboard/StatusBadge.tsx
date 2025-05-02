@@ -1,5 +1,5 @@
 
-import { cn, getStatusColor } from "@/lib/utils";
+import { cn, getStatusColor } from "../../lib/utils";
 
 interface StatusBadgeProps {
   status: string;
@@ -7,10 +7,6 @@ interface StatusBadgeProps {
 }
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
-  const statusText = typeof status === 'string' 
-    ? status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ') 
-    : 'Desconhecido';
-  
   return (
     <span
       className={cn(
@@ -19,7 +15,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
         className
       )}
     >
-      {statusText}
+      {status}
     </span>
   );
 };
