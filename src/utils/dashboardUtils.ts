@@ -1,94 +1,64 @@
 
-import { UserRole } from "@/types";
+export function getUserRoleName(role: string): string {
+  const roles: Record<string, string> = {
+    admin: "Administrador",
+    lawyer: "Advogado",
+    senior_lawyer: "Advogado Sênior",
+    client: "Cliente",
+    assistant: "Assistente"
+  };
 
-/**
- * Get a user-friendly name for the user role
- */
-export const getUserRoleName = (role: UserRole): string => {
-  switch (role) {
-    case UserRole.CLIENT:
-      return "Cliente";
-    case UserRole.LAWYER:
-      return "Advogado";
-    case UserRole.SENIOR_LAWYER:
-      return "Advogado Sénior";
-    case UserRole.ASSISTANT:
-      return "Assistente";
-    case UserRole.ADMIN:
-      return "Administrador";
-    default:
-      return "Utilizador";
-  }
-};
+  return roles[role] || role;
+}
 
-/**
- * Get chart data for the dashboard
- */
-export const getChartData = () => {
+export function getChartData() {
+  // Dados simulados para gráficos do dashboard
   return {
-    casesByMonth: [
-      { month: "Jan", count: 10 },
-      { month: "Fev", count: 15 },
-      { month: "Mar", count: 8 },
-      { month: "Abr", count: 12 },
-      { month: "Mai", count: 19 },
-      { month: "Jun", count: 14 },
+    processos: [
+      { month: "Jan", value: 5 },
+      { month: "Fev", value: 8 },
+      { month: "Mar", value: 12 },
+      { month: "Abr", value: 10 },
+      { month: "Mai", value: 15 },
+      { month: "Jun", value: 18 }
     ],
-    casesByType: [
-      { type: "Cível", count: 35 },
-      { type: "Família", count: 25 },
-      { type: "Trabalhista", count: 20 },
-      { type: "Criminal", count: 10 },
-      { type: "Tributário", count: 10 },
-    ],
+    faturamento: [
+      { month: "Jan", value: 2500 },
+      { month: "Fev", value: 3800 },
+      { month: "Mar", value: 5000 },
+      { month: "Abr", value: 4500 },
+      { month: "Mai", value: 6200 },
+      { month: "Jun", value: 7500 }
+    ]
   };
-};
+}
 
-/**
- * Get financial data for the dashboard
- */
-export const getFinancialData = () => {
+export function getFinancialData() {
+  // Dados financeiros simulados
   return {
-    revenue: {
-      total: 35000,
-      pending: 8000,
-      overdue: 2000,
-    },
-    revenueByMonth: [
-      { month: "Jan", value: 12000 },
-      { month: "Fev", value: 15000 },
-      { month: "Mar", value: 10000 },
-      { month: "Abr", value: 18000 },
-      { month: "Mai", value: 20000 },
-      { month: "Jun", value: 17000 },
-    ],
+    totalFaturado: 29500,
+    pendente: 4800,
+    recebido: 24700,
+    previsao: 35000
   };
-};
+}
 
-/**
- * Get performance data for the dashboard
- */
-export const getPerformanceData = () => {
+export function getPerformanceData() {
+  // Dados de desempenho simulados
   return {
-    completionRate: 85,
-    tasksByStatus: {
-      todo: 12,
-      inProgress: 8,
-      review: 5,
-      done: 25,
-    },
-    averageResolutionTime: 18, // in days
+    processosAtivos: 42,
+    tarefasPendentes: 18,
+    audienciasMes: 7,
+    prazosMes: 12
   };
-};
+}
 
-/**
- * Get statistics data for the dashboard
- */
-export const getStatisticsData = () => {
+export function getStatisticsData() {
+  // Estatísticas gerais simuladas
   return {
-    activeCases: 48,
-    pendingTasks: 25,
-    upcomingDeadlines: 7,
-    clientSatisfaction: 4.7,
+    clientesAtivos: 28,
+    processosGanhos: 67,
+    processosPerdidos: 12,
+    taxaSucesso: 85 // porcentagem
   };
-};
+}
