@@ -83,3 +83,10 @@ export function formatCurrency(value: number): string {
     currency: 'EUR'
   }).format(value);
 }
+
+// Função para validar uma password
+export function isValidPassword(password: string): boolean {
+  // Pelo menos 8 caracteres, incluindo uma letra maiúscula, um número e um caractere especial
+  return /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+}
+
