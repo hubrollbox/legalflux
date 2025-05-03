@@ -7,20 +7,22 @@ export interface Client {
   email: string;
   phone: string;
   address: string;
-  nif: string;
   taxId: string;
+  nif: string;
   notes?: string;
   status: ClientStatus;
-  created_at: string;
-  updated_at?: string;
+  createdAt: Date;
+  updatedAt?: Date;
+  userId: string;
+  lawyerId?: string;
 }
 
-export type CreateClientDTO = Omit<Client, 'id' | 'created_at' | 'updated_at'>;
-export type UpdateClientDTO = Partial<Omit<Client, 'id' | 'created_at' | 'updated_at'>>;
+export type CreateClientDTO = Omit<Client, 'id' | 'createdAt' | 'updatedAt'>;
+export type UpdateClientDTO = Partial<Omit<Client, 'id' | 'createdAt' | 'updatedAt'>>;
 
 export interface ClientFilters {
   search?: string;
   status?: ClientStatus;
-  sortBy?: 'name' | 'created_at' | 'status';
+  sortBy?: 'name' | 'createdAt' | 'status';
   sortOrder?: 'asc' | 'desc';
 }

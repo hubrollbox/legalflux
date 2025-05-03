@@ -24,30 +24,14 @@ import { useToast } from '@/components/ui/use-toast';
 import { clientService } from '@/services/clientService';
 
 interface ClientListProps {
+  clients: Client[];
   onEdit: (client: Client) => void;
   onDelete: (client: Client) => void;
   onView: (client: Client) => void;
 }
 
-const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => {
-  const [clients, setClients] = useState<Client[]>([]);
+const ClientList: React.FC<ClientListProps> = ({ clients, onEdit, onDelete, onView }) => {
   const { toast } = useToast();
-
-  const loadClients = useCallback(async () => {
-    try {
-      const data = await clientService.listClients();
-      setClients(data);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load clients"
-      });
-    }
-  }, [toast]);
-
-  useEffect(() => {
-    loadClients();
-  }, [loadClients]);
   const navigate = useNavigate();
 
   const getStatusBadge = (status: string) => {
@@ -91,7 +75,7 @@ const ClientList: React.FC<ClientListProps> = ({ onEdit, onDelete, onView }) => 
             clients.map((client) => (
               <TableRow key={client.id}>
                 <TableCell className="font-medium">{client.name}</TableCell>
-                <TableCell>{client.nif}</TableCell>
+                <TableCell>{client.taxId}</TableCell>
                 <TableCell>{client.email || ''}</TableCell>
                 <TableCell>{client.phone}</TableCell>
                 <TableCell>{getStatusBadge(client.status)}</TableCell>

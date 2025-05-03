@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Correct import for v7.5.2
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
@@ -51,7 +51,7 @@ const Clients = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await clientService.getClients();
+      const data = await clientService.listClients();
       if (!Array.isArray(data)) {
         throw new Error('Invalid response format from server');
       }
@@ -164,7 +164,11 @@ const Clients = () => {
   const handleCreateClient = async (data: CreateClientDTO) => {
     setIsSubmitting(true);
     try {
-      const newClient = await clientService.createClient(data);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('User not authenticated');
+      }
+      const newClient = await clientService.createClient(data, session.user.id);
       toast({
         title: "Cliente criado",
         description: "Cliente criado com sucesso.",
@@ -219,7 +223,11 @@ const Clients = () => {
 
     setIsSubmitting(true);
     try {
-      await clientService.deleteClient(selectedClient.id);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('User not authenticated');
+      }
+      await clientService.deleteClient(selectedClient.id, session.user.id);
       toast({
         title: "Cliente excluído",
         description: "Cliente excluído com sucesso.",
@@ -310,18 +318,17 @@ const Clients = () => {
               </CardContent>
             ) : filteredClients.length === 0 ? (
               <CardContent className="p-6">
-                <EmptyState
-                  title="Nenhum cliente encontrado"
-                  description={searchTerm || statusFilter !== "all" ? "Tente ajustar os filtros de busca." : "Comece adicionando um novo cliente."}
-                  icon={UserPlus}
-                  action={{
-                    label: "Adicionar Cliente",
-                    onClick: handleOpenCreateDialog,
-                  }}
+                <EmptyState 
+                  message="Nenhum cliente encontrado"
+                  action={
+                    <Button onClick={handleOpenCreateDialog}>
+                      Adicionar Cliente
+                    </Button>
+                  }
                 />
               </CardContent>
             ) : (
-              <ClientList
+              <ClientList 
                 clients={filteredClients}
                 onEdit={handleOpenEditDialog}
                 onDelete={handleOpenDeleteDialog}

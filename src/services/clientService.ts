@@ -1,16 +1,5 @@
 import { supabase } from '../lib/supabase-client';
-export interface Client {
-  id: string;
-  name: string;
-  taxId: string;
-  phone: string;
-  email: string;
-  address: string;
-  status: string;
-  createdAt: Date;
-  userId: string;
-  lawyerId: string;
-}
+import type { Client } from "@/types/client";
 
 // Export the clientService with minimal changes to fix the type issues
 export const clientService = {
@@ -163,6 +152,16 @@ export const clientService = {
     } as Client;
   },
 
+  async deleteClient(id: string, userId: string) {
+    const { error } = await supabase
+      .from('clientes')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', userId);
+
+    if (error) throw error;
+  },
+
   async listClients(userRole?: string, advogadoId?: string): Promise<Client[]> {
     const query = supabase
       .from('clientes')
@@ -194,10 +193,10 @@ export const clientService = {
     return (data as unknown as DbClient[]).map(item => ({
       id: item.id ?? '',
       name: item.nome ?? '',
-      taxId: item.nif ?? '',
-      phone: item.telefone ?? '',
       email: item.email ?? '',
+      phone: item.telefone ?? '',
       address: item.morada ?? '',
+      taxId: item.nif ?? '',
       status: item.estado ?? 'prospect',
       createdAt: item.created_at ? new Date(item.created_at) : new Date(),
       userId: item.user_id ?? '',

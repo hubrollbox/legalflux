@@ -39,23 +39,23 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({ transactions })
     
     // Calculate all metrics
     const totalRevenue = transactions
-      .filter(t => t.type === 'payment' && t.status === 'completed')
+      .filter(t => t.type === 'income' && t.status === 'completed')
       .reduce((sum, t) => sum + t.amount, 0);
       
     const totalPending = transactions
-      .filter(t => t.type === 'invoice' && t.status === 'pending')
+      .filter(t => t.type === 'income' && t.status === 'pending')
       .reduce((sum, t) => sum + t.amount, 0);
       
     const totalExpenses = transactions
-      .filter(t => t.type === 'refund' || (t.type === 'payment' && t.amount < 0))
+      .filter(t => t.type === 'expense' || (t.type === 'income' && t.amount < 0))
       .reduce((sum, t) => sum + Math.abs(t.amount), 0);
       
     const currentMonthRevenue = currentMonthTransactions
-      .filter(t => t.type === 'payment' && t.status === 'completed')
+      .filter(t => t.type === 'income' && t.status === 'completed')
       .reduce((sum, t) => sum + t.amount, 0);
       
     const previousMonthRevenue = previousMonthTransactions
-      .filter(t => t.type === 'payment' && t.status === 'completed')
+      .filter(t => t.type === 'income' && t.status === 'completed')
       .reduce((sum, t) => sum + t.amount, 0);
     
     // Calculate percentage changes

@@ -7,13 +7,13 @@ import {
   FormControl, 
   FormMessage, 
   FormDescription 
-} from "../../ui/form";
-import { Input } from "../../ui/input";
-import { Button } from "../../ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
-import { Switch } from "../../ui/switch";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import type { UseFormReturn } from "react-hook-form";
-import { userFormSchema, UserFormValues } from "../../../schemas/userFormSchema";
+import { userFormSchema, UserFormValues } from "@/schemas/userFormSchema";
 
 interface UserFormProps {
   form: UseFormReturn<UserFormValues>;

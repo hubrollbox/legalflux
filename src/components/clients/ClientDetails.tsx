@@ -74,7 +74,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
           status: (apiClient.estado as ClientStatus) || "prospect",
           notes: apiClient.notas || "",
           userId: String(apiClient.user_id),
-          lawyerId: apiClient.advogado_id ? String(apiClient.advogado_id) : null,
+          lawyerId: apiClient.advogado_id ? String(apiClient.advogado_id) : undefined,
           createdAt: apiClient.criado_em ? new Date(apiClient.criado_em) : new Date()
         };
         onEdit(mappedClient);

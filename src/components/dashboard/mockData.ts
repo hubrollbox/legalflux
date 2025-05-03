@@ -11,6 +11,7 @@ export const getRecentCases = (): RecentCase[] => [
     clientName: "João Cardoso",
     clientAvatar: "",
     status: "active",
+    updatedAt: new Date('2023-06-15'),
   },
   {
     id: "2",
@@ -18,6 +19,7 @@ export const getRecentCases = (): RecentCase[] => [
     clientName: "Pedro Santos",
     clientAvatar: "",
     status: "pending",
+    updatedAt: new Date('2023-07-22'),
   },
   {
     id: "3",
@@ -25,6 +27,7 @@ export const getRecentCases = (): RecentCase[] => [
     clientName: "Teresa Almeida",
     clientAvatar: "",
     status: "closed",
+    updatedAt: new Date('2023-05-10'),
   },
 ];
 

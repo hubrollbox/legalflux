@@ -77,7 +77,7 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
             width={800}
             height={600}
             className="max-w-full max-h-[60vh] object-contain rounded border"
-            onError={(e) => {
+            onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
               const target = e.target as HTMLImageElement;
               target.src = `https://placehold.co/800x600?text=Image+Not+Available`;
             }}
