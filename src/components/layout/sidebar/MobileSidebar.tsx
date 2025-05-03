@@ -1,11 +1,11 @@
+
 import React, { useEffect } from "react";
 import { X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { LOGO } from "@/assets";
 import UserProfile from "../UserProfile";
 import type { SidebarItem } from "./SidebarItems";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from 'next/image';
+import CustomImage from '@/components/ui/CustomImage';
 
 interface MobileSidebarProps {
   user: any;
@@ -81,7 +81,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({
             >
               <div className="flex justify-between items-center p-4 border-b border-sidebar-border">
                 <div className="flex items-center">
-                  <Image src={LOGO.SMALL} alt="LegalFlux Logo" width={24} height={24} className="h-6 mr-2" />
+                  <CustomImage src="/lovable-uploads/2e2650ad-d2c9-49ca-ba40-8c19627e97aa.png" alt="LegalFlux Logo" width={24} height={24} className="h-6 mr-2" />
                   <h1 className="text-xl font-bold">LegalFlux</h1>
                 </div>
                 <Button

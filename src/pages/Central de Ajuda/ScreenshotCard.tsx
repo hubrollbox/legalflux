@@ -1,6 +1,6 @@
 
 import React from "react";
-import Image from "@/components/ui/Image";
+import CustomImage from "@/components/ui/CustomImage";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 interface ScreenshotCardProps {
@@ -19,7 +19,7 @@ export const ScreenshotCard: React.FC<ScreenshotCardProps> = ({
   return (
     <Card className="overflow-hidden">
       <div className="aspect-video bg-gray-100 relative">
-        <Image 
+        <CustomImage 
           src={imageSrc} 
           alt={imageAlt} 
           width={400} 

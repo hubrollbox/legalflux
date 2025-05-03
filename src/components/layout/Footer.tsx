@@ -1,6 +1,6 @@
+
 import { Link } from 'react-router-dom';
-// import { Facebook, Instagram, Linkedin, Twitter } from '@lucide/react';
-// Remover: import Image from 'next/image';
+import CustomImage from '@/components/ui/CustomImage';
 
 export const Footer = () => {
   return (
@@ -9,7 +9,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <img 
+              <CustomImage 
                 src="/logo.png" 
                 alt="Company Logo"
                 width={120}
@@ -50,13 +50,13 @@ export const Footer = () => {
             </address>
             <div className="flex space-x-4 mt-4">
               <a href="/img/app-store.svg" className="text-muted-foreground hover:text-foreground">
-                <img src="/img/app-store.svg" alt="App Store" width={20} height={20} className="h-5 w-5" />
+                <CustomImage src="/img/app-store.svg" alt="App Store" width={20} height={20} className="h-5 w-5" />
               </a>
               <a href="/img/google-play.svg" className="text-muted-foreground hover:text-foreground">
-                <img src="/img/google-play.svg" alt="Google Play" width={20} height={20} className="h-5 w-5" />
+                <CustomImage src="/img/google-play.svg" alt="Google Play" width={20} height={20} className="h-5 w-5" />
               </a>
               <a href="/img/windows-store.svg" className="text-muted-foreground hover:text-foreground">
-                <img src="/img/windows-store.svg" alt="Windows Store" width={20} height={20} className="h-5 w-5" />
+                <CustomImage src="/img/windows-store.svg" alt="Windows Store" width={20} height={20} className="h-5 w-5" />
               </a>
             </div>
           </div>
@@ -68,4 +68,5 @@ export const Footer = () => {
     </footer>
   );
 };
+
 export default Footer;

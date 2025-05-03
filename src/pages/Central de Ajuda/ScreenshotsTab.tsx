@@ -1,6 +1,6 @@
 
 import React from "react";
-import Image from "@/components/ui/Image";
+import CustomImage from "@/components/ui/CustomImage";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const ScreenshotsTab = () => {
@@ -32,7 +32,7 @@ const ScreenshotsTab = () => {
               <CardTitle>{screenshot.title}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Image 
+              <CustomImage 
                 src={screenshot.image} 
                 alt={screenshot.title}
                 width={400}

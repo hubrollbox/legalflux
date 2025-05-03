@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Image from '@/components/ui/Image';
+import CustomImage from '@/components/ui/CustomImage';
 
 const LandingFooter = () => {
   return (
@@ -31,7 +31,7 @@ const LandingFooter = () => {
           
           <div>
             <Link to="/" className="text-muted-foreground hover:text-foreground">
-              <Image 
+              <CustomImage 
                 src="/lovable-uploads/2e2650ad-d2c9-49ca-ba40-8c19627e97aa.png" 
                 alt="Logo"
                 width={100}
@@ -43,7 +43,7 @@ const LandingFooter = () => {
           
           <div>
             <a href="#" className="text-muted-foreground hover:text-foreground">
-              <Image 
+              <CustomImage 
                 src="/img/google-play.svg" 
                 alt="Google Play" 
                 width={120}
