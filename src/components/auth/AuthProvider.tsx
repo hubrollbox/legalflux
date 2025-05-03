@@ -1,9 +1,9 @@
+import { AuthContext } from '../../contexts/AuthContext';
+import { supabase } from '../../lib/supabase-client';
+import { User } from '../../types/auth';
+import { UserRole } from '../../types/permissions';
+import { Toaster } from 'sonner';
 import React, { useState, useEffect, ReactNode } from 'react';
-import { AuthContext } from './AuthContext';
-import { supabase } from '../lib/supabase-client';
-import { User } from '../types/auth';
-import { UserRole } from '../types/permissions';
-import { toast } from 'sonner';
 
 interface AuthProviderProps {
   children: ReactNode;

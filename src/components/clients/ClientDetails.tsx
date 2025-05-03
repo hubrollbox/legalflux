@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2, FileText, Loader2, ExternalLink } from "lucide-react";
-import type { Client, ClientStatus } from "@/types/client";
+import type { Client } from "@/types/client";
 import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
@@ -71,11 +71,11 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
           email: apiClient.email || "Unknown",
           phone: apiClient.telefone || "Unknown",
           address: apiClient.morada || "Unknown",
-          status: (apiClient.estado as ClientStatus) || "prospect",
+          status: (apiClient.estado as Client["status"]) || "prospect",
           notes: apiClient.notas || "",
           userId: String(apiClient.user_id),
           lawyerId: apiClient.advogado_id ? String(apiClient.advogado_id) : undefined,
-          createdAt: apiClient.criado_em ? new Date(apiClient.criado_em) : new Date()
+          createdAt: apiClient.criado_em ? new Date(apiClient.criado_em) : new Date(),
         };
         onEdit(mappedClient);
         toast({
@@ -124,7 +124,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
           </div>
           <div>
             <h3 className="text-sm font-medium text-muted-foreground">Creation Date</h3>
-            <p className="text-base">{new Date(client.createdAt).toLocaleDateString()}</p>
+            <p className="text-base">{new Date(client.created_at).toLocaleDateString()}</p>
           </div>
         </div>
 
