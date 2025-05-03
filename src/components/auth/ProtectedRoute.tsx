@@ -4,7 +4,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { usePermissions } from "@/hooks/usePermissions";
 import { toast } from "sonner";
-import type { UserRole } from "@/types/permissions";
+import { UserRole } from "@/types/permissions";
 import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteProps {
@@ -40,13 +40,13 @@ const ProtectedRoute = ({
   }
   
   // Verifica se o utilizador tem a função permitida
-  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+  if (allowedRoles && user && !allowedRoles.includes(user.role as UserRole)) {
     toast.error("Acesso negado", {
       description: "Não tem permissões para aceder a esta página."
     });
     
     // Redirecionar para a página apropriada com base na função do utilizador
-    if (user.role === "client") {
+    if (user.role === UserRole.CLIENT) {
       return <Navigate to="/client-portal/processes" replace />;
     } else {
       return <Navigate to="/dashboard" replace />;
@@ -54,13 +54,13 @@ const ProtectedRoute = ({
   }
   
   // Se um módulo for especificado, verifica permissões
-  if (module && !hasPermission(module, action)) {
+  if (module && !hasPermission(module)) {
     toast.error("Acesso negado", {
       description: "Não tem permissões para aceder a esta funcionalidade."
     });
     
     // Redirecionar para a página apropriada com base na função do utilizador
-    if (user?.role === "client") {
+    if (user?.role === UserRole.CLIENT) {
       return <Navigate to="/client-portal" replace />;
     } else {
       return <Navigate to="/dashboard" replace />;

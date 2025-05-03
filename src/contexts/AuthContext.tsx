@@ -1,3 +1,4 @@
+
 import { createContext, useContext } from 'react';
 import type { User, RegisterData, PersonalData, CompanyData } from '../types/auth';
 
