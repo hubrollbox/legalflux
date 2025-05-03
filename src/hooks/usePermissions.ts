@@ -1,43 +1,41 @@
 
-import { useState, useEffect } from 'react';
-import { UserRole, DEFAULT_ROLE_PERMISSIONS, Permission } from '../types/permissions';
+import { useMemo } from 'react';
 import { useAuth } from './useAuth';
+import { UserRole, Permission, DEFAULT_ROLE_PERMISSIONS } from '../types/permissions';
 
 export const usePermissions = () => {
-  const { user } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
-  
-  useEffect(() => {
-    // Simulate loading permissions
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-    
-    return () => clearTimeout(timer);
-  }, []);
-  
+  const { user, isLoading } = useAuth();
+
   const hasRole = (role: UserRole): boolean => {
-    if (!user) return false;
-    return user.role === role;
+    return user?.role === role;
   };
-  
-  const hasPermission = (permission: string, action?: string): boolean => {
+
+  const hasPermission = (permission: string): boolean => {
     if (!user) return false;
     
-    const userRole = user.role as keyof typeof DEFAULT_ROLE_PERMISSIONS;
-    const userPermissions = DEFAULT_ROLE_PERMISSIONS[userRole] || [];
-    
-    // Admin has all permissions
-    if (userRole === UserRole.ADMIN) return true;
-    
-    // Check if the user has specific permission
-    if (action) {
-      return userPermissions.includes(`${permission.toUpperCase()}_${action.toUpperCase()}` as Permission);
+    // Check if the user has the specific permission
+    if (user.permissions?.includes(permission)) {
+      return true;
     }
     
-    // Check if the user has any permission for this module
-    return userPermissions.some(p => p.startsWith(`${permission.toUpperCase()}_`));
+    // Check if the user's role has the permission
+    if (user.role) {
+      const rolePermissions = DEFAULT_ROLE_PERMISSIONS[user.role];
+      return rolePermissions?.includes(permission as Permission) || false;
+    }
+    
+    return false;
   };
-  
-  return { hasPermission, hasRole, isLoading };
+
+  const permissions = useMemo(() => {
+    if (!user?.role) return [];
+    return DEFAULT_ROLE_PERMISSIONS[user.role] || [];
+  }, [user?.role]);
+
+  return {
+    hasRole,
+    hasPermission,
+    permissions,
+    isLoading,
+  };
 };

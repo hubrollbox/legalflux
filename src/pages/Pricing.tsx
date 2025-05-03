@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
 import PlanCard from "@/components/subscription/PlanCard";
@@ -76,7 +76,7 @@ const subscriptionPlans = [
 
 const Subscriptions = () => {
   const { isAuthenticated, user } = useAuth();
-
+  
   // Componente para exibir quando o usuário estiver autenticado
   const AuthenticatedView = () => (
     <DashboardLayout>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, ReactNode } from 'react';
 import { AuthContext } from './AuthContext';
 import { supabase } from '../lib/supabase-client';
@@ -13,7 +12,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<any | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
@@ -41,7 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setUser(null);
         }
         
-        setLoading(false);
+        setIsLoading(false);
       }
     );
 
@@ -63,7 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // Fetch user details from database
         fetchUserProfile(session.user.id);
       } else {
-        setLoading(false);
+        setIsLoading(false);
       }
     });
 
@@ -88,13 +87,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error) {
       console.error('Error fetching user profile:', error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const login = async (email: string, password: string) => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
       
       const { data, error } = await supabase.auth.signInWithPassword({ 
@@ -110,13 +109,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       throw error;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const logout = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
       
       const { error } = await supabase.auth.signOut();
@@ -131,13 +130,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         description: error.message
       });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const register = async (email: string, password: string, name: string) => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
       
       // Register the user with Supabase auth
@@ -179,13 +178,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       throw error;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const forgotPassword = async (email: string) => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
       
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -204,13 +203,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       throw error;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const resetPassword = async (token: string, newPassword: string) => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
       
       const { error } = await supabase.auth.updateUser({
@@ -229,7 +228,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       throw error;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -269,7 +268,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       user, 
       session,
       error, 
-      isLoading: loading, 
+      isLoading, 
       isAuthenticated: !!user,
       login,
       logout,
