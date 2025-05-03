@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, ReactNode } from 'react';
 import { AuthContext } from './AuthContext';
 import { supabase } from '../lib/supabase-client';
@@ -18,7 +19,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     // Set up auth state listener FIRST to avoid missing auth events
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      (event: string, session: any) => {
         setSession(session);
         
         if (session?.user) {

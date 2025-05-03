@@ -1,6 +1,14 @@
 
 import { UserRole } from './permissions';
 
+export enum UserType {
+  ADMIN = 'admin',
+  LAWYER = 'lawyer',
+  SENIOR_LAWYER = 'senior_lawyer',
+  ASSISTANT = 'assistant',
+  CLIENT = 'client'
+}
+
 export interface User {
   id: string;
   name?: string;
