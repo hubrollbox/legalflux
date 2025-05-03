@@ -75,3 +75,20 @@ export enum PriorityLevel {
   HIGH = 'high',
   URGENT = 'urgent'
 }
+
+// Tipos financeiros
+export type TransactionStatus = 'pending' | 'completed' | 'failed' | 'cancelled';
+export type TransactionType = 'income' | 'expense' | 'transfer';
+
+export interface FinancialTransaction {
+  id: string;
+  date: string;
+  amount: number;
+  description?: string;
+  status: TransactionStatus;
+  type: TransactionType;
+  category?: string;
+  accountId?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}

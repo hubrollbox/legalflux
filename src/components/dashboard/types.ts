@@ -37,27 +37,7 @@ export interface RecentTask {
   dueDate?: string;
 }
 
-export interface FinancialTransaction {
-  id: string;
-  date: Date;
-  description: string;
-  amount: number;
-  type: TransactionType;
-  status: TransactionStatus;
-  category: string;
-}
-
-export enum TransactionType {
-  INCOME = 'income',
-  EXPENSE = 'expense'
-}
-
-export enum TransactionStatus {
-  COMPLETED = 'completed',
-  PENDING = 'pending',
-  FAILED = 'failed',
-  CANCELED = 'canceled'
-}
+import type { FinancialTransaction, TransactionType, TransactionStatus } from '../../types';
 
 export interface Case {
   id: string;
