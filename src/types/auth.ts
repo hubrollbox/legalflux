@@ -61,5 +61,6 @@ export enum UserType {
   LAWYER = "lawyer",
   ADMIN = "admin",
   ASSISTANT = "assistant",
-  SENIOR_LAWYER = "senior_lawyer"
+  SENIOR_LAWYER = "senior_lawyer",
+  COMPANY = "company"
 }

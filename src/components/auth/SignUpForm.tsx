@@ -1,5 +1,34 @@
+
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { UserType } from '@/types/auth';
+
+interface CustomSignUpData {
+  name: string;
+  email: string;
+  password: string;
+  role: string; 
+  acceptTerms: boolean;
+  phone?: string;
+  nif?: string;
+  address?: string;
+  userType?: string;
+  professionalData?: {
+    licenseNumber: string;
+    professionalEmail: string;
+    professionalAddress: string;
+    barAssociationId: string;
+    companyAffiliated: boolean;
+  };
+  companyData?: {
+    name: string;
+    nif: string;
+    cae: string;
+    email: string;
+    phone: string;
+    address: string;
+  };
+}
 
 export const SignUpForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -48,16 +77,18 @@ export const SignUpForm = () => {
       setCurrentStep(3); // Próximo passo: dados profissionais
     } else {
       try {
-        await signUp({
+        const signUpData: CustomSignUpData = {
           name: formData.nome,
           email: formData.email,
           password: formData.password,
           role: userType,
-          userType: userType,
           acceptTerms: true,
           phone: formData.telemovel,
-          nif: formData.nif
-        });
+          nif: formData.nif,
+          address: formData.morada
+        };
+        
+        await signUp(signUpData);
       } catch (err: any) {
         setError(err.message || 'Erro ao processar o registro');
       }
@@ -78,15 +109,13 @@ export const SignUpForm = () => {
         return;
       }
       
-      await signUp({
-        userType: 'company',
-        personalData: {
-          fullName: formData.empresaNome,
-          email: formData.empresaEmail,
-          phone: formData.empresaTelefone,
-          password: formData.password,
-          taxId: formData.empresaNIF
-        },
+      const signUpData: CustomSignUpData = {
+        name: formData.empresaNome,
+        email: formData.empresaEmail,
+        password: formData.password,
+        role: 'company',
+        acceptTerms: true,
+        nif: formData.empresaNIF,
         companyData: {
           name: formData.empresaNome,
           nif: formData.empresaNIF,
@@ -94,9 +123,10 @@ export const SignUpForm = () => {
           email: formData.empresaEmail,
           phone: formData.empresaTelefone,
           address: formData.empresaMorada
-        },
-        acceptTerms: true
-      });
+        }
+      };
+      
+      await signUp(signUpData);
     } catch (err: any) {
       setError(err.message || 'Erro ao processar o registro da empresa');
     }
@@ -196,24 +226,29 @@ export const SignUpForm = () => {
             Estou vinculado a uma empresa
           </label>
 
-          <button onClick={() => formData.empresaVinculada ? setCurrentStep(4) : signUp({
-            userType: userType,
-            personalData: {
-              fullName: formData.nome,
-              email: formData.email,
-              phone: formData.telemovel,
-              password: formData.password,
-              taxId: formData.nif
-            },
-            professionalData: {
-              licenseNumber: formData.cedulaProfissional,
-              professionalEmail: formData.email,
-              professionalAddress: formData.morada || '',
-              barAssociationId: formData.ordemProfissional,
-              companyAffiliated: formData.empresaVinculada
-            },
-            acceptTerms: true
-          })}>
+          <button onClick={() => { 
+            if (formData.empresaVinculada) {
+              setCurrentStep(4); 
+            } else {
+              const signUpData: CustomSignUpData = {
+                name: formData.nome,
+                email: formData.email,
+                password: formData.password,
+                role: 'professional',
+                acceptTerms: true,
+                nif: formData.nif,
+                professionalData: {
+                  licenseNumber: formData.cedulaProfissional,
+                  professionalEmail: formData.email,
+                  professionalAddress: formData.morada || '',
+                  barAssociationId: formData.ordemProfissional,
+                  companyAffiliated: formData.empresaVinculada
+                }
+              };
+              
+              signUp(signUpData);
+            }
+          }}>
             {formData.empresaVinculada ? 'Continuar' : 'Registar'}
           </button>
         </div>

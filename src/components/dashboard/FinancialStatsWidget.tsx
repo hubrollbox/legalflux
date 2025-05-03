@@ -1,128 +1,109 @@
-import * as React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import DashboardWidget from './DashboardWidget';
 
-interface FinancialStats {
-  totalRevenue: number;
-  monthlyRevenue: number;
-  revenueChange: number;
-  pendingPayments: number;
-  averageInvoice: number;
-}
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DollarSign, TrendingUp, TrendingDown, AlertCircle, CreditCard } from "lucide-react";
 
 interface FinancialStatsWidgetProps {
-  stats: FinancialStats;
+  data: {
+    totalRevenue: number;
+    totalExpenses: number;
+    pendingInvoices: number;
+    outstandingPayments: number;
+  };
   className?: string;
 }
 
-const FinancialStatsWidget: React.FC<FinancialStatsWidgetProps> = ({
-  stats,
-  className = '',
-}) => {
+const FinancialStatsWidget: React.FC<FinancialStatsWidgetProps> = ({ data, className }) => {
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-PT', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
+    return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(value);
   };
 
+  const cards = [
+    {
+      title: "Receita Total",
+      value: formatCurrency(data.totalRevenue),
+      icon: DollarSign,
+      trend: {
+        value: 12.5,
+        isPositive: true
+      },
+      color: "bg-blue-50 border-blue-100 hover:bg-blue-100"
+    },
+    {
+      title: "Faturação Mensal",
+      value: formatCurrency(data.totalRevenue / 12),
+      icon: TrendingUp,
+      color: "bg-green-50 border-green-100 hover:bg-green-100"
+    },
+    {
+      title: "Despesas",
+      value: formatCurrency(data.totalExpenses),
+      icon: TrendingDown,
+      trend: {
+        value: -2.3,
+        isPositive: false
+      },
+      color: "bg-amber-50 border-amber-100 hover:bg-amber-100"
+    },
+    {
+      title: "Margem de Lucro",
+      value: `${Math.round(((data.totalRevenue - data.totalExpenses) / data.totalRevenue) * 100)}%`,
+      icon: DollarSign,
+      color: "bg-purple-50 border-purple-100 hover:bg-purple-100"
+    },
+    {
+      title: "Faturas Pendentes",
+      value: `${data.pendingInvoices}`,
+      secondaryText: formatCurrency(data.pendingInvoices * 350), // Valor médio
+      icon: AlertCircle,
+      color: "bg-red-50 border-red-100 hover:bg-red-100"
+    },
+    {
+      title: "Pagamentos em Atraso",
+      value: `${data.outstandingPayments}`,
+      secondaryText: formatCurrency(data.outstandingPayments * 275), // Valor médio
+      icon: CreditCard,
+      color: "bg-indigo-50 border-indigo-100 hover:bg-indigo-100"
+    }
+  ];
+
   return (
-    <DashboardWidget 
-      title="Resumo Financeiro" 
-      description="Visão geral das suas finanças"
-      className={className}
-      collapsible
-    >
-      <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-3">
-          {/* Receita Mensal */}
-          <Card className="bg-blue-50 border-blue-100">
-            <CardContent className="p-3">
+    <div className={className}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {cards.map((card, index) => (
+          <Card key={index} className={`transition-all duration-200 ${card.color}`}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-blue-700 font-medium">Receita Mensal</p>
-                  <p className="text-lg font-bold text-blue-900">{formatCurrency(stats.monthlyRevenue)}</p>
+                  <div className="text-2xl font-bold">{card.value}</div>
+                  {card.secondaryText && (
+                    <p className="text-xs text-muted-foreground">{card.secondaryText}</p>
+                  )}
+                  {card.trend && (
+                    <div className="flex items-center mt-2 text-xs">
+                      {card.trend.isPositive ? (
+                        <TrendingUp className="h-3 w-3 text-green-600 mr-1" />
+                      ) : (
+                        <TrendingDown className="h-3 w-3 text-red-600 mr-1" />
+                      )}
+                      <span className={card.trend.isPositive ? "text-green-600" : "text-red-600"}>
+                        {card.trend.isPositive ? "+" : ""}{card.trend.value}%
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <div className="bg-blue-100 p-2 rounded-full">
-                  <DollarSign className="h-4 w-4 text-blue-700" />
+                <div className={`p-2 rounded-full ${card.color.replace('bg-', 'bg-opacity-70 bg-')}`}>
+                  {React.createElement(card.icon, { className: "h-5 w-5 opacity-70" })}
                 </div>
-              </div>
-              <div className="mt-2 flex items-center text-xs">
-                {stats.revenueChange > 0 ? (
-                  <>
-                    <TrendingUp className="h-3 w-3 text-green-600 mr-1" />
-                    <span className="text-green-600">+{stats.revenueChange}% vs. mês anterior</span>
-                  </>
-                ) : (
-                  <>
-                    <TrendingDown className="h-3 w-3 text-red-600 mr-1" />
-                    <span className="text-red-600">{stats.revenueChange}% vs. mês anterior</span>
-                  </>
-                )}
               </div>
             </CardContent>
           </Card>
-
-          {/* Receita Total */}
-          <Card className="bg-green-50 border-green-100">
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-green-700 font-medium">Receita Total</p>
-                  <p className="text-lg font-bold text-green-900">{formatCurrency(stats.totalRevenue)}</p>
-                </div>
-                <div className="bg-green-100 p-2 rounded-full">
-                  <DollarSign className="h-4 w-4 text-green-700" />
-                </div>
-              </div>
-              <div className="mt-2 flex items-center text-xs text-green-700">
-                <span>Acumulado anual</span>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          {/* Pagamentos Pendentes */}
-          <Card className="bg-yellow-50 border-yellow-100">
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-yellow-700 font-medium">Pagamentos Pendentes</p>
-                  <p className="text-lg font-bold text-yellow-900">{formatCurrency(stats.pendingPayments)}</p>
-                </div>
-                <div className="bg-yellow-100 p-2 rounded-full">
-                  <AlertCircle className="h-4 w-4 text-yellow-700" />
-                </div>
-              </div>
-              <div className="mt-2 flex items-center text-xs text-yellow-700">
-                <span>Aguardando recebimento</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Valor Médio */}
-          <Card className="bg-purple-50 border-purple-100">
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-purple-700 font-medium">Valor Médio</p>
-                  <p className="text-lg font-bold text-purple-900">{formatCurrency(stats.averageInvoice)}</p>
-                </div>
-                <div className="bg-purple-100 p-2 rounded-full">
-                  <CreditCard className="h-4 w-4 text-purple-700" />
-                </div>
-              </div>
-              <div className="mt-2 flex items-center text-xs text-purple-700">
-                <span>Por fatura emitida</span>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        ))}
       </div>
-    </DashboardWidget>
+    </div>
   );
 };
 

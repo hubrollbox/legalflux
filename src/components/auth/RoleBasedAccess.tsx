@@ -23,11 +23,11 @@ const RoleBasedAccess: React.FC<RoleBasedAccessProps> = ({
 }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { hasRole, hasPermission, loading } = usePermissions();
+  const { hasRole, hasPermission, isLoading } = usePermissions();
   const [hasAccess, setHasAccess] = useState<boolean>(false);
   
   useEffect(() => {
-    if (loading) return;
+    if (isLoading) return;
     
     let access = true;
     
@@ -40,9 +40,9 @@ const RoleBasedAccess: React.FC<RoleBasedAccessProps> = ({
     }
     
     setHasAccess(access);
-  }, [requiredRole, requiredPermission, hasRole, hasPermission, loading]);
+  }, [requiredRole, requiredPermission, hasRole, hasPermission, isLoading]);
   
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700"></div>

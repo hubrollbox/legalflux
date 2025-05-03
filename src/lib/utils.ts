@@ -56,3 +56,87 @@ export function getColorByPriority(priority: string): string {
       return 'text-gray-600 bg-gray-100 border-gray-200';
   }
 }
+
+export function getUserRoleName(role: string): string {
+  switch (role) {
+    case 'admin':
+      return 'Administrador';
+    case 'lawyer':
+      return 'Advogado';
+    case 'senior_lawyer':
+      return 'Advogado Sénior';
+    case 'assistant':
+      return 'Assistente';
+    case 'client':
+      return 'Cliente';
+    default:
+      return 'Utilizador';
+  }
+}
+
+export interface PlanDetail {
+  name: string;
+  price: number;
+  description: string;
+  features: string[];
+  maxUsers: number;
+  recommended?: boolean;
+}
+
+export function getPlanDetails(): PlanDetail[] {
+  return [
+    {
+      name: 'Basic',
+      price: 49,
+      description: 'Para advogados individuais',
+      features: [
+        'Gestão de processos básica',
+        'Calendário integrado',
+        'Armazenamento de documentos (5GB)',
+        'Suporte por email'
+      ],
+      maxUsers: 1
+    },
+    {
+      name: 'Solo',
+      price: 99,
+      description: 'Para advogados independentes',
+      features: [
+        'Todas as funcionalidades do Basic',
+        'Gestão de processos avançada',
+        'Faturação integrada',
+        'Armazenamento de documentos (20GB)',
+        'Suporte prioritário'
+      ],
+      maxUsers: 3,
+      recommended: true
+    },
+    {
+      name: 'Enterprise',
+      price: 199,
+      description: 'Para escritórios com equipas',
+      features: [
+        'Todas as funcionalidades do Solo',
+        'Gestão de equipas',
+        'Relatórios personalizados',
+        'Armazenamento ilimitado',
+        'Suporte dedicado',
+        'API para integrações'
+      ],
+      maxUsers: 10
+    },
+    {
+      name: 'Personalizado',
+      price: 0,
+      description: 'Para grandes escritórios',
+      features: [
+        'Plano completamente personalizado',
+        'Funcionalidades adaptadas às suas necessidades',
+        'Integrações personalizadas',
+        'Utilizadores ilimitados',
+        'Gerente de conta dedicado'
+      ],
+      maxUsers: 999
+    }
+  ];
+}

@@ -1,4 +1,6 @@
 
+export type CategoryKey = 'case' | 'meeting' | 'deadline' | 'hearing' | 'other' | 'task' | 'trial' | 'client' | 'reminder' | 'document';
+
 export type CalendarEvent = {
   id: string;
   title: string;
@@ -17,9 +19,14 @@ export type CalendarEvent = {
   recurrenceType?: 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'yearly';
 };
 
-export type CategoryKey = 'case' | 'meeting' | 'deadline' | 'hearing' | 'other' | 'task' | 'trial' | 'client' | 'reminder' | 'document';
-
 export interface CalendarProviderProps {
   children: React.ReactNode;
   initialView?: 'day' | 'week' | 'month';
+}
+
+export interface CategoryConfig {
+  label: string;
+  color: string;
+  hoverColor: string;
+  icon: React.ReactNode;
 }

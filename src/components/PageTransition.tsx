@@ -25,9 +25,11 @@ const PageTransition: React.FC<PageTransitionProps> = ({
           duration: 0.3,
           ease: "easeInOut" 
         }}
-        className={className}
+        // Apply className to a wrapper div instead of directly to motion.div
       >
-        {children}
+        <div className={className}>
+          {children}
+        </div>
       </motion.div>
     </AnimatePresence>
   );

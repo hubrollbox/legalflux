@@ -1,91 +1,43 @@
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-
-interface Permission {
-  module: string;
-  action: string;
-}
+import { UserRole, DEFAULT_ROLE_PERMISSIONS, Permission } from '../types/permissions';
+import { useAuth } from './useAuth';
 
 export const usePermissions = () => {
-  const { user, isLoading } = useAuth();
-  const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [loading, setLoading] = useState(true);
-
+  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+  
   useEffect(() => {
-    const loadPermissions = async () => {
-      // Aqui você carregaria as permissões do usuário do backend
-      // Por enquanto vamos simular com base no papel do usuário
-      if (user) {
-        // Simulação simples - permissões baseadas no papel
-        const userPermissions: Permission[] = [];
-        
-        switch (user.role) {
-          case 'ADMIN':
-            // Administradores têm acesso completo
-            userPermissions.push(
-              { module: 'users', action: 'create' },
-              { module: 'users', action: 'read' },
-              { module: 'users', action: 'update' },
-              { module: 'users', action: 'delete' },
-              { module: 'processes', action: 'create' },
-              { module: 'processes', action: 'read' },
-              { module: 'processes', action: 'update' },
-              { module: 'processes', action: 'delete' },
-              { module: 'billing', action: 'read' },
-              { module: 'billing', action: 'update' },
-              { module: 'reports', action: 'read' }
-            );
-            break;
-          case 'LAWYER':
-            // Advogados têm acesso a casos e clientes
-            userPermissions.push(
-              { module: 'processes', action: 'create' },
-              { module: 'processes', action: 'read' },
-              { module: 'processes', action: 'update' },
-              { module: 'clients', action: 'read' },
-              { module: 'documents', action: 'create' },
-              { module: 'documents', action: 'read' },
-              { module: 'documents', action: 'update' }
-            );
-            break;
-          case 'CLIENT':
-            // Clientes só podem ver seus próprios processos
-            userPermissions.push(
-              { module: 'processes', action: 'read' },
-              { module: 'documents', action: 'read' },
-              { module: 'messages', action: 'create' },
-              { module: 'messages', action: 'read' }
-            );
-            break;
-          default:
-            break;
-        }
-        
-        setPermissions(userPermissions);
-      }
-      setLoading(false);
-    };
-
-    if (!isLoading) {
-      loadPermissions();
-    }
-  }, [user, isLoading]);
-
-  const hasPermission = (module: string, action: string = 'read') => {
+    // Simulate loading permissions
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
+  const hasRole = (role: UserRole): boolean => {
+    if (!user) return false;
+    return user.role === role;
+  };
+  
+  const hasPermission = (permission: string, action?: string): boolean => {
     if (!user) return false;
     
-    // Administradores têm todas as permissões
-    if (user.role === 'ADMIN') return true;
+    const userRole = user.role as keyof typeof DEFAULT_ROLE_PERMISSIONS;
+    const userPermissions = DEFAULT_ROLE_PERMISSIONS[userRole] || [];
     
-    return permissions.some(
-      (permission) => 
-        permission.module === module && permission.action === action
-    );
+    // Admin has all permissions
+    if (userRole === UserRole.ADMIN) return true;
+    
+    // Check if the user has specific permission
+    if (action) {
+      return userPermissions.includes(`${permission.toUpperCase()}_${action.toUpperCase()}` as Permission);
+    }
+    
+    // Check if the user has any permission for this module
+    return userPermissions.some(p => p.startsWith(`${permission.toUpperCase()}_`));
   };
-
-  return {
-    hasPermission,
-    isLoading: loading
-  };
+  
+  return { hasPermission, hasRole, isLoading };
 };

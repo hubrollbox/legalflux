@@ -234,13 +234,13 @@ const RegisterForm = () => {
     }
   };
   
-  const handleSubmitForm = async (data: FormData) => {
+  const handleSubmitForm = async () => {
     try {
       // Aqui você implementaria a lógica para enviar os dados para o Supabase
       console.log('Dados do formulário enviados:', formData);
       
       // Simulação de registro bem-sucedido
-      // Redirecionar para o dashboard após o registro
+      // Use navigate instead of router
       navigate('/dashboard');
     } catch (error) {
       console.error('Erro ao registrar:', error);

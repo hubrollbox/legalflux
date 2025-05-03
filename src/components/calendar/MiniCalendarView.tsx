@@ -1,113 +1,119 @@
 
-import React, { useMemo } from 'react';
-import { Calendar } from "@/components/ui/calendar";
-import { Badge } from "@/components/ui/badge";
-import type { CalendarEvent } from '@/types';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale/pt-BR';
-import { cn } from '@/lib/utils';
-import { DayContent, DayProps } from 'react-day-picker';
+import React, { useState, useMemo } from "react";
+import { Calendar } from "../ui/calendar";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { ptPT } from "date-fns/locale";
+import type { CalendarEvent } from "@/types/calendar";
 
 interface MiniCalendarViewProps {
   events: CalendarEvent[];
   selectedDate: Date;
   onDateChange: (date: Date) => void;
+  className?: string;
 }
 
 const MiniCalendarView: React.FC<MiniCalendarViewProps> = ({
   events,
   selectedDate,
   onDateChange,
+  className,
 }) => {
-  // Agrupar eventos por data
-  const eventsByDate = useMemo(() => {
-    const grouped = new Map<string, CalendarEvent[]>();
-    
-    events.forEach(event => {
-      const dateKey = format(new Date(event.start), 'yyyy-MM-dd');
-      if (!grouped.has(dateKey)) {
-        grouped.set(dateKey, []);
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
+
+  // Group events by date
+  const eventsByDay = useMemo(() => {
+    return events.reduce((acc: Record<string, CalendarEvent[]>, event) => {
+      const dateKey = format(new Date(event.start), "yyyy-MM-dd");
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
       }
-      const eventsForDate = grouped.get(dateKey);
-      if (eventsForDate) {
-        eventsForDate.push(event);
-      }
-    });
-    
-    return grouped;
+      acc[dateKey].push(event);
+      return acc;
+    }, {});
   }, [events]);
 
-  // Função para renderizar o conteúdo do dia no calendário
-  const renderDay = (date: Date) => {
-    const dateKey = format(date, 'yyyy-MM-dd');
-    const dayEvents = eventsByDate.get(dateKey) || [];
-    
-    if (dayEvents.length === 0) return null;
-    
-    // Agrupar eventos por categoria
-    const categoryCounts: Record<string, number> = {};
-    dayEvents.forEach(event => {
-      const category = event.category || 'other';
-      categoryCounts[category] = (categoryCounts[category] || 0) + 1;
-    });
-    
-    // Determinar se há eventos de alta prioridade
-    const hasHighPriority = dayEvents.some(event => event.priority === 'high');
-    
-    return (
-      <div className="flex justify-center">
-        <Badge 
-          variant="outline" 
-          className={cn(
-            "w-6 h-6 p-0 flex items-center justify-center text-[10px] font-semibold",
-            hasHighPriority ? "border-red-500 text-red-500" : "border-primary text-primary"
-          )}
-        >
-          {dayEvents.length}
-        </Badge>
-      </div>
-    );
+  // Custom modifiers for days with events
+  const modifiers = useMemo(() => {
+    return {
+      hasEvents: Object.keys(eventsByDay).map((dateStr) => new Date(dateStr)),
+      isSelected: selectedDate,
+    };
+  }, [eventsByDay, selectedDate]);
+
+  // Custom modifier styles
+  const modifiersStyles = {
+    hasEvents: { border: "2px solid #9b87f5" },
+    isSelected: { backgroundColor: "#9b87f5", color: "white" },
   };
 
-  // Custom day renderer
-  const CustomDay = (props: DayProps) => {
+  // Function to render the day cell with event indicators
+  const renderDayContents = (day: Date) => {
+    const dateKey = format(day, "yyyy-MM-dd");
+    const dayEvents = eventsByDay[dateKey] || [];
+    const hasEvents = dayEvents.length > 0;
+
     return (
-      <div {...props}>
-        <div>{format(props.date, 'd')}</div>
-        {renderDay(props.date)}
+      <div className="relative flex flex-col items-center justify-center">
+        <span>{format(day, "d")}</span>
+        {hasEvents && (
+          <div className="flex space-x-0.5 mt-1 absolute -bottom-1">
+            {dayEvents.slice(0, 3).map((_, i) => (
+              <div
+                key={i}
+                className="w-1 h-1 rounded-full bg-primary"
+              />
+            ))}
+            {dayEvents.length > 3 && (
+              <div className="w-1 h-1 rounded-full bg-gray-300" />
+            )}
+          </div>
+        )}
       </div>
     );
   };
 
   return (
-    <div className="rounded-md border bg-card text-card-foreground shadow-sm">
-      <div className="p-4">
-        <Calendar
-          mode="single"
-          selected={selectedDate}
-          onSelect={(date) => date && onDateChange(date)}
-          locale={ptBR}
-          className="w-full"
-          components={{
-            DayContent: CustomDay
-          }}
-          classNames={{
-            day_today: "bg-muted font-bold text-primary",
-            day_selected: "bg-primary text-primary-foreground font-bold",
-          }}
-        />
-      </div>
-      <div className="border-t px-4 py-3">
-        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <Badge variant="outline" className="w-3 h-3 p-0 border-primary" />
-            <span>Eventos</span>
+    <div
+      className={cn(
+        "border rounded-lg shadow-sm bg-white p-3",
+        className
+      )}
+    >
+      <Calendar
+        mode="single"
+        selected={selectedDate}
+        onSelect={(date) => date && onDateChange(date)}
+        onMonthChange={setCurrentMonth}
+        locale={ptPT}
+        modifiers={modifiers}
+        modifiersStyles={modifiersStyles}
+        showOutsideDays
+        className="w-full"
+      />
+
+      <div className="mt-4 text-sm">
+        <h4 className="font-medium mb-2">
+          Eventos em {format(selectedDate, "d 'de' MMMM", { locale: ptPT })}
+        </h4>
+        {eventsByDay[format(selectedDate, "yyyy-MM-dd")]?.length ? (
+          <div className="space-y-1">
+            {eventsByDay[format(selectedDate, "yyyy-MM-dd")].map((event) => (
+              <div
+                key={event.id}
+                className="px-2 py-1 text-xs rounded bg-gray-50 hover:bg-gray-100 cursor-pointer"
+              >
+                <span className="font-medium">{format(new Date(event.start), "HH:mm")}</span>
+                {" - "}
+                {event.title}
+              </div>
+            ))}
           </div>
-          <div className="flex items-center gap-1">
-            <Badge variant="outline" className="w-3 h-3 p-0 border-red-500" />
-            <span>Prioridade Alta</span>
-          </div>
-        </div>
+        ) : (
+          <p className="text-muted-foreground text-xs">
+            Sem eventos agendados para este dia.
+          </p>
+        )}
       </div>
     </div>
   );
