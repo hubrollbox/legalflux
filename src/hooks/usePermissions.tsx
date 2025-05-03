@@ -2,8 +2,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../contexts/AuthContext";
-import { Permission } from "@/types/permissions";
-import { DEFAULT_ROLE_PERMISSIONS } from "@/components/users/UserPermissionsDialog";
+import { Permission, DEFAULT_ROLE_PERMISSIONS } from "@/types/permissions";
+// Removida a linha duplicada: import DEFAULT_ROLE_PERMISSIONS from "@/components/users/UserPermissionsDialog";
 
 interface PermissionsContextType {
   userPermissions: Permission[];
@@ -44,9 +44,9 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
         throw permissionsError;
       }
 
-      if (customPermissions && customPermissions.length > 0 && customPermissions[0].permissionId) {
+      if (customPermissions && customPermissions.length > 0 && customPermissions[0].tipo) {
         // Usuário tem permissões customizadas
-        setUserPermissions([customPermissions[0].permissionId] as unknown as Permission[]);
+        setUserPermissions([customPermissions[0].tipo] as unknown as Permission[]);
       } else {
         // Fallback para permissões padrão por role
         const role = user.role || 'client';
