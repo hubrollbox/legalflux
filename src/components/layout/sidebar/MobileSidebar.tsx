@@ -4,8 +4,10 @@ import { X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import UserProfile from "../UserProfile";
 import type { SidebarItem } from "./SidebarItems";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import CustomImage from '@/components/ui/CustomImage';
+import { UserRole } from "@/types/permissions";
+import { motion } from "framer-motion";
 
 interface MobileSidebarProps {
   user: any;
@@ -25,7 +27,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({
   onLogout
 }) => {
   const filteredItems = items.filter(
-    (item) => !user?.role || item.roles.includes(user.role)
+    (item) => !user?.role || item.roles.includes(user.role as UserRole)
   );
 
   // Fechar o sidebar quando pressionar ESC
@@ -58,22 +60,14 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({
         {isOpen && (
           <>
             {/* Mobile Sidebar Overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+            <div
               className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
               onClick={onClose}
               aria-hidden="true"
             />
 
             {/* Mobile Sidebar Content */}
-            <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            <div
               className="fixed inset-y-0 left-0 w-64 bg-sidebar text-sidebar-foreground z-50 md:hidden"
               role="dialog"
               aria-modal="true"
@@ -123,7 +117,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({
                 </nav>
               </div>
               <UserProfile user={user} />
-            </motion.div>
+            </div>
           </>
         )}
       </AnimatePresence>

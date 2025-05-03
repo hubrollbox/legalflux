@@ -25,7 +25,6 @@ const PageTransition: React.FC<PageTransitionProps> = ({
           duration: 0.3,
           ease: "easeInOut" 
         }}
-        // Apply className to a wrapper div instead of directly to motion.div
       >
         <div className={className}>
           {children}

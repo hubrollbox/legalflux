@@ -1,9 +1,9 @@
 
 import React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-import { supabase } from "../../integrations/supabase/supabase";
-import { useAuth } from "../contexts/AuthContext";
-import { UserRole, Permission, DEFAULT_ROLE_PERMISSIONS } from "../../types/permissions";
+import { supabase } from "../integrations/supabase/supabase";
+import { useAuth } from "./useAuth";
+import { UserRole, Permission, DEFAULT_ROLE_PERMISSIONS } from "../types/permissions";
 
 interface PermissionsContextType {
   userPermissions: Permission[];

@@ -1,74 +1,78 @@
 
-import { ReactNode } from 'react';
-import { LucideIcon } from 'lucide-react';
+export type RecentCase = {
+  id: string;
+  title: string;
+  clientName: string;
+  clientAvatar: string;
+  status: string;
+  updatedAt: Date;
+};
+
+export type RecentTask = {
+  id: string;
+  title: string;
+  assignedToName: string;
+  assignedToAvatar: string;
+  priority: PriorityLevel;
+};
 
 export enum PriorityLevel {
   HIGH = "high",
   MEDIUM = "medium",
-  LOW = "low"
+  LOW = "low",
 }
 
-export interface StatCard {
-  title: string;
-  value: string;
-  icon: string;
-  description?: string;
-  trend?: {
-    value: number;
-    label?: string;
-  };
-}
-
-export interface RecentCase {
-  id: string;
-  title: string;
-  clientName: string;
-  clientAvatar?: string;
-  status: string;
-  updatedAt: string;
-}
-
-export interface RecentTask {
-  id: string;
-  title: string;
-  assignedToName: string;
-  assignedToAvatar?: string;
-  priority: string;
-  dueDate?: string;
-}
-
-import type { FinancialTransaction, TransactionType, TransactionStatus } from '../../types';
-
-export interface Case {
-  id: string;
-  title: string;
-  client: string;
-  status: string;
-  priority: PriorityLevel;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface Task {
+export type Task = {
   id: string;
   title: string;
   description?: string;
-  assignedTo: string;
-  dueDate: Date;
+  dueDate?: Date;
+  completed: boolean;
   priority: PriorityLevel;
-  status: string;
+  assignedTo?: string;
+  assignedToName?: string;
   caseId?: string;
-  caseName?: string;
-}
+  createdAt: Date;
+  updatedAt?: Date;
+};
 
-export interface ClientData {
+export type Case = {
+  id: string;
+  title: string;
+  description?: string;
+  status: string;
+  clientId: string;
+  assignedTo?: string;
+  createdAt: Date;
+  updatedAt?: Date;
+  dueDate?: Date;
+  priority?: PriorityLevel;
+  courtDetails?: {
+    courtName?: string;
+    caseNumber?: string;
+    judge?: string;
+    hearingDate?: Date;
+  };
+};
+
+export type Client = {
   id: string;
   name: string;
   email: string;
-  phone: string;
-  nif: string;
+  phone?: string;
   address?: string;
-  status: string;
-}
+  company?: string;
+  createdAt: Date;
+  updatedAt?: Date;
+  notes?: string;
+};
 
-export type Client = ClientData;
+export type DashboardStats = {
+  activeCases: number;
+  completedTasks: number;
+  pendingTasks: number;
+  upcomingDeadlines: number;
+  billedAmount: number;
+  pendingAmount: number;
+  clientsCount: number;
+};

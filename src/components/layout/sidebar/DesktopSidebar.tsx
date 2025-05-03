@@ -1,12 +1,12 @@
 
 import * as React from "react";
 import { useLocation } from "react-router-dom";
-import { Avatar, AvatarImage, AvatarFallback } from "../../../components/ui/avatar";
-import { LOGO } from "@/assets";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import type { SidebarItem } from "./SidebarItems";
 import { LogOut } from "lucide-react";
-// Using standard img tag since next/image is not available in this React project
+import CustomImage from "@/components/ui/CustomImage";
+import { UserRole } from "@/types/permissions";
 
 interface UserData {
   id: string;
@@ -52,8 +52,8 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
       {/* Logo */}
       <div className="p-4 border-b border-sidebar-border">
         <div className="flex items-center">
-          <Image 
-            src={LOGO.WHITE}
+          <CustomImage 
+            src="/lovable-uploads/2e2650ad-d2c9-49ca-ba40-8c19627e97aa.png" 
             alt="LegalFlux Logo"
             width={32}
             height={32}
@@ -72,7 +72,7 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
             const isActive = pathname === item.href;
             
             // Skip item if it's not allowed for the user's role
-            if (item.roles && !item.roles.includes(user?.role)) {
+            if (item.roles && user?.role && !item.roles.includes(user.role as UserRole)) {
               return null;
             }
 
@@ -149,12 +149,3 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
 };
 
 export default DesktopSidebar;
-
-// Replace <img> with:
-<Image
-  src="/logo.svg"
-  alt="LegalFlux Logo"
-  width={120}
-  height={40}
-  priority
-/>

@@ -1,54 +1,109 @@
 
-import { FileText, FileSpreadsheet, FileImage, FilePresentationIcon, FileCode, File } from "lucide-react";
+import {
+  FileText,
+  FilePdf,
+  FileImage,
+  FileArchive,
+  FileCode,
+  File,
+  FileSpreadsheet,
+  FilePresentation,
+  Clock,
+} from "lucide-react";
 
-export const getFileIcon = (type: string) => {
-  switch (type.toLowerCase()) {
-    case 'document':
-    case 'docx':
-    case 'doc':
+export function getFileIcon(fileType: string) {
+  switch (fileType.toLowerCase()) {
     case 'pdf':
+      return FilePdf;
+    case 'doc':
+    case 'docx':
+    case 'txt':
       return FileText;
-    case 'spreadsheet':
-    case 'xlsx':
-    case 'xls':
-    case 'csv':
-      return FileSpreadsheet;
-    case 'image':
-    case 'png':
     case 'jpg':
     case 'jpeg':
+    case 'png':
+    case 'gif':
       return FileImage;
-    case 'presentation':
-    case 'pptx':
-    case 'ppt':
-      return FilePresentationIcon;
-    case 'code':
+    case 'zip':
+    case 'rar':
+      return FileArchive;
     case 'js':
+    case 'ts':
+    case 'jsx':
+    case 'tsx':
     case 'html':
     case 'css':
+    case 'json':
       return FileCode;
+    case 'xls':
+    case 'xlsx':
+    case 'csv':
+      return FileSpreadsheet;
+    case 'ppt':
+    case 'pptx':
+      return FilePresentation;
     default:
       return File;
   }
-};
+}
 
-export const formatDate = (date: string | Date): string => {
+export function formatDate(date: Date | string): string {
   if (!date) return '';
   
-  const d = new Date(date);
-  return new Intl.DateTimeFormat('pt-PT', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).format(d);
-};
+  const d = typeof date === 'string' ? new Date(date) : date;
+  
+  // Se a data for inválida, retorna string vazia
+  if (isNaN(d.getTime())) return '';
+  
+  const day = d.getDate().toString().padStart(2, '0');
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  const year = d.getFullYear();
+  
+  return `${day}/${month}/${year}`;
+}
 
-export const formatSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-};
+export function formatFileSize(sizeInBytes: number): string {
+  if (sizeInBytes < 1024) {
+    return sizeInBytes + ' B';
+  } else if (sizeInBytes < 1024 * 1024) {
+    return (sizeInBytes / 1024).toFixed(1) + ' KB';
+  } else if (sizeInBytes < 1024 * 1024 * 1024) {
+    return (sizeInBytes / (1024 * 1024)).toFixed(1) + ' MB';
+  } else {
+    return (sizeInBytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+  }
+}
+
+export function getTimeAgo(date: Date | string): string {
+  const now = new Date();
+  const past = typeof date === 'string' ? new Date(date) : date;
+  
+  const seconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+  
+  let interval = Math.floor(seconds / 31536000);
+  if (interval >= 1) {
+    return interval === 1 ? 'há 1 ano' : `há ${interval} anos`;
+  }
+  
+  interval = Math.floor(seconds / 2592000);
+  if (interval >= 1) {
+    return interval === 1 ? 'há 1 mês' : `há ${interval} meses`;
+  }
+  
+  interval = Math.floor(seconds / 86400);
+  if (interval >= 1) {
+    return interval === 1 ? 'há 1 dia' : `há ${interval} dias`;
+  }
+  
+  interval = Math.floor(seconds / 3600);
+  if (interval >= 1) {
+    return interval === 1 ? 'há 1 hora' : `há ${interval} horas`;
+  }
+  
+  interval = Math.floor(seconds / 60);
+  if (interval >= 1) {
+    return interval === 1 ? 'há 1 minuto' : `há ${interval} minutos`;
+  }
+  
+  return seconds < 10 ? 'agora mesmo' : `há ${Math.floor(seconds)} segundos`;
+}

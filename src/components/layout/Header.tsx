@@ -1,9 +1,10 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, PanelLeftClose, PanelLeftOpen, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getUserRoleName, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,9 +15,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ThemeToggle from "@/components/ui/theme-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { motion } from "framer-motion";
 import { userMenuItems } from "./sidebar/sidebarConfig";
 import { useAuth } from "@/hooks/useAuth";
+import { UserRole } from "@/types/permissions";
+
+// Utilitário para obter o nome da função do utilizador
+const getUserRoleName = (role?: string): string => {
+  switch (role) {
+    case 'admin':
+      return 'Administrador';
+    case 'lawyer':
+      return 'Advogado';
+    case 'senior_lawyer':
+      return 'Advogado Sénior';
+    case 'assistant':
+      return 'Assistente';
+    case 'client':
+      return 'Cliente';
+    default:
+      return 'Utilizador';
+  }
+};
 
 interface HeaderProps {
   user: any;
@@ -31,7 +50,7 @@ const UserNav: React.FC<{ user: any; onLogout: () => void }> = ({ user, onLogout
   const { user: authUser } = useAuth();
   
   const filteredMenuItems = userMenuItems.filter(item =>
-    authUser?.role !== undefined && item.roles.includes(authUser.role)
+    authUser?.role !== undefined && item.roles.includes(authUser.role as UserRole)
   );
 
   return (
@@ -86,12 +105,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const isMobile = useIsMobile();
   return (
-    <motion.header 
-      className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-6"
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-6">
       <div className="flex items-center">
         <Button
           variant="ghost"
@@ -124,7 +138,7 @@ const Header: React.FC<HeaderProps> = ({
         <ThemeToggle className="mr-2" />
         <UserNav user={user} onLogout={logout} />
       </div>
-    </motion.header>
+    </header>
   );
 };
 
