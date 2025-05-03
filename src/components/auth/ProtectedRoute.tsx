@@ -1,10 +1,10 @@
 
 import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { usePermissions } from "@/hooks/usePermissions";
-import { toast } from "sonner";
-import { UserRole } from "@/types/permissions";
+import { useAuth } from "../../hooks/useAuth";
+import { usePermissions } from "../../hooks/usePermissions";
+import { toast } from "sonner"; // Importação correta
+import { UserRole } from "../../types/permissions";
 import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteProps {

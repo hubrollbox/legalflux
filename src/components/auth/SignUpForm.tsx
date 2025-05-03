@@ -1,7 +1,6 @@
-
-import { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { UserType } from '@/types/auth';
+import * as React from 'react';
+import { useAuth } from '../../hooks/useAuth';
+import { UserRole } from '../../types/permissions';
 
 interface CustomSignUpData {
   name: string;

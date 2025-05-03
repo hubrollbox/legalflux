@@ -1,22 +1,23 @@
-
-import type { ReactNode } from 'react';
-import { useState, useEffect } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase-client';
-import type { User } from '../../types/auth';
+import React, { useState, useEffect, ReactNode } from 'react';
+import { AuthContext } from './AuthContext';
+import { supabase } from '../lib/supabase-client';
+import { User } from '../types/auth';
+import { UserRole } from '../types/permissions';
+import { toast } from 'sonner';
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getSession = async () => {
-      setLoading(true);
+      setIsLoading(true);
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
@@ -27,12 +28,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             .single();
           if (error) throw error;
           setUser(data as User);
+          setSession(session);
         }
       } catch (error) {
         setError(error as Error);
         setUser(null);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
     getSession();
@@ -48,11 +50,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             setUser(null);
           } else {
             setUser(data as User);
+            setSession(session);
           }
         } else {
           setUser(null);
+          setSession(null);
         }
-        setLoading(false);
+        setIsLoading(false);
       }
     );
     return () => {
@@ -60,9 +64,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
   }, []);
 
-  const signIn = async (email: string, password: string) => {
+  const login = async (email: string, password: string) => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
@@ -74,44 +78,70 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           .single();
         if (userError) throw userError;
         setUser(userData as User);
+        setSession(data.session);
       }
     } catch (error) {
       setError(error as Error);
       setUser(null);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const signOut = async () => {
+  const logout = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
       await supabase.auth.signOut();
       setUser(null);
+      setSession(null);
     } catch (error) {
       setError(error as Error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const signUp = async (userData: any) => {
+  const register = async (email: string, password: string, name?: string) => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
-      const { email, password, ...rest } = userData;
       const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) throw error;
       if (data.user) {
-        await supabase.from('users').insert([{ id: data.user.id, email, ...rest }]);
-        setUser({ id: data.user.id, email, ...rest } as User);
+        await supabase.from('users').insert([{ id: data.user.id, email, name }]);
+        setUser({ id: data.user.id, email, name } as User);
+        setSession(data.session);
       }
     } catch (error) {
       setError(error as Error);
       setUser(null);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
+    }
+  };
+
+  const forgotPassword = async (email: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      await supabase.auth.resetPasswordForEmail(email);
+    } catch (error) {
+      setError(error as Error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resetPassword = async (code: string, password: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      await supabase.auth.updateUserWithPassword(code, password);
+    } catch (error) {
+      setError(error as Error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -124,18 +154,31 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return !!data && !error;
   };
 
+  const getRedirectPath = () => {
+    const { data: { session } } = supabase.auth.getSession();
+    if (session?.user) {
+      return '/dashboard';
+    }
+    return '/login';
+  };
+
   return (
     <AuthContext.Provider value={{ 
       user, 
-      loading, 
+      session,
       error, 
-      signIn, 
-      signOut, 
-      signUp, 
-      checkEmailExists, 
-      login: signIn, 
-      isLoading: loading,
-      isAuthenticated: !!user 
+      isLoading, 
+      isAuthenticated: !!user,
+      login,
+      logout,
+      register,
+      forgotPassword,
+      resetPassword,
+      checkEmailExists,
+      signIn: login,
+      signOut: logout,
+      signUp: (userData: any) => register(userData.email, userData.password, userData.name),
+      getRedirectPath
     }}>
       {children}
     </AuthContext.Provider>

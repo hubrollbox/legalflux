@@ -1,11 +1,12 @@
 
 import React, { ReactNode } from 'react';
-import { usePermissions } from '@/hooks/usePermissions';
-import { Loading } from '@/components/ui/loading';
+import { usePermissions } from '../../hooks/usePermissions';
+import { Loading } from '../../components/ui/loading';
+import { UserRole } from '../../types/permissions';
 
 interface RoleBasedAccessProps {
   children: ReactNode;
-  allowedRoles?: string[];
+  allowedRoles?: UserRole[];
   allowedPermissions?: string[];
   fallback?: ReactNode | null;
 }
