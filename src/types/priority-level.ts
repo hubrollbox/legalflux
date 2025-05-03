@@ -1,18 +1,12 @@
 
 export enum PriorityLevel {
-  HIGH = "high",
-  MEDIUM = "medium",
-  LOW = "low"
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high'
 }
 
-export interface PriorityItem {
-  priority: PriorityLevel;
-  label: string;
-  color: string;
-}
-
-export const priorityOptions: PriorityItem[] = [
-  { priority: PriorityLevel.HIGH, label: "Alta", color: "text-red-600" },
-  { priority: PriorityLevel.MEDIUM, label: "Média", color: "text-amber-500" },
-  { priority: PriorityLevel.LOW, label: "Baixa", color: "text-green-600" }
-];
+export const priorityColorMap: Record<PriorityLevel, string> = {
+  [PriorityLevel.LOW]: 'bg-green-100 text-green-800',
+  [PriorityLevel.MEDIUM]: 'bg-yellow-100 text-yellow-800',
+  [PriorityLevel.HIGH]: 'bg-red-100 text-red-800'
+};

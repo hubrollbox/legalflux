@@ -1,7 +1,14 @@
+
 import { createClient } from '@supabase/supabase-js';
 
-// Using the project reference from your supabase configuration
-const supabaseUrl = 'https://iibvdqcwycrcyskxvsgu.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpYnZkcWN3eWNyY3lza3h2c2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI0MzQ4MzEsImV4cCI6MjA1ODAxMDgzMX0.KZfIOLYclaOtn3WX_za7ti3Q0qgz06CtU5wjkV8IasU';
+// Using environment variables with fallbacks to fixed values
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://iibvdqcwycrcyskxvsgu.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpYnZkcWN3eWNyY3lza3h2c2d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI0MzQ4MzEsImV4cCI6MjA1ODAxMDgzMX0.KZfIOLYclaOtn3WX_za7ti3Q0qgz06CtU5wjkV8IasU';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    storage: localStorage
+  }
+});
