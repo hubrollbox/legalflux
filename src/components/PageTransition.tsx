@@ -1,15 +1,16 @@
 
 import React, { ReactNode, useEffect } from 'react';
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, HTMLMotionProps } from "framer-motion";
 
-interface PageTransitionProps {
+interface PageTransitionProps extends HTMLMotionProps<"div"> {
   children: ReactNode;
   className?: string;
 }
 
 const PageTransition: React.FC<PageTransitionProps> = ({ 
   children, 
-  className = "" 
+  className = "",
+  ...props
 }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -25,6 +26,7 @@ const PageTransition: React.FC<PageTransitionProps> = ({
           duration: 0.3,
           ease: "easeInOut" 
         }}
+        {...props}
       >
         <div className={className}>
           {children}
