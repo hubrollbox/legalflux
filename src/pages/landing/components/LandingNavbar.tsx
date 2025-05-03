@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
-import Image from '@/components/ui/image';
+import Image from '@/components/ui/Image';
 
 const LandingNavbar = () => {
   const navigate = useNavigate();

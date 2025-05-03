@@ -1,8 +1,9 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "./useAuth";
-import { Permission, DEFAULT_ROLE_PERMISSIONS } from "@/types/permissions";
+import { useAuth } from "../contexts/AuthContext";
+import { Permission } from "@/types/permissions";
+import { DEFAULT_ROLE_PERMISSIONS } from "@/components/users/UserPermissionsDialog";
 
 interface PermissionsContextType {
   userPermissions: Permission[];
@@ -32,9 +33,9 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
         return;
       }
 
-      // Attempt to fetch custom permissions for the user from the permissions table
+      // Buscar permissões customizadas do usuário na tabela correta
       const { data: customPermissions, error: permissionsError } = await supabase
-        .from('permissions')
+        .from('permissoes')
         .select('*')
         .eq('user_id', user.id);
 
@@ -43,13 +44,13 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
         throw permissionsError;
       }
 
-      if (customPermissions && customPermissions.length > 0) {
-        // User has custom permissions
-        setUserPermissions(customPermissions[0].permissions as Permission[]);
+      if (customPermissions && customPermissions.length > 0 && customPermissions[0].permissionId) {
+        // Usuário tem permissões customizadas
+        setUserPermissions([customPermissions[0].permissionId] as unknown as Permission[]);
       } else {
-        // Fall back to role-based default permissions
+        // Fallback para permissões padrão por role
         const role = user.role || 'client';
-        setUserPermissions(DEFAULT_ROLE_PERMISSIONS[role] || []);
+        setUserPermissions((DEFAULT_ROLE_PERMISSIONS[role] || []) as unknown as Permission[]);
       }
     } catch (err: any) {
       console.error('Permissions fetch error:', err);
@@ -65,7 +66,7 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }, [user]);
 
   const hasPermission = (permission: Permission): boolean => {
-    return userPermissions.includes(permission) || userPermissions.includes('ADMIN_ACCESS');
+    return userPermissions.includes(permission as any) || userPermissions.includes("ADMIN_ACCESS" as any);
   };
 
   const hasRole = (role: string): boolean => {

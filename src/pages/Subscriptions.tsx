@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "../contexts/AuthContext";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
 import PlanCard from "@/components/subscription/PlanCard";
@@ -14,8 +14,9 @@ import { plans } from "@/shared/plans";
 
 const subscriptionPlans = [
   {
+    id: "basic",
     name: "Basic",
-    price: "49€",
+    price: 49,
     description: "Para advogados individuais com funcionalidades básicas.",
     features: [
       "Gestão de casos",
@@ -28,8 +29,9 @@ const subscriptionPlans = [
     priceId: "price_basic"
   },
   {
+    id: "solo",
     name: "Solo",
-    price: "99€",
+    price: 99,
     description: "Para advogados independentes com funcionalidades adicionais.",
     features: [
       "Tudo do plano Basic",
@@ -42,8 +44,9 @@ const subscriptionPlans = [
     priceId: "price_solo"
   },
   {
+    id: "enterprise",
     name: "Enterprise",
-    price: "199€",
+    price: 199,
     description: "Para escritórios com equipas e funcionalidades avançadas.",
     features: [
       "Tudo do plano Solo",
@@ -56,8 +59,9 @@ const subscriptionPlans = [
     priceId: "price_enterprise"
   },
   {
+    id: "custom",
     name: "Personalizado",
-    price: "Sob orçamento",
+    price: 0,
     description: "Para grandes escritórios com necessidades específicas.",
     features: [
       "Tudo do plano Enterprise",

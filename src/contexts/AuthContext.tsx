@@ -1,5 +1,8 @@
 import { createContext, useContext } from 'react';
-import type { User } from '../types/auth';
+import type { User, RegisterData, PersonalData, CompanyData } from '../types/auth';
+
+// Definição do tipo DetailedUserData como união de dados pessoais e da empresa
+export type DetailedUserData = PersonalData & CompanyData;
 
 export interface AuthContextType {
   user: User | null;
@@ -9,6 +12,9 @@ export interface AuthContextType {
   signOut: () => Promise<void>;
   signUp: (userData: RegisterData | DetailedUserData) => Promise<void>;
   checkEmailExists: (email: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<void>;
+  isLoading: boolean;
+  isAuthenticated: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -17,7 +23,11 @@ export const AuthContext = createContext<AuthContextType>({
   error: null,
   signIn: async () => {},
   signOut: async () => {},
-  signUp: async () => {}
+  signUp: async () => {},
+  checkEmailExists: async () => false,
+  login: async () => {},
+  isLoading: false,
+  isAuthenticated: false
 });
 
 export const useAuth = () => {

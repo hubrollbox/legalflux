@@ -82,9 +82,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signUp = async (email: string, password: string, userData: Partial<User>) => {
+  const signUp = async (userData: any) => {
     try {
       setLoading(true);
+      const { email, password, ...rest } = userData;
       const { error: signUpError, data } = await supabase.auth.signUp({ email, password });
       if (signUpError) throw signUpError;
       if (data.user) {
@@ -94,7 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             {
               id: data.user.id,
               email,
-              ...userData,
+              ...rest,
               created_at: new Date().toISOString()
             }
           ]);
@@ -108,13 +109,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const checkEmailExists = async (email: string): Promise<boolean> => {
+    const { data, error } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', email)
+      .maybeSingle();
+    if (error) {
+      console.error('Error checking email:', error);
+      return false;
+    }
+    return !!data;
+  };
+
   const value = {
     user,
     loading,
     error,
     signIn,
     signOut,
-    signUp
+    signUp,
+    checkEmailExists,
+    login: signIn,
+    isLoading: loading
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

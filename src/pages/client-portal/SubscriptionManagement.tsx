@@ -228,7 +228,7 @@ const SubscriptionManagement: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        {currentPlan?.features.map((feature, index) => (
+                        {currentPlan?.features.map((feature: PlanFeature, index: number) => (
                           <div key={index} className="flex items-center">
                             {feature.included ? (
                               <Check className="h-4 w-4 mr-2 text-green-600" />

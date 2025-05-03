@@ -1,7 +1,7 @@
 
 import * as React from "react";
 import { Link } from "react-router-dom";
-import Image from '@/components/ui/image';
+import Image from '@/components/ui/Image';
 
 interface AuthLayoutProps {
   children: React.ReactNode;

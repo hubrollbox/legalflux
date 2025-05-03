@@ -4,7 +4,7 @@ import { Modal } from "../../../components/ui/modal";
 import { Button } from "../../../components/ui/button";
 import { Download, Printer, Share2 } from "lucide-react";
 import { Document } from "./DocumentTable";
-import { Image } from "@/components/ui/image";
+import Image from "@/components/ui/Image";
 
 interface DocumentPreviewModalProps {
   isOpen: boolean;

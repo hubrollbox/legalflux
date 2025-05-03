@@ -1,14 +1,24 @@
 
+export interface PlanFeature {
+  name: string;
+  included: boolean;
+  details?: string;
+}
+
 export interface Plan {
   id: string;
   name: string;
   price: number | null;
   description: string;
-  features: string[];
+  features: PlanFeature[];
   maxUsers?: number;
   maxStorage?: number;
   maxCases?: number;
   priceId?: string; // Add priceId to match PlanCard component
+  highlight?: boolean; // Indica se o plano deve ser destacado
+  storage?: string;
+  billingCycle?: 'monthly' | 'yearly';
+  popular?: boolean;
 }
 
 export interface NavItem {

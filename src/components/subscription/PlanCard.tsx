@@ -60,9 +60,13 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, isCurrentPlan = false, public
       <CardContent className="flex-grow flex flex-col">
         <ul className="space-y-2 mb-6 flex-grow">
           {plan.features.map((feature, index) => (
-            <li key={index} className="flex items-start">
-              <Check className="h-5 w-5 text-green-500 mr-2 shrink-0" />
-              <span className="text-sm">{feature}</span>
+            <li key={index} className="flex items-center gap-2">
+              <span className={feature.included ? "" : "text-muted-foreground line-through"}>
+                {feature.name}
+                {feature.details && (
+                  <span className="ml-2 text-xs text-gray-500">({feature.details})</span>
+                )}
+              </span>
             </li>
           ))}
         </ul>

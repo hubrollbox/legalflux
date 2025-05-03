@@ -8,7 +8,7 @@ export interface UserData {
   createdAt?: string;
 }
 
-export type UserType = UserData;
+export type User = UserData;
 
 export interface LoginCredentials {
   email: string;
