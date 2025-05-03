@@ -1,77 +1,70 @@
 
-import React, { createContext, useState, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import type { CalendarEvent, CategoryKey } from '@/types';
 
-interface CalendarContextProps {
+interface CalendarContextType {
   events: CalendarEvent[];
-  filteredEvents: CalendarEvent[];
   selectedDate: Date;
-  selectedCategory: CategoryKey | null;
   selectedEvent: CalendarEvent | null;
+  selectedCategory: CategoryKey | null;
   handleDateChange: (date: Date) => void;
+  handleEventSelect: (event: CalendarEvent | null) => void;
   handleCategoryChange: (category: CategoryKey | null) => void;
-  handleEventSelect: (event: CalendarEvent) => void;
-  addEvent: (event: CalendarEvent) => void;
-  updateEvent: (id: string, eventData: Partial<CalendarEvent>) => void;
-  deleteEvent: (id: string) => void;
+  handleAddEvent: (event: CalendarEvent) => void;
+  handleUpdateEvent: (event: CalendarEvent) => void;
+  handleDeleteEvent: (eventId: string) => void;
 }
 
-const CalendarContext = createContext<CalendarContextProps | undefined>(undefined);
+const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
 
 export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectedCategory, setSelectedCategory] = useState<CategoryKey | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
-
-  const filteredEvents = useMemo(() => {
-    if (!selectedCategory) return events;
-    return events.filter(event => event.category === selectedCategory);
-  }, [events, selectedCategory]);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryKey | null>(null);
 
   const handleDateChange = (date: Date) => {
     setSelectedDate(date);
+  };
+
+  const handleEventSelect = (event: CalendarEvent | null) => {
+    setSelectedEvent(event);
   };
 
   const handleCategoryChange = (category: CategoryKey | null) => {
     setSelectedCategory(category);
   };
 
-  const handleEventSelect = (event: CalendarEvent) => {
-    setSelectedEvent(event);
+  const handleAddEvent = (event: CalendarEvent) => {
+    setEvents([...events, event]);
   };
 
-  const addEvent = (event: CalendarEvent) => {
-    setEvents(prevEvents => [...prevEvents, event]);
+  const handleUpdateEvent = (updatedEvent: CalendarEvent) => {
+    setEvents(events.map(event => event.id === updatedEvent.id ? updatedEvent : event));
   };
 
-  const updateEvent = (id: string, eventData: Partial<CalendarEvent>) => {
-    setEvents(prevEvents => 
-      prevEvents.map(event => 
-        event.id === id ? { ...event, ...eventData } : event
-      )
-    );
+  const handleDeleteEvent = (eventId: string) => {
+    setEvents(events.filter(event => event.id !== eventId));
   };
 
-  const deleteEvent = (id: string) => {
-    setEvents(prevEvents => prevEvents.filter(event => event.id !== id));
-  };
-
-  const value = {
-    events,
-    filteredEvents,
-    selectedDate,
-    selectedCategory,
-    selectedEvent,
-    handleDateChange,
-    handleCategoryChange,
-    handleEventSelect,
-    addEvent,
-    updateEvent,
-    deleteEvent
-  };
-
-  return <CalendarContext.Provider value={value}>{children}</CalendarContext.Provider>;
+  return (
+    <CalendarContext.Provider
+      value={{
+        events,
+        selectedDate,
+        selectedEvent,
+        selectedCategory,
+        handleDateChange,
+        handleEventSelect,
+        handleCategoryChange,
+        handleAddEvent,
+        handleUpdateEvent,
+        handleDeleteEvent
+      }}
+    >
+      {children}
+    </CalendarContext.Provider>
+  );
 };
 
 export const useCalendar = () => {

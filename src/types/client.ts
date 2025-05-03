@@ -1,41 +1,26 @@
+
 export type ClientStatus = 'active' | 'inactive' | 'prospect';
 
 export interface Client {
   id: string;
   name: string;
+  email: string;
+  phone: string;
+  address: string;
   nif: string;
   taxId: string;
-  phone: string;
-  email: string;
-  address: string;
-  status: ClientStatus;
-  createdAt: Date;
-  userId: string;
-  lawyerId?: string | null;
   notes?: string;
-}
-
-export interface CreateClientDTO {
-  name: string;
-  nif: string;
-  taxId: string;
-  phone: string;
-  email: string;
-  address: string;
   status: ClientStatus;
-  userId: string;
-  lawyerId?: string | null;
-  notes?: string | undefined;
+  created_at: string;
+  updated_at?: string;
 }
 
-export interface UpdateClientDTO {
-  name?: string;
-  nif?: string;
-  taxId?: string;
-  phone?: string;
-  email?: string;
-  address?: string;
+export type CreateClientDTO = Omit<Client, 'id' | 'created_at' | 'updated_at'>;
+export type UpdateClientDTO = Partial<Omit<Client, 'id' | 'created_at' | 'updated_at'>>;
+
+export interface ClientFilters {
+  search?: string;
   status?: ClientStatus;
-  lawyerId?: string | null;
-  notes?: string | undefined;
+  sortBy?: 'name' | 'created_at' | 'status';
+  sortOrder?: 'asc' | 'desc';
 }

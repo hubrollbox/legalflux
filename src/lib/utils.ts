@@ -43,3 +43,16 @@ export function getStatusColor(status: string): string {
       return 'bg-gray-100 text-gray-800 border-gray-200';
   }
 }
+
+export function getColorByPriority(priority: string): string {
+  switch (priority) {
+    case 'high':
+      return 'text-red-600 bg-red-100 border-red-200';
+    case 'medium':
+      return 'text-amber-600 bg-amber-100 border-amber-200';
+    case 'low':
+      return 'text-green-600 bg-green-100 border-green-200';
+    default:
+      return 'text-gray-600 bg-gray-100 border-gray-200';
+  }
+}

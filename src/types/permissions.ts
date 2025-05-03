@@ -1,33 +1,59 @@
 
 export enum UserRole {
-  ADMIN = "ADMIN",
-  LAWYER = "LAWYER",
-  SENIOR_LAWYER = "SENIOR_LAWYER",
-  ASSISTANT = "ASSISTANT",
-  CLIENT = "CLIENT"
+  CLIENT = "client",
+  LAWYER = "lawyer",
+  ADMIN = "admin",
+  ASSISTANT = "assistant",
+  SENIOR_LAWYER = "senior_lawyer"
 }
 
-export interface Permission {
-  id: string;
-  name: string;
-  description: string;
-}
+export type Permission = 
+  | "READ_CLIENTS"
+  | "WRITE_CLIENTS"
+  | "READ_PROCESSES"
+  | "WRITE_PROCESSES"
+  | "READ_CALENDAR"
+  | "WRITE_CALENDAR"
+  | "READ_INVOICES"
+  | "WRITE_INVOICES"
+  | "READ_REPORTS"
+  | "WRITE_REPORTS"
+  | "ADMIN_ACCESS"
+  | string;
 
-export interface RolePermission {
-  roleId: string;
-  permissionId: string;
-}
-
-export interface UserPermission {
-  userId: string;
-  permissionId: string;
-}
-
-
-export const DEFAULT_ROLE_PERMISSIONS: { [key: string]: string[] } = {
-  ADMIN: ["ADMIN_ACCESS", "VIEW_ALL", "EDIT_ALL"],
-  LAWYER: ["VIEW_CLIENTS", "EDIT_CASES"],
-  SENIOR_LAWYER: ["VIEW_CLIENTS", "EDIT_CASES", "APPROVE_CASES"],
-  ASSISTANT: ["VIEW_CLIENTS"],
-  CLIENT: ["VIEW_SELF", "EDIT_SELF"]
+export const DEFAULT_ROLE_PERMISSIONS: Record<string, Permission[]> = {
+  [UserRole.CLIENT]: [
+    "READ_PROCESSES",
+    "READ_CALENDAR",
+    "READ_INVOICES"
+  ],
+  [UserRole.LAWYER]: [
+    "READ_CLIENTS",
+    "READ_PROCESSES",
+    "WRITE_PROCESSES",
+    "READ_CALENDAR",
+    "WRITE_CALENDAR",
+    "READ_INVOICES"
+  ],
+  [UserRole.ASSISTANT]: [
+    "READ_CLIENTS",
+    "READ_PROCESSES",
+    "READ_CALENDAR",
+    "WRITE_CALENDAR",
+    "READ_INVOICES"
+  ],
+  [UserRole.SENIOR_LAWYER]: [
+    "READ_CLIENTS",
+    "WRITE_CLIENTS",
+    "READ_PROCESSES",
+    "WRITE_PROCESSES",
+    "READ_CALENDAR",
+    "WRITE_CALENDAR",
+    "READ_INVOICES",
+    "WRITE_INVOICES",
+    "READ_REPORTS"
+  ],
+  [UserRole.ADMIN]: [
+    "ADMIN_ACCESS"
+  ]
 };

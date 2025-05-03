@@ -1,3 +1,4 @@
+
 import type { ReactNode } from 'react';
 import { useState, useEffect } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -124,7 +125,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, signIn, signOut, signUp, checkEmailExists, login: signIn, isLoading: loading }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      loading, 
+      error, 
+      signIn, 
+      signOut, 
+      signUp, 
+      checkEmailExists, 
+      login: signIn, 
+      isLoading: loading,
+      isAuthenticated: !!user 
+    }}>
       {children}
     </AuthContext.Provider>
   );

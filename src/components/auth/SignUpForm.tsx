@@ -1,15 +1,13 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 
-import type { UserType } from '../../types/auth';
-
 export const SignUpForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [userType, setUserType] = useState<UserType>('individual');
+  const [userType, setUserType] = useState<string>('individual');
   const [error, setError] = useState('');
   const { signUp } = useAuth();
 
-  const handleUserTypeSelect = (type: UserType) => {
+  const handleUserTypeSelect = (type: string) => {
     setUserType(type);
     setCurrentStep(2);
   };
@@ -41,7 +39,6 @@ export const SignUpForm = () => {
   };
 
   const handleSubmitPersonalData = async () => {
-    // Validação básica
     if (!formData.nome || !formData.nif || !formData.email || !formData.password) {
       alert('Preencha os campos obrigatórios!');
       return;
@@ -51,23 +48,15 @@ export const SignUpForm = () => {
       setCurrentStep(3); // Próximo passo: dados profissionais
     } else {
       try {
-        // Enviar dados para API
-        // TODO: Implement email existence check
-        const emailExists = false; // Temporary implementation
-        if (emailExists) {
-          setError('Este email já está registrado');
-          return;
-        }
         await signUp({
+          name: formData.nome,
+          email: formData.email,
+          password: formData.password,
+          role: userType,
           userType: userType,
-          personalData: {
-            fullName: formData.nome,
-            email: formData.email,
-            phone: formData.telemovel,
-            password: formData.password,
-            taxId: formData.nif
-          },
-          acceptTerms: true
+          acceptTerms: true,
+          phone: formData.telemovel,
+          nif: formData.nif
         });
       } catch (err: any) {
         setError(err.message || 'Erro ao processar o registro');

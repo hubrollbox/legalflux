@@ -103,7 +103,7 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
       ref={elementRef}
       className={cn(
         'p-2 rounded-md cursor-pointer transition-all',
-        getCategoryColor(event.category),
+        getCategoryColor(event.category || 'other'),
         getPriorityBorder(event.priority),
         isDragging ? 'opacity-50' : 'opacity-100',
         className
@@ -113,7 +113,7 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
     >
       <div className="flex items-center gap-2 mb-1">
         <div className="text-muted-foreground">
-          {getCategoryIcon(event.category)}
+          {getCategoryIcon(event.category || 'other')}
         </div>
         <h4 className="font-medium text-sm truncate">{event.title}</h4>
       </div>

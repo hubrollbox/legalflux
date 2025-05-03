@@ -1,23 +1,18 @@
 import React from "react";
-
 import Calendar from "react-calendar";
-
-// Definindo o tipo Value localmente baseado na definição do react-calendar
-type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
-
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Users, Clock, FileText, Calendar as CalendarIcon } from "lucide-react";
+import { Users, Clock, FileText, Calendar as CalendarIcon, Briefcase, Gavel, Scale } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { CategoryKey } from '@/types';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { useCalendar } from './CalendarContext';
 
-
-
-
+// Defining the type Value locally based on react-calendar's definition
+type ValuePiece = Date | null;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 interface CategoryConfig {
   label: string;
@@ -26,7 +21,7 @@ interface CategoryConfig {
   hoverColor: string;
 }
 
-const categoryConfig: Record<CategoryKey, CategoryConfig> = {
+const categoryConfig: Record<string, CategoryConfig> = {
   meeting: {
     label: "Reuniões",
     color: "bg-blue-100 text-blue-700",
@@ -45,6 +40,24 @@ const categoryConfig: Record<CategoryKey, CategoryConfig> = {
     hoverColor: "hover:bg-green-50",
     icon: <FileText className="h-4 w-4" />
   },
+  hearing: {
+    label: "Audiências",
+    color: "bg-purple-100 text-purple-700",
+    hoverColor: "hover:bg-purple-50",
+    icon: <Gavel className="h-4 w-4" />
+  },
+  trial: {
+    label: "Julgamentos",
+    color: "bg-amber-100 text-amber-700",
+    hoverColor: "hover:bg-amber-50",
+    icon: <Scale className="h-4 w-4" />
+  },
+  client: {
+    label: "Clientes",
+    color: "bg-indigo-100 text-indigo-700",
+    hoverColor: "hover:bg-indigo-50",
+    icon: <Briefcase className="h-4 w-4" />
+  },
   other: {
     label: "Outros",
     color: "bg-gray-100 text-gray-700",
@@ -62,20 +75,15 @@ const categoryConfig: Record<CategoryKey, CategoryConfig> = {
     color: "bg-purple-100 text-purple-700",
     hoverColor: "hover:bg-purple-50",
     icon: <FileText className="h-4 w-4" />
+  },
+  case: {
+    label: "Processos",
+    color: "bg-blue-100 text-blue-700",
+    hoverColor: "hover:bg-blue-50",
+    icon: <FileText className="h-4 w-4" />
   }
 };
 
-import { useCalendar } from './CalendarContext';
-
-// Remove these unused declarations:
-// interface MyInterface {}
-// interface MyInterface {
-//   id: string;
-//   name: string;
-// }
-// type MyType = object;
-
-// Remove duplicate Props interfaces and replace with:
 interface EnhancedCalendarSidebarProps {
   className?: string;
   initialDate?: Date;
@@ -91,6 +99,7 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
     handleCategoryChange: onCategoryFilter,
     selectedCategory
   } = useCalendar();
+  
   const handleDateChange = React.useCallback((value: Value) => {
     if (!value) return;
     
@@ -102,10 +111,14 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
   }, [onDateChange]);
 
   const eventsByCategory = React.useMemo(() => {
-    return events.reduce<Record<CategoryKey, number>>((acc, event) => {
-      acc[event.category] = (acc[event.category] || 0) + 1;
-      return acc;
-    }, {} as Record<CategoryKey, number>);
+    const result: Record<string, number> = {};
+    
+    events.forEach(event => {
+      const category = event.category || 'other';
+      result[category] = (result[category] || 0) + 1;
+    });
+    
+    return result;
   }, [events]);
 
   const upcomingEvents = React.useMemo(() => {
@@ -117,15 +130,17 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
   }, [events]);
 
   const renderCategoryFilter = (category: CategoryKey | null) => {
-    const config = category ? categoryConfig[category] : {
-      label: "Todos",
-      color: "bg-gray-100 text-gray-700",
-      hoverColor: "hover:bg-gray-50",
-      icon: <CalendarIcon className="h-4 w-4" />
-    };
+    const config = category && categoryConfig[category] 
+      ? categoryConfig[category] 
+      : {
+        label: "Todos",
+        color: "bg-gray-100 text-gray-700",
+        hoverColor: "hover:bg-gray-50",
+        icon: <CalendarIcon className="h-4 w-4" />
+      };
 
     const isSelected = selectedCategory === category;
-    const count = category ? eventsByCategory[category] || 0 : events.length;
+    const count = category ? (eventsByCategory[category] || 0) : events.length;
 
     return (
       <div
@@ -187,7 +202,9 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
           <ScrollArea className="h-[300px]">
             <div className="space-y-4">
               {upcomingEvents.map(event => {
-                const config = categoryConfig[event.category];
+                const category = event.category || 'other';
+                const config = categoryConfig[category] || categoryConfig.other;
+                
                 return (
                   <div
                     key={event.id}

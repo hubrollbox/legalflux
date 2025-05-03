@@ -2,12 +2,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "../contexts/AuthContext";
-import { Permission, DEFAULT_ROLE_PERMISSIONS } from "@/types/permissions";
-// Removida a linha duplicada: import DEFAULT_ROLE_PERMISSIONS from "@/components/users/UserPermissionsDialog";
+import { UserRole, Permission, DEFAULT_ROLE_PERMISSIONS } from "@/types/permissions";
 
 interface PermissionsContextType {
   userPermissions: Permission[];
-  hasPermission: (permission: Permission) => boolean;
+  hasPermission: (permission: string, action?: string) => boolean;
   hasRole: (role: string) => boolean;
   loading: boolean;
   isLoading: boolean;
@@ -65,7 +64,10 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
     fetchPermissions();
   }, [user]);
 
-  const hasPermission = (permission: Permission): boolean => {
+  const hasPermission = (permission: string, action?: string): boolean => {
+    if (action) {
+      return userPermissions.includes(`${permission}:${action}` as any) || userPermissions.includes("ADMIN_ACCESS" as any);
+    }
     return userPermissions.includes(permission as any) || userPermissions.includes("ADMIN_ACCESS" as any);
   };
 

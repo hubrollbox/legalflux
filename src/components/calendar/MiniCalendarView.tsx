@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
@@ -5,7 +6,7 @@ import type { CalendarEvent } from '@/types';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale/pt-BR';
 import { cn } from '@/lib/utils';
-import type { CalendarDay, Modifiers } from 'react-day-picker';
+import { DayContent, DayProps } from 'react-day-picker';
 
 interface MiniCalendarViewProps {
   events: CalendarEvent[];
@@ -27,15 +28,18 @@ const MiniCalendarView: React.FC<MiniCalendarViewProps> = ({
       if (!grouped.has(dateKey)) {
         grouped.set(dateKey, []);
       }
-      grouped.get(dateKey)?.push(event);
+      const eventsForDate = grouped.get(dateKey);
+      if (eventsForDate) {
+        eventsForDate.push(event);
+      }
     });
     
     return grouped;
   }, [events]);
 
   // Função para renderizar o conteúdo do dia no calendário
-  const renderDay = (day: CalendarDay) => {
-    const dateKey = format(day.date, 'yyyy-MM-dd');
+  const renderDay = (date: Date) => {
+    const dateKey = format(date, 'yyyy-MM-dd');
     const dayEvents = eventsByDate.get(dateKey) || [];
     
     if (dayEvents.length === 0) return null;
@@ -43,7 +47,8 @@ const MiniCalendarView: React.FC<MiniCalendarViewProps> = ({
     // Agrupar eventos por categoria
     const categoryCounts: Record<string, number> = {};
     dayEvents.forEach(event => {
-      categoryCounts[event.category] = (categoryCounts[event.category] || 0) + 1;
+      const category = event.category || 'other';
+      categoryCounts[category] = (categoryCounts[category] || 0) + 1;
     });
     
     // Determinar se há eventos de alta prioridade
@@ -64,6 +69,16 @@ const MiniCalendarView: React.FC<MiniCalendarViewProps> = ({
     );
   };
 
+  // Custom day renderer
+  const CustomDay = (props: DayProps) => {
+    return (
+      <div {...props}>
+        <div>{format(props.date, 'd')}</div>
+        {renderDay(props.date)}
+      </div>
+    );
+  };
+
   return (
     <div className="rounded-md border bg-card text-card-foreground shadow-sm">
       <div className="p-4">
@@ -74,12 +89,7 @@ const MiniCalendarView: React.FC<MiniCalendarViewProps> = ({
           locale={ptBR}
           className="w-full"
           components={{
-            Day: ({ day, modifiers, ...props }: { day: CalendarDay; modifiers: Modifiers; [key: string]: any }) => (
-              <div {...props}>
-                <div>{format(day.date, 'd')}</div>
-                {renderDay(day)}
-              </div>
-            )
+            DayContent: CustomDay
           }}
           classNames={{
             day_today: "bg-muted font-bold text-primary",

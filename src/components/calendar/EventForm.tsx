@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import type { DateRange } from "react-day-picker";
 
 interface EventFormProps {
   onSubmit: (event: EventData) => void;
@@ -15,7 +16,7 @@ interface EventFormProps {
 interface EventData {
   title: string;
   description: string;
-  dateRange: { from: Date | undefined; to?: Date | undefined };
+  dateRange: { from: Date; to?: Date };
   category: string;
   isRecurring: boolean;
   recurrenceType?: string;
@@ -34,6 +35,18 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialData }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
+  };
+  
+  const handleDateRangeChange = (range: DateRange | undefined) => {
+    if (range?.from) {
+      setFormData(prev => ({
+        ...prev,
+        dateRange: { 
+          from: range.from || new Date(), 
+          to: range.to 
+        }
+      }));
+    }
   };
 
   return (
@@ -63,7 +76,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialData }) => {
         <Label>Período</Label>
         <DatePickerWithRange
           value={formData.dateRange}
-          onChange={(range) => setFormData({ ...formData, dateRange: range || { from: new Date(), to: new Date() } })}
+          onChange={handleDateRangeChange}
         />
       </div>
 

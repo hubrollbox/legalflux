@@ -5,7 +5,7 @@ export type CalendarEvent = {
   start: Date;
   end: Date;
   description?: string;
-  category?: string;
+  category: CategoryKey;
   type?: 'deadline' | 'hearing' | 'meeting' | 'other';
   location?: string;
   client?: string;

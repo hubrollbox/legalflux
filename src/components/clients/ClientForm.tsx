@@ -1,10 +1,10 @@
+
 import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import {
   Form,
   FormControl,
@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Client, ClientStatus, CreateClientDTO, UpdateClientDTO } from "@/types/client";
+import type { Client, ClientStatus } from "@/types/client";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,14 +34,14 @@ const clientFormSchema = z.object({
   phone: z.string().min(9, { message: "Telefone inválido" }),
   address: z.string().min(5, { message: "Morada deve ter pelo menos 5 caracteres" }),
   notes: z.string().optional(),
-  status: z.enum(["active", "inactive", "prospect"]).default("active"),
+  status: z.enum(["active", "inactive", "prospect"]),
 });
 
 type ClientFormValues = z.infer<typeof clientFormSchema>;
 
 interface ClientFormProps {
   initialData?: Client;
-  onSubmit: (data: CreateClientDTO | UpdateClientDTO) => void;
+  onSubmit: (data: any) => void;
   isSubmitting?: boolean;
 }
 

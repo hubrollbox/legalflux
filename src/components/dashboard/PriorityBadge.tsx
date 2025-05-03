@@ -1,30 +1,38 @@
 
 import { cn, getColorByPriority } from "@/lib/utils";
-import { PriorityLevel } from "@/types"; // Import PriorityLevel from the correct path
+import { PriorityLevel } from "@/types/priority-level";
+import { Badge } from "@/components/ui/badge";
+import { AlertTriangle } from "lucide-react";
 
 interface PriorityBadgeProps {
-  priority: PriorityLevel;
+  priority: PriorityLevel | string;
+  showIcon?: boolean;
   className?: string;
 }
 
-const PriorityBadge: React.FC<PriorityBadgeProps> = ({ priority, className }) => {
-  const priorityText = {
-    [PriorityLevel.LOW]: 'Baixa',
-    [PriorityLevel.MEDIUM]: 'Média',
-    [PriorityLevel.HIGH]: 'Alta',
-    [PriorityLevel.URGENT]: 'Urgente'
-  };
-  
+const labelMap = {
+  [PriorityLevel.HIGH]: "Alta",
+  [PriorityLevel.MEDIUM]: "Média",
+  [PriorityLevel.LOW]: "Baixa",
+};
+
+const PriorityBadge = ({ priority, showIcon = true, className }: PriorityBadgeProps) => {
+  const priorityKey = priority as PriorityLevel;
+  const label = labelMap[priorityKey] || "Normal";
+
   return (
-    <span
+    <Badge 
+      variant="outline" 
       className={cn(
-        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
-        getColorByPriority(priorityText[priority]),
+        getColorByPriority(priority),
         className
       )}
     >
-      {priorityText[priority]}
-    </span>
+      {showIcon && priorityKey !== PriorityLevel.LOW && (
+        <AlertTriangle className="h-3 w-3 mr-1" />
+      )}
+      {label}
+    </Badge>
   );
 };
 

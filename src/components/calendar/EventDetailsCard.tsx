@@ -98,8 +98,12 @@ const EventDetailsCard: React.FC<EventDetailsCardProps> = ({
   const priorityInfo = getPriorityInfo(event.priority);
 
   return (
-    <Card className="w-full shadow-md border-l-4" style={{ borderLeftColor: event.priority === 'high' ? '#ef4444' : event.priority === 'medium' ? '#eab308' : '#22c55e' }}>
-      <CardHeader className={cn("pb-2", getCategoryColor(event.category))}>
+    <Card className="w-full shadow-md border-l-4" style={{ 
+      borderLeftColor: event.priority === 'high' ? '#ef4444' : 
+                         event.priority === 'medium' ? '#eab308' : 
+                         '#22c55e' 
+    }}>
+      <CardHeader className={cn("pb-2", getCategoryColor(event.category || 'other'))}>
         <div className="flex justify-between items-start">
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-full bg-white/80">
@@ -154,8 +158,8 @@ const EventDetailsCard: React.FC<EventDetailsCardProps> = ({
             )}
 
             <div className="flex items-center gap-2 text-sm">
-              <Badge variant="outline" className={getCategoryColor(event.category)}>
-                {getCategoryName(event.category)}
+              <Badge variant="outline" className={getCategoryColor(event.category || 'other')}>
+                {getCategoryName(event.category || 'other')}
               </Badge>
             </div>
           </div>

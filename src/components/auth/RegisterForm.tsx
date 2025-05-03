@@ -99,7 +99,7 @@ const RegisterForm = () => {
     else if (currentStep === 6) {
       // Validar termos
       if (!validateStep6()) return;
-      handleSubmit();
+      handleSubmitForm();
     }
   };
   
@@ -234,14 +234,14 @@ const RegisterForm = () => {
     }
   };
   
-  const handleSubmit = async () => {
+  const handleSubmitForm = async (data: FormData) => {
     try {
       // Aqui você implementaria a lógica para enviar os dados para o Supabase
       console.log('Dados do formulário enviados:', formData);
       
       // Simulação de registro bem-sucedido
       // Redirecionar para o dashboard após o registro
-      router.push('/dashboard');
+      navigate('/dashboard');
     } catch (error) {
       console.error('Erro ao registrar:', error);
       setError('Ocorreu um erro ao processar o registro. Por favor, tente novamente.');

@@ -6,11 +6,11 @@ import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
 import { usePermissions } from '../../hooks/usePermissions';
 import { useAuth } from '../../hooks/useAuth';
-import { UserRole, Permission } from '../../types/permissions';
+import { UserRole } from '../../types/permissions';
 
 interface RoleBasedAccessProps {
   requiredRole?: UserRole;
-  requiredPermission?: Permission;
+  requiredPermission?: string;
   children: React.ReactNode;
   fallback?: React.ReactNode;
 }

@@ -20,6 +20,7 @@ export interface RegisterData {
   password: string;
   name: string;
   role: string;
+  userType?: string;
   companyName?: string;
   nif?: string;
   phone?: string;
