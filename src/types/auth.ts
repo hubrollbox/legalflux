@@ -54,3 +54,11 @@ export interface ProfessionalData {
   barNumber: string;
   acceptTerms: boolean;
 }
+
+export enum UserType {
+  CLIENT = "client",
+  LAWYER = "lawyer",
+  ADMIN = "admin",
+  ASSISTANT = "assistant",
+  SENIOR_LAWYER = "senior_lawyer"
+}
