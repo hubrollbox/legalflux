@@ -1,10 +1,9 @@
 
 import * as React from "react";
-import { Modal } from "../../../components/ui/modal";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Download, Printer, Share2 } from "lucide-react";
 import { Document } from "./DocumentTable";
-import Image from "@/components/ui/Image";
+import CustomImage from "@/components/ui/CustomImage";
 
 interface DocumentPreviewModalProps {
   isOpen: boolean;
@@ -71,7 +70,7 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
     if (type === 'jpg' || type === 'jpeg' || type === 'png') {
       return (
         <div className="flex justify-center py-6">
-          <Image
+          <CustomImage
             src={`https://placehold.co/800x600?text=${document.name}`}
             alt={document.name}
             width={800}
@@ -128,42 +127,46 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
   };
 
   return (
-    <Modal 
-      isOpen={isOpen} 
-      onClose={onClose}
-      title={document.name}
-      className="max-w-4xl"
-    >
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-muted p-4 rounded-lg">
-          <div>
-            <p className="text-sm font-medium">Detalhes do Documento</p>
-            <div className="text-sm text-muted-foreground mt-1 space-y-1">
-              <p>Tipo: {document.type.toUpperCase()}</p>
-              <p>Tamanho: {document.size}</p>
-              <p>Data de upload: {document.uploadDate}</p>
-              <p>Processo: {document.processNumber || "N/A"}</p>
-            </div>
-          </div>
-          <div className="flex gap-2 self-end sm:self-auto">
-            <Button variant="outline" size="sm">
-              <Share2 className="h-4 w-4 mr-2" />
-              Partilhar
-            </Button>
-            <Button variant="outline" size="sm">
-              <Printer className="h-4 w-4 mr-2" />
-              Imprimir
-            </Button>
-            <Button variant="default" size="sm">
-              <Download className="h-4 w-4 mr-2" />
-              Descarregar
-            </Button>
-          </div>
+    <dialog open={isOpen} className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="bg-white rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-auto">
+        <div className="sticky top-0 bg-white p-4 border-b flex items-center justify-between">
+          <h2 className="text-lg font-medium">{document.name}</h2>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            X
+          </Button>
         </div>
         
-        {getDocumentPreview()}
+        <div className="space-y-6 p-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-muted p-4 rounded-lg">
+            <div>
+              <p className="text-sm font-medium">Detalhes do Documento</p>
+              <div className="text-sm text-muted-foreground mt-1 space-y-1">
+                <p>Tipo: {document.type.toUpperCase()}</p>
+                <p>Tamanho: {document.size}</p>
+                <p>Data de upload: {document.uploadDate}</p>
+                <p>Processo: {document.processNumber || "N/A"}</p>
+              </div>
+            </div>
+            <div className="flex gap-2 self-end sm:self-auto">
+              <Button variant="outline" size="sm">
+                <Share2 className="h-4 w-4 mr-2" />
+                Partilhar
+              </Button>
+              <Button variant="outline" size="sm">
+                <Printer className="h-4 w-4 mr-2" />
+                Imprimir
+              </Button>
+              <Button variant="default" size="sm">
+                <Download className="h-4 w-4 mr-2" />
+                Descarregar
+              </Button>
+            </div>
+          </div>
+          
+          {getDocumentPreview()}
+        </div>
       </div>
-    </Modal>
+    </dialog>
   );
 };
 

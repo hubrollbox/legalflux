@@ -1,11 +1,11 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/supabase';
 import { FileText, Loader2, Upload } from 'lucide-react';
 import { useEffect } from 'react';
-import Image from 'next/image';
-
+import CustomImage from '@/components/ui/CustomImage';
 
 type FilePreview = {
   name: string;
@@ -101,7 +101,7 @@ export const FileUpload = ({ processId, onUploadSuccess }: FileUploadProps) => {
               {uploadedFiles.map((file, index) => (
                 <div key={index} className="relative group">
                   {file.type.startsWith('image/') ? (
-                    <Image 
+                    <CustomImage 
                       src={file.preview} 
                       alt={file.name}
                       width={200}

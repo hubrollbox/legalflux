@@ -1,74 +1,22 @@
 
-import type { ReactNode } from "react";
-import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
-import { usePermissions } from "../../hooks/usePermissions";
-import { useToast } from "@/components/ui/use-toast"; 
-import { UserRole } from "../../types/permissions";
-import { Loader2 } from "lucide-react";
+import React from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from "sonner";
 
-interface ProtectedRouteProps {
-  children: ReactNode;
-  module?: string;
-  action?: 'create' | 'read' | 'update' | 'delete';
-  allowedRoles?: UserRole[];
-}
-
-const ProtectedRoute = ({ 
-  children, 
-  module = '', 
-  action = 'read',
-  allowedRoles
-}: ProtectedRouteProps) => {
-  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
-  const { hasPermission, isLoading: permissionsLoading } = usePermissions();
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
-  const { toast } = useToast();
-  
-  // Se ainda estiver a carregar o estado de autenticação, mostra um loader
-  if (authLoading || permissionsLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-        <p className="text-muted-foreground">A carregar...</p>
-      </div>
-    );
+
+  if (loading) {
+    return <div className="flex items-center justify-center h-screen">Carregando...</div>;
   }
-  
-  // Se não estiver autenticado, redireciona para login
+
   if (!isAuthenticated) {
+    toast.error("Você precisa fazer login para acessar esta página");
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
-  
-  // Verifica se o utilizador tem a função permitida
-  if (allowedRoles && user && !allowedRoles.includes(user.role as UserRole)) {
-    toast.error("Acesso negado", {
-      description: "Não tem permissões para aceder a esta página."
-    });
-    
-    // Redirecionar para a página apropriada com base na função do utilizador
-    if (user.role === UserRole.CLIENT) {
-      return <Navigate to="/client-portal/processes" replace />;
-    } else {
-      return <Navigate to="/dashboard" replace />;
-    }
-  }
-  
-  // Se um módulo for especificado, verifica permissões
-  if (module && !hasPermission(module)) {
-    toast.error("Acesso negado", {
-      description: "Não tem permissões para aceder a esta funcionalidade."
-    });
-    
-    // Redirecionar para a página apropriada com base na função do utilizador
-    if (user?.role === UserRole.CLIENT) {
-      return <Navigate to="/client-portal" replace />;
-    } else {
-      return <Navigate to="/dashboard" replace />;
-    }
-  }
-  
-  // Se todas as verificações passarem, renderiza o conteúdo protegido
+
   return <>{children}</>;
 };
 

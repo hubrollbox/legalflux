@@ -1,29 +1,29 @@
 
-import { CalendarIcon, FileText, FileImage, FileArchive, FileCode } from 'lucide-react';
+import { FileText, FileImage, FileArchive, FileCode } from 'lucide-react';
 import { format, isValid } from 'date-fns';
 import { ptBR } from 'date-fns/locale/pt-BR';
 
 export const getFileIcon = (fileType: string) => {
   switch(fileType?.toLowerCase()) {
     case 'pdf':
-      return FilePdf;
+      return <FileText className="text-red-500" />; // Use FileText for PDF with red color instead of FilePdf
     case 'jpg':
     case 'jpeg':
     case 'png':
     case 'gif':
-      return FileImage;
+      return <FileImage />;
     case 'zip':
     case 'rar':
-      return FileArchive;
+      return <FileArchive />;
     case 'js':
     case 'ts':
     case 'jsx':
     case 'tsx':
     case 'html':
     case 'css':
-      return FileCode;
+      return <FileCode />;
     default:
-      return FileText;
+      return <FileText />;
   }
 };
 

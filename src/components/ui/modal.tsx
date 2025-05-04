@@ -1,48 +1,44 @@
 
-import React from "react";
-import ReactDOM from "react-dom";
-import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import * as React from "react";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  title?: string;
   children: React.ReactNode;
   className?: string;
-  title?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, className, title }) => {
+export const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  title,
+  children,
+  className = ""
+}) => {
   if (!isOpen) return null;
-
-  return ReactDOM.createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div 
-        className={cn(
-          "relative bg-white dark:bg-gray-900 rounded-lg shadow-xl max-h-[90vh] overflow-auto",
-          "w-full max-w-3xl mx-4 border border-border",
-          className
+  
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+      <div className="fixed inset-0 bg-black bg-opacity-50" onClick={onClose}></div>
+      
+      <div className={`relative bg-background rounded-lg shadow-lg max-w-lg w-full mx-4 ${className}`}>
+        {title && (
+          <div className="flex justify-between items-center border-b p-4">
+            <h3 className="text-lg font-semibold">{title}</h3>
+            <button
+              className="text-gray-500 hover:text-gray-700"
+              onClick={onClose}
+            >
+              &times;
+            </button>
+          </div>
         )}
-      >
-        <div className="flex items-center justify-between p-4 border-b">
-          {title && (
-            <h2 className="text-lg font-semibold">{title}</h2>
-          )}
-          <button
-            className="p-1 ml-auto rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            onClick={onClose}
-            aria-label="Fechar"
-          >
-            <X className="h-5 w-5 text-gray-500" />
-          </button>
-        </div>
+        
         <div className="p-4">
           {children}
         </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 };
-
-export { Modal };

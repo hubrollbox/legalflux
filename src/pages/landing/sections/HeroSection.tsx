@@ -1,9 +1,10 @@
+
 import React from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-// Remover: import Image from 'next/image';
+import CustomImage from "@/components/ui/CustomImage";
 
 const HeroSection = () => {
   return (
@@ -37,7 +38,7 @@ const HeroSection = () => {
             <div className="flex -space-x-2">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="w-8 h-8 rounded-full bg-gray-300 border-2 border-white overflow-hidden">
-                  <Image 
+                  <CustomImage 
                     src={`/img/avatar${i}.jpg`} 
                     alt="Usuario" 
                     width={32} 
