@@ -42,7 +42,7 @@ export interface Task {
 }
 
 // Exporte PriorityLevel para uso em outros arquivos
-export { PriorityLevel };
+export type { PriorityLevel };
 
 // Interface para Cliente
 export interface Client {

@@ -1,7 +1,8 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
-import type { Process, Document } from '@/types/process';
+import type { Process } from '@/types/process';
+import type { Document } from '@/types/document';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -116,7 +117,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                   <div className="flex items-center">
                     <Users className="h-4 w-4 mr-2 text-muted-foreground" />
                     <span className="font-medium">Cliente:</span>
-                    <span className="ml-2">{process.client?.name || "--"}</span>
+                    <span className="ml-2">{process.clientId || "--"}</span>
                   </div>
                   <div className="flex items-center">
                     <FileText className="h-4 w-4 mr-2 text-muted-foreground" />
@@ -129,7 +130,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                     <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                     <span className="font-medium">Data de Início:</span>
                     <span className="ml-2">
-                      {format(new Date(process.startDate), 'PPP', { locale: pt })}
+                      {format(new Date(process.startDate!), 'PPP', { locale: pt })}
                     </span>
                   </div>
                   {process.endDate && (
@@ -137,7 +138,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                       <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                       <span className="font-medium">Data de Encerramento:</span>
                       <span className="ml-2">
-                        {format(new Date(process.endDate), 'PPP', { locale: pt })}
+                        {format(new Date(process.endDate!), 'PPP', { locale: pt })}
                       </span>
                     </div>
                   )}
@@ -195,7 +196,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                   <div className="pb-8">
                     <p className="font-medium">Processo criado</p>
                     <p className="text-sm text-muted-foreground">
-                      {format(new Date(process.createdAt), 'PPP', { locale: pt })}
+                      {format(new Date(process.createdAt!), 'PPP', { locale: pt })}
                     </p>
                   </div>
                 </div>
@@ -208,7 +209,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                   <div className="pb-8">
                     <p className="font-medium">Processo iniciado</p>
                     <p className="text-sm text-muted-foreground">
-                      {format(new Date(process.startDate), 'PPP', { locale: pt })}
+                      {format(new Date(process.startDate!), 'PPP', { locale: pt })}
                     </p>
                   </div>
                 </div>
@@ -221,7 +222,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                     <div>
                       <p className="font-medium">Processo finalizado</p>
                       <p className="text-sm text-muted-foreground">
-                        {format(new Date(process.endDate), 'PPP', { locale: pt })}
+                        {format(new Date(process.endDate!), 'PPP', { locale: pt })}
                       </p>
                     </div>
                   </div>

@@ -6,7 +6,7 @@ import { Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import { Plan } from "@/types";
+import { Plan } from "@/types/plan";
 
 interface PlanCardProps {
   plan: Plan;
@@ -19,10 +19,10 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, isCurrentPlan = false, public
 
   const handleSelectPlan = () => {
     if (publicView) {
-      navigate("/register", { state: { selectedPlan: plan.priceId } });
+      navigate("/register", { state: { selectedPlan: plan.id } });
     } else {
       // Lógica para mudar de plano quando já está autenticado
-      console.log("Solicitação para mudar para o plano:", plan.priceId);
+      console.log("Solicitação para mudar para o plano:", plan.id);
     }
   };
 
@@ -30,17 +30,15 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, isCurrentPlan = false, public
     <Card
       className={cn(
         "flex flex-col h-full transition-all duration-200 hover:shadow-lg",
-        plan.highlight && "border-highlight/50 shadow-md",
         isCurrentPlan && "border-2 border-primary"
       )}
     >
       <CardHeader className={cn(
-        "pb-4",
-        plan.highlight && "bg-highlight/10"
+        "pb-4"
       )}>
         <div className="flex justify-between items-start">
           <CardTitle>{plan.name}</CardTitle>
-          {plan.highlight && (
+          {plan.recommended && (
             <Badge className="bg-highlight text-white hover:bg-highlight/90">
               Popular
             </Badge>
@@ -61,19 +59,14 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, isCurrentPlan = false, public
         <ul className="space-y-2 mb-6 flex-grow">
           {plan.features.map((feature, index) => (
             <li key={index} className="flex items-center gap-2">
-              <span className={feature.included ? "" : "text-muted-foreground line-through"}>
-                {feature.name}
-                {feature.details && (
-                  <span className="ml-2 text-xs text-gray-500">({feature.details})</span>
-                )}
-              </span>
+              <span>{feature}</span>
             </li>
           ))}
         </ul>
         <Button
           className={cn(
             "w-full mt-auto",
-            plan.highlight ? "bg-highlight hover:bg-highlight/90" : "",
+            plan.recommended ? "bg-highlight hover:bg-highlight/90" : "",
             plan.name === "Personalizado" ? "bg-primary hover:bg-primary/90" : ""
           )}
           variant={isCurrentPlan ? "outline" : "default"}

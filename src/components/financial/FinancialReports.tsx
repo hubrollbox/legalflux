@@ -156,7 +156,7 @@ const FinancialReports: React.FC<FinancialReportsProps> = () => {
                       mode="range"
                       defaultMonth={dateRange.from ?? new Date()}
                       selected={dateRange}
-                      onSelect={range => setDateRange({ from: range?.from, to: range?.to })}
+                      onSelect={(range: { from: Date | undefined; to: Date | undefined } | undefined) => setDateRange({ from: range?.from, to: range?.to })}
                       numberOfMonths={2}
                     />
                   </PopoverContent>

@@ -37,7 +37,7 @@ const SidebarItems: React.FC<SidebarItemsProps> = ({
             onClick={() => onNavigate(item.href)}
             tooltip={item.name || item.label}
           >
-            {React.createElement(item.icon, { className: "mr-2 h-5 w-5" })}
+            {typeof item.icon === 'function' ? React.createElement(item.icon, { className: "mr-2 h-5 w-5" }) : null}
             <span>{item.name || item.label}</span>
           </SidebarMenuButton>
         </SidebarMenuItem>

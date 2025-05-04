@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Form,
   FormControl,
@@ -31,6 +31,9 @@ import { pt } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Process, ProcessStatus, ProcessType, CreateProcessDTO, UpdateProcessDTO } from '@/types/process';
+import { Client } from '@/types/client';
+import { clientService } from '@/services/clientService';
+import { SubmitHandler } from 'react-hook-form';
 
 // Schema de validação para o formulário de processo
 const processFormSchema = z.object({
@@ -118,7 +121,7 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
     }),
   });
 
-  const handleSubmit: SubmitHandler<ProcessFormValues> = (values) => {
+  const handleSubmit: SubmitHandler<ProcessFormValues> = (values: ProcessFormValues) => {
     const formattedData = {
       ...values,
       startDate: values.startDate.toISOString(),
@@ -241,7 +244,7 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
             control={form.control}
             name="startDate"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>Data de Início <span className="text-red-500">*</span></FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -253,12 +256,8 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
                           !field.value && "text-muted-foreground"
                         )}
                       >
-                        {field.value ? (
-                          format(field.value, "PPP", { locale: pt })
-                        ) : (
-                          <span>Selecione uma data</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        {field.value ? format(field.value, "PPP", { locale: pt }) : "Selecione a data"}
+                        <CalendarIcon className="ml-2 h-4 w-4" />
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
@@ -267,9 +266,7 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
+                      disabled={(date: Date) => date > new Date()}
                       initialFocus
                     />
                   </PopoverContent>
@@ -283,8 +280,8 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
             control={form.control}
             name="endDate"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Data de Encerramento</FormLabel>
+              <FormItem>
+                <FormLabel>Data de Término</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -295,24 +292,17 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
                           !field.value && "text-muted-foreground"
                         )}
                       >
-                        {field.value ? (
-                          format(field.value, "PPP", { locale: pt })
-                        ) : (
-                          <span>Selecione uma data</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        {field.value ? format(field.value, "PPP", { locale: pt }) : "Selecione a data"}
+                        <CalendarIcon className="ml-2 h-4 w-4" />
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={field.value || undefined}
+                      selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) =>
-                        date < (form.getValues().startDate || new Date("1900-01-01")) ||
-                        date > new Date()
-                      }
+                      disabled={(date: Date) => date > new Date()}
                       initialFocus
                     />
                   </PopoverContent>

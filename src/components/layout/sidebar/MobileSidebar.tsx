@@ -91,7 +91,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({
                   "hover:bg-accent hover:text-accent-foreground"
                 )}
               >
-                {Icon && React.createElement(Icon, { className: "h-5 w-5 mr-3" })}
+                {Icon && typeof Icon === 'function' ? React.createElement(Icon, { className: "h-5 w-5 mr-3" }) : null}
                 <span>{item.name}</span>
               </button>
             );

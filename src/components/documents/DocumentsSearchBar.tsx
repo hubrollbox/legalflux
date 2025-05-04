@@ -89,7 +89,7 @@ const DocumentsSearchBar: React.FC<DocumentsSearchBarProps> = ({
               <CalendarComponent
                 mode="single"
                 selected={filters.date}
-                onSelect={(date) => setFilters({ ...filters, date })}
+                onSelect={(date: Date | undefined) => setFilters({ ...filters, date })}
                 initialFocus
                 locale={ptBR}
               />
