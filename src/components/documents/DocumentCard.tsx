@@ -14,7 +14,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import React, { useEffect, useState } from "react";
 // Remover: import Image from 'next/image';
-import { getFileIcon, formatDate } from './documentCardUtils';
+import { getFileIcon, formatDate } from './documentCardUtils.tsx';
 
 interface DocumentCardProps {
   doc: {

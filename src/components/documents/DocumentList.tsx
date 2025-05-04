@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { getFileIcon, formatDate } from "./documentCardUtils";
+import { getFileIcon, formatDate } from "./documentCardUtils.tsx";
 
 interface DocumentListProps {
   documents: Array<{

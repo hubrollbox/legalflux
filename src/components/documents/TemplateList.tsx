@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { formatDate } from "./documentCardUtils";
+import { formatDate } from "./documentCardUtils.tsx";
 
 interface TemplateListProps {
   templates: Array<{
