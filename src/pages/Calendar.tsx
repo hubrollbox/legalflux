@@ -11,7 +11,7 @@ import { format, parse, startOfWeek, getDay } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import EventForm from "@/components/calendar/EventForm";
-import CalendarSidebar from "@/components/calendar/CalendarSidebar";
+import EnhancedCalendarSidebar from "@/components/calendar/EnhancedCalendarSidebar";
 import { useToast } from "@/hooks/use-toast";
 
 interface CalendarEvent {
@@ -134,7 +134,7 @@ const CalendarPage = ({ initialEvents }: CalendarPageProps) => {
       </div>
 
       <div className="flex gap-6 mt-6">
-        <CalendarSidebar
+        <EnhancedCalendarSidebar
           events={events}
           selectedDate={date}
           onDateChange={setDate}
