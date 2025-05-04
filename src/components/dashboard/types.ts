@@ -24,6 +24,7 @@ export interface RecentTask {
   assignedToName: string;
   assignedToAvatar: string;
   priority: PriorityLevel;
+  status?: string;
 }
 
 export interface Case {
@@ -38,4 +39,18 @@ export interface Task {
   title: string;
   status: string;
   priority?: PriorityLevel;
+}
+
+// Exporte PriorityLevel para uso em outros arquivos
+export { PriorityLevel };
+
+// Interface para Cliente
+export interface Client {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  address?: string;
+  nif?: string;
+  created_at?: string;
 }

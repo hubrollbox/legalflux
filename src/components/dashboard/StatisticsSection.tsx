@@ -4,6 +4,7 @@ import SectionHeader from "@/components/layout/SectionHeader";
 import MetricsCard from "@/components/dashboard/MetricsCard";
 import type { StatCard } from "./types";
 import { motion } from "framer-motion";
+import { ReactNode } from "react";
 
 interface StatisticsSectionProps {
   stats: {
@@ -15,12 +16,16 @@ interface StatisticsSectionProps {
   userOrganization: string;
 }
 
+interface EnhancedStatCard extends Omit<StatCard, 'icon'> {
+  icon: ReactNode;
+}
+
 const StatisticsSection: React.FC<StatisticsSectionProps> = ({
   stats,
   userOrganization,
 }) => {
   // Convert stats object to StatCard array
-  const statsCards: StatCard[] = [
+  const statsCards: EnhancedStatCard[] = [
     {
       title: "Processos Activos",
       value: stats.activeProcesses,

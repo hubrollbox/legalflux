@@ -1,12 +1,13 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { Client } from "@/types/client";
-import type { Process } from "@/types/process";
 import type { Document } from "@/types/document";
+import type { Client } from "@/components/dashboard/types";
+import type { Process } from "@/types/process";
 
 interface DocumentFormProps {
   onSubmit: (data: Partial<Document>) => void;
@@ -27,13 +28,14 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
 }) => {
   const [formData, setFormData] = React.useState<Partial<Document>>(
     initialData || {
-      title: '',
+      name: '',
       description: '',
-      fileUrl: '',
-      fileType: '',
+      url: '',
+      type: '',
       clientId: selectedClient,
       processId: selectedProcess,
-      version: 1
+      version: 1,
+      status: 'draft'
     }
   );
 
@@ -43,7 +45,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
     
     setFormData(prev => ({
       ...prev,
-      fileType: files[0]?.type || ''
+      type: files[0]?.type || ''
     }));
   };
 
@@ -61,11 +63,11 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="title">Título do Documento <span className="text-red-500">*</span></Label>
+        <Label htmlFor="name">Título do Documento <span className="text-red-500">*</span></Label>
         <Input
-          id="title"
-          value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          id="name"
+          value={formData.name || ''}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           placeholder="Digite o título do documento"
           required
         />
@@ -88,7 +90,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
           id="file"
           type="file"
           onChange={handleFileChange}
-          required={!initialData?.fileUrl}
+          required={!initialData?.url}
           className="cursor-pointer"
         />
       </div>

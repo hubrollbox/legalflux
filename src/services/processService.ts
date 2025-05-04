@@ -43,4 +43,6 @@ export const processService = {
   }
 };
 
+// Exportar funções individuais para uso direto
 export const getProcesses = processService.listProcesses;
+export const getCurrentProcess = processService.getCurrentProcess;

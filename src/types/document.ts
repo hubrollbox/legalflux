@@ -10,4 +10,11 @@ export interface Document {
   status: 'draft' | 'review' | 'final' | 'archived';
   processId?: string;
   createdById?: string;
+  title?: string;
+  description?: string;
+  fileUrl?: string;
+  fileType?: string;
+  clientId?: string;
+  version?: number;
+  tags?: string[];
 }
