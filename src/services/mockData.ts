@@ -80,3 +80,34 @@ export function getRecentTasks() {
     }
   ];
 }
+
+// Mock data for financial transactions
+export const MOCK_FINANCIAL_TRANSACTIONS = [
+  {
+    id: "txn-001",
+    date: "2023-05-01",
+    description: "Consulting Fee",
+    amount: 1500.00,
+    type: "credit",
+    category: "Services",
+    userId: "user-001"
+  },
+  {
+    id: "txn-002",
+    date: "2023-05-03",
+    description: "Court Filing Fee",
+    amount: -200.00,
+    type: "debit",
+    category: "Legal Fees",
+    userId: "user-002"
+  },
+  {
+    id: "txn-003",
+    date: "2023-05-05",
+    description: "Document Preparation",
+    amount: 500.00,
+    type: "credit",
+    category: "Services",
+    userId: "user-001"
+  }
+];
