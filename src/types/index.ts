@@ -8,4 +8,5 @@ export * from './financial';
 export * from './permissions';
 export * from './priority-level';
 export * from './process';
-export * from './category'; // Added this export
+export * from './category';
+export * from './task'; // Adicionado

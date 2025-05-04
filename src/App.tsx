@@ -1,16 +1,19 @@
 
-import React from "react";
-import { RouterProvider } from "react-router-dom";
-import router from "./router";
-import { Toaster } from "sonner";
-import AuthProvider from "./contexts/AuthProvider";
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { Toaster } from 'sonner';
+import './App.css';
+import AppRoutes from './routes/AppRoutes';
+import { AuthProvider } from './contexts/AuthProvider';
 
 function App() {
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-      <Toaster position="top-right" />
-    </AuthProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <Toaster position="top-right" />
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

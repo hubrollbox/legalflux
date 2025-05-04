@@ -3,33 +3,20 @@ export interface Process {
   id: string;
   title: string;
   description?: string;
-  status: ProcessStatus;
-  type: string;
-  number: string;
+  number?: string; // Número do processo
+  status?: 'active' | 'pending' | 'closed' | 'archived';
+  type?: string;
+  area?: string;
   clientId?: string;
-  clientName?: string;
-  assignedTo?: string;
-  assignedToName?: string;
-  startDate?: string;
-  dueDate?: string;
+  assignedTo?: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
+  deadline?: Date;
   priority?: 'high' | 'medium' | 'low';
   court?: string;
   judge?: string;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export type ProcessStatus = 'active' | 'closed' | 'pending' | 'archived';
-
-export interface ProcessFilter {
-  status?: ProcessStatus[];
-  type?: string[];
-  clientId?: string;
-  assignedTo?: string;
-  startDateFrom?: Date;
-  startDateTo?: Date;
-  dueDateFrom?: Date;
-  dueDateTo?: Date;
-  priority?: string[];
-  search?: string;
+  value?: number;
+  valueType?: 'fixed' | 'hourly' | 'percentage';
+  documents?: string[];
+  tags?: string[];
 }

@@ -1,19 +1,24 @@
 
 export interface Document {
   id: string;
-  name: string;
   title: string;
   description?: string;
-  fileUrl: string;
-  fileType: string;
+  fileUrl?: string;
+  fileType?: string;
+  size?: number;
   clientId?: string;
   processId?: string;
-  version: number;
-  createdAt?: string;
-  updatedAt?: string;
-  size?: string;
-  owner?: string;
-  folder?: string;
-  status?: 'draft' | 'review' | 'final';
+  version?: number;
+  createdBy?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  status?: 'draft' | 'review' | 'final' | 'archived';
   tags?: string[];
+  sharedWith?: string[];
+  downloadUrl?: string;
+  filename?: string;
+  signatureRequired?: boolean;
+  signed?: boolean;
+  signatories?: string[];
+  comments?: string[];
 }

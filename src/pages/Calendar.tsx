@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
@@ -24,6 +25,43 @@ interface CalendarEvent {
   isRecurring?: boolean
   recurrenceType?: 'daily' | 'weekly' | 'monthly' | 'yearly'
 }
+
+// Hook para simular o uso do calendário (poderia ser movido para um arquivo separado)
+const useCalendar = () => {
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+  const createEvent = async (eventData: Partial<CalendarEvent>) => {
+    const newEvent: CalendarEvent = {
+      id: Date.now().toString(),
+      title: eventData.title || 'Untitled',
+      start: eventData.start || new Date(),
+      end: eventData.end || new Date(),
+      category: eventData.category || 'other',
+      description: eventData.description,
+      isRecurring: eventData.isRecurring,
+      recurrenceType: eventData.recurrenceType,
+    };
+    
+    setEvents(prev => [...prev, newEvent]);
+    return newEvent;
+  };
+
+  const updateEvent = async (eventId: string, eventData: Partial<CalendarEvent>) => {
+    setEvents(prev => 
+      prev.map(event => 
+        event.id === eventId
+          ? { ...event, ...eventData }
+          : event
+      )
+    );
+  };
+
+  const deleteEvent = async (eventId: string) => {
+    setEvents(prev => prev.filter(event => event.id !== eventId));
+  };
+
+  return { events, createEvent, updateEvent, deleteEvent };
+};
 
 interface CalendarPageProps {
   initialEvents: CalendarEvent[]

@@ -15,7 +15,7 @@ interface EventDetailsCardProps {
   onClose?: () => void;
 }
 
-export function EventDetailsCard({ event, onEdit, onDelete }) {
+export function EventDetailsCard({ event, onEdit, onDelete, onClose }: EventDetailsCardProps) {
   // Função para obter o ícone com base na categoria do evento
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -37,7 +37,7 @@ export function EventDetailsCard({ event, onEdit, onDelete }) {
   };
 
   // Função para obter o nome da categoria
-  const getCategoryName = (categoryKey) => {
+  const getCategoryName = (categoryKey: string) => {
     // If categoryKey is undefined, use a default category or return a placeholder
     if (!categoryKey) return "Sem categoria";
     
@@ -91,7 +91,7 @@ export function EventDetailsCard({ event, onEdit, onDelete }) {
         <div className="flex justify-between items-start">
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-full bg-white/80">
-              {getCategoryIcon(event.category)}
+              {getCategoryIcon(event.category || '')}
             </div>
             <CardTitle className="text-lg font-semibold">{event.title}</CardTitle>
           </div>
@@ -106,9 +106,9 @@ export function EventDetailsCard({ event, onEdit, onDelete }) {
           <div className="flex items-center gap-2 text-sm">
             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
             <span>
-              {format(new Date(event.start), 'PPP', { locale: ptBR })} • 
-              {format(new Date(event.start), 'HH:mm', { locale: ptBR })}
-              {event.end && ` - ${format(new Date(event.end), 'HH:mm', { locale: ptBR })}`}
+              {format(event.start, 'PPP', { locale: ptBR })} • 
+              {format(event.start, 'HH:mm', { locale: ptBR })}
+              {event.end && ` - ${format(event.end, 'HH:mm', { locale: ptBR })}`}
             </span>
           </div>
 

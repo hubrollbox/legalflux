@@ -1,9 +1,12 @@
 
-export type CategoryKey = 'work' | 'personal' | 'meeting' | 'holiday' | 'reminder' | 'deadline' | 'legal' | 'court' | 'client' | 'other';
-
-export interface Category {
-  id: string;
-  name: string;
-  key: CategoryKey;
-  color: string;
-}
+export type CategoryKey = 
+  | 'meeting'
+  | 'deadline'
+  | 'task'
+  | 'hearing'
+  | 'trial'
+  | 'client'
+  | 'other'
+  | 'reminder'
+  | 'document'
+  | 'case';

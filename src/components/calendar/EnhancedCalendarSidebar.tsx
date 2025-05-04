@@ -1,3 +1,4 @@
+
 import React from "react";
 import Calendar from "react-calendar";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
@@ -124,8 +125,8 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
   const upcomingEvents = React.useMemo(() => {
     const now = new Date();
     return events
-      .filter(event => event.start >= now)
-      .sort((a, b) => a.start.getTime() - b.start.getTime())
+      .filter(event => new Date(event.start) >= now)
+      .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
       .slice(0, 5);
   }, [events]);
 
@@ -216,24 +217,24 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
                     <div className="flex items-center gap-2 mb-2">
                       {config.icon}
                       <div className="flex items-center gap-2">
-  <h4 className="font-medium">{event.title}</h4>
-  {event.priority && (
-    <Badge 
-      variant="outline"
-      className={cn(
-        'text-xs capitalize',
-        event.priority === 'high' && 'bg-red-100 text-red-700',
-        event.priority === 'medium' && 'bg-orange-100 text-orange-700',
-        event.priority === 'low' && 'bg-green-100 text-green-700'
-      )}
-    >
-      {event.priority}
-    </Badge>
-  )}
-</div>
+                        <h4 className="font-medium">{event.title}</h4>
+                        {event.priority && (
+                          <Badge 
+                            variant="outline"
+                            className={cn(
+                              'text-xs capitalize',
+                              event.priority === 'high' && 'bg-red-100 text-red-700',
+                              event.priority === 'medium' && 'bg-orange-100 text-orange-700',
+                              event.priority === 'low' && 'bg-green-100 text-green-700'
+                            )}
+                          >
+                            {event.priority}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                     <p className="text-sm opacity-80">
-                      {format(event.start, 'dd/MM/yyyy HH:mm', { locale: ptBR })}
+                      {format(new Date(event.start), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
                     </p>
                     {event.description && (
                       <p className="text-sm mt-1 opacity-70 line-clamp-2">

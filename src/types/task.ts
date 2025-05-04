@@ -3,18 +3,13 @@ export interface Task {
   id: string;
   title: string;
   description?: string;
-  status: 'pending' | 'completed' | 'cancelled' | 'in_progress';
-  priority: 'high' | 'medium' | 'low';
-  dueDate?: string;
+  dueDate?: Date;
+  priority?: 'high' | 'medium' | 'low';
+  status?: 'pending' | 'in-progress' | 'completed' | 'cancelled';
   assignedTo?: string;
-  assignedToName?: string;
   processId?: string;
-  processName?: string;
   clientId?: string;
-  clientName?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  completedAt?: string;
-  completedBy?: string;
-  category?: string;
+  createdBy?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
