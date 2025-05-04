@@ -1,6 +1,6 @@
 
 import { cn, getColorByPriority } from "@/lib/utils";
-import { PriorityLevel } from "@/types/priority-level";
+import { PriorityLevel, PriorityLevelEnum } from "@/types/priority-level";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle } from "lucide-react";
 
@@ -10,10 +10,11 @@ interface PriorityBadgeProps {
   className?: string;
 }
 
-const labelMap = {
-  [PriorityLevel.HIGH]: "Alta",
-  [PriorityLevel.MEDIUM]: "Média",
-  [PriorityLevel.LOW]: "Baixa",
+const labelMap: Record<PriorityLevel, string> = {
+  'high': "Alta",
+  'medium': "Média",
+  'low': "Baixa",
+  'none': "Normal"
 };
 
 const PriorityBadge = ({ priority, showIcon = true, className }: PriorityBadgeProps) => {
@@ -28,7 +29,7 @@ const PriorityBadge = ({ priority, showIcon = true, className }: PriorityBadgePr
         className
       )}
     >
-      {showIcon && priorityKey !== PriorityLevel.LOW && (
+      {showIcon && priorityKey !== PriorityLevelEnum.LOW && (
         <AlertTriangle className="h-3 w-3 mr-1" />
       )}
       {label}

@@ -9,4 +9,5 @@ export * from './permissions';
 export * from './priority-level';
 export * from './process';
 export * from './category';
-export * from './task'; // Adicionado
+export * from './task';
+export * from './plan';

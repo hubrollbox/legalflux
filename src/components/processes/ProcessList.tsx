@@ -84,6 +84,17 @@ const ProcessList: React.FC<ProcessListProps> = ({
   onDelete,
   onAddDocument,
 }) => {
+  // Format date safely
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return "N/A";
+    try {
+      return new Date(dateString).toLocaleDateString('pt-BR');
+    } catch (error) {
+      console.error("Invalid date:", dateString);
+      return "Data inválida";
+    }
+  };
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -110,14 +121,14 @@ const ProcessList: React.FC<ProcessListProps> = ({
               <TableRow key={process.id}>
                 <TableCell className="font-medium">{process.number}</TableCell>
                 <TableCell>{process.title}</TableCell>
-                <TableCell>{process.client?.name || "--"}</TableCell>
+                <TableCell>{process.clientId || "--"}</TableCell>
                 <TableCell>{getProcessTypeName(process.type)}</TableCell>
                 <TableCell>
-                  <Badge className={getStatusColor(process.status)}>
-                    {getStatusName(process.status)}
+                  <Badge className={getStatusColor(process.status as ProcessStatus)}>
+                    {getStatusName(process.status as ProcessStatus)}
                   </Badge>
                 </TableCell>
-                <TableCell>{new Date(process.startDate).toLocaleDateString('pt-BR')}</TableCell>
+                <TableCell>{formatDate(process.startDate)}</TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

@@ -1,12 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import type { SubmitHandler } from "react-hook-form";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
+import React, { useState } from 'react';
+import { 
   Form,
   FormControl,
   FormField,
@@ -14,7 +7,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { 
   Select,
   SelectContent,
   SelectItem,
@@ -22,14 +18,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { 
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
+import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Process, ProcessStatus, ProcessType, CreateProcessDTO, UpdateProcessDTO } from "@/types/process";
-import type { Client } from "@/types/client";
-import { clientService } from "@/services/clientService";
+import { Process, ProcessStatus, ProcessType, CreateProcessDTO, UpdateProcessDTO } from '@/types/process';
 
 // Schema de validação para o formulário de processo
 const processFormSchema = z.object({
@@ -125,6 +126,11 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
       description: values.description || undefined,
     };
     onSubmit(formattedData as CreateProcessDTO | UpdateProcessDTO);
+  };
+
+  const formatDate = (date: Date | string | undefined) => {
+    if (!date) return undefined;
+    return format(new Date(date), 'yyyy-MM-dd');
   };
 
   return (

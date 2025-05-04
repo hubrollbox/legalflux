@@ -10,6 +10,15 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+// Define UserRole enum constants for usage as values
+const UserRoleValues = {
+  CLIENT: 'client',
+  ADMIN: 'admin',
+  LAWYER: 'lawyer',
+  SENIOR_LAWYER: 'senior_lawyer',
+  ASSISTANT: 'assistant'
+};
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<any | null>(null);
@@ -156,7 +165,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const getRedirectPath = () => {
-    if (user?.role === UserRole.CLIENT) {
+    if (user?.role === UserRoleValues.CLIENT) {
       return '/client-portal/processes';
     } else if (user) {
       return '/dashboard';

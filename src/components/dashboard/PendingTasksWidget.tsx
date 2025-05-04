@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { CheckCircle, Clock, AlertCircle, ExternalLink, ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -25,9 +24,12 @@ const PendingTasksWidget: React.FC<PendingTasksWidgetProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<'dueDate' | 'priority'>('dueDate');
 
-  // Filtrar e ordenar tarefas
+  // Filtrar e ordenar tarefas - fixed status comparison
   const filteredTasks = tasks
-    .filter(task => task.status === 'pending' || task.status === 'in-progress' || task.status === 'todo' || task.status === 'in_progress')
+    .filter(task => {
+      const status = task.status.toLowerCase();
+      return status === 'pending' || status === 'in-progress' || status === 'todo' || status === 'in_progress';
+    })
     .filter(task => {
       if (filterPriority === 'all') return true;
       return task.priority?.toLowerCase() === filterPriority;
@@ -157,7 +159,10 @@ const PendingTasksWidget: React.FC<PendingTasksWidgetProps> = ({
           </div>
         )}
         
-        {tasks.filter(t => t.status === 'pending' || t.status === 'in-progress' || t.status === 'todo' || t.status === 'in_progress').length > 0 && onViewAll && (
+        {tasks.filter(t => {
+          const status = t.status.toLowerCase();
+          return status === 'pending' || status === 'in-progress' || status === 'todo' || status === 'in_progress';
+        }).length > 0 && onViewAll && (
           <div className="pt-2">
             <Button 
               variant="ghost" 

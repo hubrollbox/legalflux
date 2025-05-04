@@ -6,7 +6,12 @@ import type { StatCard } from "./types";
 import { motion } from "framer-motion";
 
 interface StatisticsSectionProps {
-  stats: StatCard[];
+  stats: {
+    activeProcesses: number;
+    pendingDocuments: number;
+    completedCases: number;
+    averageResolutionTime: number;
+  }; 
   userOrganization: string;
 }
 
@@ -14,6 +19,34 @@ const StatisticsSection: React.FC<StatisticsSectionProps> = ({
   stats,
   userOrganization,
 }) => {
+  // Convert stats object to StatCard array
+  const statsCards: StatCard[] = [
+    {
+      title: "Processos Activos",
+      value: stats.activeProcesses,
+      description: "Processos em andamento",
+      icon: <span className="text-blue-500">📊</span>
+    },
+    {
+      title: "Documentos Pendentes",
+      value: stats.pendingDocuments,
+      description: "Necessitam revisão",
+      icon: <span className="text-green-500">📝</span>
+    },
+    {
+      title: "Casos Finalizados",
+      value: stats.completedCases, 
+      description: "No último período",
+      icon: <span className="text-purple-500">✅</span>
+    },
+    {
+      title: "Tempo Médio",
+      value: `${stats.averageResolutionTime} dias`,
+      description: "Resolução de casos",
+      icon: <span className="text-amber-500">⏱️</span>
+    }
+  ];
+
   // Cores para os cards de estatísticas
   const cardColors = [
     "bg-blue-50 border-blue-200 hover:bg-blue-100",
@@ -29,7 +62,7 @@ const StatisticsSection: React.FC<StatisticsSectionProps> = ({
       </SectionHeader>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-        {stats.map((item, index) => (
+        {statsCards.map((item, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 20 }}
