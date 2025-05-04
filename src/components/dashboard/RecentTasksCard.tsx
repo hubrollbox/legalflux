@@ -16,7 +16,7 @@ const RecentTasksCard: React.FC<RecentTasksCardProps> = ({ tasks }) => {
       </CardHeader>
       <CardContent className="p-4">
         <ul className="space-y-4">
-          {tasks.map((item) => (
+          {(tasks || []).map((item) => (
             <li key={item.id} className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <Avatar>
