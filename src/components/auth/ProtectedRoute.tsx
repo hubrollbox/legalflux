@@ -14,12 +14,17 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   }
 
   if (!isAuthenticated) {
-    toast({
-      title: "Acesso negado",
-      description: "Precisa fazer login para aceder a esta página",
-      variant: "destructive",
-    });
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/" replace />;
+  }
+
+  if (user?.role === "client") {
+    if (!location.pathname.startsWith("/client-portal") && location.pathname !== "/logout") {
+      return <Navigate to="/client-portal" replace />;
+    }
+  } else if (["lawyer", "senior_lawyer", "assistant", "admin"].includes(user?.role)) {
+    if (!location.pathname.startsWith("/dashboard") && location.pathname !== "/logout") {
+      return <Navigate to="/dashboard" replace />;
+    }
   }
 
   return <>{children}</>;
