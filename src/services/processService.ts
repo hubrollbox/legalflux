@@ -42,3 +42,5 @@ export const processService = {
     };
   }
 };
+
+export const getProcesses = processService.listProcesses;
