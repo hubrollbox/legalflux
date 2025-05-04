@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -62,6 +63,17 @@ const getProcessTypeName = (type: string) => {
 };
 
 const ProcessCard: React.FC<ProcessCardProps> = ({ process, onView }) => {
+  // Função auxiliar segura para formatação de data
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return "Data não especificada";
+    try {
+      return format(new Date(dateString), 'PPP', { locale: pt });
+    } catch (error) {
+      console.error("Erro ao formatar data:", error);
+      return "Data inválida";
+    }
+  };
+
   return (
     <Card className="h-full flex flex-col">
       <CardContent className="pt-6 flex-grow">
@@ -80,7 +92,7 @@ const ProcessCard: React.FC<ProcessCardProps> = ({ process, onView }) => {
           </div>
           <div className="flex items-center text-sm">
             <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span>{format(new Date(process.startDate), 'PPP', { locale: pt })}</span>
+            <span>{formatDate(process.startDate)}</span>
           </div>
         </div>
       </CardContent>

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, PanelLeftClose, PanelLeftOpen, LogOut } from "lucide-react";
+import { Menu, PanelLeftClose, PanelLeftOpen, LogOut, User, Settings, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -15,9 +15,30 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ThemeToggle from "@/components/ui/theme-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { userMenuItems } from "./sidebar/sidebarConfig";
 import { useAuth } from "@/hooks/useAuth";
 import { UserRole } from "@/types/permissions";
+
+// Menu de usuário definido aqui já que estava faltando no arquivo importado
+const userMenuItems = [
+  {
+    label: "Perfil",
+    href: "/profile",
+    icon: User,
+    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"] as UserRole[]
+  },
+  {
+    label: "Assinaturas",
+    href: "/subscriptions",
+    icon: CreditCard,
+    roles: ["admin", "lawyer", "senior_lawyer"] as UserRole[]
+  },
+  {
+    label: "Configurações",
+    href: "/settings",
+    icon: Settings,
+    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"] as UserRole[]
+  },
+];
 
 // Utilitário para obter o nome da função do utilizador
 const getUserRoleName = (role?: string): string => {
@@ -49,9 +70,10 @@ const UserNav: React.FC<{ user: any; onLogout: () => void }> = ({ user, onLogout
   const navigate = useNavigate();
   const { user: authUser } = useAuth();
   
-  const filteredMenuItems = userMenuItems.filter(item =>
-    authUser?.role !== undefined && item.roles.includes(authUser.role as UserRole)
-  );
+  const filteredMenuItems = userMenuItems.filter(item => {
+    if (!authUser?.role) return true;
+    return item.roles.includes(authUser.role as UserRole);
+  });
 
   return (
     <DropdownMenu>

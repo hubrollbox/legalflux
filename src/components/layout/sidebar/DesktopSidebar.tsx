@@ -1,25 +1,15 @@
 
-import * as React from "react";
-import { useLocation } from "react-router-dom";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
-import type { SidebarItem } from "./SidebarItems";
+import React from "react";
 import { LogOut } from "lucide-react";
-import CustomImage from "@/components/ui/CustomImage";
-import { UserRole } from "@/types/permissions";
-
-interface UserData {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  role: string;
-}
+import { SidebarItem } from "./SidebarItems";
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface DesktopSidebarProps {
-  user: UserData | null;
+  user: any;
   items: SidebarItem[];
-  isCollapsed: boolean;
+  isCollapsed?: boolean;
   onNavigate: (href: string) => void;
   onLogout: () => void;
 }
@@ -27,122 +17,129 @@ interface DesktopSidebarProps {
 const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
   user,
   items,
-  isCollapsed,
+  isCollapsed = false,
   onNavigate,
   onLogout,
 }) => {
-  const location = useLocation();
-  const pathname = location.pathname;
-
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-  };
-
   return (
     <aside
       className={cn(
-        "bg-sidebar border-r border-sidebar-border h-screen fixed left-0 top-0 z-20 hidden md:flex flex-col transition-all duration-300 overflow-hidden",
-        isCollapsed ? "w-16" : "w-64"
+        "hidden md:flex flex-col border-r bg-background h-screen sticky top-0 transition-all",
+        isCollapsed ? "w-16" : "w-64",
       )}
     >
-      {/* Logo */}
-      <div className="p-4 border-b border-sidebar-border">
-        <div className="flex items-center">
-          <CustomImage 
-            src="/lovable-uploads/2e2650ad-d2c9-49ca-ba40-8c19627e97aa.png" 
-            alt="LegalFlux Logo"
-            width={32}
-            height={32}
-            className="h-8 w-auto"
+      {/* Sidebar Header */}
+      <div className="p-4 border-b flex items-center justify-center">
+        <div
+          className={cn(
+            "flex items-center gap-2 h-8",
+            isCollapsed && "justify-center"
+          )}
+        >
+          <img
+            src="/logo.svg"
+            alt="Logo"
+            className="h-8 w-8"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = "/favicon.ico";
+            }}
           />
           {!isCollapsed && (
-            <span className="ml-3 text-sidebar-foreground font-bold text-lg">LegalFlux</span>
+            <span className="font-bold text-lg">LegalFlux</span>
           )}
         </div>
       </div>
 
-      {/* Navigation Items */}
-      <div className="flex-1 overflow-y-auto py-4 scrollbar-none">
-        <nav className="px-2 space-y-1">
-          {items.map((item, index) => {
-            const isActive = pathname === item.href;
-            
-            // Skip item if it's not allowed for the user's role
-            if (item.roles && user?.role && !item.roles.includes(user.role as UserRole)) {
-              return null;
-            }
-
-            return (
-              <button
-                key={index}
-                className={cn(
-                  "w-full flex items-center p-2 rounded-md transition-colors text-sidebar-foreground text-left",
-                  isActive
-                    ? "bg-sidebar-accent text-white font-medium"
-                    : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                  isCollapsed ? "justify-center" : ""
-                )}
-                onClick={() => onNavigate(item.href)}
-                aria-label={item.label}
-                role="navigation"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    onNavigate(item.href);
-                  }
-                }}
-              >
-                <item.icon className={cn("flex-shrink-0 h-5 w-5", isActive ? "text-white" : "text-gray-600")} />
+      {/* User Info */}
+      <div
+        className={cn(
+          "p-4 border-b flex items-center",
+          isCollapsed ? "justify-center" : "justify-start"
+        )}
+      >
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-3 cursor-pointer">
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src={user?.avatar} />
+                  <AvatarFallback>{user?.name?.charAt(0) || "U"}</AvatarFallback>
+                </Avatar>
                 {!isCollapsed && (
-                  <span className="ml-3 truncate">{item.label}</span>
+                  <div className="grid gap-0.5">
+                    <p className="text-sm font-medium">
+                      {user?.name || "Utilizador"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {user?.role || "Sem função"}
+                    </p>
+                  </div>
                 )}
-              </button>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right" className={cn(!isCollapsed && "hidden")}>
+              <p className="font-medium">{user?.name || "Utilizador"}</p>
+              <p className="text-xs text-muted-foreground">
+                {user?.role || "Sem função"}
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 overflow-y-auto py-4">
+        <ul className="space-y-1 px-2">
+          {items.map((item) => {
+            const Icon = item.icon;
+            return (
+              <li key={item.href}>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={() => onNavigate(item.href)}
+                        className={cn(
+                          "flex items-center w-full px-3 py-2 rounded-md text-sm transition-colors",
+                          "hover:bg-accent hover:text-accent-foreground"
+                        )}
+                      >
+                        {Icon && React.createElement(Icon, { className: "h-5 w-5 mr-2" })}
+                        {!isCollapsed && <span>{item.name}</span>}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className={cn(!isCollapsed && "hidden")}>
+                      {item.name}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </li>
             );
           })}
-        </nav>
-      </div>
+        </ul>
+      </nav>
 
-      {/* User profile */}
-      <div className="p-4 border-t border-sidebar-border">
-        <div className={cn("flex items-center", isCollapsed ? "justify-center" : "")}>
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={user?.avatar} alt={user?.name} />
-            <AvatarFallback className="bg-sidebar-accent text-white text-xs">
-              {user?.name ? getInitials(user.name) : "U"}
-            </AvatarFallback>
-          </Avatar>
-          {!isCollapsed && (
-            <div className="ml-3 truncate">
-              <p className="text-sm font-medium text-sidebar-foreground truncate">
-                {user?.name || "Utilizador"}
-              </p>
-              <p className="text-xs text-gray-600 truncate">
-                {user?.email || "email@exemplo.com"}
-              </p>
-            </div>
-          )}
-        </div>
-        <button
-          className={cn(
-            "mt-3 w-full flex items-center p-2 rounded-md transition-colors text-sidebar-foreground text-left hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-            isCollapsed ? "justify-center" : ""
-          )}
-          onClick={onLogout}
-          aria-label="Logout"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              onLogout();
-            }
-          }}
-        >
-          <LogOut className="flex-shrink-0 h-5 w-5 text-gray-600" />
-          {!isCollapsed && <span className="ml-3">Sair</span>}
-        </button>
+      {/* Logout Button */}
+      <div className="p-4 border-t">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={onLogout}
+                className={cn(
+                  "flex items-center w-full px-3 py-2 rounded-md text-sm transition-colors",
+                  "hover:bg-destructive/10 hover:text-destructive"
+                )}
+              >
+                <LogOut className="h-5 w-5 mr-2" />
+                {!isCollapsed && <span>Sair</span>}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right" className={cn(!isCollapsed && "hidden")}>
+              Sair
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </aside>
   );

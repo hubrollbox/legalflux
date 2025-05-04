@@ -31,14 +31,14 @@ const StatisticsSection: React.FC<StatisticsSectionProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
         {stats.map((item, index) => (
           <motion.div
-            key={item.title}
+            key={index}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
             <MetricsCard
               title={item.title}
-              value={item.value}
+              value={item.value.toString()}
               icon={item.icon}
               description={item.description}
               className={`transition-all duration-200 ${cardColors[index % cardColors.length]}`}

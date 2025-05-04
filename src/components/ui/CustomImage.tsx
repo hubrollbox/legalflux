@@ -1,36 +1,51 @@
 
-import React from "react";
+import React, { useState } from 'react';
 
-interface ImageProps {
-  src: string;
-  alt: string;
+interface CustomImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   width?: number;
   height?: number;
+  src: string;
+  alt: string;
+  onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
   className?: string;
-  onError?: React.ReactEventHandler<HTMLImageElement>;
 }
 
-const CustomImage: React.FC<ImageProps> = ({
-  src,
-  alt,
+const CustomImage: React.FC<CustomImageProps> = ({
   width,
   height,
+  src,
+  alt,
+  onError,
   className,
-  onError
+  ...props
 }) => {
+  const [hasError, setHasError] = useState(false);
+
+  const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    setHasError(true);
+    if (onError) onError(e);
+  };
+
+  if (hasError) {
+    return (
+      <div 
+        className={`flex items-center justify-center bg-gray-100 text-gray-400 ${className}`}
+        style={{ width, height }}
+      >
+        Imagem não disponível
+      </div>
+    );
+  }
+
   return (
     <img
       src={src}
       alt={alt}
       width={width}
       height={height}
+      onError={handleError}
       className={className}
-      onError={onError}
-      style={{ 
-        maxWidth: "100%", 
-        height: "auto",
-        objectFit: "cover" 
-      }}
+      {...props}
     />
   );
 };

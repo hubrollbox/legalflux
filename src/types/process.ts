@@ -2,21 +2,16 @@
 export interface Process {
   id: string;
   title: string;
-  description?: string;
-  number?: string; // Número do processo
-  status?: 'active' | 'pending' | 'closed' | 'archived';
-  type?: string;
-  area?: string;
+  number?: string;
+  type: 'civil' | 'criminal' | 'labor' | 'administrative' | 'tax' | 'other';
+  status: 'new' | 'in_progress' | 'completed' | 'archived';
+  startDate?: string;
+  endDate?: string;
   clientId?: string;
-  assignedTo?: string[];
+  description?: string;
+  assignedTo?: string;
+  courtId?: string;
+  priority?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  deadline?: Date;
-  priority?: 'high' | 'medium' | 'low';
-  court?: string;
-  judge?: string;
-  value?: number;
-  valueType?: 'fixed' | 'hourly' | 'percentage';
-  documents?: string[];
-  tags?: string[];
 }

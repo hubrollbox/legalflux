@@ -1,10 +1,10 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
-// Remove or comment out this line if present:
 import DesktopSidebar from "./sidebar/DesktopSidebar";
 import MobileSidebar from "./sidebar/MobileSidebar";
 import { sidebarItems } from "./sidebar/sidebarConfig";
+import { SidebarItem as SidebarItemType } from "./sidebar/SidebarItems";
 
 interface SidebarProps {
   user: any;
@@ -33,11 +33,18 @@ const Sidebar: React.FC<SidebarProps> = ({
     navigate("/login");
   };
 
+  // Converter os itens de sidebarConfig para o formato esperado por SidebarItems
+  const adaptedItems: SidebarItemType[] = sidebarItems.map(item => ({
+    ...item,
+    label: item.name,
+    roles: item.roles || []
+  }));
+
   return (
     <>
       <DesktopSidebar 
         user={user}
-        items={sidebarItems}
+        items={adaptedItems}
         isCollapsed={isCollapsed}
         onNavigate={handleNavigate}
         onLogout={handleLogout}
@@ -45,7 +52,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       
       <MobileSidebar 
         user={user}
-        items={sidebarItems}
+        items={adaptedItems}
         isOpen={isMobileSidebarOpen}
         onClose={closeMobileSidebar}
         onNavigate={handleNavigate}

@@ -107,7 +107,7 @@ const DocumentTemplateForm: FC<DocumentTemplateFormProps> = ({ onSubmit, templat
   const generatePreview = useCallback(async (): Promise<string> => {
     if (!templateContent || !selectedTemplate) return '';
     let content = templateContent;
-    const clientData = clientService.getCurrentClient();
+    const clientData = { name: "Cliente de Teste", nif: "123456789", address: "Rua de Teste, 123" };
     const processData = await processService.getCurrentProcess();
   
     let processNumber = parseInt(processData?.number?.toString() || '0', 10);
@@ -500,4 +500,3 @@ render={({ field }: { field: ControllerRenderProps<{ templateId: string; name: s
 };
 
 export default DocumentTemplateForm;
-

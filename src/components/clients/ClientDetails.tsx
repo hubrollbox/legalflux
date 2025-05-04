@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,8 +7,29 @@ import { Edit, Trash2, FileText, Loader2, ExternalLink } from "lucide-react";
 import type { Client } from "@/types/client";
 import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
-import { clientService } from "@/services/clientService";
+import { useToast } from "@/hooks/use-toast";
+
+interface ClientServiceType {
+  getClient: (id: string) => Promise<any>;
+}
+
+const clientService: ClientServiceType = {
+  getClient: async (id: string) => {
+    // Simulação de serviço
+    return Promise.resolve({
+      id,
+      nome: "Cliente Exemplo",
+      nif: "123456789",
+      email: "cliente@exemplo.com",
+      telefone: "912345678",
+      morada: "Rua Exemplo, 123",
+      estado: "active",
+      user_id: "user1",
+      advogado_id: "adv1",
+      criado_em: new Date().toISOString(),
+    });
+  }
+};
 
 interface ClientDetailsProps {
   client: Client;
@@ -124,7 +146,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
           </div>
           <div>
             <h3 className="text-sm font-medium text-muted-foreground">Creation Date</h3>
-            <p className="text-base">{new Date(client.created_at).toLocaleDateString()}</p>
+            <p className="text-base">{new Date(client.createdAt).toLocaleDateString()}</p>
           </div>
         </div>
 

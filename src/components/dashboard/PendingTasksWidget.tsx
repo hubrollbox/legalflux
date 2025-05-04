@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { CheckCircle, Clock, AlertCircle, ExternalLink, ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -26,7 +27,7 @@ const PendingTasksWidget: React.FC<PendingTasksWidgetProps> = ({
 
   // Filtrar e ordenar tarefas
   const filteredTasks = tasks
-    .filter(task => task.status === 'todo' || task.status === 'in_progress')
+    .filter(task => task.status === 'pending' || task.status === 'in-progress' || task.status === 'todo' || task.status === 'in_progress')
     .filter(task => {
       if (filterPriority === 'all') return true;
       return task.priority?.toLowerCase() === filterPriority;
@@ -156,7 +157,7 @@ const PendingTasksWidget: React.FC<PendingTasksWidgetProps> = ({
           </div>
         )}
         
-        {tasks.filter(t => t.status === 'todo' || t.status === 'in_progress').length > 0 && onViewAll && (
+        {tasks.filter(t => t.status === 'pending' || t.status === 'in-progress' || t.status === 'todo' || t.status === 'in_progress').length > 0 && onViewAll && (
           <div className="pt-2">
             <Button 
               variant="ghost" 

@@ -5,7 +5,8 @@ import { SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { UserRole } from "@/types/permissions";
 
 export interface SidebarItem {
-  label: string;
+  name: string;
+  label?: string; // Para compatibilidade
   icon: React.ElementType;
   href: string;
   roles: UserRole[];
@@ -31,13 +32,13 @@ const SidebarItems: React.FC<SidebarItemsProps> = ({
   return (
     <>
       {filteredItems.map((item) => (
-        <SidebarMenuItem key={item.label}>
+        <SidebarMenuItem key={item.name || item.label}>
           <SidebarMenuButton
             onClick={() => onNavigate(item.href)}
-            tooltip={item.label}
+            tooltip={item.name || item.label}
           >
-            <item.icon className="mr-2 h-5 w-5" />
-            <span>{item.label}</span>
+            {React.createElement(item.icon, { className: "mr-2 h-5 w-5" })}
+            <span>{item.name || item.label}</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
       ))}
