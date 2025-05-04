@@ -15,3 +15,11 @@ export interface RolePermission {
   permissionId: string;
   granted: boolean;
 }
+
+export const DEFAULT_ROLE_PERMISSIONS: Record<UserRole, string[]> = {
+  admin: ['*'],
+  lawyer: ['read_cases', 'edit_cases', 'view_documents'],
+  senior_lawyer: ['read_cases', 'edit_cases', 'view_documents', 'approve_cases'],
+  assistant: ['read_cases', 'view_documents'],
+  client: ['read_cases']
+};
