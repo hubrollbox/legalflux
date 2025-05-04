@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { usePermissions } from "../../hooks/usePermissions";
-import { toast } from "sonner"; 
+import { toast as sonnerToast } from "sonner"; 
 import { UserRole } from "../../types/permissions";
 import { Loader2 } from "lucide-react";
 
@@ -41,7 +41,7 @@ const ProtectedRoute = ({
   
   // Verifica se o utilizador tem a função permitida
   if (allowedRoles && user && !allowedRoles.includes(user.role as UserRole)) {
-    toast.error("Acesso negado", {
+    sonnerToast.error("Acesso negado", {
       description: "Não tem permissões para aceder a esta página."
     });
     
@@ -55,7 +55,7 @@ const ProtectedRoute = ({
   
   // Se um módulo for especificado, verifica permissões
   if (module && !hasPermission(module)) {
-    toast.error("Acesso negado", {
+    sonnerToast.error("Acesso negado", {
       description: "Não tem permissões para aceder a esta funcionalidade."
     });
     

@@ -1,4 +1,3 @@
-
 export type RecentCase = {
   id: string;
   title: string;
@@ -76,3 +75,12 @@ export type DashboardStats = {
   pendingAmount: number;
   clientsCount: number;
 };
+
+export interface StatCard {
+  title: string;
+  value: string | number;
+  trend?: number;
+  icon?: React.ReactNode;
+  description?: string;
+  color?: 'blue' | 'green' | 'red' | 'yellow' | 'purple';
+}

@@ -36,10 +36,12 @@ const SignUpForm: React.FC = () => {
 
     // Check if email already exists
     try {
-      const exists = await checkEmailExists(email);
-      if (exists) {
-        setError('Este email já está registado. Por favor, utilize outro email ou faça login.');
-        return false;
+      if (checkEmailExists) {
+        const exists = await checkEmailExists(email);
+        if (exists) {
+          setError('Este email já está registado. Por favor, utilize outro email ou faça login.');
+          return false;
+        }
       }
     } catch (err) {
       console.error('Error checking email:', err);

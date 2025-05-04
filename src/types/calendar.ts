@@ -22,6 +22,7 @@ export interface CalendarEvent {
   updatedAt?: string;
   isRecurring?: boolean;
   recurrenceRule?: string;
+  recurrenceType?: string;
 }
 
 export interface CalendarFilter {

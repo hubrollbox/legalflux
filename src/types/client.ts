@@ -5,6 +5,7 @@ export interface Client {
   email?: string;
   phone: string;
   taxId: string;
+  nif: string;
   address?: string;
   notes?: string;
   status: ClientStatus;

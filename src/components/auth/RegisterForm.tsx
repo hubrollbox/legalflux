@@ -1,18 +1,22 @@
+
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useNavigate } from 'react-router-dom';
 import { validateEmail, validatePassword, validateNIF } from '@/utils/validation';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 
 // This is the form component that handles the multi-step registration process
 const RegisterForm = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [error, setError] = useState<string>('');
+  const { register } = useAuth();
   
   // Form state with all possible fields
   const [formData, setFormData] = useState({
@@ -236,15 +240,20 @@ const RegisterForm = () => {
   
   const handleSubmitForm = async () => {
     try {
-      // Aqui você implementaria a lógica para enviar os dados para o Supabase
-      console.log('Dados do formulário enviados:', formData);
+      setError('');
       
-      // Simulação de registro bem-sucedido
-      // Use navigate instead of router
-      navigate('/dashboard');
-    } catch (error) {
+      // Registar utilizador com Supabase/AuthProvider
+      if (register) {
+        await register(formData.email, formData.password, formData.name);
+        toast.success("Registo concluído com sucesso!");
+        // Redirecionamento após registro bem-sucedido
+        navigate('/dashboard');
+      } else {
+        throw new Error("Função de registro não disponível");
+      }
+    } catch (error: any) {
       console.error('Erro ao registrar:', error);
-      setError('Ocorreu um erro ao processar o registro. Por favor, tente novamente.');
+      setError(error.message || 'Ocorreu um erro ao processar o registro. Por favor, tente novamente.');
     }
   };
   
