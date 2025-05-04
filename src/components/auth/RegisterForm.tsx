@@ -9,7 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { validateEmail, validatePassword, validateNIF } from '@/utils/validation';
 import { useAuth } from '@/hooks/useAuth';
-import { toast } from 'sonner';
+import { useToast } from "@/components/ui/use-toast";
 
 // This is the form component that handles the multi-step registration process
 const RegisterForm = () => {

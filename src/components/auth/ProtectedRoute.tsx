@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { usePermissions } from "../../hooks/usePermissions";
-import { toast } from "sonner"; 
+import { useToast } from "@/components/ui/use-toast"; 
 import { UserRole } from "../../types/permissions";
 import { Loader2 } from "lucide-react";
 
@@ -23,6 +23,7 @@ const ProtectedRoute = ({
   const { isAuthenticated, isLoading: authLoading, user } = useAuth();
   const { hasPermission, isLoading: permissionsLoading } = usePermissions();
   const location = useLocation();
+  const { toast } = useToast();
   
   // Se ainda estiver a carregar o estado de autenticação, mostra um loader
   if (authLoading || permissionsLoading) {

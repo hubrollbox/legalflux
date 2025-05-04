@@ -18,7 +18,7 @@ import BillingPage from '../pages/client-portal/BillingPage';
 import CommunicationsPage from '../pages/client-portal/CommunicationsPage';
 import ProfilePage from '../pages/client-portal/ProfilePage';
 
-import AuthLayout from '../components/layout/AuthLayout';
+import AuthLayout from '../components/auth/AuthLayout';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
 
