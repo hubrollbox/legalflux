@@ -52,13 +52,13 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
       phone: '',
       address: '',
       notes: ''
-    } : {
+    } as Partial<Client> : {
       number: '',
       title: '',
       description: '',
       status: 'active',
       clientId: ''
-    })
+    } as Partial<Process>)
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -76,7 +76,7 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
             <Input
               id="name"
               value={(formData as Partial<Client>).name || ''}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value } as Partial<Client | Process>)}
               placeholder="Digite o nome do cliente"
               required
             />
@@ -88,7 +88,7 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
               id="email"
               type="email"
               value={(formData as Partial<Client>).email || ''}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value } as Partial<Client | Process>)}
               placeholder="Digite o email do cliente"
               required
             />
@@ -99,7 +99,7 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
             <Input
               id="phone"
               value={(formData as Partial<Client>).phone || ''}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value } as Partial<Client | Process>)}
               placeholder="Digite o telefone do cliente"
               required
             />
@@ -110,7 +110,7 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
             <Input
               id="address"
               value={(formData as Partial<Client>).address || ''}
-              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value } as Partial<Client | Process>)}
               placeholder="Digite o endereço do cliente"
             />
           </div>
@@ -120,7 +120,7 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
             <Textarea
               id="notes"
               value={(formData as Partial<Client>).notes || ''}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, notes: e.target.value } as Partial<Client | Process>)}
               placeholder="Digite observações sobre o cliente"
               rows={3}
             />
@@ -134,7 +134,7 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
             <Input
               id="number"
               value={(formData as Partial<Process>).number || ''}
-              onChange={(e) => setFormData({ ...formData, number: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, number: e.target.value } as Partial<Client | Process>)}
               placeholder="Digite o número do processo"
               required
             />
@@ -145,7 +145,7 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
             <Input
               id="title"
               value={(formData as Partial<Process>).title || ''}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value } as Partial<Client | Process>)}
               placeholder="Digite o título do processo"
               required
             />
@@ -156,7 +156,7 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
             <Textarea
               id="description"
               value={(formData as Partial<Process>).description || ''}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value } as Partial<Client | Process>)}
               placeholder="Digite a descrição do processo"
               rows={3}
             />

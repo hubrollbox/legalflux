@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Label } from "@/components/ui/label";
@@ -245,7 +244,12 @@ const RegisterForm = () => {
       // Registar utilizador com Supabase/AuthProvider
       if (register) {
         await register(formData.email, formData.password, formData.name);
-        toast.success("Registo concluído com sucesso!");
+        // Toast de sucesso com useToast
+        const { toast } = useToast();
+        toast({
+          title: "Registo concluído com sucesso!",
+          variant: "default"
+        });
         // Redirecionamento após registro bem-sucedido
         navigate('/dashboard');
       } else {

@@ -1,105 +1,83 @@
 
 import { 
-  LayoutDashboard, Briefcase, Users, Calendar, MessageSquare, 
-  Settings, DollarSign, CheckSquare, UserPlus, CreditCard, FileText, User, BarChart2, BookOpen
+  Home, 
+  FileText, 
+  Users, 
+  Calendar, 
+  Settings, 
+  MessageSquare, 
+  Book, 
+  Briefcase,
+  DollarSign,
+  Link,
+  HelpCircle,
+  LogOut
 } from "lucide-react";
-import type { SidebarItem } from "./SidebarItems";
-import { UserRole } from "@/types/permissions"; // <-- Add this import
+import { ComponentType } from "react";
 
-// Itens que aparecem no menu lateral
+export interface SidebarItem {
+  name: string;
+  href: string;
+  icon: ComponentType<any>;
+  items?: SidebarSubItem[];
+  roles?: string[];
+}
+
+interface SidebarSubItem {
+  name: string;
+  href: string;
+  roles?: string[];
+}
+
 export const sidebarItems: SidebarItem[] = [
   {
-    label: "Painel",
-    icon: LayoutDashboard,
+    name: "Dashboard",
     href: "/dashboard",
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
+    icon: Home,
   },
   {
-    label: "Processos",
-    icon: Briefcase,
+    name: "Processos",
     href: "/processes",
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
+    icon: Briefcase,
   },
   {
-    label: "Tarefas",
-    icon: CheckSquare,
-    href: "/tasks",
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT],
-  },
-  {
-    label: "Documentos",
-    icon: FileText,
-    href: "/documents",
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
-  },
-  {
-    label: "Onboarding",
-    icon: BookOpen,
-    href: "/onboarding",
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
-  },
-  {
-    label: "Clientes",
-    icon: Users,
+    name: "Clientes",
     href: "/clients",
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER],
+    icon: Users,
   },
   {
-    label: "Agenda",
-    icon: Calendar,
-    href: "/calendar",
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
-  },
-  {
-    label: "Mensagens",
-    icon: MessageSquare,
-    href: "/messages",
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
-  },
-  {
-    label: "Financeiro",
-    icon: DollarSign,
-    href: "/financial",
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.CLIENT],
-  },
-  {
-    label: "Análise de Dados",
-    icon: BarChart2,
-    href: "/analytics",
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER],
-  },
-  {
-    label: "Links Úteis",
+    name: "Documentos",
+    href: "/documents",
     icon: FileText,
+  },
+  {
+    name: "Calendário",
+    href: "/calendar",
+    icon: Calendar,
+  },
+  {
+    name: "Mensagens",
+    href: "/messages",
+    icon: MessageSquare,
+  },
+  {
+    name: "Financeiro",
+    href: "/financial",
+    icon: DollarSign,
+  },
+  {
+    name: "Links Úteis",
     href: "/useful-links",
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
-  },
-];
-
-// Itens que aparecem no dropdown do usuário
-export const userMenuItems: SidebarItem[] = [
-  {
-    label: "Utilizadores",
-    icon: UserPlus,
-    href: "/users",
-    roles: [UserRole.ADMIN, UserRole.SENIOR_LAWYER],
+    icon: Link,
   },
   {
-    label: "Assinaturas",
-    icon: CreditCard,
-    href: "/subscriptions",
-    roles: [UserRole.ADMIN, UserRole.SENIOR_LAWYER],
+    name: "Central de Ajuda",
+    href: "/help-center",
+    icon: HelpCircle,
   },
   {
-    label: "Configurações",
-    icon: Settings,
+    name: "Configurações",
     href: "/settings",
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
-  },
-  {
-    label: "Perfil",
-    icon: User,
-    href: "/profile",
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT],
+    icon: Settings,
   },
 ];

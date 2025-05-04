@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -61,7 +60,7 @@ const ClientForm: React.FC<ClientFormProps> = ({
       phone: "",
       address: "",
       notes: "",
-      status: "active" as ClientStatus,
+      status: "active" as const,
     },
   });
   
