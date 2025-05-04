@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { formatDate } from "./DocumentCard";
+import { formatDate } from "./documentCardUtils";
 
 interface TemplateCardProps {
   template: {
