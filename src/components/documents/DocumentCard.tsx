@@ -1,4 +1,5 @@
 
+import React, { useEffect, useState } from "react";
 import { MoreHorizontal, Eye, Download, Share2, Trash2, Tag, Check } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,9 +13,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import React, { useEffect, useState } from "react";
-// Remover: import Image from 'next/image';
-import { getFileIcon, formatDate } from './documentCardUtils.tsx';
+import { getFileIcon, formatDate } from './documentCardUtils';
+import CustomImage from '@/components/ui/CustomImage';
 
 interface DocumentCardProps {
   doc: {
@@ -28,8 +28,8 @@ interface DocumentCardProps {
     process: string;
     preview?: string;
     tags?: string[];
-    fileUrl: string;  // Add this
-    title: string;    // Add this
+    fileUrl?: string;
+    title?: string;
   };
 }
 
@@ -116,12 +116,6 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ doc }) => {
             {isSigned ? (
               <>
                 <Check className="h-4 w-4" />
-
-
-
-
-
-
                 Assinado
               </>
             ) : (
@@ -129,19 +123,20 @@ const DocumentCard: React.FC<DocumentCardProps> = ({ doc }) => {
             )}
           </Button>
         </div>
-        {doc.preview && (
+        {doc.preview && doc.fileUrl && (
           <div className="relative aspect-video rounded-md overflow-hidden mb-3 bg-muted">
-            <img 
+            <CustomImage 
               src={doc.fileUrl} 
               alt={doc.name}
               width={500}
               height={300}
+              className="w-full h-full object-cover"
             />
           </div>
         )}
         <div className="space-y-2">
           <div className="flex items-center text-xs text-muted-foreground">
-            <span>Atualizado em {formatDate(doc.updatedAt.toString())}</span>
+            <span>Atualizado em {formatDate(doc.updatedAt)}</span>
           </div>
           <div className="flex items-center text-xs text-muted-foreground">
             <span>Processo: {doc.process}</span>

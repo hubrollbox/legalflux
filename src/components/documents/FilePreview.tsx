@@ -1,10 +1,9 @@
+
 import { useState } from 'react';
-import { Document as PdfDocument, Page as PdfPage } from 'react-pdf';
-import DocViewer, { PDFRenderer } from '@cyntler/react-doc-viewer';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { FileText, X } from 'lucide-react';
-import Image from 'next/image';
+import CustomImage from '@/components/ui/CustomImage';
 
 interface FilePreviewProps {
   fileUrl: string;
@@ -23,35 +22,30 @@ export const FilePreview = ({ fileUrl, fileName, onClose }: FilePreviewProps) =>
   const renderPreview = () => {
     if (fileType === 'pdf') {
       return (
-        <PdfDocument file={fileUrl} onLoadSuccess={onDocumentLoadSuccess}>
-          {Array.from(new Array(numPages), (_, index) => (
-            <PdfPage key={`page_${index + 1}`} pageNumber={index + 1} />
-          ))}
-        </PdfDocument>
+        <div className="flex flex-col items-center justify-center h-full gap-4 text-muted-foreground">
+          <FileText className="h-12 w-12" />
+          <span>Pré-visualização de PDF não disponível neste momento</span>
+        </div>
       );
     }
 
     if (fileType && ['doc', 'docx'].includes(fileType)) {
       return (
-        <div className="h-full">
-          <DocViewer
-            documents={[{ uri: fileUrl }]}
-            pluginRenderers={[PDFRenderer]}
-            config={{ header: { disableHeader: true } }}
-          />
+        <div className="flex flex-col items-center justify-center h-full gap-4 text-muted-foreground">
+          <FileText className="h-12 w-12" />
+          <span>Pré-visualização de documento não disponível neste momento</span>
         </div>
       );
     }
 
     if (fileType && ['png', 'jpg', 'jpeg'].includes(fileType)) {
       return (
-        <Image
+        <CustomImage
           src={fileUrl}
           alt={fileName}
           width={800}
           height={600}
           className="max-h-screen mx-auto"
-          style={{ objectFit: 'contain', width: 'auto', height: 'auto', maxHeight: '80vh' }}
         />
       );
     }

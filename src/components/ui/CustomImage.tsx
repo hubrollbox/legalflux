@@ -10,7 +10,7 @@ interface ImageProps {
   onError?: React.ReactEventHandler<HTMLImageElement>;
 }
 
-const Image: React.FC<ImageProps> = ({
+const CustomImage: React.FC<ImageProps> = ({
   src,
   alt,
   width,
@@ -35,4 +35,4 @@ const Image: React.FC<ImageProps> = ({
   );
 };
 
-export default Image;
+export default CustomImage;

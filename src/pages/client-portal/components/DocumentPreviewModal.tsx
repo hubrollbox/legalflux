@@ -2,8 +2,18 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Printer, Share2 } from "lucide-react";
-import { Document } from "./DocumentTable";
 import CustomImage from "@/components/ui/CustomImage";
+
+interface Document {
+  id: string;
+  name: string;
+  type: string;
+  size: string;
+  uploadDate: string;
+  processNumber?: string;
+  fileUrl?: string;
+  title?: string;
+}
 
 interface DocumentPreviewModalProps {
   isOpen: boolean;
@@ -20,7 +30,7 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
   if (!document) return null;
 
   const getDocumentTypeIcon = () => {
-    switch (document.type.toLowerCase()) {
+    switch (document.type?.toLowerCase()) {
       case 'pdf':
         return "📄";
       case 'xlsx':
@@ -71,7 +81,7 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
       return (
         <div className="flex justify-center py-6">
           <CustomImage
-            src={`https://placehold.co/800x600?text=${document.name}`}
+            src={document.fileUrl || `https://placehold.co/800x600?text=${document.name}`}
             alt={document.name}
             width={800}
             height={600}
@@ -141,9 +151,9 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
             <div>
               <p className="text-sm font-medium">Detalhes do Documento</p>
               <div className="text-sm text-muted-foreground mt-1 space-y-1">
-                <p>Tipo: {document.type.toUpperCase()}</p>
-                <p>Tamanho: {document.size}</p>
-                <p>Data de upload: {document.uploadDate}</p>
+                <p>Tipo: {document.type?.toUpperCase() || 'N/A'}</p>
+                <p>Tamanho: {document.size || 'N/A'}</p>
+                <p>Data de upload: {document.uploadDate || 'N/A'}</p>
                 <p>Processo: {document.processNumber || "N/A"}</p>
               </div>
             </div>

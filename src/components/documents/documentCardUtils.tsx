@@ -1,7 +1,8 @@
 
+import React from 'react';
 import { FileText, FileImage, FileArchive, FileCode } from 'lucide-react';
 import { format, isValid } from 'date-fns';
-import { ptBR } from 'date-fns/locale/pt-BR';
+import { ptPT } from 'date-fns/locale';
 
 export const getFileIcon = (fileType: string) => {
   switch(fileType?.toLowerCase()) {
@@ -33,7 +34,7 @@ export const formatDate = (date: Date | string | undefined) => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   if (!isValid(dateObj)) return '';
   
-  return format(dateObj, 'dd MMM yyyy', { locale: ptBR });
+  return format(dateObj, 'dd MMM yyyy', { locale: ptPT });
 };
 
 export default {

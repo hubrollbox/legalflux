@@ -12,6 +12,7 @@ type FilePreview = {
   type: string;
   preview: string;
   size: number;
+  fileObject?: File;
 };
 
 interface FileUploadProps {
@@ -52,12 +53,14 @@ export const FileUpload = ({ processId, onUploadSuccess }: FileUploadProps) => {
           .toString(36)
           .substring(2)}.${fileExt}`;
 
-        const { error } = await supabase.storage
-          .from('process-documents')
-          .upload(fileName, (file as any).fileObject);
+        if (file.fileObject) {
+          const { error } = await supabase.storage
+            .from('process-documents')
+            .upload(fileName, file.fileObject);
 
-        if (error) throw error;
-        filePaths.push(fileName);
+          if (error) throw error;
+          filePaths.push(fileName);
+        }
       }
 
       onUploadSuccess?.(filePaths);
@@ -107,7 +110,6 @@ export const FileUpload = ({ processId, onUploadSuccess }: FileUploadProps) => {
                       width={200}
                       height={150}
                       className="h-full w-full object-cover rounded-md"
-                      onLoad={() => URL.revokeObjectURL(file.preview)}
                     />
                     ) : (
                     <div className="flex items-center justify-center h-32 w-full bg-muted rounded-md">
