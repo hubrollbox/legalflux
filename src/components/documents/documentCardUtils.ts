@@ -1,5 +1,5 @@
 
-import { CalendarIcon, FileText, FileImage, FileArchive, FileCode, FilePdf } from 'lucide-react';
+import { CalendarIcon, FileText, FileImage, FileArchive, FileCode } from 'lucide-react';
 import { format, isValid } from 'date-fns';
 import { ptBR } from 'date-fns/locale/pt-BR';
 
