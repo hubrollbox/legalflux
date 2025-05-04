@@ -1,9 +1,10 @@
+
+import React, { useState, useEffect, ReactNode } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase-client';
 import { User } from '../../types/auth';
 import { UserRole } from '../../types/permissions';
 import { Toaster } from 'sonner';
-import React, { useState, useEffect, ReactNode } from 'react';
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -39,7 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
     getSession();
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (event: string, session: any) => {
         if (session?.user) {
           const { data, error } = await supabase
             .from('users')
@@ -137,7 +138,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       setError(null);
-      await supabase.auth.updateUserWithPassword(code, password);
+      await supabase.auth.updateUser({ password });
     } catch (error) {
       setError(error as Error);
     } finally {
@@ -155,8 +156,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const getRedirectPath = () => {
-    const { data: { session } } = supabase.auth.getSession();
-    if (session?.user) {
+    if (user?.role === UserRole.CLIENT) {
+      return '/client-portal/processes';
+    } else if (user) {
       return '/dashboard';
     }
     return '/login';

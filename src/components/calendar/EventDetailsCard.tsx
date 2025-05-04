@@ -15,12 +15,7 @@ interface EventDetailsCardProps {
   onClose?: () => void;
 }
 
-const EventDetailsCard: React.FC<EventDetailsCardProps> = ({
-  event,
-  onEdit,
-  onDelete,
-  onClose,
-}) => {
+export function EventDetailsCard({ event, onEdit, onDelete }) {
   // Função para obter o ícone com base na categoria do evento
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -42,23 +37,12 @@ const EventDetailsCard: React.FC<EventDetailsCardProps> = ({
   };
 
   // Função para obter o nome da categoria
-  const getCategoryName = (category: string) => {
-    switch (category) {
-      case 'meeting':
-        return 'Reunião';
-      case 'deadline':
-        return 'Prazo';
-      case 'task':
-        return 'Tarefa';
-      case 'hearing':
-        return 'Audiência';
-      case 'trial':
-        return 'Julgamento';
-      case 'client':
-        return 'Cliente';
-      default:
-        return 'Outro';
-    }
+  const getCategoryName = (categoryKey) => {
+    // If categoryKey is undefined, use a default category or return a placeholder
+    if (!categoryKey) return "Sem categoria";
+    
+    // Otherwise, proceed with the existing logic
+    return categoryKey; // or whatever formatting you need to do
   };
 
   // Função para obter a cor com base na categoria

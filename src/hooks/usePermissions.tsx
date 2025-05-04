@@ -1,102 +1,99 @@
 
-import React from "react";
-import { createContext, useContext, useEffect, useState } from "react";
-import { supabase } from "../integrations/supabase/supabase";
-import { useAuth } from "./useAuth";
-import { UserRole, Permission, DEFAULT_ROLE_PERMISSIONS } from "../types/permissions";
+import { useState, useEffect } from 'react';
+import { useAuth } from './useAuth';
+import { UserRole } from '../types/permissions';
 
-interface PermissionsContextType {
-  userPermissions: Permission[];
-  hasPermission: (permission: string, action?: string) => boolean;
-  hasRole: (role: string) => boolean;
-  loading: boolean;
-  isLoading: boolean;
-  error: string | null;
-  fetchPermissions: () => Promise<void>;
-}
+type PermissionMap = Record<string, boolean>;
 
-const PermissionsContext = createContext<PermissionsContextType | undefined>(undefined);
+export function usePermissions() {
+  const { user, isAuthenticated } = useAuth();
+  const [permissions, setPermissions] = useState<PermissionMap>({});
+  const [isLoading, setIsLoading] = useState(true);
 
-export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user } = useAuth();
-  const [userPermissions, setUserPermissions] = useState<Permission[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchPermissions = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      if (!user) {
-        setUserPermissions([]);
-        return;
-      }
-
-      // Buscar permissões customizadas do usuário na tabela correta
-      const { data: customPermissions, error: permissionsError } = await supabase
-        .from('permissoes')
-        .select('*')
-        .eq('user_id', user.id);
-
-      if (permissionsError) {
-        console.error('Error fetching permissions:', permissionsError);
-        throw permissionsError;
-      }
-
-      if (customPermissions && customPermissions.length > 0 && customPermissions[0].tipo) {
-        // Usuário tem permissões customizadas
-        setUserPermissions([customPermissions[0].tipo] as unknown as Permission[]);
-      } else {
-        // Fallback para permissões padrão por role
-        const role = user.role || 'client';
-        setUserPermissions((DEFAULT_ROLE_PERMISSIONS[role] || []) as unknown as Permission[]);
-      }
-    } catch (err: any) {
-      console.error('Permissions fetch error:', err);
-      setError(err.message || 'Failed to load permissions');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // When user changes, fetch updated permissions
   useEffect(() => {
-    fetchPermissions();
-  }, [user]);
+    const loadPermissions = async () => {
+      setIsLoading(true);
+      
+      try {
+        // This is a simplified example. In a real application, you would fetch
+        // permissions from your backend/database
+        
+        if (!isAuthenticated || !user) {
+          setPermissions({});
+          return;
+        }
+        
+        // Define permissions based on user role
+        const permissionMap: PermissionMap = {};
+        
+        switch (user.role) {
+          case UserRole.ADMIN:
+            // Admin has all permissions
+            permissionMap.users = true;
+            permissionMap.clients = true;
+            permissionMap.processes = true;
+            permissionMap.documents = true;
+            permissionMap.calendar = true;
+            permissionMap.financial = true;
+            permissionMap.settings = true;
+            permissionMap.reports = true;
+            break;
+            
+          case UserRole.SENIOR_LAWYER:
+            // Senior lawyer has most permissions
+            permissionMap.clients = true;
+            permissionMap.processes = true;
+            permissionMap.documents = true;
+            permissionMap.calendar = true;
+            permissionMap.financial = true;
+            permissionMap.reports = true;
+            break;
+            
+          case UserRole.LAWYER:
+            // Regular lawyer
+            permissionMap.clients = true;
+            permissionMap.processes = true;
+            permissionMap.documents = true;
+            permissionMap.calendar = true;
+            break;
+            
+          case UserRole.ASSISTANT:
+            // Assistant has limited permissions
+            permissionMap.calendar = true;
+            permissionMap.documents = true;
+            break;
+            
+          case UserRole.CLIENT:
+            // Client has very limited access
+            permissionMap.clientDocuments = true;
+            permissionMap.clientProcesses = true;
+            permissionMap.clientCalendar = true;
+            break;
+            
+          default:
+            // No permissions by default
+            break;
+        }
+        
+        setPermissions(permissionMap);
+      } catch (error) {
+        console.error('Error loading permissions:', error);
+        setPermissions({});
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const hasPermission = (permission: string, action?: string): boolean => {
-    if (action) {
-      return userPermissions.includes(`${permission}:${action}` as any) || userPermissions.includes("ADMIN_ACCESS" as any);
-    }
-    return userPermissions.includes(permission as any) || userPermissions.includes("ADMIN_ACCESS" as any);
+    loadPermissions();
+  }, [user, isAuthenticated]);
+
+  const hasPermission = (module: string): boolean => {
+    return !!permissions[module];
   };
 
-  const hasRole = (role: string): boolean => {
-    return user?.role === role;
-  };
-
-  const value = {
-    userPermissions,
+  return {
+    permissions,
     hasPermission,
-    hasRole,
-    loading,
-    isLoading: loading,
-    error,
-    fetchPermissions
+    isLoading
   };
-
-  return (
-    <PermissionsContext.Provider value={value}>
-      {children}
-    </PermissionsContext.Provider>
-  );
-};
-
-export const usePermissions = () => {
-  const context = useContext(PermissionsContext);
-  if (context === undefined) {
-    throw new Error('usePermissions must be used within a PermissionsProvider');
-  }
-  return context;
-};
+}

@@ -83,7 +83,7 @@ const MiniCalendarView: React.FC<MiniCalendarViewProps> = ({
       <Calendar
         mode="single"
         selected={selectedDate}
-        onSelect={(date) => date && onDateChange(date)}
+        onSelect={(date: Date | undefined) => date && onDateChange(date)}
         onMonthChange={setCurrentMonth}
         locale={pt}
         modifiers={modifiers}

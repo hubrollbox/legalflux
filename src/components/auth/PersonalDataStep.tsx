@@ -13,7 +13,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { UserType } from '@/types/auth';
 
 type Props = {
   userType: string;

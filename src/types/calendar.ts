@@ -1,36 +1,34 @@
 
+import { CategoryKey } from './category';
+
 export interface CalendarEvent {
   id: string;
   title: string;
-  start: Date;
-  end: Date;
-  allDay?: boolean;
   description?: string;
+  start: string;
+  end: string;
+  allDay?: boolean;
   location?: string;
   categoryId?: string;
-  category?: string; // Added this property
-  userId?: string;
-  processId?: string;
-  process?: string; // Added this property 
-  client?: string; // Added this property
-  reminderTime?: number; // minutes before event
-  status?: 'scheduled' | 'cancelled' | 'completed';
+  category?: CategoryKey; // Added for backward compatibility
   priority?: 'high' | 'medium' | 'low';
-  recurrence?: {
-    frequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
-    interval: number; // e.g. every 2 weeks
-    endDate?: Date; // when the recurrence ends
-    exceptions?: Date[]; // dates to exclude
-  };
+  status?: 'pending' | 'completed' | 'cancelled';
+  client?: string; // Added for backward compatibility
+  clientId?: string;
+  process?: string; // Added for backward compatibility
+  processId?: string;
+  createdBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
   isRecurring?: boolean;
-  recurrenceType?: 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'yearly';
-  attendees?: string[]; // user IDs or external emails
+  recurrenceRule?: string;
 }
 
-export interface EventCategory {
-  id: string;
-  name: string;
-  color: string;
-  userId?: string;
-  isDefault?: boolean;
+export interface CalendarFilter {
+  categories?: string[];
+  startDate?: Date;
+  endDate?: Date;
+  priority?: string[];
+  status?: string[];
+  search?: string;
 }
