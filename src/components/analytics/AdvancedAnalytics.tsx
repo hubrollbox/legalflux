@@ -107,7 +107,7 @@ interface AdvancedAnalyticsProps {
   users?: User[];
 }
 
-const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) => {
+const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props: AdvancedAnalyticsProps) => {
   // Memoized chart components
   const MemoizedBarChart = React.memo(BarChart);
   const MemoizedLineChart = React.memo(LineChart);
@@ -744,7 +744,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props) =
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                        label={({ name, percent }: { name: string; percent: number }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                         outerRadius={150}
                         fill="#8884d8"
                         dataKey="value"
