@@ -4,3 +4,5 @@ export enum PriorityLevel {
   MEDIUM = "medium",
   HIGH = "high"
 }
+
+export { PriorityLevel as PriorityLevelEnum };
