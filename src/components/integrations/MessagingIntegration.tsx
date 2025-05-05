@@ -1,12 +1,12 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button"; // Ensure ButtonProps includes variant from buttonVariants
+import { Button } from "@/components/ui/button";
 import { MessageSquare, PhoneForwarded } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import Image from 'next/image'; // Import the Image component
+import CustomImage from "@/components/ui/CustomImage";
 
 const MessagingIntegration = () => {
   const { toast } = useToast();
@@ -38,21 +38,18 @@ const MessagingIntegration = () => {
               {/* WhatsApp Integration */}
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center">
-                  {/* Replace img with Image */}
-                  <Image
+                  <CustomImage
                     src="/img/integrations/whatsapp.svg"
                     alt="WhatsApp"
-                    width={24} // Provide width
-                    height={24} // Provide height
+                    width={24}
+                    height={24}
                     className="mr-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=W";
-                      (e.target as HTMLImageElement).srcset = ""; // Clear srcset on error for placeholder
                     }}
                   />
                   <span>WhatsApp Business</span>
                 </div>
-                {/* Ensure Button variant prop is valid */}
                 <Button
                   variant="outline"
                   size="sm"
@@ -66,21 +63,18 @@ const MessagingIntegration = () => {
               {/* Telegram Integration */}
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center">
-                  {/* Replace img with Image */}
-                  <Image
+                  <CustomImage
                     src="/img/integrations/telegram.svg"
                     alt="Telegram"
-                    width={24} // Provide width
-                    height={24} // Provide height
+                    width={24}
+                    height={24}
                     className="mr-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=T";
-                      (e.target as HTMLImageElement).srcset = ""; // Clear srcset on error for placeholder
                     }}
                   />
                   <span>Telegram</span>
                 </div>
-                {/* Ensure Button variant prop is valid */}
                 <Button
                   variant="outline"
                   size="sm"
@@ -94,21 +88,18 @@ const MessagingIntegration = () => {
               {/* SMS API Integration */}
               <div className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center">
-                  {/* Replace img with Image */}
-                  <Image
+                  <CustomImage
                     src="/img/integrations/sms.svg"
                     alt="SMS"
-                    width={24} // Provide width
-                    height={24} // Provide height
+                    width={24}
+                    height={24}
                     className="mr-2"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=SMS";
-                      (e.target as HTMLImageElement).srcset = ""; // Clear srcset on error for placeholder
                     }}
                   />
                   <span>SMS API</span>
                 </div>
-                {/* Ensure Button variant prop is valid */}
                 <Button
                   variant="outline"
                   size="sm"
@@ -178,5 +169,3 @@ const MessagingIntegration = () => {
 };
 
 export default MessagingIntegration;
-
-// Removed the misplaced example code from the end of the file

@@ -2,9 +2,8 @@
 export interface Plan {
   id: string;
   name: string;
-  price: number;
   description: string;
+  price: number | null;
+  recommended: boolean;
   features: string[];
-  recommended?: boolean;
-  period: 'month' | 'year';
 }
