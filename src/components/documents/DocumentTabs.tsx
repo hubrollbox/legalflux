@@ -15,7 +15,7 @@ interface DocumentTabsProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   filters: {
-    type: "document" | "action" | "precedent" | "strategy";
+    type: string;
     date: Date | undefined;
     tags: string[];
   };
@@ -23,18 +23,19 @@ interface DocumentTabsProps {
   filteredDocuments: Array<{
     id: string;
     name: string;
-    type: "document" | "action" | "precedent" | "strategy";
+    type: string;
     size: string;
     updatedAt: Date;
     owner: string;
     folder: string;
     process: string;
     tags?: string[];
+    status?: string;
   }>;
   filteredTemplates: Array<{
     id: string;
     name: string;
-    type: "document" | "action" | "precedent" | "strategy";
+    type: string;
     size: string;
     description: string;
     updatedAt: string;
@@ -71,11 +72,11 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
       </div>
       
       <DocumentsSearchBar 
-  searchTerm={searchTerm} 
-  setSearchTerm={setSearchTerm}
-  filters={filters}
-  setFilters={setFilters}
-/>
+        searchTerm={searchTerm} 
+        setSearchTerm={setSearchTerm}
+        filters={filters}
+        setFilters={setFilters}
+      />
 
       <TabsContent value="all" className="mt-6">
         <DocumentsContent

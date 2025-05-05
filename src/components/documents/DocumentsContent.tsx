@@ -10,12 +10,14 @@ interface DocumentsContentProps {
   documents: Array<{
     id: string;
     name: string;
-    type: "document" | "action" | "precedent" | "strategy";
+    type: string;
     size: string;
     updatedAt: Date;
     owner: string;
     folder: string;
     process: string;
+    tags?: string[];
+    status?: string;
   }>;
   viewMode: "grid" | "list";
 }
@@ -26,6 +28,22 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
   documents, 
   viewMode 
 }) => {
+  if (!documents) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>Nenhum documento encontrado</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8 text-muted-foreground">
+            Não foram encontrados documentos com os critérios de busca atuais.
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="">
       <CardHeader className="">

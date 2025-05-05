@@ -49,7 +49,38 @@ const Documents = () => {
       template.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
+  // Component that shows the documents filtering by signature status
+  const FilteredDocumentsView = () => {
+    const docsToShow = filterSigned === 'all' 
+      ? filteredDocuments 
+      : filteredDocuments.filter(doc => {
+          // Assuming you have a 'signed' property in your document objects
+          const isSigned = doc.status === 'signed'; // Adjust based on your actual data structure
+          return filterSigned === 'signed' ? isSigned : !isSigned;
+        });
+    
+    return (
+      <>
+        <div className="mb-4 flex gap-2">
+          <Select onValueChange={(v) => setFilterSigned(v as any)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Estado de Assinatura" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="signed">Assinados</SelectItem>
+              <SelectItem value="unsigned">Por assinar</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {docsToShow.map((doc) => (
+            <DocumentCard key={doc.id} doc={doc} />
+          ))}
+        </div>
+      </>
+    );
+  };
 
   return (
     <PageTransition>
@@ -63,7 +94,12 @@ const Documents = () => {
             setSearchTerm={setSearchTerm}
             filteredDocuments={filteredDocuments}
             filteredTemplates={filteredTemplates}
+            filters={filters}
+            setFilters={setFilters}
           />
+          
+          {/* You can use the FilteredDocumentsView component here if needed */}
+          {/* <FilteredDocumentsView /> */}
         </div>
       </DashboardLayout>
     </PageTransition>
@@ -71,20 +107,3 @@ const Documents = () => {
 };
 
 export default Documents;
-
-// Adicionar filtro na seção de documentos
-<div className="mb-4 flex gap-2">
-  <Select onValueChange={(v) => setFilterSigned(v as any)}>
-    <SelectTrigger className="w-[180px]">
-      <SelectValue placeholder="Estado de Assinatura" />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectItem value="all">Todos</SelectItem>
-      <SelectItem value="signed">Assinados</SelectItem>
-      <SelectItem value="unsigned">Por assinar</SelectItem>
-    </SelectContent>
-  </Select>
-</div>
-{filteredDocuments.map((doc) => (
-  <DocumentCard key={doc.id} doc={doc} />
-))}
