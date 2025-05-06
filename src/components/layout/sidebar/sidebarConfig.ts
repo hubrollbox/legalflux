@@ -37,13 +37,13 @@ export const sidebarItems: SidebarItem[] = [
     name: "Dashboard",
     href: "/dashboard",
     icon: Home,
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Processos",
     href: "/processes",
     icon: Briefcase,
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Clientes",

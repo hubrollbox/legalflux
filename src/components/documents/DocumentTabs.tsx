@@ -23,7 +23,7 @@ interface DocumentTabsProps {
   filteredDocuments: Array<{
     id: string;
     name: string;
-    type: string;
+    type: "document" | "action" | "precedent" | "strategy";
     size: string;
     updatedAt: Date;
     owner: string;
@@ -35,7 +35,7 @@ interface DocumentTabsProps {
   filteredTemplates: Array<{
     id: string;
     name: string;
-    type: string;
+    type: "document" | "action" | "precedent" | "strategy";
     size: string;
     description: string;
     updatedAt: string;

@@ -28,3 +28,5 @@ export type { CalendarEvent } from "./calendar";
 export type { CategoryKey } from "./category";
 export type { Task } from "./task";
 export { PriorityLevel } from "./priority-level";
+export type { FinancialTransaction, TransactionStatus } from "./financial";
+export { TransactionType } from "./financial";

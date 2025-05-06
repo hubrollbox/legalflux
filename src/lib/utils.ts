@@ -20,3 +20,20 @@ export function getStatusColor(status: string): string {
       return "text-gray-600 bg-gray-100 border-gray-300";
   }
 }
+
+export function getUserRoleName(role: string): string {
+  switch (role) {
+    case "admin":
+      return "Administrador";
+    case "lawyer":
+      return "Advogado";
+    case "senior_lawyer":
+      return "Advogado Sênior";
+    case "assistant":
+      return "Assistente";
+    case "client":
+      return "Cliente";
+    default:
+      return "Usuário";
+  }
+}
