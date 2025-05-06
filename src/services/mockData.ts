@@ -53,3 +53,27 @@ export const getRecentTasks = () => {
     }
   ];
 };
+
+export const MOCK_FINANCIAL_TRANSACTIONS = [
+  {
+    id: "f1",
+    date: "2023-05-20",
+    description: "Pagamento de honorários",
+    amount: 1500.00,
+    type: "entrada"
+  },
+  {
+    id: "f2",
+    date: "2023-05-18",
+    description: "Pagamento de despesas processuais",
+    amount: -300.00,
+    type: "saída"
+  },
+  {
+    id: "f3",
+    date: "2023-05-15",
+    description: "Recebimento de cliente",
+    amount: 2000.00,
+    type: "entrada"
+  }
+];
