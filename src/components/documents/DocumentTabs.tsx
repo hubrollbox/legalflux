@@ -50,8 +50,8 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
   setSearchTerm,
   filters,
   setFilters,
-  filteredDocuments,
-  filteredTemplates
+  filteredDocuments = [], // Valor padrão para evitar undefined
+  filteredTemplates = []  // Valor padrão para evitar undefined
 }) => {
   return (
     <Tabs defaultValue="all" className="mb-6">

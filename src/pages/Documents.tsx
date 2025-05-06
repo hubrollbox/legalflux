@@ -36,18 +36,20 @@ const Documents = () => {
         new Date(doc.updatedAt).toDateString() === filters.date.toDateString();
       
       const matchesTags = filters.tags.length === 0 || 
-        (doc.tags && filters.tags.every(tag => doc.tags.includes(tag)));
+        (doc.tags && filters.tags.every(tag => doc.tags?.includes(tag)));
 
       return matchesSearch && matchesType && matchesDate && matchesTags;
     });
-  }, [searchTerm, filters]);
+  }, [searchTerm, filters, mockDocuments]);
 
-  const filteredTemplates = mockTemplates.filter(
-    template => 
-      template.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      template.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      template.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredTemplates = useMemo(() => {
+    return mockTemplates.filter(
+      template => 
+        template.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        template.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        template.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm]);
 
   // Component that shows the documents filtering by signature status
   const FilteredDocumentsView = () => {

@@ -5,4 +5,4 @@ export enum PriorityLevel {
   HIGH = "high"
 }
 
-export { PriorityLevel as PriorityLevelEnum };
+// Removido export { PriorityLevel as PriorityLevelEnum }; que estava causando confusão

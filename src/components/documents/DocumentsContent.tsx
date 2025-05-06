@@ -28,7 +28,11 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
   documents, 
   viewMode 
 }) => {
-  if (!documents) {
+  // Certifique-se de que documents nunca seja undefined
+  const safeDocuments = documents || [];
+  
+  // Se não houver documentos, mostra uma mensagem
+  if (safeDocuments.length === 0) {
     return (
       <Card>
         <CardHeader>
@@ -55,12 +59,12 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
       <CardContent className="">
         {viewMode === "grid" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {documents.map((doc) => (
+            {safeDocuments.map((doc) => (
               <DocumentCard key={doc.id} doc={doc} />
             ))}
           </div>
         ) : (
-          <DocumentList documents={documents.map(doc => ({
+          <DocumentList documents={safeDocuments.map(doc => ({
             ...doc,
             updatedAt: doc.updatedAt.toISOString()
           }))} />
