@@ -1,64 +1,63 @@
 
-export function getUserRoleName(role: string): string {
-  const roles: Record<string, string> = {
-    admin: "Administrador",
-    lawyer: "Advogado",
-    senior_lawyer: "Advogado Sênior",
-    client: "Cliente",
-    assistant: "Assistente"
-  };
+// Função para determinar o nome do papel com base no código do papel
+export const getUserRoleName = (role: string): string => {
+  switch (role) {
+    case 'admin':
+      return 'Administrador';
+    case 'lawyer':
+      return 'Advogado';
+    case 'senior_lawyer':
+      return 'Advogado Sênior';
+    case 'assistant':
+      return 'Assistente';
+    case 'client':
+      return 'Cliente';
+    default:
+      return 'Utilizador';
+  }
+};
 
-  return roles[role] || role;
-}
+// Função para gerar dados de gráfico de exemplo
+export const getChartData = () => {
+  return [
+    { month: 'Jan', processos: 5, documentos: 12 },
+    { month: 'Fev', processos: 8, documentos: 15 },
+    { month: 'Mar', processos: 12, documentos: 18 },
+    { month: 'Abr', processos: 10, documentos: 22 },
+    { month: 'Mai', processos: 14, documentos: 25 },
+    { month: 'Jun', processos: 18, documentos: 30 },
+  ];
+};
 
-export function getChartData() {
-  // Dados simulados para gráficos do dashboard
+// Função para gerar dados financeiros de exemplo
+export const getFinancialData = () => {
+  return [
+    { month: 'Jan', receitas: 15000, despesas: 8000 },
+    { month: 'Fev', receitas: 18000, despesas: 7500 },
+    { month: 'Mar', receitas: 22000, despesas: 9000 },
+    { month: 'Abr', receitas: 19000, despesas: 8500 },
+    { month: 'Mai', receitas: 24000, despesas: 10000 },
+    { month: 'Jun', receitas: 28000, despesas: 11000 },
+  ];
+};
+
+// Função para gerar dados de desempenho de exemplo
+export const getPerformanceData = () => {
+  return [
+    { dia: 'Seg', concluidas: 5, pendentes: 3 },
+    { dia: 'Ter', concluidas: 7, pendentes: 2 },
+    { dia: 'Qua', concluidas: 4, pendentes: 4 },
+    { dia: 'Qui', concluidas: 6, pendentes: 2 },
+    { dia: 'Sex', concluidas: 9, pendentes: 1 },
+  ];
+};
+
+// Função para gerar estatísticas gerais
+export const getStatisticsData = () => {
   return {
-    processos: [
-      { month: "Jan", value: 5 },
-      { month: "Fev", value: 8 },
-      { month: "Mar", value: 12 },
-      { month: "Abr", value: 10 },
-      { month: "Mai", value: 15 },
-      { month: "Jun", value: 18 }
-    ],
-    faturamento: [
-      { month: "Jan", value: 2500 },
-      { month: "Fev", value: 3800 },
-      { month: "Mar", value: 5000 },
-      { month: "Abr", value: 4500 },
-      { month: "Mai", value: 6200 },
-      { month: "Jun", value: 7500 }
-    ]
+    activeProcesses: 24,
+    pendingDocuments: 15,
+    completedCases: 42,
+    averageResolutionTime: 45
   };
-}
-
-export function getFinancialData() {
-  // Dados financeiros simulados
-  return {
-    totalFaturado: 29500,
-    pendente: 4800,
-    recebido: 24700,
-    previsao: 35000
-  };
-}
-
-export function getPerformanceData() {
-  // Dados de desempenho simulados
-  return {
-    processosAtivos: 42,
-    tarefasPendentes: 18,
-    audienciasMes: 7,
-    prazosMes: 12
-  };
-}
-
-export function getStatisticsData() {
-  // Estatísticas gerais simuladas
-  return {
-    clientesAtivos: 28,
-    processosGanhos: 67,
-    processosPerdidos: 12,
-    taxaSucesso: 85 // porcentagem
-  };
-}
+};

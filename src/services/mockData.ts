@@ -1,113 +1,55 @@
 
-// Dados simulados para casos recentes
-export function getRecentCases() {
+export const getRecentCases = () => {
   return [
     {
-      id: "case-001",
-      title: "Silva vs. Empresa ABC",
-      status: "ativo",
-      date: "2023-05-01",
-      type: "Trabalhista"
+      id: "c1",
+      title: "Processo Trabalhista - Empresa XYZ",
+      status: "active",
+      client: "João Silva",
+      date: "Hoje, 10:30",
+      action: "Novo Documento Adicionado"
     },
     {
-      id: "case-002",
-      title: "Disputa de Propriedade",
-      status: "pendente",
-      date: "2023-04-28",
-      type: "Cível"
+      id: "c2",
+      title: "Ação de Despejo - Imóvel Comercial",
+      status: "pending",
+      client: "Maria Oliveira",
+      date: "Hoje, 09:15",
+      action: "Atualização de Status"
     },
     {
-      id: "case-003",
-      title: "Processo de Herança",
-      status: "ativo",
-      date: "2023-04-25",
-      type: "Família"
-    },
-    {
-      id: "case-004",
-      title: "Recurso Tributário",
-      status: "ativo",
-      date: "2023-04-20",
-      type: "Tributário"
-    },
-    {
-      id: "case-005",
-      title: "Ação de Indenização",
-      status: "concluído",
-      date: "2023-04-15",
-      type: "Cível"
+      id: "c3",
+      title: "Recurso Administrativo - Licença de Funcionamento",
+      status: "active",
+      client: "Empresa ABC",
+      date: "Ontem, 14:20",
+      action: "Prazo Atualizado"
     }
   ];
-}
+};
 
-// Dados simulados para tarefas recentes
-export function getRecentTasks() {
+export const getRecentTasks = () => {
   return [
     {
-      id: "task-001",
+      id: "t1",
       title: "Preparar contestação",
-      deadline: "2023-05-10",
-      priority: "alta",
-      assignedTo: "João Silva"
+      deadline: "Hoje, 18:00",
+      priority: "high",
+      assigned: "Você"
     },
     {
-      id: "task-002",
-      title: "Revisar contrato",
-      deadline: "2023-05-08",
-      priority: "média",
-      assignedTo: "Maria Costa"
+      id: "t2",
+      title: "Revisar contrato de prestação de serviços",
+      deadline: "Amanhã, 12:00",
+      priority: "medium",
+      assigned: "Ana Costa"
     },
     {
-      id: "task-003",
-      title: "Agendar reunião com cliente",
-      deadline: "2023-05-05",
-      priority: "baixa",
-      assignedTo: "Ana Pereira"
-    },
-    {
-      id: "task-004",
-      title: "Preparar audiência",
-      deadline: "2023-05-15",
-      priority: "alta",
-      assignedTo: "Carlos Santos"
-    },
-    {
-      id: "task-005",
-      title: "Enviar notificação",
-      deadline: "2023-05-07",
-      priority: "média",
-      assignedTo: "Pedro Alves"
+      id: "t3",
+      title: "Contactar cliente para obter documentos adicionais",
+      deadline: "25/05/2023",
+      priority: "low",
+      assigned: "Carlos Santos"
     }
   ];
-}
-
-// Mock data for financial transactions
-export const MOCK_FINANCIAL_TRANSACTIONS = [
-  {
-    id: "txn-001",
-    date: "2023-05-01",
-    description: "Consulting Fee",
-    amount: 1500.00,
-    type: "credit",
-    category: "Services",
-    userId: "user-001"
-  },
-  {
-    id: "txn-002",
-    date: "2023-05-03",
-    description: "Court Filing Fee",
-    amount: -200.00,
-    type: "debit",
-    category: "Legal Fees",
-    userId: "user-002"
-  },
-  {
-    id: "txn-003",
-    date: "2023-05-05",
-    description: "Document Preparation",
-    amount: 500.00,
-    type: "credit",
-    category: "Services",
-    userId: "user-001"
-  }
-];
+};

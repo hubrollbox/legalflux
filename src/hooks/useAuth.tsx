@@ -1,125 +1,150 @@
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { supabase } from "../integrations/supabase/client";
-import { toast } from "sonner";
+import { createContext, useContext, useState, useEffect } from 'react';
+import { User, AuthContextType } from '../types/auth';
 
-interface AuthContextType {
-  user: any | null;
-  isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
-  logout: () => Promise<void>;
-  checkEmailExists?: (email: string) => Promise<boolean>;
+// Criar contexto de autenticação
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// Hook personalizado para usar o contexto de autenticação
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }
 
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  isAuthenticated: false,
-  login: async () => {},
-  register: async () => {},
-  logout: async () => {},
-});
+// Provider para o contexto de autenticação
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<any | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
+  // Simular verificação de sessão no carregamento inicial
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user || null);
-        setIsAuthenticated(!!session?.user);
+    const checkUserSession = async () => {
+      try {
+        // Em uma implementação real, você verificaria a sessão do usuário aqui
+        // Por exemplo, verificando um token JWT no localStorage ou usando uma API de sessão
+
+        // Simulação de verificação de sessão
+        const userSession = localStorage.getItem('user');
+        
+        if (userSession) {
+          setUser(JSON.parse(userSession));
+        }
+      } catch (err) {
+        console.error("Erro ao verificar sessão:", err);
+        setError("Falha ao verificar a sua sessão.");
+      } finally {
+        setLoading(false);
       }
-    );
-
-    // Verificar sessão atual
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user || null);
-      setIsAuthenticated(!!session?.user);
-    });
-
-    return () => {
-      subscription.unsubscribe();
     };
+
+    checkUserSession();
   }, []);
 
+  // Função de login
   const login = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        throw error;
+      setLoading(true);
+      setError(null);
+      
+      // Em uma implementação real, você chamaria a sua API de autenticação aqui
+      // Simulação de login
+      if (email && password) {
+        // Simular um atraso de rede
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const mockUser = {
+          id: '1',
+          email: email,
+          name: 'Utilizador Demo',
+          role: 'lawyer'
+        };
+        
+        // Guardar no localStorage para persistência da sessão
+        localStorage.setItem('user', JSON.stringify(mockUser));
+        
+        setUser(mockUser);
+      } else {
+        throw new Error('Email e senha são obrigatórios');
       }
-
-      toast.success("Login efetuado com sucesso!");
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao realizar login");
-      throw error;
+    } catch (err) {
+      console.error("Erro ao fazer login:", err);
+      setError(err instanceof Error ? err.message : 'Falha ao fazer login');
+      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const register = async (email: string, password: string, name: string) => {
+  // Função de criação de conta
+  const signup = async (email: string, password: string, userInfo: any) => {
     try {
-      const { error, data } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: name,
-          },
-        },
-      });
-
-      if (error) {
-        throw error;
+      setLoading(true);
+      setError(null);
+      
+      // Em uma implementação real, você chamaria a sua API de registro aqui
+      // Simulação de registro
+      if (email && password) {
+        // Simular um atraso de rede
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const mockUser = {
+          id: `${Math.floor(Math.random() * 1000)}`,
+          email: email,
+          name: userInfo.fullName || 'Novo Utilizador',
+          role: userInfo.role || 'client'
+        };
+        
+        // Guardar no localStorage para persistência da sessão
+        localStorage.setItem('user', JSON.stringify(mockUser));
+        
+        setUser(mockUser);
+      } else {
+        throw new Error('Email e senha são obrigatórios');
       }
-
-      toast.success("Registo efetuado com sucesso! Verifique seu email para confirmar a conta.");
-      return data;
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao realizar registro");
-      throw error;
+    } catch (err) {
+      console.error("Erro ao criar conta:", err);
+      setError(err instanceof Error ? err.message : 'Falha ao criar conta');
+      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Função de logout
   const logout = async () => {
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        throw error;
-      }
-      toast.success("Logout efetuado com sucesso!");
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao realizar logout");
-      throw error;
+      setLoading(true);
+      
+      // Em uma implementação real, você chamaria a sua API de logout aqui
+      // Simulação de logout
+      localStorage.removeItem('user');
+      
+      setUser(null);
+    } catch (err) {
+      console.error("Erro ao fazer logout:", err);
+      setError(err instanceof Error ? err.message : 'Falha ao fazer logout');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const checkEmailExists = async (email: string): Promise<boolean> => {
-    try {
-      // Esta é apenas uma implementação simulada
-      // Numa implementação real, você pode chamar uma função de backend
-      // que verifica se o email existe sem revelar informações sensíveis
-      return false;
-    } catch (error) {
-      console.error("Erro ao verificar email:", error);
-      return false;
-    }
-  };
-
+  // Valor do contexto
   const value = {
     user,
-    isAuthenticated,
+    signup,
     login,
-    register,
     logout,
-    checkEmailExists
+    loading,
+    error
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
-
-export const useAuth = () => useContext(AuthContext);
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+}

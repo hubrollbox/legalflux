@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Correct import for v7.5.2
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import { Process, Document } from "../types";
@@ -8,7 +8,6 @@ import { getProcesses } from "../services/processService";
 import { getDocuments } from "../services/documentService";
 import { Input } from "../components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Badge } from "../components/ui/badge";
 import { useIsMobile } from "../hooks/use-mobile";
 import PageTransition from "../components/PageTransition";
 
@@ -28,6 +27,13 @@ import DashboardCustomizer from "../components/dashboard/DashboardCustomizer";
 // Import utility functions
 import { getUserRoleName, getChartData, getFinancialData, getPerformanceData, getStatisticsData } from "@/utils/dashboardUtils";
 import { getRecentCases, getRecentTasks } from "@/services/mockData";
+
+// Mock data para tarefas pendentes
+const tasks = [
+  { id: "1", title: "Revisar contrato do cliente ABC", priority: "high", dueDate: "Hoje" },
+  { id: "2", title: "Preparar audiência", priority: "medium", dueDate: "Amanhã" },
+  { id: "3", title: "Contactar testemunha", priority: "low", dueDate: "23/05/2023" }
+];
 
 const Dashboard = () => {
   const { user } = useAuth();

@@ -1,17 +1,4 @@
 
-import { UserRole } from "./permissions";
-
-export interface User {
-  id: string;
-  email: string;
-  name?: string;
-  avatar?: string;
-  role?: UserRole;
-  organizationId?: string;
-  created_at?: string;
-  updated_at?: string;
-}
-
 export enum UserType {
   CLIENT = 'client',
   LAWYER = 'lawyer',
@@ -19,8 +6,23 @@ export enum UserType {
   ADMIN = 'admin'
 }
 
-export interface AuthResponse {
+export interface User {
+  id: string;
+  email: string;
+  name?: string;
+  role?: string;
+  organizationId?: string;
+}
+
+export interface AuthContextType {
   user: User | null;
-  session: any | null;
-  error: Error | null;
+  signup: (email: string, password: string, userInfo: any) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  loading: boolean;
+  error: string | null;
+}
+
+export interface AuthProviderProps {
+  children: React.ReactNode;
 }

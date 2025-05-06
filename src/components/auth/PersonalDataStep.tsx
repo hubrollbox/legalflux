@@ -58,8 +58,7 @@ export default function PersonalDataStep({ userType, initialValues, onNext, onBa
         <FormField
           control={form.control}
           name="fullName"
--          render={({ field }) => (
-+          render={({ field }: { field: any }) => (
+          render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel>Nome Completo *</FormLabel>
               <FormControl>
@@ -73,8 +72,7 @@ export default function PersonalDataStep({ userType, initialValues, onNext, onBa
         <FormField
           control={form.control}
           name="nif"
--          render={({ field }) => (
-+          render={({ field }: { field: any }) => (
+          render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel>NIF *</FormLabel>
               <FormControl>
@@ -88,8 +86,7 @@ export default function PersonalDataStep({ userType, initialValues, onNext, onBa
         <FormField
           control={form.control}
           name="email"
--          render={({ field }) => (
-+          render={({ field }: { field: any }) => (
+          render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel>Email *</FormLabel>
               <FormControl>
@@ -105,8 +102,7 @@ export default function PersonalDataStep({ userType, initialValues, onNext, onBa
             <FormField
               control={form.control}
               name="phone"
--              render={({ field }) => (
-+              render={({ field }: { field: any }) => (
+              render={({ field }: { field: any }) => (
                 <FormItem>
                   <FormLabel>Telemóvel</FormLabel>
                   <FormControl>
@@ -120,8 +116,7 @@ export default function PersonalDataStep({ userType, initialValues, onNext, onBa
             <FormField
               control={form.control}
               name="address"
--              render={({ field }) => (
-+              render={({ field }: { field: any }) => (
+              render={({ field }: { field: any }) => (
                 <FormItem>
                   <FormLabel>Endereço</FormLabel>
                   <FormControl>
@@ -137,8 +132,7 @@ export default function PersonalDataStep({ userType, initialValues, onNext, onBa
         <FormField
           control={form.control}
           name="password"
--          render={({ field }) => (
-+          render={({ field }: { field: any }) => (
+          render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel>Senha *</FormLabel>
               <FormControl>
@@ -152,8 +146,7 @@ export default function PersonalDataStep({ userType, initialValues, onNext, onBa
         <FormField
           control={form.control}
           name="confirmPassword"
--          render={({ field }) => (
-+          render={({ field }: { field: any }) => (
+          render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel>Confirmar Senha *</FormLabel>
               <FormControl>

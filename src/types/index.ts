@@ -1,13 +1,25 @@
 
-// Exportar todos os tipos da aplicação para facilitar importação
-export * from './auth';
-export * from './calendar';
-export * from './client';
-export * from './document';
-export * from './financial';
-export * from './permissions';
-export * from './priority-level';
-export * from './process';
-export * from './category';
-export * from './task';
-export * from './plan';
+export interface Document {
+  id: string;
+  name: string;
+  type: string;
+  size: string;
+  updatedAt: Date;
+  owner: string;
+  folder: string;
+  process: string;
+  tags?: string[];
+  status: string;
+}
+
+export interface Process {
+  id: string;
+  title: string;
+  clientName: string;
+  type: string;
+  deadline: Date;
+  status: string;
+  progress?: number;
+  responsible?: string;
+  priority?: string;
+}

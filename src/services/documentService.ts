@@ -1,94 +1,81 @@
 
-import { Document } from '../types';
+import { Document } from "../types";
 
-// Dados mock para documentos
-const mockDocuments: Document[] = [
+// Dados de exemplo para documentos
+const sampleDocuments: Document[] = [
   {
-    id: '1',
-    title: 'Petição Inicial',
-    processId: '1',
-    clientId: '1',
-    lawyerId: '1',
-    status: 'final',
-    type: 'petition',
-    createdAt: '2023-01-16T09:30:00Z',
-    updatedAt: '2023-01-18T15:20:00Z',
-    fileUrl: 'https://example.com/files/peticao_inicial.pdf',
-    fileSize: 2500000,
-    version: 3,
-    tags: ['civil', 'inicial']
+    id: "1",
+    name: "Contrato de Prestação de Serviços",
+    type: "contract",
+    size: "245 KB",
+    updatedAt: new Date(),
+    owner: "João Silva",
+    folder: "Contratos",
+    process: "Processo #123",
+    tags: ["importante", "cliente-vip"],
+    status: "active"
   },
   {
-    id: '2',
-    title: 'Contrato de Prestação de Serviços',
-    processId: '2',
-    clientId: '2',
-    lawyerId: '1',
-    status: 'draft',
-    type: 'contract',
-    createdAt: '2023-03-11T10:45:00Z',
-    updatedAt: '2023-03-12T14:30:00Z',
-    fileUrl: 'https://example.com/files/contrato.pdf',
-    fileSize: 1200000,
-    version: 1,
-    tags: ['laboral', 'contrato']
+    id: "2",
+    name: "Procuração",
+    type: "power_of_attorney",
+    size: "125 KB",
+    updatedAt: new Date(Date.now() - 86400000), // 1 dia atrás
+    owner: "Maria Pereira",
+    folder: "Documentos Pessoais",
+    process: "Processo #456",
+    status: "pending"
   },
   {
-    id: '3',
-    title: 'Acordo Parental',
-    processId: '3',
-    clientId: '3',
-    lawyerId: '2',
-    status: 'review',
-    type: 'agreement',
-    createdAt: '2022-11-10T11:15:00Z',
-    updatedAt: '2023-04-25T09:40:00Z',
-    fileUrl: 'https://example.com/files/acordo_parental.pdf',
-    fileSize: 1800000,
-    version: 2,
-    tags: ['família', 'acordo']
-  },
-  {
-    id: '4',
-    title: 'Procuração',
-    clientId: '1',
-    lawyerId: '1',
-    status: 'pending',
-    type: 'power_of_attorney',
-    createdAt: '2023-02-05T16:20:00Z',
-    updatedAt: '2023-02-05T16:20:00Z',
-    fileUrl: 'https://example.com/files/procuracao.pdf',
-    fileSize: 500000,
-    version: 1,
-    tags: ['procuração']
+    id: "3",
+    name: "Petição Inicial",
+    type: "petition",
+    size: "350 KB",
+    updatedAt: new Date(Date.now() - 172800000), // 2 dias atrás
+    owner: "Carlos Santos",
+    folder: "Processos Judiciais",
+    process: "Processo #789",
+    tags: ["urgente"],
+    status: "pending"
   }
 ];
 
 export const getDocuments = async (): Promise<Document[]> => {
-  // Simular uma chamada API
+  // Simulação de uma chamada de API
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(mockDocuments);
+      resolve(sampleDocuments);
     }, 500);
   });
 };
 
 export const getDocumentById = async (id: string): Promise<Document | undefined> => {
-  // Simular uma chamada API
+  // Simulação de uma chamada de API
   return new Promise((resolve) => {
     setTimeout(() => {
-      const document = mockDocuments.find(d => d.id === id);
-      resolve(document);
+      resolve(sampleDocuments.find(doc => doc.id === id));
     }, 300);
   });
 };
 
-export const getDocumentsByProcessId = async (processId: string): Promise<Document[]> => {
-  // Simular uma chamada API
+export const saveDocument = async (document: Document): Promise<Document> => {
+  // Simulação de uma chamada de API para salvar
   return new Promise((resolve) => {
     setTimeout(() => {
-      const documents = mockDocuments.filter(d => d.processId === processId);
-      resolve(documents);
+      resolve({
+        ...document,
+        id: document.id || `${Math.floor(Math.random() * 1000)}`,
+        updatedAt: new Date()
+      });
+    }, 600);
+  });
+};
+
+export const deleteDocument = async (id: string): Promise<boolean> => {
+  // Simulação de uma chamada de API para excluir
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
     }, 400);
   });
 };
