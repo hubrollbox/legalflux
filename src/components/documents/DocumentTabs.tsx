@@ -8,6 +8,7 @@ import DocumentsSearchBar from "./DocumentsSearchBar";
 import DocumentsViewMode from "./DocumentsViewMode";
 import DocumentsContent from "./DocumentsContent";
 import TemplatesContent from "./TemplatesContent";
+import type { Document as DocumentType } from "@/types/document";
 
 interface DocumentTabsProps {
   viewMode: "grid" | "list";
@@ -15,31 +16,21 @@ interface DocumentTabsProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   filters: {
-    type: string;
-    date: Date | undefined;
-    tags: string[];
+    type?: string;
+    date?: Date;
+    tags?: string[];
   };
   setFilters: (filters: any) => void;
-  filteredDocuments: Array<{
-    id: string;
-    name: string;
-    type: "document" | "action" | "precedent" | "strategy";
-    size: string;
-    updatedAt: Date;
-    owner: string;
-    folder: string;
-    process: string;
-    tags?: string[];
-    status?: string;
-  }>;
+  filteredDocuments: DocumentType[];
   filteredTemplates: Array<{
     id: string;
     name: string;
     type: "document" | "action" | "precedent" | "strategy";
-    size: string;
-    description: string;
-    updatedAt: string;
-    category: string;
+    size?: string;
+    description?: string;
+    updatedAt?: string | Date;
+    category?: string;
+    tags?: string[];
   }>;
 }
 
@@ -50,8 +41,8 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
   setSearchTerm,
   filters,
   setFilters,
-  filteredDocuments = [], // Valor padrão para evitar undefined
-  filteredTemplates = []  // Valor padrão para evitar undefined
+  filteredDocuments = [],
+  filteredTemplates = []
 }) => {
   return (
     <Tabs defaultValue="all" className="mb-6">
@@ -82,13 +73,25 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
         <DocumentsContent
           title="Todos os Documentos"
           description={`${filteredDocuments.length} documento(s) encontrado(s)`}
-          documents={filteredDocuments}
+          documents={filteredDocuments.map(doc => ({
+            ...doc,
+            status: doc.status ?? "draft",
+            updatedAt: doc.updatedAt ?? new Date(),
+            tags: doc.tags ?? [],
+            type: doc.type ?? "document"
+          }))}
           viewMode={viewMode}
         />
       </TabsContent>
-      
       <TabsContent value="templates" className="mt-6">
-        <TemplatesContent templates={filteredTemplates} viewMode={viewMode} />
+        <TemplatesContent templates={filteredTemplates.map(template => ({
+          ...template,
+          updatedAt: template.updatedAt ?? new Date(),
+          size: template.size ?? "-",
+          description: template.description ?? "",
+          category: template.category ?? "document",
+          tags: template.tags ?? []
+        }))} viewMode={viewMode} />
       </TabsContent>
       
       <TabsContent value="recent">

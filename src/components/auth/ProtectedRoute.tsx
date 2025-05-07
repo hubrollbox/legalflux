@@ -2,12 +2,13 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, user } = useAuth();
   const location = useLocation();
   const isLoading = !isAuthenticated && !user;
+  const { toast } = useToast();
 
   if (isLoading) {
     return <div className="flex items-center justify-center h-screen">Carregando...</div>;

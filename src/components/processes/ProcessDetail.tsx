@@ -209,7 +209,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                   <div className="pb-8">
                     <p className="font-medium">Processo iniciado</p>
                     <p className="text-sm text-muted-foreground">
-                      {format(new Date(process.startDate!), 'PPP', { locale: pt })}
+                      {format(new Date(process.startDate ?? ''), "dd 'de' MMMM 'de' yyyy", { locale: pt })}
                     </p>
                   </div>
                 </div>

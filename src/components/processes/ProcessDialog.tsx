@@ -45,8 +45,7 @@ const ProcessDialog: React.FC<ProcessDialogProps> = ({
             clientId: '',
             startDate: new Date().toISOString(),
             createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            userId: ''
+            updatedAt: new Date().toISOString()
           }}
           onSubmit={onSubmit}
           isSubmitting={isSubmitting}

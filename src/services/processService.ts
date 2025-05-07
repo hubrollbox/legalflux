@@ -19,3 +19,5 @@ export const processService = {
     return allProcesses.find(p => p.id === id);
   }
 };
+
+export const getProcesses = processService.getProcesses;
