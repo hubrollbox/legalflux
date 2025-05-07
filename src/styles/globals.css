@@ -4,35 +4,37 @@
 @tailwind utilities;
 
 :root {
-  --background: #f8fafc;
-  --foreground: #18181b;
-  --primary: #2563eb;
-  --primary-foreground: #ffffff;
-  --secondary: #64748b;
-  --secondary-foreground: #ffffff;
-  --border: #e5e7eb;
-  --input: #e5e7eb;
-  --ring: #2563eb;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --accent: #f1f5f9;
-  --accent-foreground: #18181b;
-  --popover: #ffffff;
-  --popover-foreground: #18181b;
-  --card: #ffffff;
-  --card-foreground: #18181b;
+  --background: 248 250 252;
+  --foreground: 24 24 27;
+  --primary: 37 99 235;
+  --primary-foreground: 255 255 255;
+  --secondary: 100 116 139;
+  --secondary-foreground: 255 255 255;
+  --border: 229 231 235;
+  --input: 229 231 235;
+  --ring: 37 99 235;
+  --muted: 241 245 249;
+  --muted-foreground: 100 116 139;
+  --destructive: 239 68 68;
+  --destructive-foreground: 255 255 255;
+  --accent: 241 245 249;
+  --accent-foreground: 24 24 27;
+  --popover: 255 255 255;
+  --popover-foreground: 24 24 27;
+  --card: 255 255 255;
+  --card-foreground: 24 24 27;
   --radius: 0.5rem;
-}
-
-body {
-  background-color: var(--background);
-  color: var(--foreground);
 }
 
 @layer base {
   body {
-    @apply bg-white text-foreground;
+    @apply text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
 }
