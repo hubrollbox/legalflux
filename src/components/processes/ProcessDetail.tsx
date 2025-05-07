@@ -130,7 +130,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                     <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                     <span className="font-medium">Data de Início:</span>
                     <span className="ml-2">
-                      {format(new Date(process.startDate!), 'PPP', { locale: pt })}
+                      {process.startDate ? format(new Date(process.startDate), 'PPP', { locale: pt }) : '--'}
                     </span>
                   </div>
                   {process.endDate && (
@@ -138,7 +138,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                       <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                       <span className="font-medium">Data de Encerramento:</span>
                       <span className="ml-2">
-                        {format(new Date(process.endDate!), 'PPP', { locale: pt })}
+                        {process.endDate ? format(new Date(process.endDate), 'PPP', { locale: pt }) : '--'}
                       </span>
                     </div>
                   )}
@@ -209,7 +209,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                   <div className="pb-8">
                     <p className="font-medium">Processo iniciado</p>
                     <p className="text-sm text-muted-foreground">
-                      {format(new Date(process.startDate ?? ''), "dd 'de' MMMM 'de' yyyy", { locale: pt })}
+                      {process.startDate ? format(new Date(process.startDate), "dd 'de' MMMM 'de' yyyy", { locale: pt }) : '--'}
                     </p>
                   </div>
                 </div>
@@ -222,7 +222,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                     <div>
                       <p className="font-medium">Processo finalizado</p>
                       <p className="text-sm text-muted-foreground">
-                        {format(new Date(process.endDate!), 'PPP', { locale: pt })}
+                        {process.endDate ? format(new Date(process.endDate), 'PPP', { locale: pt }) : '--'}
                       </p>
                     </div>
                   </div>
