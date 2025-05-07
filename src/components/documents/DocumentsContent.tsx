@@ -3,22 +3,12 @@ import React from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import DocumentCard from "./DocumentCard";
 import DocumentList from "./DocumentList";
+import { Document } from "@/types";
 
 interface DocumentsContentProps {
   title: string;
   description: string;
-  documents: Array<{
-    id: string;
-    name: string;
-    type: "document" | "action" | "precedent" | "strategy";
-    size: string;
-    updatedAt: Date;
-    owner: string;
-    folder: string;
-    process: string;
-    tags?: string[];
-    status?: string;
-  }>;
+  documents: Array<Document>;
   viewMode: "grid" | "list";
 }
 
@@ -60,12 +50,13 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
         {viewMode === "grid" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {safeDocuments.map((doc) => (
-              <DocumentCard key={doc.id} doc={doc} />
+              <DocumentCard key={doc.id} doc={{...doc, type: doc.type as "document" | "action" | "precedent" | "strategy"}} />
             ))}
           </div>
         ) : (
           <DocumentList documents={safeDocuments.map(doc => ({
             ...doc,
+            type: doc.type as "document" | "action" | "precedent" | "strategy",
             updatedAt: doc.updatedAt.toISOString()
           }))} />
         )}

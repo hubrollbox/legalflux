@@ -1,4 +1,8 @@
-/* Definições globais de variáveis CSS para Tailwind */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --background: #f8fafc;
   --foreground: #18181b;
@@ -13,9 +17,22 @@
   --muted-foreground: #64748b;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
+  --accent: #f1f5f9;
+  --accent-foreground: #18181b;
+  --popover: #ffffff;
+  --popover-foreground: #18181b;
+  --card: #ffffff;
+  --card-foreground: #18181b;
+  --radius: 0.5rem;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
+}
+
+@layer base {
+  body {
+    @apply bg-white text-foreground;
+  }
 }

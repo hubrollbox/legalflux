@@ -1,4 +1,6 @@
 
+import { PriorityLevel } from "./priority-level";
+
 export type TaskStatus = 'todo' | 'in_progress' | 'completed' | 'cancelled' | 'pending' | 'in-progress';
 
 export interface Task {

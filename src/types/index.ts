@@ -2,7 +2,7 @@
 export interface Document {
   id: string;
   name: string;
-  type: string;
+  type: "document" | "action" | "precedent" | "strategy";
   size: string;
   updatedAt: Date;
   owner: string;
@@ -30,3 +30,5 @@ export type { Task } from "./task";
 export { PriorityLevel } from "./priority-level";
 export type { FinancialTransaction, TransactionStatus } from "./financial";
 export { TransactionType } from "./financial";
+export type { User, AuthContextType } from "./auth";
+export { UserRole } from "./permissions";

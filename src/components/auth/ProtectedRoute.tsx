@@ -2,7 +2,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { useToast } from "@/components/ui/use-toast";
+import { toast as sonnerToast } from "sonner";
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, user } = useAuth();
@@ -21,7 +21,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
     if (!location.pathname.startsWith("/client-portal") && location.pathname !== "/logout") {
       return <Navigate to="/client-portal" replace />;
     }
-  } else if (["lawyer", "senior_lawyer", "assistant", "admin"].includes(user?.role)) {
+  } else if (["lawyer", "senior_lawyer", "assistant", "admin"].includes(user?.role || "")) {
     if (!location.pathname.startsWith("/dashboard") && location.pathname !== "/logout") {
       return <Navigate to="/dashboard" replace />;
     }
@@ -31,4 +31,3 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 };
 
 export default ProtectedRoute;
-const { toast } = useToast();

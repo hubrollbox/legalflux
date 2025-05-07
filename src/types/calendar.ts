@@ -5,17 +5,17 @@ export interface CalendarEvent {
   id: string;
   title: string;
   description?: string;
-  start: Date; // Alterado de string para Date
-  end: Date; // Alterado de string para Date
+  start: Date;
+  end: Date;
   allDay?: boolean;
   location?: string;
   categoryId?: string;
-  category?: CategoryKey; // Added for backward compatibility
+  category?: CategoryKey;
   priority?: 'high' | 'medium' | 'low';
   status?: 'pending' | 'completed' | 'cancelled';
-  client?: string; // Added for backward compatibility
+  client?: string;
   clientId?: string;
-  process?: string; // Added for backward compatibility
+  process?: string;
   processId?: string;
   createdBy?: string;
   createdAt?: string;

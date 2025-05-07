@@ -1,6 +1,6 @@
 
-import { RecentCase, RecentTask, PriorityLevel, Case, Client, Task } from "./types";
-import { PriorityLevelEnum } from "@/types/priority-level";
+import { RecentCase, RecentTask, Case, Client, Task } from "./types";
+import { PriorityLevel } from "@/types/priority-level";
 
 // Recent cases data
 export const getRecentCases = (): RecentCase[] => [
@@ -37,20 +37,20 @@ export const getRecentTasks = (): RecentTask[] => [
     title: "Preparar petição inicial",
     assignedToName: "Advogado Demo",
     assignedToAvatar: "",
-    priority: PriorityLevelEnum.HIGH,
+    priority: PriorityLevel.HIGH,
   },
   {
     id: "2",
     title: "Revisar contrato",
     assignedToName: "Assistente Demo",
     assignedToAvatar: "",
-    priority: PriorityLevelEnum.MEDIUM,
+    priority: PriorityLevel.MEDIUM,
   },
   {
     id: "3",
     title: "Agendar audiência",
     assignedToName: "Carlos Santos",
     assignedToAvatar: "",
-    priority: PriorityLevelEnum.LOW,
+    priority: PriorityLevel.LOW,
   },
 ];

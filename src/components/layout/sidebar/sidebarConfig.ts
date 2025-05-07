@@ -49,49 +49,49 @@ export const sidebarItems: SidebarItem[] = [
     name: "Clientes",
     href: "/clients",
     icon: Users,
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant"]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT]
   },
   {
     name: "Documentos",
     href: "/documents",
     icon: FileText,
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Calendário",
     href: "/calendar",
     icon: Calendar,
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Mensagens",
     href: "/messages",
     icon: MessageSquare,
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Financeiro",
     href: "/financial",
     icon: DollarSign,
-    roles: ["admin", "lawyer", "senior_lawyer"]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER]
   },
   {
     name: "Links Úteis",
     href: "/useful-links",
     icon: Link,
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Central de Ajuda",
     href: "/help-center",
     icon: HelpCircle,
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Configurações",
     href: "/settings",
     icon: Settings,
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
 ];
 
@@ -100,18 +100,18 @@ export const userMenuItems = [
     label: "Perfil",
     href: "/profile",
     icon: User,
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     label: "Assinaturas",
     href: "/subscriptions",
     icon: CreditCard,
-    roles: ["admin", "lawyer", "senior_lawyer"]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER]
   },
   {
     label: "Configurações",
     href: "/settings",
     icon: Settings,
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
 ];

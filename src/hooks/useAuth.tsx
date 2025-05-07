@@ -19,6 +19,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   // Simular verificação de sessão no carregamento inicial
   useEffect(() => {
@@ -31,7 +32,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userSession = localStorage.getItem('user');
         
         if (userSession) {
-          setUser(JSON.parse(userSession));
+          const parsedUser = JSON.parse(userSession);
+          setUser(parsedUser);
+          setIsAuthenticated(true);
         }
       } catch (err) {
         console.error("Erro ao verificar sessão:", err);
@@ -67,6 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem('user', JSON.stringify(mockUser));
         
         setUser(mockUser);
+        setIsAuthenticated(true);
       } else {
         throw new Error('Email e senha são obrigatórios');
       }
@@ -102,6 +106,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem('user', JSON.stringify(mockUser));
         
         setUser(mockUser);
+        setIsAuthenticated(true);
       } else {
         throw new Error('Email e senha são obrigatórios');
       }
@@ -124,12 +129,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem('user');
       
       setUser(null);
+      setIsAuthenticated(false);
     } catch (err) {
       console.error("Erro ao fazer logout:", err);
       setError(err instanceof Error ? err.message : 'Falha ao fazer logout');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Função para obter o caminho de redirecionamento com base no papel do usuário
+  const getRedirectPath = () => {
+    if (user?.role === 'client') {
+      return '/client-portal';
+    } else if (user) {
+      return '/dashboard';
+    }
+    return '/login';
   };
 
   // Valor do contexto
@@ -139,7 +155,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     login,
     logout,
     loading,
-    error
+    error,
+    isAuthenticated,
+    session: null,
+    register: signup,
+    forgotPassword: async () => {},
+    resetPassword: async () => {},
+    checkEmailExists: async () => false,
+    signIn: login,
+    signOut: logout,
+    signUp: signup,
+    getRedirectPath
   };
 
   return (
