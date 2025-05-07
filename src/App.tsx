@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import './App.css';
+import './styles/globals.css';
 import AppRoutes from './routes/AppRoutes';
 import { AuthProvider } from './contexts/AuthProvider';
 

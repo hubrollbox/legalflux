@@ -1,4 +1,5 @@
 
+
 // Serviço para operações relacionadas a processos
 
 export const processService = {
@@ -20,4 +21,7 @@ export const processService = {
   }
 };
 
+// Exportar funções individuais para uso direto
 export const getProcesses = processService.getProcesses;
+export const getProcessById = processService.getProcessById;
+
