@@ -66,7 +66,7 @@ export default function ProfessionalDataStep({ initialValues, personalData, onNe
         <FormField
           control={form.control}
           name="numero_cedula"
-          render={({ field }) => (
+          render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel>Número da Cédula Profissional *</FormLabel>
               <FormControl>
@@ -79,8 +79,22 @@ export default function ProfessionalDataStep({ initialValues, personalData, onNe
 
         <FormField
           control={form.control}
+          name="email_profissional"
+          render={({ field }: { field: any }) => (
+            <FormItem>
+              <FormLabel>Email Profissional *</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="morada_profissional"
-          render={({ field }) => (
+          render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel>Morada Profissional *</FormLabel>
               <FormControl>
@@ -93,25 +107,8 @@ export default function ProfessionalDataStep({ initialValues, personalData, onNe
 
         <FormField
           control={form.control}
-          name="email_profissional"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email Profissional *</FormLabel>
-              <FormControl>
-                <Input type="email" {...field} />
-              </FormControl>
-              <FormDescription>
-                Deve ser igual ao email fornecido anteriormente
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="ordem_id"
-          render={({ field }) => (
+          render={({ field }: { field: any }) => (
             <FormItem>
               <FormLabel>Identificação da Ordem *</FormLabel>
               <FormControl>
@@ -125,15 +122,13 @@ export default function ProfessionalDataStep({ initialValues, personalData, onNe
         <FormField
           control={form.control}
           name="vinculado_empresa"
-          render={({ field }) => (
-            <FormItem className="flex items-center gap-2">
+          render={({ field }: { field: any }) => (
+            <FormItem>
               <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
+                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
               </FormControl>
-              <FormLabel>Vinculado a uma empresa?</FormLabel>
+              <FormLabel>Vinculado a uma empresa</FormLabel>
+              <FormDescription>Selecione se está vinculado a uma empresa.</FormDescription>
             </FormItem>
           )}
         />
