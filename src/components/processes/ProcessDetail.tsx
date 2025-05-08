@@ -10,9 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileText, Users, Calendar, Edit, ArrowLeft, Download } from 'lucide-react';
 
 interface ProcessDetailProps {
-  process: Process & {
-    documents?: Document[];
-  };
+  process: Process;
   onBack: () => void;
   onEdit: (id: string) => void;
   onExportPdf: (id: string) => void;
@@ -157,7 +155,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
             <TabsContent value="documents" className="pt-4">
               {process.documents && process.documents.length > 0 ? (
                 <div className="space-y-4">
-                  {process.documents.map((doc) => (
+                  {process.documents!.map((doc) => (
                     <Card key={doc.id}>
                       <CardContent className="p-4 flex items-center justify-between">
                         <div className="flex items-center">
@@ -165,7 +163,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                           <div>
                             <p className="font-medium">{doc.name}</p>
                             <p className="text-sm text-muted-foreground">
-                              Versão {doc.version} • Atualizado em {format(new Date(doc.updatedAt), 'PPP', { locale: pt })}
+                              Versão {doc.version ?? '--'} • Atualizado em {doc.updatedAt ? format(new Date(doc.updatedAt), 'PPP', { locale: pt }) : '--'}
                             </p>
                           </div>
                         </div>

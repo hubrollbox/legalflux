@@ -86,7 +86,7 @@ const ProcessList: React.FC<ProcessListProps> = ({
 }) => {
   // Format date safely
   const formatDate = (dateString: string | undefined) => {
-    if (!dateString) return "N/A";
+    if (!dateString) return "--";
     try {
       return new Date(dateString).toLocaleDateString('pt-BR');
     } catch (error) {

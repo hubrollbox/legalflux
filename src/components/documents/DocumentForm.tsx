@@ -6,6 +6,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Document } from "@/types/document";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { documentSchema, type DocumentFormValues } from '@/schemas/documentSchema';
+import type { Document } from '@/types/document';
 
 interface Client {
   id: string;
@@ -161,3 +165,30 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
 };
 
 export default DocumentForm;
+
+const form = useForm<DocumentFormValues>({
+  resolver: zodResolver(documentSchema),
+  defaultValues: {
+    status: 'draft',
+    ...defaultValues,
+  },
+});
+
+<FormField
+  control={form.control}
+  name="file"
+  render={({ field: { value, onChange, ...fieldProps } }) => (
+    <FormItem>
+      <FormLabel>Anexo do Documento</FormLabel>
+      <FormControl>
+        <Input
+          type="file"
+          accept=".pdf,.doc,.docx"
+          onChange={(e) => onChange(e.target.files?.[0])}
+          {...fieldProps}
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
