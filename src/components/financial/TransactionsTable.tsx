@@ -51,24 +51,22 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
   // Tradução de tipos e status para português
   const translateTransactionType = (type: TransactionType): string => {
     const translations: Record<TransactionType, string> = {
-      'invoice': 'Fatura',
-      'payment': 'Pagamento',
-      'refund': 'Reembolso',
-      'income': 'Receita',
-      'expense': 'Despesa',
-      'other': 'Outro',
-      // Removed 'subscription' as it's not part of TransactionType
+      [TransactionType.INVOICE]: 'Fatura',
+      [TransactionType.PAYMENT]: 'Pagamento',
+      [TransactionType.REFUND]: 'Reembolso',
+      [TransactionType.INCOME]: 'Receita',
+      [TransactionType.EXPENSE]: 'Despesa',
     };
     return translations[type] || type;
   };
 
   const translateTransactionStatus = (status: TransactionStatus): string => {
     const translations: Record<TransactionStatus, string> = {
-      'pending': 'Pendente',
-      'completed': 'Concluído',
-      'failed': 'Falhou',
-      'cancelled': 'Cancelado',
-      'refunded': 'Reembolsado'
+      [TransactionStatus.PENDING]: 'Pendente',
+      [TransactionStatus.COMPLETED]: 'Concluído',
+      [TransactionStatus.FAILED]: 'Falhou',
+      [TransactionStatus.CANCELLED]: 'Cancelado',
+      [TransactionStatus.REFUNDED]: 'Reembolsado',
     };
     return translations[status] || status;
   };
@@ -76,11 +74,11 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
   // Status badge color
   const getStatusColor = (status: TransactionStatus): string => {
     const colors: Record<TransactionStatus, string> = {
-      'pending': 'bg-yellow-500',
-      'completed': 'bg-green-500',
-      'failed': 'bg-red-500',
-      'cancelled': 'bg-gray-500',
-      'refunded': 'bg-blue-500'
+      [TransactionStatus.PENDING]: 'bg-yellow-500',
+      [TransactionStatus.COMPLETED]: 'bg-green-500',
+      [TransactionStatus.FAILED]: 'bg-red-500',
+      [TransactionStatus.CANCELLED]: 'bg-gray-500',
+      [TransactionStatus.REFUNDED]: 'bg-blue-500',
     };
     return colors[status] || 'bg-gray-500';
   };

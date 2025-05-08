@@ -73,3 +73,5 @@ export const processService = {
     return processService.getProcesses();
   }
 };
+
+export const getProcesses = processService.getProcesses;

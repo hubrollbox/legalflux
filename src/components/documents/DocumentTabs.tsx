@@ -19,7 +19,11 @@ interface DocumentTabsProps {
     date?: Date;
     tags: string[];
   };
-  setFilters: (filters: any) => void;
+  setFilters: (filters: {
+    type: string;
+    date?: Date;
+    tags: string[];
+  }) => void;
   filteredDocuments: Document[];
   filteredTemplates: DocumentTemplate[];
 }

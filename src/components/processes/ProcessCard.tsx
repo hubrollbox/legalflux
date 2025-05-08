@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { Process } from "@/types/process";
+import type { Process, ProcessStatus, ProcessType } from "@/types/process";
 import { Eye, FileText, Calendar } from "lucide-react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
@@ -13,7 +13,7 @@ interface ProcessCardProps {
   onView: (id: string) => void;
 }
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: ProcessStatus) => {
   switch (status) {
     case "in_progress":
       return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
@@ -28,7 +28,7 @@ const getStatusColor = (status: string) => {
   }
 };
 
-const getStatusName = (status: string) => {
+const getStatusName = (status: ProcessStatus) => {
   switch (status) {
     case "in_progress":
       return "Em Curso";
@@ -43,7 +43,7 @@ const getStatusName = (status: string) => {
   }
 };
 
-const getProcessTypeName = (type: string) => {
+const getProcessTypeName = (type: ProcessType) => {
   switch (type) {
     case "civil":
       return "Civil";

@@ -1,7 +1,7 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
-import type { Process } from '@/types/process';
+import type { Process, ProcessStatus, ProcessType } from '@/types/process';
 import type { Document } from '@/types/document';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +18,7 @@ interface ProcessDetailProps {
   onExportPdf: (id: string) => void;
 }
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: ProcessStatus) => {
   switch (status) {
     case "in_progress":
       return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
@@ -33,7 +33,7 @@ const getStatusColor = (status: string) => {
   }
 };
 
-const getStatusName = (status: string) => {
+const getStatusName = (status: ProcessStatus) => {
   switch (status) {
     case "in_progress":
       return "Em Curso";
@@ -48,7 +48,7 @@ const getStatusName = (status: string) => {
   }
 };
 
-const getProcessTypeName = (type: string) => {
+const getProcessTypeName = (type: ProcessType) => {
   switch (type) {
     case "civil":
       return "Civil";
@@ -99,8 +99,8 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
               <CardTitle className="text-2xl">{process.title}</CardTitle>
               <CardDescription>Processo nº {process.number}</CardDescription>
             </div>
-            <Badge className={getStatusColor(process.status)}>
-              {getStatusName(process.status)}
+            <Badge className={getStatusColor(process.status as ProcessStatus)}>
+              {getStatusName(process.status as ProcessStatus)}
             </Badge>
           </div>
         </CardHeader>
@@ -123,7 +123,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                   <div className="flex items-center">
                     <FileText className="h-4 w-4 mr-2 text-muted-foreground" />
                     <span className="font-medium">Tipo:</span>
-                    <span className="ml-2">{getProcessTypeName(process.type)}</span>
+                    <span className="ml-2">{getProcessTypeName(process.type as ProcessType)}</span>
                   </div>
                 </div>
                 <div className="space-y-2">

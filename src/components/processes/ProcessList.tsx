@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import type { Process, ProcessStatus } from "@/types/process";
+import type { Process, ProcessStatus, ProcessType } from "@/types/process";
 
 interface ProcessListProps {
   processes: Process[];
@@ -58,7 +58,7 @@ const getStatusName = (status: ProcessStatus) => {
   }
 };
 
-const getProcessTypeName = (type: string) => {
+const getProcessTypeName = (type: ProcessType) => {
   switch (type) {
     case "civil":
       return "Civil";
@@ -122,7 +122,7 @@ const ProcessList: React.FC<ProcessListProps> = ({
                 <TableCell className="font-medium">{process.number}</TableCell>
                 <TableCell>{process.title}</TableCell>
                 <TableCell>{process.clientId || "--"}</TableCell>
-                <TableCell>{getProcessTypeName(process.type)}</TableCell>
+                <TableCell>{getProcessTypeName(process.type as ProcessType)}</TableCell>
                 <TableCell>
                   <Badge className={getStatusColor(process.status as ProcessStatus)}>
                     {getStatusName(process.status as ProcessStatus)}
