@@ -1,14 +1,16 @@
 
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import Home from '@/pages/Home';
-import Login from '@/pages/Login';
-import Dashboard from '@/pages/Dashboard';
-import ClientPortal from '@/pages/client-portal/ClientPortal';
-import NotFound from '@/pages/NotFound';
-import LandingPage from '@/pages/landing/LandingPage';
-import { useAuth } from '@/hooks/useAuth';
+import ProtectedRoute from '../components/auth/ProtectedRoute';
+import Home from '../pages/Home';
+import Login from '../pages/Login';
+import Dashboard from '../pages/Dashboard';
+import ClientPortal from '../pages/client-portal/ClientPortal';
+import NotFound from '../pages/NotFound';
+import LandingPage from '../pages/landing/LandingPage';
+import { useAuth } from '../hooks/useAuth';
+import Screenshots from '../pages/Central de Ajuda/Screenshots';
+import Support from '../pages/Central de Ajuda/Support';
 
 const AppRoutes: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -38,8 +40,8 @@ const AppRoutes: React.FC = () => {
       />
       
       {/* Central de Ajuda */}
-      <Route path="/central-de-ajuda/support" element={<Home />} />
-      <Route path="/central-de-ajuda/screenshots" element={<Home />} />
+      <Route path="/central-de-ajuda/support" element={<Support />} />
+      <Route path="/central-de-ajuda/screenshots" element={<Screenshots />} />
       <Route path="/central-de-ajuda/faqs" element={<Home />} />
       <Route path="/central-de-ajuda/tutorials" element={<Home />} />
       <Route path="/central-de-ajuda/docs" element={<Home />} />
