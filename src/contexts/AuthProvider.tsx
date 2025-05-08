@@ -1,195 +1,182 @@
 
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '../lib/supabase-client';
+import { Session } from '@supabase/supabase-js';
 
 interface User {
   id: string;
   name: string;
-  email: string;
+  email: string | undefined;
   role: string;
 }
 
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
+  session: Session | null;
+  login: (email: string, password: string) => Promise<{ error: any }>;
+  logout: () => Promise<{ error: any }>;
+  register: (email: string, password: string, name: string) => Promise<{ data: any, error: any }>;
   checkEmailExists: (email: string) => Promise<boolean>;
   isLoading: boolean;
   error: string | null;
-  forgotPassword: (email: string) => Promise<void>;
-  resetPassword: (token: string, password: string) => Promise<void>;
+  forgotPassword: (email: string) => Promise<{ data: any, error: any }>;
+  resetPassword: (accessToken: string, newPassword: string) => Promise<{ data: any, error: any }>;
   getRedirectPath: () => string;
 }
 
-// Valor padrão do contexto
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  // Verificar se existe um usuário no localStorage ao inicializar
+
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      try {
-        const parsedUser = JSON.parse(savedUser);
-        setUser(parsedUser);
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Erro ao analisar usuário armazenado', error);
-        localStorage.removeItem('user');
+    const getInitialSession = async () => {
+      const { data: { session: initialSession }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        console.error('Error getting initial session:', sessionError.message);
+        setError(sessionError.message);
+      } else if (initialSession) {
+        setSession(initialSession);
+        const supabaseUser = initialSession.user;
+        const userRole = supabaseUser.user_metadata?.role || 'client';
+        setUser({
+          id: supabaseUser.id,
+          email: supabaseUser.email,
+          name: supabaseUser.user_metadata?.name || supabaseUser.email || 'Usuário',
+          role: userRole,
+        });
       }
-    }
+      setIsLoading(false);
+    };
+
+    getInitialSession();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+      setSession(newSession);
+      if (newSession?.user) {
+        const supabaseUser = newSession.user;
+        const userRole = supabaseUser.user_metadata?.role || 'client';
+        setUser({
+          id: supabaseUser.id,
+          email: supabaseUser.email,
+          name: supabaseUser.user_metadata?.name || supabaseUser.email || 'Usuário',
+          role: userRole,
+        });
+      } else {
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
+
+    return () => {
+      authListener?.unsubscribe();
+    };
   }, []);
-  
-  // Função de login
+
   const login = async (email: string, password: string) => {
-    try {
-      setIsLoading(true);
-      // Simular verificação de credenciais
-      // Em uma implementação real, aqui haveria uma chamada à API
-      if (email === 'admin@example.com' && password === 'password') {
-        const mockUser = {
-          id: '1',
-          name: 'Administrador',
-          email: 'admin@example.com',
-          role: 'admin'
-        };
-        setUser(mockUser);
-        setIsAuthenticated(true);
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        return;
-      }
-      
-      if (email === 'lawyer@example.com' && password === 'password') {
-        const mockUser = {
-          id: '2',
-          name: 'Advogado',
-          email: 'lawyer@example.com',
-          role: 'lawyer'
-        };
-        setUser(mockUser);
-        setIsAuthenticated(true);
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        return;
-      }
-      
-      if (email === 'client@example.com' && password === 'password') {
-        const mockUser = {
-          id: '3',
-          name: 'Cliente',
-          email: 'client@example.com',
-          role: 'client'
-        };
-        setUser(mockUser);
-        setIsAuthenticated(true);
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        return;
-      }
-      
-      throw new Error('Credenciais inválidas');
-    } catch (error) {
-      console.error('Erro no login', error);
-      setError('Credenciais inválidas');
-      throw error;
-    } finally {
-      setIsLoading(false);
+    setIsLoading(true);
+    setError(null);
+    const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+    setIsLoading(false);
+    if (loginError) {
+      console.error('Erro no login:', loginError.message);
+      setError(loginError.message);
     }
+    return { error: loginError };
   };
-  
-  // Função de registro
+
   const register = async (email: string, password: string, name: string) => {
-    try {
-      setIsLoading(true);
-      // Em uma implementação real, aqui haveria uma chamada à API
-      const mockUser = {
-        id: Math.random().toString(36).substr(2, 9),
-        name: name,
-        email: email,
-        role: 'client'
-      };
-      
-      setUser(mockUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-    } catch (error) {
-      console.error('Erro no registro', error);
-      setError('Erro ao registrar usuário');
-      throw error;
-    } finally {
-      setIsLoading(false);
+    setIsLoading(true);
+    setError(null);
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name: name,
+          role: 'client',
+        },
+      },
+    });
+    setIsLoading(false);
+    if (signUpError) {
+      console.error('Erro no registro:', signUpError.message);
+      setError(signUpError.message);
     }
+    return { data: signUpData, error: signUpError };
   };
 
-  // Função para verificar se um email já existe
-  const checkEmailExists = async (email: string): Promise<boolean> => {
-    // Simulação: em uma implementação real, faria uma chamada à API
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return false; // Simulando que o email não existe
-  };
-
-  // Função de recuperação de senha
-  const forgotPassword = async (email: string): Promise<void> => {
-    try {
-      setIsLoading(true);
-      // Simular envio de email de recuperação
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    } catch (error) {
-      console.error('Erro na recuperação de senha', error);
-      setError('Erro ao solicitar recuperação de senha');
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Função de redefinição de senha
-  const resetPassword = async (token: string, password: string): Promise<void> => {
-    try {
-      setIsLoading(true);
-      // Simular redefinição de senha
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    } catch (error) {
-      console.error('Erro na redefinição de senha', error);
-      setError('Token inválido ou expirado');
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  // Função de logout
   const logout = async () => {
-    try {
-      setIsLoading(true);
-      // Limpar dados do usuário
-      setUser(null);
-      setIsAuthenticated(false);
-      localStorage.removeItem('user');
-    } catch (error) {
-      console.error('Erro no logout', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
+    setIsLoading(true);
+    setError(null);
+    const { error: logoutError } = await supabase.auth.signOut();
+    setIsLoading(false);
+    if (logoutError) {
+      console.error('Erro no logout:', logoutError.message);
+      setError(logoutError.message);
     }
+    // setUser and setSession will be updated by onAuthStateChange
+    return { error: logoutError };
   };
 
-  // Obter caminho de redirecionamento com base no perfil do usuário
+  const checkEmailExists = async (email: string): Promise<boolean> => {
+    setIsLoading(true);
+    setError(null);
+    // Supabase does not provide a direct way to check if an email exists.
+    // You should implement a custom backend function for this.
+    // For now, always return false.
+    console.warn('checkEmailExists is a placeholder and needs a proper backend implementation.');
+    setIsLoading(false);
+    return false;
+  };
+
+  const forgotPassword = async (email: string) => {
+    setIsLoading(true);
+    setError(null);
+    const { data, error: forgotPasswordError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setIsLoading(false);
+    if (forgotPasswordError) {
+      console.error('Erro ao solicitar recuperação de senha:', forgotPasswordError.message);
+      setError(forgotPasswordError.message);
+    }
+    return { data, error: forgotPasswordError };
+  };
+
+  const resetPassword = async (accessToken: string, newPassword: string) => {
+    setIsLoading(true);
+    setError(null);
+    const { data, error: resetError } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+    setIsLoading(false);
+    if (resetError) {
+      console.error('Erro ao redefinir senha:', resetError.message);
+      setError(resetError.message);
+    }
+    return { data, error: resetError };
+  };
+
   const getRedirectPath = () => {
     if (user?.role === "client") {
       return "/client-portal";
     }
     return "/dashboard";
   };
-  
-  // Valor do contexto
+
   const contextValue: AuthContextType = {
-    isAuthenticated,
+    isAuthenticated: !!user,
     user,
+    session,
     login,
     logout,
     register,
@@ -198,9 +185,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     error,
     forgotPassword,
     resetPassword,
-    getRedirectPath
+    getRedirectPath,
   };
-  
+
   return (
     <AuthContext.Provider value={contextValue}>
       {children}

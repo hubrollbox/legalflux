@@ -1,5 +1,4 @@
 import * as React from "react";
-// Remove or comment out until framer-motion is properly installed
 // import { motion } from "framer-motion";
 import LandingNavbar from "./landing/components/LandingNavbar";
 import HeroSection from "./landing/sections/HeroSection";

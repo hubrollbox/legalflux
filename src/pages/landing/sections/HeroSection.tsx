@@ -75,7 +75,7 @@ const HeroSection = () => {
               frameBorder="0" 
               allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
               title="Legalflux"
-            ></iframe>
+            />
           </div>
         </motion.div>
       </div>
