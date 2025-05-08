@@ -5,9 +5,19 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { Document } from "@/types/document";
-import type { Client } from "@/components/dashboard/types";
-import type { Process } from "@/types/process";
+import { Document } from "@/types/document";
+
+interface Client {
+  id: string;
+  name: string;
+}
+
+interface Process {
+  id: string;
+  title: string;
+  clientId: string;
+  number: string;
+}
 
 interface DocumentFormProps {
   onSubmit: (data: Partial<Document>) => void;
@@ -32,10 +42,15 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
       description: '',
       url: '',
       type: '',
-      clientId: selectedClient,
-      processId: selectedProcess,
+      owner: '',
+      process: selectedProcess || '',
+      folder: '',
       version: 1,
-      status: 'draft'
+      status: 'draft',
+      tags: [],
+      category: '',
+      clientId: selectedClient || '',
+      processId: selectedProcess || ''
     }
   );
 
@@ -56,8 +71,8 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
     onSubmit(formData);
   };
 
-  const filteredProcesses = selectedClient
-    ? processes.filter(process => process.clientId === selectedClient)
+  const filteredProcesses = formData.clientId
+    ? processes.filter(process => process.clientId === formData.clientId)
     : processes;
 
   return (
@@ -99,7 +114,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
         <Label htmlFor="clientId">Cliente</Label>
         <Select
           value={formData.clientId}
-          onValueChange={(value: string) => setFormData({ ...formData, clientId: value, processId: undefined })}
+          onValueChange={(value: string) => setFormData({ ...formData, clientId: value, processId: undefined, process: '' })}
           disabled={!!selectedClient}
         >
           <SelectTrigger id="clientId">
@@ -117,7 +132,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
         <Label htmlFor="processId">Processo</Label>
         <Select
           value={formData.processId}
-          onValueChange={(value: string) => setFormData({ ...formData, processId: value })}
+          onValueChange={(value: string) => setFormData({ ...formData, processId: value, process: value })}
           disabled={!!selectedProcess || !formData.clientId}
         >
           <SelectTrigger id="processId">

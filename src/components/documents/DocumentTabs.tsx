@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,23 +8,15 @@ import DocumentsSearchBar from "./DocumentsSearchBar";
 import DocumentsViewMode from "./DocumentsViewMode";
 import DocumentsContent from "./DocumentsContent";
 import TemplatesContent from "./TemplatesContent";
-import { Document, DocumentTemplate } from "@/types/document";
+import { Document, DocumentTemplate, DocumentFilter } from "@/types/document";
 
 interface DocumentTabsProps {
   viewMode: "grid" | "list";
   setViewMode: (mode: "grid" | "list") => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filters: {
-    type: string;
-    date?: Date;
-    tags: string[];
-  };
-  setFilters: (filters: {
-    type: string;
-    date?: Date;
-    tags: string[];
-  }) => void;
+  filters: DocumentFilter;
+  setFilters: (filters: DocumentFilter) => void;
   filteredDocuments: Document[];
   filteredTemplates: DocumentTemplate[];
 }
@@ -76,7 +69,7 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
         <TemplatesContent 
           templates={filteredTemplates.map(template => ({
             ...template,
-            updatedAt: typeof template.updatedAt === 'object' ? template.updatedAt.toString() : template.updatedAt
+            updatedAt: typeof template.updatedAt === 'string' ? template.updatedAt : template.updatedAt.toString()
           }))} 
           viewMode={viewMode} 
         />

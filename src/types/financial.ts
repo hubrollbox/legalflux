@@ -33,3 +33,6 @@ export interface Transaction {
   notes?: string;
   paymentMethod?: string;
 }
+
+// Exportando diretamente (não como type)
+export type FinancialTransaction = Transaction;

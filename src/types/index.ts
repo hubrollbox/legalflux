@@ -4,7 +4,7 @@ export interface Document {
   name: string;
   type: "document" | "action" | "precedent" | "strategy";
   size: string;
-  updatedAt: Date;
+  updatedAt: string;
   owner: string;
   folder: string;
   process: string;
@@ -17,18 +17,19 @@ export interface Process {
   title: string;
   clientName: string;
   type: string;
-  deadline: Date;
+  deadline: string;
   status: string;
   progress?: number;
   responsible?: string;
   priority?: string;
 }
 
-export type { CalendarEvent } from "./calendar";
-export type { CategoryKey } from "./category";
-export type { Task } from "./task";
-export { PriorityLevel } from "./priority-level";
-export type { FinancialTransaction } from "./financial";
-export { TransactionType, TransactionStatus } from "./financial";
-export type { User, AuthContextType } from "./auth";
-export { UserRole } from "./permissions";
+export * from "./calendar";
+export * from "./category";
+export * from "./task";
+export * from "./priority-level";
+export * from "./financial";
+export * from "./auth";
+export * from "./permissions";
+export * from "./document";
+export * from "./process";

@@ -5,8 +5,17 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import type { FinancialTransaction, TransactionStatus, TransactionType } from '@/types';
+import { TransactionStatus, TransactionType } from '@/types/financial';
 import { Download, Search, ArrowUpDown } from 'lucide-react';
+
+interface FinancialTransaction {
+  id: string;
+  amount: number;
+  type: string;
+  status: string;
+  date: string | Date;
+  description?: string;
+}
 
 interface TransactionsTableProps {
   transactions: FinancialTransaction[];
@@ -27,8 +36,8 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
       const csvData = filteredTransactions.map(t => [
         t.id,
         `${t.amount}`,
-        translateTransactionType(t.type as TransactionType),
-        translateTransactionStatus(t.status as TransactionStatus),
+        translateTransactionType(t.type as string),
+        translateTransactionStatus(t.status as string),
         new Date(t.date).toLocaleDateString('pt-PT'),
         t.description || ''
       ]);
@@ -49,36 +58,39 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
   };
 
   // Tradução de tipos e status para português
-  const translateTransactionType = (type: TransactionType): string => {
-    const translations: Record<TransactionType, string> = {
-      [TransactionType.INVOICE]: 'Fatura',
-      [TransactionType.PAYMENT]: 'Pagamento',
-      [TransactionType.REFUND]: 'Reembolso',
-      [TransactionType.INCOME]: 'Receita',
-      [TransactionType.EXPENSE]: 'Despesa',
+  const translateTransactionType = (type: string): string => {
+    const translations: Record<string, string> = {
+      'invoice': 'Fatura',
+      'payment': 'Pagamento',
+      'refund': 'Reembolso',
+      'income': 'Receita',
+      'expense': 'Despesa',
+      'other': 'Outro'
     };
     return translations[type] || type;
   };
 
-  const translateTransactionStatus = (status: TransactionStatus): string => {
-    const translations: Record<TransactionStatus, string> = {
-      [TransactionStatus.PENDING]: 'Pendente',
-      [TransactionStatus.COMPLETED]: 'Concluído',
-      [TransactionStatus.FAILED]: 'Falhou',
-      [TransactionStatus.CANCELLED]: 'Cancelado',
-      [TransactionStatus.REFUNDED]: 'Reembolsado',
+  const translateTransactionStatus = (status: string): string => {
+    const translations: Record<string, string> = {
+      'pending': 'Pendente',
+      'completed': 'Concluído',
+      'failed': 'Falhou',
+      'cancelled': 'Cancelado',
+      'refunded': 'Reembolsado',
+      'overdue': 'Vencido'
     };
     return translations[status] || status;
   };
 
   // Status badge color
-  const getStatusColor = (status: TransactionStatus): string => {
-    const colors: Record<TransactionStatus, string> = {
-      [TransactionStatus.PENDING]: 'bg-yellow-500',
-      [TransactionStatus.COMPLETED]: 'bg-green-500',
-      [TransactionStatus.FAILED]: 'bg-red-500',
-      [TransactionStatus.CANCELLED]: 'bg-gray-500',
-      [TransactionStatus.REFUNDED]: 'bg-blue-500',
+  const getStatusColor = (status: string): string => {
+    const colors: Record<string, string> = {
+      'pending': 'bg-yellow-500',
+      'completed': 'bg-green-500',
+      'failed': 'bg-red-500',
+      'cancelled': 'bg-gray-500',
+      'refunded': 'bg-blue-500',
+      'overdue': 'bg-orange-500'
     };
     return colors[status] || 'bg-gray-500';
   };
@@ -161,6 +173,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
                 <SelectItem value="failed">Falhou</SelectItem>
                 <SelectItem value="cancelled">Cancelado</SelectItem>
                 <SelectItem value="refunded">Reembolsado</SelectItem>
+                <SelectItem value="overdue">Vencido</SelectItem>
               </SelectContent>
             </Select>
             
@@ -257,17 +270,17 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
                     <TableCell className="font-medium">
                       {transaction.amount.toLocaleString('pt-PT')}
                     </TableCell>
-                    <TableCell>{translateTransactionType(transaction.type as TransactionType)}</TableCell>
+                    <TableCell>{translateTransactionType(transaction.type)}</TableCell>
                     <TableCell>
-                      <Badge className={getStatusColor(transaction.status as TransactionStatus)}>
-                        {translateTransactionStatus(transaction.status as TransactionStatus)}
+                      <Badge className={getStatusColor(transaction.status)}>
+                        {translateTransactionStatus(transaction.status)}
                       </Badge>
                     </TableCell>
                     <TableCell>{new Date(transaction.date).toLocaleDateString('pt-PT')}</TableCell>
                     <TableCell className="max-w-[200px] truncate">{transaction.description || 'N/A'}</TableCell>
                   </TableRow>
                 ))
-)}
+              )}
             </TableBody>
           </Table>
         </div>

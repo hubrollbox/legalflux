@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogDescription
 } from "@/components/ui/dialog";
-import type { Process } from "@/types/process";
+import { Process } from "@/types/process";
 import ProcessForm from "./ProcessForm";
 
 interface ProcessDialogProps {
@@ -37,8 +37,8 @@ const ProcessDialog: React.FC<ProcessDialogProps> = ({
     status: 'new',
     clientId: '',
     startDate: new Date().toISOString(),
-    createdAt: new Date(),
-    updatedAt: new Date()
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   };
 
   return (

@@ -67,7 +67,11 @@ export const processService = {
 
   // Método para listar processos
   listProcesses: async (): Promise<any[]> => {
-    return processService.getProcesses();
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(mockProcesses);
+      }, 500);
+    });
   }
 };
 

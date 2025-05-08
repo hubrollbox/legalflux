@@ -9,17 +9,17 @@ export interface Process {
   type: ProcessType;
   status: ProcessStatus;
   clientId: string;
-  startDate: string | Date;
-  endDate?: string | Date;
+  startDate: string; // Padronizado para string
+  endDate?: string; // Padronizado para string
   description?: string;
-  createdAt: Date | string;
-  updatedAt?: Date | string;
+  createdAt: string; // Padronizado para string
+  updatedAt?: string; // Padronizado para string
   documents?: Array<{
     id: string;
     name: string;
     type?: string;
     status?: string;
-    updatedAt?: Date | string;
+    updatedAt?: string; // Padronizado para string
     version?: number;
   }>;
 }

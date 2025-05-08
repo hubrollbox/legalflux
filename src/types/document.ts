@@ -15,6 +15,8 @@ export interface Document {
   owner: string;
   process: string;
   folder: string;
+  clientId?: string;  // Adicionado para compatibilidade com DocumentForm
+  processId?: string; // Adicionado para compatibilidade com DocumentForm
   version?: number;
   metadata?: Record<string, any>;
 }
@@ -22,7 +24,7 @@ export interface Document {
 // Tipos para filtros de documentos
 export interface DocumentFilter {
   type: string;
-  date: Date | undefined;
+  date?: Date; // Tornando opcional para compatibilidade
   tags: string[];
 }
 
