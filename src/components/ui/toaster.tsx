@@ -1,34 +1,39 @@
 
-import {
-  Toast,
-  ToastClose,
-  ToastDescription,
-  ToastProvider,
-  ToastTitle,
-  ToastViewport,
-} from "@/components/ui/toast";
-import { useToast } from "@/components/ui/use-toast";
+import React from 'react';
+import { toast } from 'sonner';  // Usando sonner que está disponível no projeto
 
+export type ToastProps = {
+  id?: string;
+  title?: string;
+  description?: string;
+  action?: React.ReactNode;
+  variant?: "default" | "destructive" | "success";
+};
+
+// Componente Toaster simplificado
 export function Toaster() {
-  const { toasts } = useToast();
-
-  return (
-    <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
-        return (
-          <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
-              )}
-            </div>
-            {action}
-            <ToastClose />
-          </Toast>
-        );
-      })}
-      <ToastViewport />
-    </ToastProvider>
-  );
+  // Componente vazio que será melhorado quando o toast real for implementado
+  return null;
 }
+
+// Hook useToast simplificado
+export const useToast = () => {
+  return {
+    toast: (props?: ToastProps) => {
+      if (props) {
+        return toast(props.title, {
+          description: props.description,
+        });
+      }
+      return null;
+    }
+  };
+};
+
+// Componentes de compatibilidade
+export const Toast: React.FC<{ children: React.ReactNode }> = ({ children }) => <>{children}</>;
+export const ToastClose: React.FC = () => null;
+export const ToastDescription: React.FC<{ children: React.ReactNode }> = ({ children }) => <>{children}</>;
+export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => <>{children}</>;
+export const ToastTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => <>{children}</>;
+export const ToastViewport: React.FC = () => null;

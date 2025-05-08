@@ -111,6 +111,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
               <TabsTrigger value="documents">Documentos</TabsTrigger>
               <TabsTrigger value="timeline">Linha do Tempo</TabsTrigger>
             </TabsList>
+            
             <TabsContent value="details" className="space-y-4 pt-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -196,7 +197,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                   <div className="pb-8">
                     <p className="font-medium">Processo criado</p>
                     <p className="text-sm text-muted-foreground">
-                      {format(new Date(process.createdAt!), 'PPP', { locale: pt })}
+                      {process.createdAt ? format(new Date(process.createdAt), 'PPP', { locale: pt }) : '--'}
                     </p>
                   </div>
                 </div>
@@ -222,7 +223,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                     <div>
                       <p className="font-medium">Processo finalizado</p>
                       <p className="text-sm text-muted-foreground">
-                        {process.endDate ? format(new Date(process.endDate), 'PPP', { locale: pt }) : '--'}
+                        {format(new Date(process.endDate), 'PPP', { locale: pt })}
                       </p>
                     </div>
                   </div>

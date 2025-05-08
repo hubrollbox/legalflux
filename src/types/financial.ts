@@ -4,6 +4,7 @@ export enum TransactionType {
   EXPENSE = "expense",
   INVOICE = "invoice",
   PAYMENT = "payment",
+  REFUND = "refund" // Adicionado
 }
 
 export enum TransactionStatus {
@@ -11,6 +12,8 @@ export enum TransactionStatus {
   COMPLETED = "completed",
   CANCELLED = "cancelled",
   OVERDUE = "overdue",
+  FAILED = "failed", // Adicionado
+  CANCELED = "canceled" // Adicionado (nota: diferente de CANCELLED)
 }
 
 export interface FinancialTransaction {

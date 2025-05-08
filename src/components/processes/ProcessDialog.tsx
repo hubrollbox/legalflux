@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   Dialog,
@@ -28,6 +29,18 @@ const ProcessDialog: React.FC<ProcessDialogProps> = ({
   title,
   description,
 }) => {
+  const initialData: Process = process || {
+    id: '',
+    title: '',
+    number: '',
+    type: 'other',
+    status: 'new',
+    clientId: '',
+    startDate: new Date().toISOString(),
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
@@ -36,17 +49,7 @@ const ProcessDialog: React.FC<ProcessDialogProps> = ({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <ProcessForm
-          initialData={process || {
-            id: '',
-            title: '',
-            number: '',
-            type: 'other',
-            status: 'new',
-            clientId: '',
-            startDate: new Date().toISOString(),
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }}
+          initialData={initialData}
           onSubmit={onSubmit}
           isSubmitting={isSubmitting}
         />

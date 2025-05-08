@@ -17,4 +17,19 @@ export interface Document {
   clientId?: string;
   version?: number;
   tags?: string[];
+  owner?: string; // Adicionado
+  folder?: string; // Adicionado
+  process?: string; // Adicionado
+}
+
+// Interface para Template que é usada em DocumentTabs
+export interface DocumentTemplate {
+  id: string;
+  name: string;
+  type: "document" | "action" | "precedent" | "strategy";
+  size: string;
+  description: string;
+  updatedAt: string;
+  category: string;
+  tags?: string[];
 }

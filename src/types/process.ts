@@ -1,55 +1,40 @@
 
-import { Document } from './document';
-
+export type ProcessType = 'civil' | 'criminal' | 'administrative' | 'labor' | 'tax' | 'other';
 export type ProcessStatus = 'new' | 'in_progress' | 'completed' | 'archived';
-
-export type ProcessType = 'civil' | 'criminal' | 'labor' | 'administrative' | 'tax' | 'other';
 
 export interface Process {
   id: string;
   title: string;
-  number?: string;
+  number: string;
   type: ProcessType;
   status: ProcessStatus;
-  startDate?: string;
-  endDate?: string;
-  clientId?: string;
+  clientId: string;
+  startDate: string | Date;
+  endDate?: string | Date;
   description?: string;
-  assignedTo?: string;
-  courtId?: string;
-  priority?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date | string;
+  updatedAt?: Date | string;
+  documents?: Array<{
+    id: string;
+    name: string;
+    type?: string;
+    status?: string;
+    updatedAt?: Date | string;
+    version?: number;
+  }>;
 }
 
 export interface CreateProcessDTO {
   title: string;
-  number?: string;
+  number: string;
   type: ProcessType;
-  status: ProcessStatus;
-  startDate?: string;
-  clientId?: string;
-  description?: string;
-  assignedTo?: string;
-  courtId?: string;
-  priority?: string;
-}
-
-export interface UpdateProcessDTO {
-  id: string;
-  title?: string;
-  number?: string;
-  type?: ProcessType;
+  clientId: string;
   status?: ProcessStatus;
-  startDate?: string;
-  endDate?: string;
-  clientId?: string;
   description?: string;
-  assignedTo?: string;
-  courtId?: string;
-  priority?: string;
+  startDate: string;
+  endDate?: string;
 }
 
-export interface ProcessWithDocuments extends Process {
-  documents?: Document[];
+export interface UpdateProcessDTO extends Partial<CreateProcessDTO> {
+  id: string;
 }

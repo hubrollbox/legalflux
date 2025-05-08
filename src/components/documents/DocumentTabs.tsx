@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,7 +7,7 @@ import DocumentsSearchBar from "./DocumentsSearchBar";
 import DocumentsViewMode from "./DocumentsViewMode";
 import DocumentsContent from "./DocumentsContent";
 import TemplatesContent from "./TemplatesContent";
-import type { Document as DocumentType } from "@/types/document";
+import { Document, DocumentTemplate } from "@/types/document";
 
 interface DocumentTabsProps {
   viewMode: "grid" | "list";
@@ -16,22 +15,13 @@ interface DocumentTabsProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   filters: {
-    type?: string;
+    type: string;
     date?: Date;
-    tags?: string[];
+    tags: string[];
   };
   setFilters: (filters: any) => void;
-  filteredDocuments: DocumentType[];
-  filteredTemplates: Array<{
-    id: string;
-    name: string;
-    type: "document" | "action" | "precedent" | "strategy";
-    size?: string;
-    description?: string;
-    updatedAt?: string | Date;
-    category?: string;
-    tags?: string[];
-  }>;
+  filteredDocuments: Document[];
+  filteredTemplates: DocumentTemplate[];
 }
 
 const DocumentTabs: React.FC<DocumentTabsProps> = ({
@@ -73,25 +63,19 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
         <DocumentsContent
           title="Todos os Documentos"
           description={`${filteredDocuments.length} documento(s) encontrado(s)`}
-          documents={filteredDocuments.map(doc => ({
-            ...doc,
-            status: doc.status ?? "draft",
-            updatedAt: doc.updatedAt ?? new Date(),
-            tags: doc.tags ?? [],
-            type: doc.type ?? "document"
-          }))}
+          documents={filteredDocuments}
           viewMode={viewMode}
         />
       </TabsContent>
+      
       <TabsContent value="templates" className="mt-6">
-        <TemplatesContent templates={filteredTemplates.map(template => ({
-          ...template,
-          updatedAt: template.updatedAt ?? new Date(),
-          size: template.size ?? "-",
-          description: template.description ?? "",
-          category: template.category ?? "document",
-          tags: template.tags ?? []
-        }))} viewMode={viewMode} />
+        <TemplatesContent 
+          templates={filteredTemplates.map(template => ({
+            ...template,
+            updatedAt: typeof template.updatedAt === 'object' ? template.updatedAt.toString() : template.updatedAt
+          }))} 
+          viewMode={viewMode} 
+        />
       </TabsContent>
       
       <TabsContent value="recent">
