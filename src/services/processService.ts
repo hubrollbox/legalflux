@@ -1,7 +1,4 @@
 
-// Se este arquivo não existir, estamos criando-o
-import type { Process } from '@/types/process';
-
 // Mock data para desenvolvimento
 const mockProcesses = [
   {
@@ -52,7 +49,7 @@ export const processService = {
     });
   },
 
-  // Método para obter o processo atual (novo método)
+  // Método para obter o processo atual
   getCurrentProcess: async (): Promise<{ id: string; title: string; number?: string } | undefined> => {
     // Simulação de uma chamada API
     return new Promise((resolve) => {
@@ -68,10 +65,14 @@ export const processService = {
     });
   },
 
-  // Método para listar processos (alias para getProcesses)
+  // Método para listar processos
   listProcesses: async (): Promise<any[]> => {
     return processService.getProcesses();
   }
 };
 
+// Exportações nomeadas para uso em outros arquivos
 export const getProcesses = processService.getProcesses;
+export const getProcessById = processService.getProcessById;
+export const getCurrentProcess = processService.getCurrentProcess;
+export const listProcesses = processService.listProcesses;

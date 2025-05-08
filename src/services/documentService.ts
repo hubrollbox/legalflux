@@ -1,81 +1,63 @@
 
-import { Document } from "../types";
+import { Document } from '@/types/document';
 
-// Dados de exemplo para documentos
-const sampleDocuments: Document[] = [
+// Mock data para desenvolvimento
+const mockDocuments: Document[] = [
   {
-    id: "1",
-    name: "Contrato de Prestação de Serviços",
-    type: "contract",
-    size: "245 KB",
-    updatedAt: new Date(),
-    owner: "João Silva",
-    folder: "Contratos",
-    process: "Processo #123",
-    tags: ["importante", "cliente-vip"],
-    status: "active"
+    id: '1',
+    name: 'Contrato de Prestação de Serviços',
+    type: 'document',
+    url: '/documents/contrato.pdf',
+    size: 1024000,
+    description: 'Contrato padrão de prestação de serviços jurídicos',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: 'final',
+    tags: ['contrato', 'serviços'],
+    category: 'Contratos',
+    owner: 'John Doe',
+    process: '1',
+    folder: 'Contratos'
   },
   {
-    id: "2",
-    name: "Procuração",
-    type: "power_of_attorney",
-    size: "125 KB",
-    updatedAt: new Date(Date.now() - 86400000), // 1 dia atrás
-    owner: "Maria Pereira",
-    folder: "Documentos Pessoais",
-    process: "Processo #456",
-    status: "pending"
-  },
-  {
-    id: "3",
-    name: "Petição Inicial",
-    type: "petition",
-    size: "350 KB",
-    updatedAt: new Date(Date.now() - 172800000), // 2 dias atrás
-    owner: "Carlos Santos",
-    folder: "Processos Judiciais",
-    process: "Processo #789",
-    tags: ["urgente"],
-    status: "pending"
+    id: '2',
+    name: 'Petição Inicial',
+    type: 'document',
+    url: '/documents/peticao.pdf',
+    size: 512000,
+    description: 'Petição inicial do processo 123/2023',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: 'final',
+    tags: ['petição', 'inicial'],
+    category: 'Peças Processuais',
+    owner: 'Jane Smith',
+    process: '1',
+    folder: 'Processuais'
   }
 ];
 
-export const getDocuments = async (): Promise<Document[]> => {
-  // Simulação de uma chamada de API
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(sampleDocuments);
-    }, 500);
-  });
+export const documentService = {
+  // Método para listar todos os documentos
+  getDocuments: async (): Promise<Document[]> => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(mockDocuments);
+      }, 500);
+    });
+  },
+  
+  // Método para obter um documento por ID
+  getDocumentById: async (id: string): Promise<Document | undefined> => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const document = mockDocuments.find(d => d.id === id);
+        resolve(document);
+      }, 300);
+    });
+  }
 };
 
-export const getDocumentById = async (id: string): Promise<Document | undefined> => {
-  // Simulação de uma chamada de API
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(sampleDocuments.find(doc => doc.id === id));
-    }, 300);
-  });
-};
-
-export const saveDocument = async (document: Document): Promise<Document> => {
-  // Simulação de uma chamada de API para salvar
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        ...document,
-        id: document.id || `${Math.floor(Math.random() * 1000)}`,
-        updatedAt: new Date()
-      });
-    }, 600);
-  });
-};
-
-export const deleteDocument = async (id: string): Promise<boolean> => {
-  // Simulação de uma chamada de API para excluir
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, 400);
-  });
-};
+// Exportações nomeadas
+export const getDocuments = documentService.getDocuments;
+export const getDocumentById = documentService.getDocumentById;
