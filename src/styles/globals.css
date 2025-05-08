@@ -73,5 +73,31 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
+
+  .container {
+    @apply px-4 mx-auto;
+    max-width: 1280px;
+  }
+}
+
+@layer utilities {
+  .animate-fade {
+    animation: fadeIn 0.3s ease-in-out forwards;
+  }
+  
+  .animate-slide {
+    animation: slideIn 0.3s ease-in-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }

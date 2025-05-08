@@ -1,7 +1,6 @@
 
 import React, { ReactNode } from 'react';
 import { usePermissions } from '../../hooks/usePermissions';
-import { Loading } from '../../components/ui/loading';
 import { UserRole } from '../../types/permissions';
 
 interface RoleBasedAccessProps {
@@ -20,10 +19,10 @@ const RoleBasedAccess: React.FC<RoleBasedAccessProps> = ({
   allowedPermissions,
   fallback = null
 }) => {
-  const { hasPermission, hasRole, isLoading } = usePermissions();
+  const { hasRole, isLoading, hasPermission } = usePermissions();
 
   if (isLoading) {
-    return <Loading />;
+    return <div>Carregando...</div>;
   }
 
   // Verificar se o utilizador tem um dos papéis permitidos
@@ -36,9 +35,11 @@ const RoleBasedAccess: React.FC<RoleBasedAccessProps> = ({
 
   // Verificar se o utilizador tem todas as permissões requeridas
   if (allowedPermissions && allowedPermissions.length > 0) {
-    const hasAllPermissions = allowedPermissions.every(permission => 
-      hasPermission(permission)
-    );
+    const hasAllPermissions = allowedPermissions.every(permission => {
+      const [resource, action] = permission.split(':');
+      return hasPermission(resource as any, action as any);
+    });
+    
     if (!hasAllPermissions) {
       return <>{fallback}</>;
     }

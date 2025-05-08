@@ -9,13 +9,5 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   
-  return {
-    ...context,
-    getRedirectPath: () => {
-      if (context.user?.role === "client") {
-        return "/client-portal";
-      }
-      return "/dashboard";
-    }
-  };
+  return context;
 };

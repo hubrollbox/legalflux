@@ -1,7 +1,7 @@
 
 import * as React from 'react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
@@ -15,6 +15,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const { login, isLoading } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,8 +36,8 @@ const LoginForm = () => {
     
     try {
       await login(email, password);
-      // After successful login, we would typically redirect to the dashboard
-      window.location.href = '/dashboard';
+      // Após login bem-sucedido, redirecionar para o dashboard apropriado
+      navigate('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
       setError('Email ou senha incorretos. Por favor, tente novamente.');

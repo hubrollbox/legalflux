@@ -20,7 +20,7 @@ const LandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <LandingNavbar />
-      <main>
+      <main className="pt-16">
         {/* Banner de boas-vindas para utilizadores autenticados */}
         {isAuthenticated && user && (
           <section className="w-full bg-primary py-4 text-white">

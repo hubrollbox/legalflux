@@ -1,18 +1,22 @@
 
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
-import CustomImage from '@/components/ui/CustomImage';
 
 const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <CustomImage 
+          <img 
             src="/logo.png" 
             alt="Logo"
             className="h-10 w-auto"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = "https://placehold.co/100x50?text=LegalFlux";
+            }}
           />
           <span className="font-bold">LegalFlux</span>
         </Link>
@@ -20,7 +24,7 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-6">
           <Link to="/features" className="text-sm font-medium hover:text-primary">Recursos</Link>
           <Link to="/pricing" className="text-sm font-medium hover:text-primary">Preços</Link>
-          <Link to="/support" className="text-sm font-medium hover:text-primary">Suporte</Link>
+          <Link to="/central-de-ajuda/support" className="text-sm font-medium hover:text-primary">Suporte</Link>
           <Link to="/about" className="text-sm font-medium hover:text-primary">Sobre</Link>
           <Link to="/contact" className="text-sm font-medium hover:text-primary">Contato</Link>
         </div>

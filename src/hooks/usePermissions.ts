@@ -1,53 +1,72 @@
 
+import { useContext, createContext } from 'react';
 import { useAuth } from './useAuth';
+import { UserRole } from '../types/permissions';
 
-type Resource = 'documents' | 'processes' | 'clients' | 'financial' | 'settings' | 'users';
-type Action = 'view' | 'create' | 'update' | 'delete' | 'approve';
+// Define tipos para recursos e ações
+export type Resource = 'clients' | 'processes' | 'documents' | 'billing' | 'users' | 'settings';
+export type Action = 'view' | 'create' | 'edit' | 'delete';
 
-export function usePermissions() {
+// Interface para o contexto de permissões
+interface PermissionsContextType {
+  hasPermission: (resource: Resource, action: Action) => boolean;
+  hasRole: (role: UserRole) => boolean;
+  isLoading: boolean;
+}
+
+// Criar um contexto nulo para permissões
+const PermissionsContext = createContext<PermissionsContextType | null>(null);
+
+// Hook para usar o contexto de permissões
+export const usePermissions = (): PermissionsContextType => {
+  const context = useContext(PermissionsContext);
   const { user } = useAuth();
 
-  // Função para verificar se um usuário tem permissão para uma ação em um recurso
-  const hasPermission = (resource: Resource, action: Action): boolean => {
-    // Se não houver usuário logado, não tem permissão
-    if (!user || !user.role) return false;
+  // Se o contexto não for fornecido, podemos usar uma implementação padrão
+  if (!context) {
+    return {
+      hasPermission: (resource: Resource, action: Action) => {
+        // Implementação básica baseada no papel do usuário
+        if (!user) return false;
 
-    // Regras de permissão baseadas no papel do usuário
-    switch (user.role) {
-      case 'admin':
-        // Administrador tem todas as permissões
-        return true;
-      
-      case 'senior_lawyer':
-        // Advogado sênior tem todas as permissões exceto algumas configurações administrativas
-        if (resource === 'settings' && action === 'approve') return false;
-        if (resource === 'users' && action === 'delete') return false;
-        return true;
-      
-      case 'lawyer':
-        // Advogado tem permissões para documentos, processos, clientes
-        if (resource === 'financial' && (action === 'create' || action === 'update')) return false;
-        if (resource === 'settings' || resource === 'users') return action === 'view';
-        return true;
-      
-      case 'assistant':
-        // Assistente tem permissões limitadas
-        if (resource === 'financial') return false;
-        if (resource === 'settings' || resource === 'users') return false;
-        if (action === 'delete') return false;
-        if (resource === 'clients' && action === 'create') return false;
-        return true;
-      
-      case 'client':
-        // Cliente só pode ver seus próprios dados
-        if (action !== 'view') return false;
-        if (resource !== 'documents' && resource !== 'processes') return false;
-        return true;
-      
-      default:
+        // Admin tem todas as permissões
+        if (user.role === 'admin') return true;
+
+        // Advogados podem visualizar tudo, mas têm restrições para criar/editar/excluir
+        if (user.role === 'lawyer' || user.role === 'senior_lawyer') {
+          if (action === 'view') return true;
+          if (resource === 'clients' || resource === 'processes' || resource === 'documents') {
+            return action !== 'delete';
+          }
+          if (resource === 'billing') {
+            return action === 'view';
+          }
+          return false;
+        }
+
+        // Assistentes têm acesso limitado
+        if (user.role === 'assistant') {
+          if (action === 'view' && resource !== 'billing' && resource !== 'users' && resource !== 'settings') {
+            return true;
+          }
+          return false;
+        }
+
+        // Clientes só podem visualizar seus próprios recursos
+        if (user.role === 'client') {
+          return action === 'view' && (resource === 'processes' || resource === 'documents');
+        }
+
         return false;
-    }
-  };
+      },
 
-  return { hasPermission };
-}
+      hasRole: (role: UserRole) => {
+        return user?.role === role;
+      },
+
+      isLoading: false
+    };
+  }
+
+  return context;
+};
