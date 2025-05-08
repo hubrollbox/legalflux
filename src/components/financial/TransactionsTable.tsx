@@ -1,12 +1,11 @@
+
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { TransactionStatus, TransactionType } from '@/types/financial';
-import { Download, Search, ArrowUpDown } from 'lucide-react';
+import TransactionFilters from './TransactionFilters';
+import TransactionExport from './TransactionExport';
+import TransactionTable from './TransactionTable';
+import { translateTransactionType, translateTransactionStatus, getStatusColor, exportToCSV } from './utils/transactionUtils';
 
 interface FinancialTransaction {
   id: string;
@@ -30,72 +29,14 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
 
   // Função para exportar dados
   const exportData = (format: 'csv' | 'pdf' | 'excel') => {
-    alert(`Exportando dados em formato ${format}...`);
     if (format === 'csv') {
-      const headers = ['ID', 'Valor', 'Tipo', 'Status', 'Data', 'Descrição'];
-      const csvData = filteredTransactions.map(t => [
-        t.id,
-        `${t.amount}`,
-        translateTransactionType(t.type as string),
-        translateTransactionStatus(t.status as string),
-        new Date(t.date).toLocaleDateString('pt-PT'),
-        t.description || ''
-      ]);
-      const csvContent = [
-        headers.join(','),
-        ...csvData.map(row => row.join(','))
-      ].join('\n');
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', url);
-      link.setAttribute('download', `transacoes_${new Date().toISOString().split('T')[0]}.csv`);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      exportToCSV(filteredTransactions, translateTransactionType, translateTransactionStatus);
+    } else {
+      alert(`Exportando dados em formato ${format}...`);
     }
   };
 
-  // Tradução de tipos e status para português
-  const translateTransactionType = (type: string): string => {
-    const translations: Record<string, string> = {
-      'invoice': 'Fatura',
-      'payment': 'Pagamento',
-      'refund': 'Reembolso',
-      'income': 'Receita',
-      'expense': 'Despesa',
-      'other': 'Outro'
-    };
-    return translations[type] || type;
-  };
-
-  const translateTransactionStatus = (status: string): string => {
-    const translations: Record<string, string> = {
-      'pending': 'Pendente',
-      'completed': 'Concluído',
-      'failed': 'Falhou',
-      'cancelled': 'Cancelado',
-      'refunded': 'Reembolsado',
-      'overdue': 'Vencido'
-    };
-    return translations[status] || status;
-  };
-
-  // Status badge color
-  const getStatusColor = (status: string): string => {
-    const colors: Record<string, string> = {
-      'pending': 'bg-yellow-500',
-      'completed': 'bg-green-500',
-      'failed': 'bg-red-500',
-      'cancelled': 'bg-gray-500',
-      'refunded': 'bg-blue-500',
-      'overdue': 'bg-orange-500'
-    };
-    return colors[status] || 'bg-gray-500';
-  };
-
-  // Ordenação e filtragem
+  // Ordenação
   const toggleSort = (field: keyof FinancialTransaction) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -105,6 +46,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
     }
   };
 
+  // Filtragem e ordenação de transações
   const filteredTransactions = useMemo(() => {
     return transactions
       .filter(transaction => {
@@ -150,140 +92,26 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
         <CardDescription>Gerencie todas as transações financeiras do escritório</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col md:flex-row gap-4 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Pesquisar transações..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-8"
-            />
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-2">
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filtrar por status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os status</SelectItem>
-                <SelectItem value="pending">Pendente</SelectItem>
-                <SelectItem value="completed">Concluído</SelectItem>
-                <SelectItem value="failed">Falhou</SelectItem>
-                <SelectItem value="cancelled">Cancelado</SelectItem>
-                <SelectItem value="refunded">Reembolsado</SelectItem>
-                <SelectItem value="overdue">Vencido</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filtrar por tipo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os tipos</SelectItem>
-                <SelectItem value="income">Receita</SelectItem>
-                <SelectItem value="expense">Despesa</SelectItem>
-                <SelectItem value="invoice">Fatura</SelectItem>
-                <SelectItem value="payment">Pagamento</SelectItem>
-                <SelectItem value="refund">Reembolso</SelectItem>
-                <SelectItem value="other">Outro</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        <TransactionFilters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          typeFilter={typeFilter}
+          setTypeFilter={setTypeFilter}
+        />
         
-        <div className="flex justify-end mb-4 gap-2">
-          <Button variant="outline" onClick={() => exportData('csv')}>
-            <Download className="mr-2 h-4 w-4" />
-            CSV
-          </Button>
-          <Button variant="outline" onClick={() => exportData('pdf')}>
-            <Download className="mr-2 h-4 w-4" />
-            PDF
-          </Button>
-          <Button variant="outline" onClick={() => exportData('excel')}>
-            <Download className="mr-2 h-4 w-4" />
-            Excel
-          </Button>
-        </div>
+        <TransactionExport onExport={exportData} />
         
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px] cursor-pointer" onClick={() => toggleSort('id')}>
-                  <div className="flex items-center">
-                    ID
-                    {sortField === 'id' && (
-                      <ArrowUpDown className="ml-2 h-4 w-4" />
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead className="cursor-pointer" onClick={() => toggleSort('amount')}>
-                  <div className="flex items-center">
-                    Valor
-                    {sortField === 'amount' && (
-                      <ArrowUpDown className="ml-2 h-4 w-4" />
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead className="cursor-pointer" onClick={() => toggleSort('type')}>
-                  <div className="flex items-center">
-                    Tipo
-                    {sortField === 'type' && (
-                      <ArrowUpDown className="ml-2 h-4 w-4" />
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead className="cursor-pointer" onClick={() => toggleSort('status')}>
-                  <div className="flex items-center">
-                    Status
-                    {sortField === 'status' && (
-                      <ArrowUpDown className="ml-2 h-4 w-4" />
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead className="cursor-pointer" onClick={() => toggleSort('date')}>
-                  <div className="flex items-center">
-                    Data
-                    {sortField === 'date' && (
-                      <ArrowUpDown className="ml-2 h-4 w-4" />
-                    )}
-                  </div>
-                </TableHead>
-                <TableHead>Descrição</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredTransactions.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="h-24 text-center">
-                    Nenhuma transação encontrada.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredTransactions.map((transaction) => (
-                  <TableRow key={transaction.id} className="financial-table">
-                    <TableCell className="font-medium">{transaction.id}</TableCell>
-                    <TableCell className="font-medium">
-                      {transaction.amount.toLocaleString('pt-PT')}
-                    </TableCell>
-                    <TableCell>{translateTransactionType(transaction.type)}</TableCell>
-                    <TableCell>
-                      <Badge className={getStatusColor(transaction.status)}>
-                        {translateTransactionStatus(transaction.status)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{new Date(transaction.date).toLocaleDateString('pt-PT')}</TableCell>
-                    <TableCell className="max-w-[200px] truncate">{transaction.description || 'N/A'}</TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+        <TransactionTable
+          transactions={filteredTransactions}
+          sortField={sortField}
+          sortDirection={sortDirection}
+          toggleSort={toggleSort}
+          translateTransactionType={translateTransactionType}
+          translateTransactionStatus={translateTransactionStatus}
+          getStatusColor={getStatusColor}
+        />
       </CardContent>
     </Card>
   );

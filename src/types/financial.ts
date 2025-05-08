@@ -25,8 +25,8 @@ export interface Transaction {
   date: Date | string;
   description: string;
   amount: number;
-  type: TransactionType;
-  status: TransactionStatus;
+  type: string;
+  status: string;
   clientId?: string;
   processId?: string;
   category?: string;
