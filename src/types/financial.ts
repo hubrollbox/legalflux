@@ -1,38 +1,38 @@
 
-// Enum para tipos de transações
+// Definição dos tipos de transações financeiras
 export enum TransactionType {
-  INCOME = 'income',
-  EXPENSE = 'expense',
   INVOICE = 'invoice',
   PAYMENT = 'payment',
   REFUND = 'refund',
+  INCOME = 'income',
+  EXPENSE = 'expense',
   OTHER = 'other'
 }
 
-// Enum para status de transações
+// Definição dos status de transações financeiras
 export enum TransactionStatus {
   PENDING = 'pending',
   COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
-  OVERDUE = 'overdue',
   FAILED = 'failed',
-  REFUNDED = 'refunded'
+  CANCELLED = 'cancelled',
+  REFUNDED = 'refunded',
+  OVERDUE = 'overdue'
 }
 
-// Interface para transações
-export interface Transaction {
+// Interface para transações financeiras
+export interface FinancialTransaction {
   id: string;
-  date: Date | string;
-  description: string;
   amount: number;
-  type: string;
-  status: string;
-  clientId?: string;
-  processId?: string;
+  type: TransactionType | string;
+  status: TransactionStatus | string;
+  date: string | Date;
+  description?: string;
+  client?: string;
+  process?: string;
+  paymentMethod?: string;
   category?: string;
   notes?: string;
-  paymentMethod?: string;
+  attachments?: string[];
+  createdBy?: string;
+  updatedAt?: string | Date;
 }
-
-// Exportando diretamente (não como type)
-export type FinancialTransaction = Transaction;
