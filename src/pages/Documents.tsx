@@ -94,7 +94,7 @@ const Documents = () => {
             setViewMode={setViewMode}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
-            filteredDocuments={filteredDocuments}
+            filteredDocuments={filteredDocuments as Document[]}
             filteredTemplates={filteredTemplates}
             filters={filters}
             setFilters={setFilters}

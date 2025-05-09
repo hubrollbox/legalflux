@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
-import { useAuth } from './useAuth';
-import { UserRole } from '../types/permissions';
+import { useAuth } from '@/hooks/useAuth';
+import { UserRole } from '@/types/permissions';
 
 type PermissionMap = Record<string, boolean>;
 

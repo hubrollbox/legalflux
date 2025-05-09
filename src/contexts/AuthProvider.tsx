@@ -1,6 +1,7 @@
 
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { supabase } from '../lib/supabase-client';
+import { supabase } from '@/lib/supabase-client';
+import { useToast } from '@/components/ui/use-toast';
 import { Session } from '@supabase/supabase-js';
 
 interface User {
@@ -36,6 +37,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const getInitialSession = async () => {
@@ -89,6 +91,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (loginError) {
       console.error('Erro no login:', loginError.message);
       setError(loginError.message);
+      toast({
+        variant: "destructive",
+        title: "Erro ao fazer login",
+        description: loginError.message || "Não foi possível fazer login. Tente novamente.",
+      });
+    } else {
+      toast({
+        title: "Login realizado",
+        description: "Login efetuado com sucesso!",
+      });
     }
     return { error: loginError };
   };
@@ -110,6 +122,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (signUpError) {
       console.error('Erro no registro:', signUpError.message);
       setError(signUpError.message);
+      toast({
+        variant: "destructive",
+        title: "Erro ao registrar",
+        description: signUpError.message || "Não foi possível registrar. Tente novamente.",
+      });
+    } else {
+      toast({
+        title: "Registro realizado",
+        description: "Conta criada com sucesso! Verifique seu e-mail para ativação.",
+      });
     }
     return { data: signUpData, error: signUpError };
   };
@@ -122,6 +144,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (logoutError) {
       console.error('Erro no logout:', logoutError.message);
       setError(logoutError.message);
+      toast({
+        variant: "destructive",
+        title: "Erro ao sair",
+        description: logoutError.message || "Não foi possível sair. Tente novamente.",
+      });
+    } else {
+      toast({
+        title: "Logout realizado",
+        description: "Sessão encerrada com sucesso.",
+      });
     }
     // setUser and setSession will be updated by onAuthStateChange
     return { error: logoutError };
@@ -148,6 +180,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (forgotPasswordError) {
       console.error('Erro ao solicitar recuperação de senha:', forgotPasswordError.message);
       setError(forgotPasswordError.message);
+      toast({
+        variant: "destructive",
+        title: "Erro ao recuperar senha",
+        description: forgotPasswordError.message || "Não foi possível solicitar recuperação de senha.",
+      });
+    } else {
+      toast({
+        title: "Recuperação de senha",
+        description: "E-mail de recuperação enviado com sucesso!",
+      });
     }
     return { data, error: forgotPasswordError };
   };
@@ -162,6 +204,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (resetError) {
       console.error('Erro ao redefinir senha:', resetError.message);
       setError(resetError.message);
+      toast({
+        variant: "destructive",
+        title: "Erro ao redefinir senha",
+        description: resetError.message || "Não foi possível redefinir a senha.",
+      });
+    } else {
+      toast({
+        title: "Senha redefinida",
+        description: "Senha alterada com sucesso!",
+      });
     }
     return { data, error: resetError };
   };

@@ -8,11 +8,11 @@ import DashboardLayout from '@/components/layout/DashboardLayout';
 import SectionHeader from '@/components/layout/SectionHeader';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2, Edit, GripVertical, AlertTriangle, Calendar } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Input } from '../components/ui/input';
-import { Textarea } from '../components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { mockData } from '../services/mockData';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { supabase } from '@/lib/supabase-client';
 
 interface Task {
   id: string;
@@ -36,25 +36,57 @@ const Tasks = () => {
     status: 'pending',
     relatedCase: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
-    setCases(mockData.processes.map(p => p.caseNumber));
+    const fetchCasesAndTasks = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // Buscar processos para popular o select de casos
+        const { data: processes, error: processesError } = await supabase.from('processes').select('caseNumber');
+        if (processesError) throw processesError;
+        setCases(processes?.map((p: { caseNumber: string }) => p.caseNumber) || []);
+        // Buscar tarefas reais
+        const { data: tasksData, error: tasksError } = await supabase.from('tasks').select('*');
+        if (tasksError) throw tasksError;
+        setTasks(tasksData || []);
+      } catch (err: any) {
+        setError(err.message || 'Erro ao carregar dados');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCasesAndTasks();
   }, []);
 
-  const onDragEnd = (result: DropResult): void => {
+  const onDragEnd = async (result: DropResult): Promise<void> => {
     if (!result.destination) return;
     const items = Array.from(tasks);
     const [reorderedItem] = items.splice(result.source.index, 1);
-    if (!reorderedItem) return; // Prevent undefined error
+    if (!reorderedItem) return;
     items.splice(result.destination.index, 0, reorderedItem);
     setTasks(items);
+    // Opcional: atualizar ordem no Supabase se necessário
   };
 
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
     if (!newTask.title) return;
-    setTasks([...tasks, { ...newTask, id: `task-${Date.now()}` }]);
-    setNewTask({ title: '', description: '', dueDate: '', priority: 'medium', status: 'pending', relatedCase: '' });
-    setShowForm(false);
+    setSyncing(true);
+    setError(null);
+    try {
+      const { data, error: insertError } = await supabase.from('tasks').insert([{ ...newTask }]).select();
+      if (insertError) throw insertError;
+      setTasks([...tasks, data[0]]);
+      setNewTask({ title: '', description: '', dueDate: '', priority: 'medium', status: 'pending', relatedCase: '' });
+      setShowForm(false);
+    } catch (err: any) {
+      setError(err.message || 'Erro ao criar tarefa');
+    } finally {
+      setSyncing(false);
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -76,6 +108,10 @@ const Tasks = () => {
           <Plus className="mr-2 h-4 w-4" /> {showForm ? 'Cancelar' : 'Nova Tarefa'}
         </Button>
       </div>
+
+      {loading && <div className="mt-4 text-center">Carregando tarefas...</div>}
+      {error && <div className="mt-4 text-center text-red-600">{error}</div>}
+      {syncing && <div className="mt-4 text-center text-blue-600">Sincronizando...</div>}
 
       {showForm && (
         <Card className="mt-4 p-4">
@@ -115,7 +151,7 @@ const Tasks = () => {
                 ))}
               </SelectContent>
             </Select>
-            <Button onClick={handleAddTask} className="mt-4 col-span-full">
+            <Button onClick={handleAddTask} className="mt-4 col-span-full" disabled={syncing}>
               Criar Tarefa
             </Button>
           </div>

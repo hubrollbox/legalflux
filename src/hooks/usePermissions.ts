@@ -1,7 +1,6 @@
 
-import { useContext, createContext } from 'react';
-import { useAuth } from './useAuth';
-import { UserRole } from '../types/permissions';
+import { useAuth } from '@/hooks/useAuth';
+import { UserRole } from '@/types/permissions';
 
 // Define tipos para recursos e ações
 export type Resource = 'clients' | 'processes' | 'documents' | 'billing' | 'users' | 'settings';

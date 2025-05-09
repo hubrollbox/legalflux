@@ -78,7 +78,7 @@ const Financial = () => {
   const filteredTransactions = transactions.filter(transaction => {
     const matchesSearch = searchTerm === '' || 
       transaction.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      transaction.clientName?.toLowerCase().includes(searchTerm.toLowerCase());
+      transaction.clientId?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesType = filterType === 'all' || transaction.type === filterType;
 
