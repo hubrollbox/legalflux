@@ -1,4 +1,12 @@
 
+export enum UserRole {
+  CLIENT = 'client',
+  LAWYER = 'lawyer',
+  SENIOR_LAWYER = 'senior_lawyer',
+  ASSISTANT = 'assistant',
+  ADMIN = 'ADMIN'
+}
+
 export interface Permission {
   id: string;
   resource: string;

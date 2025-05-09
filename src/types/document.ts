@@ -3,7 +3,7 @@
 export interface Document {
   id: string;
   name: string;
-  type: string;
+  type: "document" | "action" | "precedent" | "strategy";
   url: string;
   size: string; // Alterado para string para compatibilidade
   description: string;

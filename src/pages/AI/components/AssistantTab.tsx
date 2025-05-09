@@ -1,10 +1,9 @@
-
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { useMessages } from '../hooks/useMessages';
 
-const AssistantTab = () => {
+export const AssistantTab: React.FC = () => {
   const {
     messages,
     loading,

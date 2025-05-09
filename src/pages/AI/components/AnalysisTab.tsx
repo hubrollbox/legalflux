@@ -1,184 +1,314 @@
-import { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { FileUp, Loader2, FileText, List } from 'lucide-react';
-import { useMessages } from '../hooks/useMessages';
-import MessageList from './MessageList';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { useDocumentExtraction } from '../hooks/useDocumentExtraction';
-import ExtractedInfoDisplay from './ExtractedInfoDisplay';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import React, { useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { AlertCircle, CheckCircle2, FileText, Send } from "lucide-react";
+import { useState } from "react";
 
-const AnalysisTab = () => {
-  const [file, setFile] = useState<File | null>(null);
-  const [analyzing, setAnalyzing] = useState(false);
-  const [analysisTab, setAnalysisTab] = useState('text');
-  const { toast } = useToast();
-  
-  const {
-    messages,
-    setMessages,
-    loading,
-    messagesEndRef
-  } = useMessages();
-  
-  const {
-    extractedInfo,
-    isExtracting,
-    extractDocumentInfo
-  } = useDocumentExtraction();
+// Mock data for document analysis
+const mockDocumentAnalysis = {
+  summary: "Este documento é um contrato de arrendamento comercial entre a empresa ABC Ltda. e o proprietário João Silva para o imóvel situado na Rua das Flores, 123, Lisboa. O contrato tem duração de 5 anos com início em 01/01/2023 e término em 31/12/2027, com valor mensal de €2.500,00.",
+  keyPoints: [
+    "Duração do contrato: 5 anos (01/01/2023 a 31/12/2027)",
+    "Valor mensal: €2.500,00 com reajuste anual pelo IPC",
+    "Garantia: 3 meses de renda (€7.500,00)",
+    "Multa por rescisão antecipada: 3 meses de renda",
+    "Responsabilidade por reparações: Locatário para reparações ordinárias, Locador para estruturais"
+  ],
+  risks: [
+    { level: "high", description: "Cláusula 8.3 permite ao locador rescindir o contrato com apenas 30 dias de aviso prévio" },
+    { level: "medium", description: "Ausência de limitação para o percentual de reajuste anual" },
+    { level: "medium", description: "Responsabilidade por danos estruturais não está claramente definida" }
+  ],
+  opportunities: [
+    "Possibilidade de renovação automática por igual período (Cláusula 12.1)",
+    "Direito de preferência na compra do imóvel (Cláusula 15.2)",
+    "Permissão para sublocação mediante autorização prévia"
+  ],
+  recommendations: [
+    "Negociar aumento do prazo de aviso prévio para rescisão pelo locador",
+    "Estabelecer um limite máximo para o reajuste anual",
+    "Clarificar as responsabilidades por reparações estruturais",
+    "Incluir cláusula de força maior para situações excepcionais"
+  ]
+};
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+// Mock data for legal analysis
+const mockLegalAnalysis = {
+  compliance: [
+    { status: "compliant", description: "Lei do Arrendamento Urbano (Lei n.º 6/2006)" },
+    { status: "compliant", description: "Código Civil Português (Artigos 1022º a 1113º)" },
+    { status: "warning", description: "Regulamento Geral de Proteção de Dados (RGPD)" },
+    { status: "non-compliant", description: "Lei das Comunicações Eletrónicas (Lei n.º 5/2004)" }
+  ],
+  precedents: [
+    "Acórdão do STJ de 12/05/2020 (Proc. 1234/18.5T8LSB) - Validade de cláusulas de rescisão unilateral",
+    "Acórdão do TRL de 08/11/2019 (Proc. 5678/17.2T8LSB) - Limites ao reajuste de rendas comerciais"
+  ],
+  legalRisks: [
+    "Cláusula de rescisão unilateral pode ser considerada abusiva conforme jurisprudência recente",
+    "Ausência de cláusula específica sobre proteção de dados pode violar o RGPD",
+    "Responsabilidades ambientais não estão adequadamente atribuídas"
+  ]
+};
+
+export const AnalysisTab: React.FC = () => {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState("document");
+  const [userQuery, setUserQuery] = useState("");
+  const [analysisHistory, setAnalysisHistory] = useState<{
+    role: "user" | "assistant";
+    content: string;
+    timestamp: Date;
+  }[]>([
+    {
+      role: "assistant",
+      content: "Olá! Estou pronto para analisar seu documento. Que aspectos específicos você gostaria de explorar?",
+      timestamp: new Date()
     }
-  };
+  ]);
 
-  const analyzeDocument = async () => {
-    if (!file) {
-      toast({
-        title: 'Erro',
-        description: 'Por favor, selecione um documento para análise.',
-        variant: 'destructive',
-      });
-      return;
-    }
+  const handleSendQuery = () => {
+    if (!userQuery.trim()) return;
 
-    setAnalyzing(true);
-    setMessages([]);
+    // Add user message to history
+    setAnalysisHistory([
+      ...analysisHistory,
+      {
+        role: "user",
+        content: userQuery,
+        timestamp: new Date()
+      }
+    ]);
 
-    try {
-      // Simular extração de texto do documento
-      // Em uma implementação real, você usaria uma API para extrair texto do PDF/DOCX
-      const documentText = await simulateTextExtraction(file);
+    // Simulate AI response
+    setTimeout(() => {
+      let response = "Analisei o documento e encontrei alguns pontos importantes relacionados à sua pergunta.";
       
-      // Extrair informações estruturadas do documento
-      await extractDocumentInfo(documentText, file.name);
-      
-      // Enviar o texto para análise pela IA
-      const { data, error } = await supabase.functions.invoke('ai-assistant', {
-        body: {
-          prompt: `Analise este documento jurídico e forneça um resumo detalhado, identificando pontos importantes, possíveis problemas e recomendações: ${documentText}`,
-          context: 'O utilizador está a solicitar análise de um documento jurídico. Forneça uma análise detalhada, identificando cláusulas importantes, possíveis problemas e recomendações.',
-          role: 'lawyer',
-          model: 'gpt-4o'
-        },
-      });
+      if (userQuery.toLowerCase().includes("risco")) {
+        response = "Os principais riscos identificados são: 1) Cláusula de rescisão com aviso prévio curto, 2) Ausência de limite para reajuste, 3) Responsabilidades estruturais ambíguas.";
+      } else if (userQuery.toLowerCase().includes("prazo") || userQuery.toLowerCase().includes("duração")) {
+        response = "O contrato tem duração de 5 anos, iniciando em 01/01/2023 e terminando em 31/12/2027, com possibilidade de renovação automática por igual período conforme Cláusula 12.1.";
+      } else if (userQuery.toLowerCase().includes("valor") || userQuery.toLowerCase().includes("renda")) {
+        response = "O valor mensal do arrendamento é de €2.500,00 com reajuste anual pelo IPC. Recomendo negociar um limite máximo para este reajuste.";
+      }
 
-      if (error) throw error;
-
-      setMessages([
+      setAnalysisHistory(prev => [
+        ...prev,
         {
-          id: '1',
-          role: 'assistant',
-          content: `### Análise do documento: ${file.name}\n\n${data.response}`,
+          role: "assistant",
+          content: response,
           timestamp: new Date()
         }
       ]);
-    } catch (error) {
-      console.error('Erro ao analisar documento:', error);
-      toast({
-        title: 'Erro',
-        description: 'Não foi possível analisar o documento. Por favor, tente novamente.',
-        variant: 'destructive',
-      });
-    } finally {
-      setAnalyzing(false);
-    }
-  };
 
-  // Função para simular extração de texto de um documento
-  // Em uma implementação real, você usaria uma API para extrair texto do PDF/DOCX
-  const simulateTextExtraction = async (file: File): Promise<string> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(`[Conteúdo extraído do documento ${file.name}]\n\nEste é um contrato de prestação de serviços entre as partes A e B...\n\nCláusula 1: Objeto\nCláusula 2: Prazo\nCláusula 3: Valor\nCláusula 4: Obrigações\nCláusula 5: Rescisão`);
-      }, 1500);
-    });
+      // Scroll to bottom
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 1000);
+
+    setUserQuery("");
   };
 
   return (
-    <Card className="flex flex-col h-[75vh]">
-      <CardHeader className="pb-3">
-        <CardTitle>Análise de Documentos</CardTitle>
-        <CardDescription>
-          Faça upload de documentos jurídicos para análise pela IA
-        </CardDescription>
-        <div className="flex flex-col space-y-3 mt-2">
-          <div className="flex items-center space-x-2">
-            <Button 
-              variant="outline" 
-              onClick={() => document.getElementById('file-upload')?.click()}
-              className="flex-grow"
-            >
-              <FileUp className="h-4 w-4 mr-2" />
-              {file ? file.name : 'Selecionar documento'}
-            </Button>
-            <input
-              id="file-upload"
-              type="file"
-              accept=".pdf,.doc,.docx,.txt"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-            <Button 
-              onClick={analyzeDocument} 
-              disabled={analyzing || !file || isExtracting}
-            >
-              {(analyzing || isExtracting) ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <FileText className="h-4 w-4 mr-2" />}
-              Analisar
-            </Button>
-          </div>
-          {file && (
-            <div className="text-sm text-muted-foreground">
-              Documento selecionado: {file.name} ({(file.size / 1024).toFixed(2)} KB)
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-full">
+      {/* Document Preview Panel */}
+      <Card className="col-span-1 md:col-span-1 h-[calc(100vh-220px)] flex flex-col">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-semibold">Documento</CardTitle>
+          <CardDescription>Contrato de Arrendamento Comercial.pdf</CardDescription>
+        </CardHeader>
+        <CardContent className="flex-1 overflow-hidden">
+          <div className="bg-muted rounded-md h-full flex items-center justify-center">
+            <div className="text-center p-4">
+              <FileText className="h-10 w-10 mx-auto text-muted-foreground mb-2" />
+              <p className="text-sm text-muted-foreground">
+                Visualização do documento não disponível nesta demonstração.
+              </p>
             </div>
-          )}
-        </div>
-      </CardHeader>
-      
-      {(messages.length > 0 || extractedInfo) && (
-        <div className="px-6 pb-2">
-          <Tabs value={analysisTab} onValueChange={setAnalysisTab} className="w-full">
-            <TabsList className="grid grid-cols-2 w-[400px] mx-auto">
-              <TabsTrigger value="text">
-                <FileText className="h-4 w-4 mr-2" />
-                Análise Textual
-              </TabsTrigger>
-              <TabsTrigger value="structured">
-                <List className="h-4 w-4 mr-2" />
-                Informações Extraídas
-              </TabsTrigger>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Analysis Panel */}
+      <Card className="col-span-1 md:col-span-2 h-[calc(100vh-220px)] flex flex-col">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-semibold">Análise do Documento</CardTitle>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid grid-cols-2 w-[400px]">
+              <TabsTrigger value="document">Análise Documental</TabsTrigger>
+              <TabsTrigger value="legal">Análise Jurídica</TabsTrigger>
             </TabsList>
           </Tabs>
-        </div>
-      )}
-      
-      <CardContent className="flex-grow overflow-auto">
-        <TabsContent value="text" className="mt-0">
-          <MessageList messages={messages} messagesEndRef={messagesEndRef} />
-        </TabsContent>
+        </CardHeader>
         
-        <TabsContent value="structured" className="mt-0">
-          {extractedInfo ? (
-            <ExtractedInfoDisplay extractedInfo={extractedInfo} />
-          ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              {isExtracting ? (
-                <div className="flex flex-col items-center">
-                  <Loader2 className="h-8 w-8 animate-spin mb-2" />
-                  <p>Extraindo informações do documento...</p>
+        <CardContent className="flex-1 overflow-hidden">
+          <TabsContent value="document" className="h-full">
+            <ScrollArea className="h-full pr-4">
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium mb-2">Resumo</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {mockDocumentAnalysis.summary}
+                  </p>
                 </div>
-              ) : (
-                <p>Nenhuma informação extraída. Selecione um documento e clique em Analisar.</p>
-              )}
+                
+                <Separator />
+                
+                <div>
+                  <h3 className="text-sm font-medium mb-2">Pontos-Chave</h3>
+                  <ul className="list-disc pl-5 space-y-1">
+                    {mockDocumentAnalysis.keyPoints.map((point, index) => (
+                      <li key={index} className="text-sm text-muted-foreground">
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <Separator />
+                
+                <div>
+                  <h3 className="text-sm font-medium mb-2">Riscos Identificados</h3>
+                  <div className="space-y-2">
+                    {mockDocumentAnalysis.risks.map((risk, index) => (
+                      <div key={index} className="flex items-start gap-2">
+                        <Badge variant={risk.level === "high" ? "destructive" : "outline"} className="mt-0.5">
+                          {risk.level}
+                        </Badge>
+                        <p className="text-sm text-muted-foreground">{risk.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <Separator />
+                
+                <div>
+                  <h3 className="text-sm font-medium mb-2">Oportunidades</h3>
+                  <ul className="list-disc pl-5 space-y-1">
+                    {mockDocumentAnalysis.opportunities.map((opportunity, index) => (
+                      <li key={index} className="text-sm text-muted-foreground">
+                        {opportunity}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <Separator />
+                
+                <div>
+                  <h3 className="text-sm font-medium mb-2">Recomendações</h3>
+                  <ul className="list-disc pl-5 space-y-1">
+                    {mockDocumentAnalysis.recommendations.map((recommendation, index) => (
+                      <li key={index} className="text-sm text-muted-foreground">
+                        {recommendation}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </ScrollArea>
+          </TabsContent>
+          
+          <TabsContent value="legal" className="h-full">
+            <ScrollArea className="h-full pr-4">
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium mb-2">Conformidade Legal</h3>
+                  <div className="space-y-2">
+                    {mockLegalAnalysis.compliance.map((item, index) => (
+                      <div key={index} className="flex items-start gap-2">
+                        {item.status === "compliant" ? (
+                          <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                        ) : item.status === "warning" ? (
+                          <AlertCircle className="h-4 w-4 text-amber-500 mt-0.5" />
+                        ) : (
+                          <AlertCircle className="h-4 w-4 text-red-500 mt-0.5" />
+                        )}
+                        <p className="text-sm text-muted-foreground">{item.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <Separator />
+                
+                <div>
+                  <h3 className="text-sm font-medium mb-2">Precedentes Jurídicos Relevantes</h3>
+                  <ul className="list-disc pl-5 space-y-1">
+                    {mockLegalAnalysis.precedents.map((precedent, index) => (
+                      <li key={index} className="text-sm text-muted-foreground">
+                        {precedent}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <Separator />
+                
+                <div>
+                  <h3 className="text-sm font-medium mb-2">Riscos Jurídicos</h3>
+                  <ul className="list-disc pl-5 space-y-1">
+                    {mockLegalAnalysis.legalRisks.map((risk, index) => (
+                      <li key={index} className="text-sm text-muted-foreground">
+                        {risk}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </ScrollArea>
+          </TabsContent>
+        </CardContent>
+        
+        <CardFooter className="border-t pt-4">
+          <div className="w-full space-y-4">
+            <ScrollArea className="h-[120px] w-full rounded-md border p-2">
+              <div className="space-y-3 pr-4">
+                {analysisHistory.map((message, index) => (
+                  <div 
+                    key={index} 
+                    className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                  >
+                    <div 
+                      className={`rounded-lg px-3 py-2 max-w-[80%] text-sm ${
+                        message.role === "user" 
+                          ? "bg-primary text-primary-foreground" 
+                          : "bg-muted"
+                      }`}
+                    >
+                      {message.content}
+                    </div>
+                  </div>
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
+            </ScrollArea>
+            
+            <div className="flex gap-2">
+              <Textarea 
+                placeholder="Faça uma pergunta sobre o documento..." 
+                className="flex-1"
+                value={userQuery}
+                onChange={(e) => setUserQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendQuery();
+                  }
+                }}
+              />
+              <Button onClick={handleSendQuery} disabled={!userQuery.trim()}>
+                <Send className="h-4 w-4" />
+              </Button>
             </div>
-          )}
-        </TabsContent>
-      </CardContent>
-    </Card>
+          </div>
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
-
-export default AnalysisTab;

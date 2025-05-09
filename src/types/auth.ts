@@ -1,4 +1,10 @@
 
+export enum UserType {
+  CLIENT = 'client',
+  PROFESSIONAL = 'professional',
+  COMPANY = 'company'
+}
+
 export interface User {
   id: string;
   name: string;

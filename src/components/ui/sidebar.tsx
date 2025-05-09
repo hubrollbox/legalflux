@@ -6,6 +6,12 @@ import { cva } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 import { ButtonProps } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface SidebarStateContextProps {
   collapsed: boolean;
@@ -61,7 +67,7 @@ export function Sidebar({ className, children, ...props }: React.HTMLAttributes<
 export function SidebarHeader({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("flex h-14 items-center border-b px-4", className)}
+      className={cn("flex h-14 items-center border-r px-4", className)}
       {...props}
     >
       {children}
@@ -166,32 +172,37 @@ const buttonVariants = cva(
 interface SidebarMenuButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean;
   variant?: "default" | "active";
+  tooltip?: string;
 }
 
 export const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonProps>(
-  ({ className, variant, children, asChild = false, ...props }, ref) => {
+  ({ className, variant, children, tooltip, asChild = false, ...props }, ref) => {
     const { collapsed } = useSidebarContext();
     const Component = asChild ? React.Fragment : "button";
     const childProps = asChild ? {} : props;
 
-    return (
-      <Component {...childProps}>
-        {asChild ? (
-          React.cloneElement(children as React.ReactElement, {
-            className: cn(buttonVariants({ variant }), 
-              collapsed ? "justify-center px-2" : "", 
-              className,
-              (children as React.ReactElement).props.className
-            ),
-            ref
-          })
-        ) : (
-          <div className={cn(buttonVariants({ variant }), collapsed ? "justify-center px-2" : "", className)}>
-            {children}
-          </div>
-        )}
+    const button = (
+      <Component
+        {...childProps}
+        className={cn(buttonVariants({ variant }), collapsed ? "justify-center px-2" : "", className)}
+        ref={ref}
+      >
+        {asChild ? children : children}
       </Component>
     );
+
+    if (collapsed && tooltip) {
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>{button}</TooltipTrigger>
+            <TooltipContent side="right">{tooltip}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    }
+
+    return button;
   }
 );
 SidebarMenuButton.displayName = "SidebarMenuButton";

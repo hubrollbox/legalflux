@@ -1,3 +1,4 @@
+
 import React from "react";
 import { 
   Form, 
@@ -12,8 +13,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { z } from "zod";
+import { userFormSchema } from "@/schemas/userFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import { userFormSchema, UserFormValues } from "@/schemas/userFormSchema";
+
+export type UserFormValues = z.infer<typeof userFormSchema>;
 
 interface UserFormProps {
   form: UseFormReturn<UserFormValues>;
@@ -157,4 +161,3 @@ const UserForm = ({ form, onSubmit, onCancel, submitLabel }: UserFormProps) => {
 };
 
 export default UserForm;
-export type { UserFormValues };
