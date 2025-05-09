@@ -8,7 +8,13 @@ import DocumentsSearchBar from "./DocumentsSearchBar";
 import DocumentsViewMode from "./DocumentsViewMode";
 import DocumentsContent from "./DocumentsContent";
 import TemplatesContent from "./TemplatesContent";
-import { Document, DocumentTemplate, DocumentFilter } from "@/types/document";
+import { Document, DocumentTemplate } from "@/types/document";
+
+interface DocumentFilter {
+  type: string;
+  date?: Date;
+  tags: string[];
+}
 
 interface DocumentTabsProps {
   viewMode: "grid" | "list";
@@ -69,6 +75,7 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
         <TemplatesContent 
           templates={filteredTemplates.map(template => ({
             ...template,
+            type: template.type as any,
             updatedAt: typeof template.updatedAt === 'string' 
               ? template.updatedAt 
               : template.updatedAt instanceof Date 

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { toast } from 'sonner';  // Usando sonner que está disponível no projeto
+import { Toaster as SonnerToaster } from 'sonner';  // Usando sonner que está disponível no projeto
 
 export type ToastProps = {
   id?: string;
@@ -10,21 +10,17 @@ export type ToastProps = {
   variant?: "default" | "destructive" | "success";
 };
 
-// Componente Toaster simplificado
+// Componente Toaster simplificado que usa o Sonner
 export function Toaster() {
-  // Componente vazio que será melhorado quando o toast real for implementado
-  return null;
+  return <SonnerToaster position="bottom-right" />;
 }
 
 // Hook useToast simplificado
 export const useToast = () => {
   return {
     toast: (props?: ToastProps) => {
-      if (props) {
-        return toast(props.title, {
-          description: props.description,
-        });
-      }
+      // Simulate a toast function
+      console.log('Toast:', props?.title, props?.description);
       return null;
     }
   };

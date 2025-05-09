@@ -24,7 +24,7 @@ export interface Document {
 // Tipos para filtros de documentos
 export interface DocumentFilter {
   type: string;
-  date?: Date; // Tornando opcional para compatibilidade
+  date?: Date;
   tags: string[];
 }
 

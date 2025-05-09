@@ -3,15 +3,7 @@ import React from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ArrowUpDown } from 'lucide-react';
-
-interface FinancialTransaction {
-  id: string;
-  amount: number;
-  type: string;
-  status: string;
-  date: string | Date;
-  description?: string;
-}
+import { FinancialTransaction } from '@/types/financial';
 
 interface TransactionTableProps {
   transactions: FinancialTransaction[];
