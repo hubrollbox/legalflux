@@ -94,7 +94,7 @@ const MiniCalendarView: React.FC<MiniCalendarViewProps> = ({
 
       <div className="mt-4 text-sm">
         <h4 className="font-medium mb-2">
-          Eventos em {format(selectedDate, "d 'de' MMMM", { locale: pt })}
+          Eventos em {format(selectedDate, "d 'de' MMMM")}
         </h4>
         {eventsByDay[format(selectedDate, "yyyy-MM-dd")]?.length ? (
           <div className="space-y-1">

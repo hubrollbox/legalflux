@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Users, Clock, FileText, Calendar as CalendarIcon, Briefcase, Gavel, Scale, Search, Filter, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { format, isToday, isTomorrow, addDays, isWithinInterval } from "date-fns";
+import { format, isToday, isTomorrow, addDays } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import type { CalendarEvent } from "@/types";
 import MiniCalendarView from "./MiniCalendarView";

@@ -67,7 +67,7 @@ const ProcessCard: React.FC<ProcessCardProps> = ({ process, onView }) => {
   const formatDate = (dateString: string | undefined) => {
     if (!dateString) return "Data não especificada";
     try {
-      return format(new Date(dateString), 'PPP', { locale: pt });
+      return format(new Date(dateString), 'PPP');
     } catch (error) {
       console.error("Erro ao formatar data:", error);
       return "Data inválida";

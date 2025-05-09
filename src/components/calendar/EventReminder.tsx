@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Bell, Calendar, Clock, AlertTriangle } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { format, isToday, isTomorrow, addDays, isWithinInterval } from "date-fns";
+import { format, isToday, isTomorrow, addDays } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 
 interface EventReminderProps {
@@ -55,11 +55,11 @@ const EventReminder: React.FC<EventReminderProps> = ({ events, onEventClick }) =
   // Função para formatar a data do evento
   const formatEventDate = (date: Date) => {
     if (isToday(date)) {
-      return `Hoje às ${format(date, 'HH:mm', { locale: ptBR })}`;
+      return `Hoje às ${format(date, 'HH:mm')}`;
     } else if (isTomorrow(date)) {
-      return `Amanhã às ${format(date, 'HH:mm', { locale: ptBR })}`;
+      return `Amanhã às ${format(date, 'HH:mm')}`;
     } else {
-      return format(date, "EEEE, dd 'de' MMMM 'às' HH:mm", { locale: ptBR });
+      return format(date, "EEEE, dd 'de' MMMM 'às' HH:mm");
     }
   };
 

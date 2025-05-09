@@ -68,8 +68,9 @@ export const MOCK_FINANCIAL_TRANSACTIONS: FinancialTransaction[] = [
     amount: 1500.00,
     type: TransactionType.INCOME,
     status: TransactionStatus.COMPLETED,
-    createdAt: new Date("2023-05-20"),
-    createdBy: "admin"
+    category: "Honorários",
+    clientName: "João Silva",
+    processId: "2023/001"
   },
   {
     id: "f2",
@@ -78,17 +79,19 @@ export const MOCK_FINANCIAL_TRANSACTIONS: FinancialTransaction[] = [
     amount: -300.00,
     type: TransactionType.EXPENSE,
     status: TransactionStatus.COMPLETED,
-    createdAt: new Date("2023-05-18"),
-    createdBy: "admin"
+    category: "Despesas Processuais",
+    clientName: "Maria Santos",
+    processId: "2023/002"
   },
   {
     id: "f3",
     date: new Date("2023-05-15"),
     description: "Recebimento de cliente",
     amount: 2000.00,
-    type: TransactionType.PAYMENT,
+    type: TransactionType.INCOME,
     status: TransactionStatus.COMPLETED,
-    createdAt: new Date("2023-05-15"),
-    createdBy: "admin"
+    category: "Recebimento",
+    clientName: "António Costa",
+    processId: "2023/003"
   }
 ];

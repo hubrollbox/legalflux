@@ -29,6 +29,7 @@ export * from "./category";
 export * from "./task";
 export * from "./priority-level";
 export * from "./financial";
+export { TransactionType, TransactionStatus } from "./financial";
 export * from "./auth";
 export * from "./permissions";
 export * from "./document";

@@ -119,7 +119,7 @@ const AgendaView: React.FC<AgendaViewProps> = ({
                         <div key={event.id} className="space-y-1">
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <span className="font-medium">
-                              {format(eventDate, "EEEE, dd 'de' MMMM", { locale: ptBR })}
+                              {format(eventDate, "EEEE, dd 'de' MMMM")}
                             </span>
                             <span>
                               {format(eventDate, "HH:mm")}

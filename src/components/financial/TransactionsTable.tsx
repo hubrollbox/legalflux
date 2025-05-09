@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { TransactionStatus, TransactionType } from '@/types/financial';
+import type { FinancialTransaction } from '@/types/financial';
 import TransactionFilters from './TransactionFilters';
 import TransactionExport from './TransactionExport';
 import TransactionTable from './TransactionTable';
@@ -38,12 +38,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
 
   // Ordenação
   const toggleSort = (field: keyof FinancialTransaction) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
+    setSortField(field);
   };
 
   // Filtragem e ordenação de transações

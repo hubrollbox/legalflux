@@ -106,9 +106,9 @@ export function EventDetailsCard({ event, onEdit, onDelete, onClose }: EventDeta
           <div className="flex items-center gap-2 text-sm">
             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
             <span>
-              {format(event.start, 'PPP', { locale: ptBR })} • 
-              {format(event.start, 'HH:mm', { locale: ptBR })}
-              {event.end && ` - ${format(event.end, 'HH:mm', { locale: ptBR })}`}
+              {format(event.start, 'PPP')}
+              {format(event.start, 'HH:mm')}
+              {event.end && ` - ${format(event.end, 'HH:mm')}`}
             </span>
           </div>
 

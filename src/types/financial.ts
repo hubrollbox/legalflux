@@ -1,4 +1,7 @@
 
+export type TransactionType = 'income' | 'expense';
+export type TransactionStatus = 'pending' | 'completed' | 'cancelled';
+
 export interface FinancialTransaction {
   id: string;
   date: Date | string;

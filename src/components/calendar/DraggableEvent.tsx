@@ -120,8 +120,8 @@ const DraggableEvent: React.FC<DraggableEventProps> = ({
       
       {showTime && (
         <p className="text-xs opacity-80">
-          {format(new Date(event.start), 'HH:mm', { locale: ptBR })}
-          {event.end && ` - ${format(new Date(event.end), 'HH:mm', { locale: ptBR })}`}
+          {format(new Date(event.start), 'HH:mm')}
+          {event.end && ` - ${format(new Date(event.end), 'HH:mm')}`}
         </p>
       )}
 

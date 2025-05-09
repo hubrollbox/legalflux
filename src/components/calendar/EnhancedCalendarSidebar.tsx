@@ -234,7 +234,7 @@ export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = (
                       </div>
                     </div>
                     <p className="text-sm opacity-80">
-                      {format(new Date(event.start), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
+                      {format(new Date(event.start), 'dd/MM/yyyy HH:mm')}
                     </p>
                     {event.description && (
                       <p className="text-sm mt-1 opacity-70 line-clamp-2">

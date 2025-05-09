@@ -166,7 +166,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props: A
   // Função para formatar a data
   const formatDate = (date: Date | undefined) => {
     if (!date) return '';
-    return format(date, 'P', { locale: ptBR });
+    return format(date, 'P');
   };
 
   // Dados para o gráfico de desempenho de advogados baseados nos usuários e tarefas

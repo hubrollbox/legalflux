@@ -145,7 +145,7 @@ export function SidebarMenu({ className, children, ...props }: React.HTMLAttribu
 export function SidebarMenuItem({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("", className)}
+      className={cn("flex items-center px-3 py-2 rounded-md transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer", className)}
       {...props}
     >
       {children}
@@ -176,33 +176,46 @@ interface SidebarMenuButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEl
 }
 
 export const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonProps>(
-  ({ className, variant, children, tooltip, asChild = false, ...props }, ref) => {
+  ({ className, variant = "default", children, tooltip, asChild = false, ...props }, ref) => {
     const { collapsed } = useSidebarContext();
-    const Component = asChild ? React.Fragment : "button";
-    const childProps = asChild ? {} : props;
-
-    const button = (
-      <Component
-        {...childProps}
-        className={cn(buttonVariants({ variant }), collapsed ? "justify-center px-2" : "", className)}
-        ref={ref}
-      >
-        {asChild ? children : children}
-      </Component>
-    );
-
-    if (collapsed && tooltip) {
+    if (asChild) {
       return (
         <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>{button}</TooltipTrigger>
-            <TooltipContent side="right">{tooltip}</TooltipContent>
+          <Tooltip delayDuration={300}>
+            <TooltipTrigger asChild>
+              <span className={cn(buttonVariants({ variant, className }))}>
+                {children}
+              </span>
+            </TooltipTrigger>
+            {tooltip && collapsed && (
+              <TooltipContent side="right">
+                {tooltip}
+              </TooltipContent>
+            )}
           </Tooltip>
         </TooltipProvider>
       );
     }
-
-    return button;
+    return (
+      <TooltipProvider>
+        <Tooltip delayDuration={300}>
+          <TooltipTrigger asChild>
+            <button
+              ref={ref}
+              className={cn(buttonVariants({ variant, className }))}
+              {...props}
+            >
+              {children}
+            </button>
+          </TooltipTrigger>
+          {tooltip && collapsed && (
+            <TooltipContent side="right">
+              {tooltip}
+            </TooltipContent>
+          )}
+        </Tooltip>
+      </TooltipProvider>
+    );
   }
 );
 SidebarMenuButton.displayName = "SidebarMenuButton";
