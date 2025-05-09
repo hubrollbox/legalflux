@@ -3,7 +3,6 @@ import React, { useState, useEffect, ReactNode } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase-client';
 import { User } from '../../types/auth';
-import { UserRole } from '../../types/permissions';
 import { Toaster } from 'sonner';
 
 interface AuthProviderProps {
@@ -48,7 +47,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     };
     getSession();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    
+    // Usar a subscription corretamente
+    const { data } = supabase.auth.onAuthStateChange(
       async (event: string, session: any) => {
         if (session?.user) {
           const { data, error } = await supabase
@@ -69,8 +70,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setIsLoading(false);
       }
     );
+    
+    // Armazenamento e limpeza adequados da subscription
     return () => {
-      subscription.unsubscribe();
+      if (data?.subscription && typeof data.subscription.unsubscribe === 'function') {
+        data.subscription.unsubscribe();
+      }
     };
   }, []);
 
