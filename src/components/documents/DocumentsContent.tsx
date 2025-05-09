@@ -38,6 +38,16 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
     );
   }
 
+  // Função para converter documentos para o formato correto
+  const formatDocumentForCards = (doc: Document) => {
+    return {
+      ...doc,
+      type: doc.type,
+      size: typeof doc.size === 'number' ? `${doc.size} KB` : doc.size,
+      updatedAt: typeof doc.updatedAt === 'string' ? doc.updatedAt : doc.updatedAt.toString()
+    };
+  };
+
   return (
     <Card className="">
       <CardHeader className="">
@@ -50,23 +60,11 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
         {viewMode === "grid" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {safeDocuments.map((doc) => (
-              <DocumentCard key={doc.id} doc={{
-                ...doc,
-                type: doc.type as any, // Corrige o erro de tipo
-                updatedAt: typeof doc.updatedAt === 'string' ? doc.updatedAt : doc.updatedAt.toString()
-              }} />
+              <DocumentCard key={doc.id} doc={formatDocumentForCards(doc)} />
             ))}
           </div>
         ) : (
-          <DocumentList documents={safeDocuments.map(doc => ({
-            ...doc,
-            type: doc.type as any, // Corrige o erro de tipo
-            updatedAt: typeof doc.updatedAt === 'string' 
-              ? doc.updatedAt 
-              : typeof doc.updatedAt.toString === 'function' 
-                ? doc.updatedAt.toString() 
-                : new Date().toISOString()
-          }))} />
+          <DocumentList documents={safeDocuments.map(doc => formatDocumentForCards(doc))} />
         )}
       </CardContent>
     </Card>

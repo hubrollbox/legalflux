@@ -11,9 +11,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
-import { User } from "@/types";
-import { Permission, RolePermissions } from "@/types/permissions";
+import { useToast } from "@/components/ui/toaster";
+import { User } from "@/types/auth";
+import { Permission } from "@/types/permissions";
 import { 
   Accordion,
   AccordionContent,
@@ -85,7 +85,7 @@ const DEFAULT_ROLE_PERMISSIONS: Record<string, string[]> = {
     "documents-read", "documents-create", "documents-update",
     "tasks-read", "tasks-create", "tasks-update"
   ],
-  admin: MOCK_PERMISSIONS.map(p => p.id)
+  ADMIN: MOCK_PERMISSIONS.map(p => p.id)
 };
 
 interface UserPermissionsDialogProps {
@@ -104,6 +104,8 @@ const UserPermissionsDialog: React.FC<UserPermissionsDialogProps> = ({
   
   // Inicializa permissões com base na função do utilizador
   useEffect(() => {
+    if (!user || !user.role) return;
+
     const defaultPermissions: Record<string, boolean> = {};
     
     // Inicializa todas as permissões como false
@@ -166,7 +168,7 @@ const UserPermissionsDialog: React.FC<UserPermissionsDialogProps> = ({
                       <div key={permission.id} className="flex items-start space-x-2">
                         <Checkbox
                           id={permission.id}
-                          checked={rolePermissions[permission.id]}
+                          checked={rolePermissions[permission.id] || false}
                           onCheckedChange={(checked) => {
                             setRolePermissions({
                               ...rolePermissions,

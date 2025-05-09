@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Users, DollarSign, Clock, AlertTriangle, BadgeCheck } from 'lucide-react';
+import { Users, Clock, AlertTriangle, BadgeCheck } from 'lucide-react';
 import { FinancialTransaction, TransactionStatus } from '@/types/financial';
 
 interface FinancialAlertsProps {
@@ -21,7 +21,7 @@ const FinancialAlerts: React.FC<FinancialAlertsProps> = ({ transactions }) => {
     
     if (pendingTransactions.length > 0) {
       newAlerts.push(
-        <Alert key="pending" variant="warning">
+        <Alert key="pending">
           <Clock className="h-4 w-4 text-amber-600" />
           <AlertTitle>Pagamentos Pendentes</AlertTitle>
           <AlertDescription>
@@ -56,7 +56,7 @@ const FinancialAlerts: React.FC<FinancialAlertsProps> = ({ transactions }) => {
     
     if (recentPayments.length > 0) {
       newAlerts.push(
-        <Alert key="recent" variant="success">
+        <Alert key="recent">
           <BadgeCheck className="h-4 w-4 text-green-600" />
           <AlertTitle>Pagamentos Recentes</AlertTitle>
           <AlertDescription>
@@ -84,7 +84,7 @@ const FinancialAlerts: React.FC<FinancialAlertsProps> = ({ transactions }) => {
         
       if (pendingAmount > 1000) {
         newAlerts.push(
-          <Alert key={`client-${client}`} variant="warning">
+          <Alert key={`client-${client}`}>
             <Users className="h-4 w-4 text-amber-600" />
             <AlertTitle>Cliente com Valores Elevados Pendentes</AlertTitle>
             <AlertDescription>
@@ -100,7 +100,7 @@ const FinancialAlerts: React.FC<FinancialAlertsProps> = ({ transactions }) => {
   
   if (alerts.length === 0) {
     return (
-      <Alert variant="success">
+      <Alert>
         <BadgeCheck className="h-4 w-4 text-green-600" />
         <AlertTitle>Sem Alertas</AlertTitle>
         <AlertDescription>

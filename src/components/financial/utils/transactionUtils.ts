@@ -1,77 +1,103 @@
 
-import { TransactionStatus, TransactionType } from '@/types/financial';
+import { FinancialTransaction } from "@/types/financial";
 
 export const translateTransactionType = (type: string): string => {
-  const translations: Record<string, string> = {
-    'invoice': 'Fatura',
-    'payment': 'Pagamento',
-    'refund': 'Reembolso',
-    'income': 'Receita',
-    'expense': 'Despesa',
-    'other': 'Outro'
-  };
-  
-  return translations[type] || type;
+  switch (type) {
+    case 'invoice':
+      return 'Fatura';
+    case 'payment':
+      return 'Pagamento';
+    case 'refund':
+      return 'Reembolso';
+    case 'income':
+      return 'Receita';
+    case 'expense':
+      return 'Despesa';
+    default:
+      return type;
+  }
 };
 
 export const translateTransactionStatus = (status: string): string => {
-  const translations: Record<string, string> = {
-    'pending': 'Pendente',
-    'completed': 'Concluído',
-    'failed': 'Falhou',
-    'cancelled': 'Cancelado',
-    'refunded': 'Reembolsado',
-    'overdue': 'Vencido'
-  };
-  
-  return translations[status] || status;
+  switch (status) {
+    case 'pending':
+      return 'Pendente';
+    case 'completed':
+      return 'Concluído';
+    case 'failed':
+      return 'Falhou';
+    case 'cancelled':
+      return 'Cancelado';
+    case 'refunded':
+      return 'Reembolsado';
+    case 'overdue':
+      return 'Vencido';
+    default:
+      return status;
+  }
 };
 
 export const getStatusColor = (status: string): string => {
-  const colors: Record<string, string> = {
-    'pending': 'text-amber-600 bg-amber-100',
-    'completed': 'text-green-600 bg-green-100',
-    'failed': 'text-red-600 bg-red-100',
-    'cancelled': 'text-gray-600 bg-gray-100',
-    'refunded': 'text-purple-600 bg-purple-100',
-    'overdue': 'text-red-600 bg-red-100'
-  };
-  
-  return colors[status] || 'text-gray-600 bg-gray-100';
+  switch (status) {
+    case 'pending':
+      return 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200';
+    case 'completed':
+      return 'bg-green-100 text-green-800 hover:bg-green-200';
+    case 'failed':
+      return 'bg-red-100 text-red-800 hover:bg-red-200';
+    case 'cancelled':
+      return 'bg-gray-100 text-gray-800 hover:bg-gray-200';
+    case 'refunded':
+      return 'bg-purple-100 text-purple-800 hover:bg-purple-200';
+    case 'overdue':
+      return 'bg-orange-100 text-orange-800 hover:bg-orange-200';
+    default:
+      return 'bg-blue-100 text-blue-800 hover:bg-blue-200';
+  }
 };
 
 export const exportToCSV = (
-  transactions: any[], 
+  transactions: FinancialTransaction[], 
   translateType: (type: string) => string,
   translateStatus: (status: string) => string
 ) => {
-  // Preparar os dados
-  const headers = ['ID', 'Data', 'Descrição', 'Tipo', 'Status', 'Valor'];
+  // Cabeçalhos do CSV
+  const headers = [
+    'ID', 
+    'Valor', 
+    'Tipo', 
+    'Status', 
+    'Data', 
+    'Descrição', 
+    'Cliente', 
+    'Processo'
+  ].join(',');
   
-  const rows = transactions.map(t => [
-    t.id,
-    typeof t.date === 'object' ? t.date.toLocaleDateString() : new Date(t.date).toLocaleDateString(),
-    t.description || '',
-    translateType(t.type),
-    translateStatus(t.status),
-    `${t.amount.toFixed(2)} €`
-  ]);
+  // Dados do CSV
+  const csvData = transactions.map(t => {
+    const data = [
+      t.id,
+      typeof t.amount === 'number' ? t.amount.toString() : t.amount,
+      translateType(t.type.toString()),
+      translateStatus(t.status.toString()),
+      typeof t.date === 'string' ? t.date : new Date(t.date).toLocaleDateString('pt-PT'),
+      t.description ? `"${t.description.replace(/"/g, '""')}"` : '',
+      t.client || '',
+      t.process || ''
+    ];
+    return data.join(',');
+  }).join('\n');
   
-  // Criar o conteúdo CSV
-  const csvContent = [
-    headers.join(','),
-    ...rows.map(row => row.join(','))
-  ].join('\n');
+  // Combina cabeçalhos e dados
+  const csvString = `${headers}\n${csvData}`;
   
-  // Criar e baixar o arquivo
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement('a');
+  // Cria um blob e um link para download
+  const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
-  
+  const link = document.createElement('a');
   link.setAttribute('href', url);
-  link.setAttribute('download', `transacoes_${new Date().toISOString().split('T')[0]}.csv`);
+  link.setAttribute('download', `transacoes_${new Date().toISOString().slice(0, 10)}.csv`);
   link.style.visibility = 'hidden';
-  
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

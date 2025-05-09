@@ -5,7 +5,7 @@ export interface Document {
   name: string;
   type: string;
   url: string;
-  size?: number;
+  size: string; // Alterado para string para compatibilidade
   description: string;
   createdAt: string | Date;
   updatedAt: string | Date;
@@ -19,12 +19,16 @@ export interface Document {
   processId?: string;
   version?: number;
   metadata?: Record<string, any>;
+  // Campos adicionais para compatibilidade
+  fileUrl?: string;
+  preview?: string;
+  title?: string;
 }
 
 // Tipos para filtros de documentos
 export interface DocumentFilter {
   type: string;
-  date?: Date;
+  date: Date | undefined; // Mudado para ser não opcional
   tags: string[];
 }
 
@@ -32,7 +36,7 @@ export interface DocumentFilter {
 export interface DocumentTemplate {
   id: string;
   name: string;
-  type: string;
+  type: "document" | "action" | "precedent" | "strategy";
   size: string;
   description: string;
   updatedAt: string | Date;
