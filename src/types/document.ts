@@ -9,14 +9,14 @@ export interface Document {
   description: string;
   createdAt: string | Date;
   updatedAt: string | Date;
-  status: 'draft' | 'review' | 'final' | 'archived';
+  status: 'draft' | 'review' | 'final' | 'archived' | 'signed';
   tags: string[];
   category: string;
   owner: string;
   process: string;
   folder: string;
-  clientId?: string;  // Adicionado para compatibilidade com DocumentForm
-  processId?: string; // Adicionado para compatibilidade com DocumentForm
+  clientId?: string;
+  processId?: string;
   version?: number;
   metadata?: Record<string, any>;
 }
@@ -32,10 +32,10 @@ export interface DocumentFilter {
 export interface DocumentTemplate {
   id: string;
   name: string;
-  type: "document" | "action" | "precedent" | "strategy";
+  type: string;
   size: string;
   description: string;
-  updatedAt: string;
+  updatedAt: string | Date;
   category: string;
   tags?: string[];
 }

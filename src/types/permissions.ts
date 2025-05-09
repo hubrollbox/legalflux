@@ -9,10 +9,14 @@ export enum UserRole {
 }
 
 // Define as permissões que podem ser concedidas
-export type Permission = {
+export interface Permission {
+  id?: string;
   resource: string;
   action: string;
-};
+  name?: string;
+  description?: string;
+  module?: string;
+}
 
 // Define o mapeamento de papéis para permissões
 export interface RolePermissions {

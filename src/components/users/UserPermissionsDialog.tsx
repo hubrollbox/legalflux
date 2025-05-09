@@ -12,7 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { User, Permission, RolePermission } from "@/types";
+import { User } from "@/types";
+import { Permission, RolePermissions } from "@/types/permissions";
 import { 
   Accordion,
   AccordionContent,
@@ -22,40 +23,40 @@ import {
 import { getUserRoleName } from "@/lib/utils";
 
 // Permissões simuladas para cada módulo
-const MOCK_PERMISSIONS: Permission[] = [
+const MOCK_PERMISSIONS = [
   // Casos
-  { id: "cases-read", name: "Ver Processos", description: "Ver detalhes dos processos", module: "cases", action: "read" },
-  { id: "cases-create", name: "Criar Processos", description: "Criar novos processos", module: "cases", action: "create" },
-  { id: "cases-update", name: "Editar Processos", description: "Atualizar processos existentes", module: "cases", action: "update" },
-  { id: "cases-delete", name: "Eliminar Processos", description: "Eliminar processos", module: "cases", action: "delete" },
+  { id: "cases-read", resource: "cases", action: "read", name: "Ver Processos", description: "Ver detalhes dos processos", module: "cases" },
+  { id: "cases-create", resource: "cases", action: "create", name: "Criar Processos", description: "Criar novos processos", module: "cases" },
+  { id: "cases-update", resource: "cases", action: "update", name: "Editar Processos", description: "Atualizar processos existentes", module: "cases" },
+  { id: "cases-delete", resource: "cases", action: "delete", name: "Eliminar Processos", description: "Eliminar processos", module: "cases" },
   
   // Documentos
-  { id: "documents-read", name: "Ver Documentos", description: "Ver documentos", module: "documents", action: "read" },
-  { id: "documents-create", name: "Criar Documentos", description: "Carregar novos documentos", module: "documents", action: "create" },
-  { id: "documents-update", name: "Editar Documentos", description: "Atualizar documentos", module: "documents", action: "update" },
-  { id: "documents-delete", name: "Eliminar Documentos", description: "Eliminar documentos", module: "documents", action: "delete" },
+  { id: "documents-read", resource: "documents", action: "read", name: "Ver Documentos", description: "Ver documentos", module: "documents" },
+  { id: "documents-create", resource: "documents", action: "create", name: "Criar Documentos", description: "Carregar novos documentos", module: "documents" },
+  { id: "documents-update", resource: "documents", action: "update", name: "Editar Documentos", description: "Atualizar documentos", module: "documents" },
+  { id: "documents-delete", resource: "documents", action: "delete", name: "Eliminar Documentos", description: "Eliminar documentos", module: "documents" },
   
   // Tarefas
-  { id: "tasks-read", name: "Ver Tarefas", description: "Ver tarefas atribuídas", module: "tasks", action: "read" },
-  { id: "tasks-create", name: "Criar Tarefas", description: "Criar novas tarefas", module: "tasks", action: "create" },
-  { id: "tasks-update", name: "Editar Tarefas", description: "Atualizar tarefas", module: "tasks", action: "update" },
-  { id: "tasks-delete", name: "Eliminar Tarefas", description: "Eliminar tarefas", module: "tasks", action: "delete" },
+  { id: "tasks-read", resource: "tasks", action: "read", name: "Ver Tarefas", description: "Ver tarefas atribuídas", module: "tasks" },
+  { id: "tasks-create", resource: "tasks", action: "create", name: "Criar Tarefas", description: "Criar novas tarefas", module: "tasks" },
+  { id: "tasks-update", resource: "tasks", action: "update", name: "Editar Tarefas", description: "Atualizar tarefas", module: "tasks" },
+  { id: "tasks-delete", resource: "tasks", action: "delete", name: "Eliminar Tarefas", description: "Eliminar tarefas", module: "tasks" },
   
   // Financeiro
-  { id: "finance-read", name: "Ver Finanças", description: "Ver dados financeiros", module: "finance", action: "read" },
-  { id: "finance-create", name: "Criar Transações", description: "Criar novas transações", module: "finance", action: "create" },
-  { id: "finance-update", name: "Editar Transações", description: "Atualizar transações existentes", module: "finance", action: "update" },
-  { id: "finance-delete", name: "Eliminar Transações", description: "Eliminar transações", module: "finance", action: "delete" },
+  { id: "finance-read", resource: "finance", action: "read", name: "Ver Finanças", description: "Ver dados financeiros", module: "finance" },
+  { id: "finance-create", resource: "finance", action: "create", name: "Criar Transações", description: "Criar novas transações", module: "finance" },
+  { id: "finance-update", resource: "finance", action: "update", name: "Editar Transações", description: "Atualizar transações existentes", module: "finance" },
+  { id: "finance-delete", resource: "finance", action: "delete", name: "Eliminar Transações", description: "Eliminar transações", module: "finance" },
   
   // Utilizadores
-  { id: "users-read", name: "Ver Utilizadores", description: "Ver utilizadores", module: "users", action: "read" },
-  { id: "users-create", name: "Criar Utilizadores", description: "Criar novos utilizadores", module: "users", action: "create" },
-  { id: "users-update", name: "Editar Utilizadores", description: "Atualizar utilizadores", module: "users", action: "update" },
-  { id: "users-delete", name: "Eliminar Utilizadores", description: "Eliminar utilizadores", module: "users", action: "delete" },
+  { id: "users-read", resource: "users", action: "read", name: "Ver Utilizadores", description: "Ver utilizadores", module: "users" },
+  { id: "users-create", resource: "users", action: "create", name: "Criar Utilizadores", description: "Criar novos utilizadores", module: "users" },
+  { id: "users-update", resource: "users", action: "update", name: "Editar Utilizadores", description: "Atualizar utilizadores", module: "users" },
+  { id: "users-delete", resource: "users", action: "delete", name: "Eliminar Utilizadores", description: "Eliminar utilizadores", module: "users" },
   
   // Configurações
-  { id: "settings-read", name: "Ver Configurações", description: "Ver configurações do sistema", module: "settings", action: "read" },
-  { id: "settings-update", name: "Editar Configurações", description: "Atualizar configurações do sistema", module: "settings", action: "update" },
+  { id: "settings-read", resource: "settings", action: "read", name: "Ver Configurações", description: "Ver configurações do sistema", module: "settings" },
+  { id: "settings-update", resource: "settings", action: "update", name: "Editar Configurações", description: "Atualizar configurações do sistema", module: "settings" },
 ];
 
 // Mapeamento de permissões padrão para cada função
