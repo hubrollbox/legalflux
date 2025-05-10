@@ -12,6 +12,8 @@ import { ptBR } from "date-fns/locale/pt-BR";
 import type { CalendarEvent } from "@/types";
 import MiniCalendarView from "./MiniCalendarView";
 import DraggableEvent from "./DraggableEvent";
+import { isWithinInterval } from "@/utils/dateUtils";
+import { formatDate } from "@/utils/dateUtils";
 
 interface ImprovedCalendarSidebarProps {
   events: CalendarEvent[];
@@ -69,10 +71,7 @@ const ImprovedCalendarSidebar: React.FC<ImprovedCalendarSidebarProps> = ({
     return events
       .filter(event => {
         const eventDate = new Date(event.start);
-        return isWithinInterval(eventDate, { 
-          start: today, 
-          end: nextWeek 
-        });
+        return isWithinInterval(eventDate, { start: today, end: nextWeek });
       })
       .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
       .slice(0, 10);
@@ -338,7 +337,7 @@ const ImprovedCalendarSidebar: React.FC<ImprovedCalendarSidebarProps> = ({
                         )}>
                           {isEventToday ? "Hoje" : 
                            isEventTomorrow ? "Amanhã" : 
-                           format(eventDate, "EEEE, dd 'de' MMMM", { locale: ptBR })}
+                           formatDate(eventDate, "EEEE, dd 'de' MMMM")}
                         </Badge>
                         <span>{format(eventDate, "HH:mm")}</span>
                       </div>

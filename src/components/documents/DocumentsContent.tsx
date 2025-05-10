@@ -42,9 +42,9 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
   const formatDocumentForCards = (doc: Document): Document => {
     return {
       ...doc,
-      type: doc.type as "document" | "action" | "precedent" | "strategy",
+      type: doc.type,
       size: typeof doc.size === 'number' ? `${doc.size} KB` : doc.size,
-      updatedAt: typeof doc.updatedAt === 'string' ? doc.updatedAt : doc.updatedAt.toString()
+      updatedAt: typeof doc.updatedAt === 'object' ? doc.updatedAt.toString() : doc.updatedAt
     };
   };
 

@@ -1,5 +1,6 @@
 
 import { FinancialTransaction } from "@/types/financial";
+import { formatDate } from "@/utils/dateUtils";
 
 export const translateTransactionType = (type: string): string => {
   switch (type) {
@@ -28,6 +29,8 @@ export const translateTransactionStatus = (status: string): string => {
       return 'Falhou';
     case 'cancelled':
       return 'Cancelado';
+    case 'canceled':
+      return 'Cancelado';
     case 'refunded':
       return 'Reembolsado';
     case 'overdue':
@@ -46,6 +49,7 @@ export const getStatusColor = (status: string): string => {
     case 'failed':
       return 'bg-red-100 text-red-800 hover:bg-red-200';
     case 'cancelled':
+    case 'canceled':
       return 'bg-gray-100 text-gray-800 hover:bg-gray-200';
     case 'refunded':
       return 'bg-purple-100 text-purple-800 hover:bg-purple-200';
@@ -80,10 +84,10 @@ export const exportToCSV = (
       typeof t.amount === 'number' ? t.amount.toString() : t.amount,
       translateType(t.type.toString()),
       translateStatus(t.status.toString()),
-      typeof t.date === 'string' ? t.date : new Date(t.date).toLocaleDateString('pt-PT'),
+      typeof t.date === 'string' ? t.date : formatDate(new Date(t.date), 'dd/MM/yyyy'),
       t.description ? `"${t.description.replace(/"/g, '""')}"` : '',
-      t.client || '',
-      t.process || ''
+      t.clientName || t.client || '',
+      t.processId || t.process || ''
     ];
     return data.join(',');
   }).join('\n');
@@ -96,7 +100,7 @@ export const exportToCSV = (
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.setAttribute('href', url);
-  link.setAttribute('download', `transacoes_${new Date().toISOString().slice(0, 10)}.csv`);
+  link.setAttribute('download', `transacoes_${formatDate(new Date(), 'yyyy-MM-dd')}.csv`);
   link.style.visibility = 'hidden';
   document.body.appendChild(link);
   link.click();

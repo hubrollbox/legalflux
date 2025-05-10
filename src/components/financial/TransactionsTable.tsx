@@ -1,20 +1,10 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import type { FinancialTransaction } from '@/types/financial';
+import { FinancialTransaction } from '@/types/financial';
 import TransactionFilters from './TransactionFilters';
 import TransactionExport from './TransactionExport';
 import TransactionTable from './TransactionTable';
 import { translateTransactionType, translateTransactionStatus, getStatusColor, exportToCSV } from './utils/transactionUtils';
-
-interface FinancialTransaction {
-  id: string;
-  amount: number;
-  type: string;
-  status: string;
-  date: string | Date;
-  description?: string;
-}
 
 interface TransactionsTableProps {
   transactions: FinancialTransaction[];

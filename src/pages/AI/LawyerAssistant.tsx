@@ -1,54 +1,47 @@
+import React, { useState } from "react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import SectionHeader from "@/components/layout/SectionHeader";
+import { Card } from "@/components/ui/card";
+import { AnalysisTab } from "./components/AnalysisTab"; // Fixed import
+import AssistantTab from "./components/AssistantTab";
+import ContextualAssistantTab from "./components/ContextualAssistantTab";
 
-import { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import PageTransition from '@/components/PageTransition';
-import ContextualAssistantTab from './components/ContextualAssistantTab';
-import ResearchTab from './components/ResearchTab';
-import DocumentTab from './components/DocumentTab';
-import AnalysisTab from './components/AnalysisTab';
-
-const LawyerAssistant = () => {
-  const [activeTab, setActiveTab] = useState('assistant');
+const LawyerAssistant: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("assistant");
 
   return (
-    <PageTransition>
-      <div className="container mx-auto pb-8">
-        <h1 className="text-2xl font-bold mb-6">Assistente Jurídico para Advogados</h1>
-        
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-4 mb-6">
-            <TabsTrigger value="assistant">
-              Assistente
-            </TabsTrigger>
-            <TabsTrigger value="research">
-              Pesquisa Jurídica
-            </TabsTrigger>
-            <TabsTrigger value="document">
-              Redação de Documentos
-            </TabsTrigger>
-            <TabsTrigger value="analysis">
-              Análise de Documentos
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="assistant" className="mt-0">
-            <ContextualAssistantTab />
-          </TabsContent>
-          
-          <TabsContent value="research" className="mt-0">
-            <ResearchTab />
-          </TabsContent>
-          
-          <TabsContent value="document" className="mt-0">
-            <DocumentTab />
-          </TabsContent>
-          
-          <TabsContent value="analysis" className="mt-0">
-            <AnalysisTab />
-          </TabsContent>
-        </Tabs>
+    <DashboardLayout>
+      <div className="dashboard-header">
+        <SectionHeader
+          title="Assistente Jurídico"
+          description="Assistência jurídica com inteligência artificial"
+        />
       </div>
-    </PageTransition>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-6">
+        <TabsList className="mb-4">
+          <TabsTrigger value="assistant">Assistente</TabsTrigger>
+          <TabsTrigger value="contextual">Contextual</TabsTrigger>
+          <TabsTrigger value="analysis">Análise</TabsTrigger>
+        </TabsList>
+        <TabsContent value="assistant" className="space-y-6">
+          <Card>
+            <AssistantTab />
+          </Card>
+        </TabsContent>
+        <TabsContent value="contextual" className="space-y-6">
+          <Card>
+            <ContextualAssistantTab />
+          </Card>
+        </TabsContent>
+        <TabsContent value="analysis" className="space-y-6">
+          <Card>
+            <AnalysisTab />
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </DashboardLayout>
   );
 };
 

@@ -1,17 +1,20 @@
 
-export type TransactionType = 'income' | 'expense';
-export type TransactionStatus = 'pending' | 'completed' | 'cancelled';
+export type TransactionType = 'income' | 'expense' | 'payment' | 'invoice' | 'refund';
+export type TransactionStatus = 'pending' | 'completed' | 'cancelled' | 'failed' | 'canceled' | 'refunded' | 'overdue';
 
 export interface FinancialTransaction {
   id: string;
   date: Date | string;
   description: string;
   amount: number;
-  type: 'income' | 'expense';
+  type: TransactionType;
   category: string;
-  status: 'pending' | 'completed' | 'cancelled';
+  status: TransactionStatus;
   clientName: string;
+  clientId?: string;
   processId?: string;
+  process?: string;
+  client?: string;
 }
 
 export interface FinancialSummary {
