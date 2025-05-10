@@ -1,5 +1,5 @@
 
-import { toast as sonnerToast, Toaster } from "sonner";
+import { Toaster } from "sonner";
 
 interface ToastProps {
   title?: string;
@@ -7,17 +7,31 @@ interface ToastProps {
   variant?: "default" | "destructive";
 }
 
-// Function to show toast notifications
+// Função para mostrar toast notifications
 export function useToast() {
   const showToast = ({ title, description, variant }: ToastProps) => {
     if (variant === "destructive") {
-      sonnerToast.error(title, {
-        description: description
-      });
+      // Usando a API correta do Toaster
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('toast', {
+          detail: {
+            type: 'error',
+            title,
+            description
+          }
+        }));
+      }
     } else {
-      sonnerToast(title, {
-        description: description
-      });
+      // Toast padrão
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('toast', {
+          detail: {
+            type: 'default',
+            title,
+            description
+          }
+        }));
+      }
     }
   };
 
@@ -28,5 +42,40 @@ export function useToast() {
 
 // Export the Toaster directly
 export { Toaster };
-// Export the sonnerToast as toast for direct usage
-export const toast = sonnerToast;
+
+// Export uma função toast global compatível
+export const toast = {
+  error: (title: string, options?: { description?: string }) => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('toast', {
+        detail: {
+          type: 'error',
+          title,
+          description: options?.description
+        }
+      }));
+    }
+  },
+  success: (title: string, options?: { description?: string }) => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('toast', {
+        detail: {
+          type: 'success',
+          title,
+          description: options?.description
+        }
+      }));
+    }
+  },
+  info: (title: string, options?: { description?: string }) => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('toast', {
+        detail: {
+          type: 'info',
+          title,
+          description: options?.description
+        }
+      }));
+    }
+  }
+};

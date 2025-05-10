@@ -7,7 +7,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { useAuth } from '../hooks/useAuth';
 import { AlertCircle, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
+import { useToast } from '../hooks/use-toast'; // Importação corrigida
 import { validateEmail } from '../utils/validation';
 
 const ForgotPassword: React.FC = () => {
@@ -16,6 +16,7 @@ const ForgotPassword: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const { forgotPassword } = useAuth();
+  const { toast } = useToast(); // Usando o hook corrigido
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +32,10 @@ const ForgotPassword: React.FC = () => {
     try {
       await forgotPassword(email);
       setSuccess(true);
-      toast.success('Email enviado com sucesso!');
+      toast({
+        title: 'Email enviado com sucesso!',
+        description: 'Verifique sua caixa de entrada.'
+      });
     } catch (err) {
       setError('Ocorreu um erro. Por favor, tente novamente.');
     } finally {

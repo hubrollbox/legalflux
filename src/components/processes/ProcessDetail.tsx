@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
@@ -66,7 +65,7 @@ const getProcessTypeName = (type: ProcessType) => {
   }
 };
 
-// Safe format date function
+// Safe format date helper
 const safeFormatDate = (date: string | Date | undefined) => {
   if (!date) return '--';
   

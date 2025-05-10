@@ -69,6 +69,7 @@ const ProcessCard: React.FC<ProcessCardProps> = ({ process, onView }) => {
     try {
       // For Date objects, convert to string first
       const dateValue = typeof dateString === 'string' ? dateString : dateString.toISOString();
+      // Corrigido para usar apenas 2 parâmetros
       return format(new Date(dateValue), 'PPP', { locale: pt });
     } catch (error) {
       console.error("Erro ao formatar data:", error);

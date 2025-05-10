@@ -6,6 +6,15 @@ import { Message } from '../types';
 import MessageInput from './MessageInput';
 import MessageList from './MessageList';
 
+// Atualizando a interface MessageInputProps
+interface MessageInputProps {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  placeholder: string;
+  disabled: boolean;
+  className?: string;
+}
+
 interface ResearchTabProps {
   onSendMessage: (message: string) => void;
   messages: Message[];
@@ -18,6 +27,7 @@ const ResearchTab: React.FC<ResearchTabProps> = ({
   isLoading 
 }) => {
   const [inputValue, setInputValue] = useState('');
+  // Correção: definindo o tipo corretamente
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {

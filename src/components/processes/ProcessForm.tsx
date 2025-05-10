@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { 
   Form,
@@ -65,6 +66,7 @@ interface ProcessFormProps {
 // Safe format date helper
 const formatDateHelper = (date: Date | null | undefined) => {
   if (!date) return '';
+  // Corrigido para usar apenas 2 parâmetros
   return format(date, 'dd/MM/yyyy', { locale: pt });
 };
 

@@ -13,5 +13,6 @@ export const formatDate = (date: Date | string | undefined, formatStr = 'dd/MM/y
   const dateObj = typeof date === "string" ? new Date(date) : date;
   if (isNaN(dateObj.getTime())) return "";
   
+  // Formato com locale português
   return format(dateObj, formatStr, { locale: ptBR });
 };

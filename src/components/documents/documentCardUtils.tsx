@@ -27,7 +27,7 @@ export const formatDate = (date: string | Date) => {
   
   try {
     const dateObj = typeof date === 'string' ? new Date(date) : date;
-    // Fix: Remove the third parameter and use options in the second parameter
+    // Corrigido para usar apenas 2 argumentos
     return format(dateObj, 'dd/MM/yyyy', { locale: pt });
   } catch (error) {
     console.error('Error formatting date:', error);
