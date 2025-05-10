@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+
+import React from 'react';
 import { useNavigate } from "react-router-dom";
 import {
   Table,
@@ -20,8 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal, Eye, Edit, Trash2, FileText } from "lucide-react";
 import type { Client } from "@/types/client";
-import { useToast } from '@/components/ui/use-toast';
-import { clientService } from '@/services/clientService';
+import { useToast } from '@/hooks/use-toast';
 
 interface ClientListProps {
   clients: Client[];
@@ -31,10 +31,9 @@ interface ClientListProps {
 }
 
 const ClientList: React.FC<ClientListProps> = ({ clients, onEdit, onDelete, onView }) => {
-  const { toast } = useToast();
   const navigate = useNavigate();
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string | undefined) => {
     switch (status) {
       case "active":
         return <Badge className="bg-green-500">Ativo</Badge>;
@@ -43,7 +42,7 @@ const ClientList: React.FC<ClientListProps> = ({ clients, onEdit, onDelete, onVi
       case "prospect":
         return <Badge className="bg-blue-500">Potencial</Badge>;
       default:
-        return <Badge>{status}</Badge>;
+        return <Badge>{status || "N/A"}</Badge>;
     }
   };
 
@@ -75,7 +74,7 @@ const ClientList: React.FC<ClientListProps> = ({ clients, onEdit, onDelete, onVi
             clients.map((client) => (
               <TableRow key={client.id}>
                 <TableCell className="font-medium">{client.name}</TableCell>
-                <TableCell>{client.taxId}</TableCell>
+                <TableCell>{client.taxId || client.nif || ''}</TableCell>
                 <TableCell>{client.email || ''}</TableCell>
                 <TableCell>{client.phone}</TableCell>
                 <TableCell>{getStatusBadge(client.status)}</TableCell>

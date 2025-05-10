@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MoreHorizontal, Eye, Edit, Trash2, FileText } from 'lucide-react';
 import {
@@ -85,10 +86,11 @@ const ProcessList: React.FC<ProcessListProps> = ({
   onAddDocument,
 }) => {
   // Format date safely
-  const formatDate = (dateString: string | undefined) => {
+  const formatDate = (dateString: string | Date | undefined) => {
     if (!dateString) return "--";
     try {
-      return new Date(dateString).toLocaleDateString('pt-BR');
+      const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+      return date.toLocaleDateString('pt-BR');
     } catch (error) {
       console.error("Invalid date:", dateString);
       return "Data inválida";
@@ -121,7 +123,7 @@ const ProcessList: React.FC<ProcessListProps> = ({
               <TableRow key={process.id}>
                 <TableCell className="font-medium">{process.number}</TableCell>
                 <TableCell>{process.title}</TableCell>
-                <TableCell>{process.clientId || "--"}</TableCell>
+                <TableCell>{process.clientName || process.clientId || "--"}</TableCell>
                 <TableCell>{getProcessTypeName(process.type as ProcessType)}</TableCell>
                 <TableCell>
                   <Badge className={getStatusColor(process.status as ProcessStatus)}>

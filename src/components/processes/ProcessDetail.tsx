@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
@@ -65,6 +66,19 @@ const getProcessTypeName = (type: ProcessType) => {
   }
 };
 
+// Safe format date function
+const safeFormatDate = (date: string | Date | undefined) => {
+  if (!date) return '--';
+  
+  try {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return format(dateObj, 'dd/MM/yyyy', { locale: pt });
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return '--';
+  }
+};
+
 const ProcessDetail: React.FC<ProcessDetailProps> = ({ 
   process, 
   onBack, 
@@ -129,7 +143,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                     <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                     <span className="font-medium">Data de Início:</span>
                     <span className="ml-2">
-                      {process.startDate ? format(new Date(process.startDate), 'PPP', { locale: pt }) : '--'}
+                      {safeFormatDate(process.startDate)}
                     </span>
                   </div>
                   {process.endDate && (
@@ -137,7 +151,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                       <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                       <span className="font-medium">Data de Encerramento:</span>
                       <span className="ml-2">
-                        {process.endDate ? format(new Date(process.endDate), 'PPP', { locale: pt }) : '--'}
+                        {safeFormatDate(process.endDate)}
                       </span>
                     </div>
                   )}
@@ -156,14 +170,14 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
               {process.documents && process.documents.length > 0 ? (
                 <div className="space-y-4">
                   {process.documents!.map((doc) => (
-                    <Card key={doc.id}>
+                    <Card key={doc.id || doc.name}>
                       <CardContent className="p-4 flex items-center justify-between">
                         <div className="flex items-center">
                           <FileText className="h-5 w-5 mr-2 text-blue-600" />
                           <div>
-                            <p className="font-medium">{doc.name}</p>
+                            <p className="font-medium">{doc.title || doc.name}</p>
                             <p className="text-sm text-muted-foreground">
-                              Versão {doc.version ?? '--'} • Atualizado em {doc.updatedAt ? format(new Date(doc.updatedAt), 'PPP', { locale: pt }) : '--'}
+                              Versão {doc.version ?? '--'} • Atualizado em {doc.updatedAt ? safeFormatDate(doc.updatedAt) : '--'}
                             </p>
                           </div>
                         </div>
@@ -195,7 +209,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                   <div className="pb-8">
                     <p className="font-medium">Processo criado</p>
                     <p className="text-sm text-muted-foreground">
-                      {process.createdAt ? format(new Date(process.createdAt), 'PPP', { locale: pt }) : '--'}
+                      {safeFormatDate(process.createdAt)}
                     </p>
                   </div>
                 </div>
@@ -208,7 +222,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                   <div className="pb-8">
                     <p className="font-medium">Processo iniciado</p>
                     <p className="text-sm text-muted-foreground">
-                      {process.startDate ? format(new Date(process.startDate), "dd 'de' MMMM 'de' yyyy", { locale: pt }) : '--'}
+                      {safeFormatDate(process.startDate)}
                     </p>
                   </div>
                 </div>
@@ -221,7 +235,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
                     <div>
                       <p className="font-medium">Processo finalizado</p>
                       <p className="text-sm text-muted-foreground">
-                        {format(new Date(process.endDate), 'PPP', { locale: pt })}
+                        {safeFormatDate(process.endDate)}
                       </p>
                     </div>
                   </div>

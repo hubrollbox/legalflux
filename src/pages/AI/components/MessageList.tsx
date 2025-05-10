@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { User } from '@/types/auth';
 
@@ -5,9 +6,6 @@ import { User } from '@/types/auth';
 interface ExtendedUser extends User {
   avatar?: string;
 }
-
-// Then update the component to use this extended type
-// If the user prop is defined elsewhere, cast it to the extended type
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Message } from '../types';
@@ -21,6 +19,8 @@ interface MessageListProps {
 
 const MessageList = ({ messages, messagesEndRef }: MessageListProps) => {
   const { user } = useAuth();
+  // Cast user to ExtendedUser to handle avatar property
+  const extendedUser = user as ExtendedUser | null;
 
   return (
     <div className="space-y-4 pb-4">
@@ -34,10 +34,10 @@ const MessageList = ({ messages, messagesEndRef }: MessageListProps) => {
               {message.role === 'assistant' ? (
                 <AvatarImage src="/icons/icon-128x128.png" alt="Assistant" />
               ) : (
-                <AvatarImage src={user?.avatar || ''} alt={user?.name || 'User'} />
+                <AvatarImage src={extendedUser?.avatar || ''} alt={extendedUser?.name || 'User'} />
               )}
               <AvatarFallback>
-                {message.role === 'assistant' ? 'AI' : user?.name?.charAt(0) || 'U'}
+                {message.role === 'assistant' ? 'AI' : extendedUser?.name?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
             

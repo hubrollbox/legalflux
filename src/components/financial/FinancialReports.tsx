@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
@@ -14,6 +15,16 @@ interface FinancialReportsProps {
 }
 
 const FinancialReports: React.FC<FinancialReportsProps> = ({ data }) => {
+  // Format date helper function
+  const formatDateString = (dateStr: string) => {
+    try {
+      return format(new Date(dateStr), 'dd/MM/yyyy', { locale: pt });
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return dateStr;
+    }
+  };
+
   return (
     <Card className="">
       <CardHeader className="">
@@ -42,7 +53,7 @@ const FinancialReports: React.FC<FinancialReportsProps> = ({ data }) => {
               {data.map((item) => (
                 <tr key={item.date}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {format(new Date(item.date), 'dd/MM/yyyy', { locale: pt })}
+                    {formatDateString(item.date)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {item.revenue}

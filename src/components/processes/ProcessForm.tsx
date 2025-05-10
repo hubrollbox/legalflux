@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { 
   Form,
@@ -30,10 +31,9 @@ import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Process, ProcessStatus, ProcessType, CreateProcessDTO, UpdateProcessDTO } from '@/types/process';
+import { Process, ProcessStatus, ProcessType } from '@/types/process';
 import { Client } from '@/types/client';
 import { clientService } from '@/services/clientService';
-import { SubmitHandler } from 'react-hook-form';
 
 // Schema de validação para o formulário de processo
 const processFormSchema = z.object({
@@ -59,9 +59,15 @@ type ProcessFormValues = z.infer<typeof processFormSchema>;
 
 interface ProcessFormProps {
   initialData?: Process;
-  onSubmit: (data: CreateProcessDTO | UpdateProcessDTO) => void;
+  onSubmit: (data: any) => void;
   isSubmitting?: boolean;
 }
+
+// Safe format date helper
+const formatDateHelper = (date: Date | null | undefined) => {
+  if (!date) return '';
+  return format(date, 'dd/MM/yyyy', { locale: pt });
+};
 
 const ProcessForm: React.FC<ProcessFormProps> = ({
   initialData,
@@ -87,53 +93,28 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
     loadClients();
   }, []);
 
-  // Preparar valores iniciais para o formulário
-  // Remove this unused constant:
-  // const defaultValues: Partial<ProcessFormValues> = {
-  //   title: "",
-  //   number: "",
-  //   type: "civil" as ProcessType,
-  //   clientId: "",
-  //   description: "",
-  //   status: "new" as ProcessStatus,
-  // };
-
   const form = useForm<ProcessFormValues>({
     resolver: zodResolver(processFormSchema),
-    defaultValues: async () => ({
-      title: "",
-      number: "",
-      type: "civil" as ProcessType,
-      clientId: "",
-      description: "",
-      status: "new" as ProcessStatus,
-      startDate: new Date(),
-      ...(initialData ? {
-        title: initialData.title,
-        number: initialData.number,
-        type: initialData.type,
-        clientId: initialData.clientId,
-        description: initialData.description || "",
-        startDate: initialData.startDate ? new Date(initialData.startDate) : new Date(),
-        endDate: initialData.endDate ? new Date(initialData.endDate) : undefined,
-        status: initialData.status,
-      } : {})
-    }),
+    defaultValues: {
+      title: initialData?.title || "",
+      number: initialData?.number || "",
+      type: (initialData?.type as ProcessType) || "civil",
+      clientId: initialData?.clientId || "",
+      description: initialData?.description || "",
+      startDate: initialData?.startDate ? new Date(initialData.startDate) : new Date(),
+      endDate: initialData?.endDate ? new Date(initialData.endDate) : undefined,
+      status: (initialData?.status as ProcessStatus) || "new",
+    },
   });
 
-  const handleSubmit: SubmitHandler<ProcessFormValues> = (values: ProcessFormValues) => {
+  const handleSubmit = (values: ProcessFormValues) => {
     const formattedData = {
       ...values,
       startDate: values.startDate.toISOString(),
       endDate: values.endDate?.toISOString(),
       description: values.description || undefined,
     };
-    onSubmit(formattedData as CreateProcessDTO | UpdateProcessDTO);
-  };
-
-  const formatDate = (date: Date | string | undefined) => {
-    if (!date) return undefined;
-    return format(new Date(date), 'yyyy-MM-dd');
+    onSubmit(formattedData);
   };
 
   return (
@@ -256,7 +237,7 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
                           !field.value && "text-muted-foreground"
                         )}
                       >
-                        {field.value ? format(field.value, "PPP", { locale: pt }) : "Selecione a data"}
+                        {field.value ? formatDateHelper(field.value) : "Selecione a data"}
                         <CalendarIcon className="ml-2 h-4 w-4" />
                       </Button>
                     </FormControl>
@@ -292,7 +273,7 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
                           !field.value && "text-muted-foreground"
                         )}
                       >
-                        {field.value ? format(field.value, "PPP", { locale: pt }) : "Selecione a data"}
+                        {field.value ? formatDateHelper(field.value) : "Selecione a data"}
                         <CalendarIcon className="ml-2 h-4 w-4" />
                       </Button>
                     </FormControl>
@@ -300,7 +281,7 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={field.value}
+                      selected={field.value || null}
                       onSelect={field.onChange}
                       disabled={(date: Date) => date > new Date()}
                       initialFocus

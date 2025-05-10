@@ -1,8 +1,13 @@
 
 import { useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { User, UserRole } from "@/types/auth";
+import { UserRole } from "@/types/auth";
 import { DEFAULT_PERMISSIONS } from "@/types/permissions";
+
+// Define a minimal User interface for internal use that matches what we need
+interface InternalUser {
+  role?: string;
+}
 
 export const usePermissions = () => {
   const { user } = useAuth();
@@ -20,16 +25,16 @@ export const usePermissions = () => {
     // Se a permissão solicitada é complexa (com curingas)
     if (permission.includes("*")) {
       const permPrefix = permission.replace("*", "");
-      const userPerms = getUserPermissions(user);
+      const userPerms = getUserPermissions(user as InternalUser);
       return userPerms.some(p => p.startsWith(permPrefix));
     }
     
     // Verificação direta da permissão
-    const userPerms = getUserPermissions(user);
+    const userPerms = getUserPermissions(user as InternalUser);
     return userPerms.includes(permission);
   }, [user]);
 
-  const getUserPermissions = (user: User): string[] => {
+  const getUserPermissions = (user: InternalUser): string[] => {
     if (!user.role) return [];
     
     // Recupera as permissões padrão com base na role

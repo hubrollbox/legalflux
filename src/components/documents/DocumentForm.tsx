@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,7 +16,22 @@ import {
   FormLabel,
   FormMessage
 } from "@/components/ui/form";
-import { documentSchema, type DocumentFormValues } from '@/schemas/documentSchema';
+import * as z from "zod";
+
+// Define a schema that matches the updated DocumentStatus type 
+const documentSchema = z.object({
+  name: z.string().min(2, { message: "O nome deve ter pelo menos 2 caracteres" }),
+  type: z.enum(["document", "action", "precedent", "strategy"] as const, {
+    required_error: "Selecione um tipo",
+  }),
+  status: z.enum(["draft", "review", "final", "archived", "signed"] as const).default("draft"),
+  description: z.string().optional(),
+  category: z.string().optional(),
+  clientId: z.string().optional(),
+  processId: z.string().optional(),
+});
+
+type DocumentFormValues = z.infer<typeof documentSchema>;
 
 interface Client {
   id: string;
@@ -99,8 +115,6 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Aqui você implementaria a lógica de upload do arquivo
-    // e obteria a URL do arquivo após o upload
     onSubmit(formData);
   };
 
@@ -141,6 +155,25 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
           required={!initialData?.url}
           className="cursor-pointer"
         />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="status">Status</Label>
+        <Select
+          value={formData.status}
+          onValueChange={(value: DocumentStatus) => setFormData({ ...formData, status: value })}
+        >
+          <SelectTrigger id="status">
+            <SelectValue placeholder="Selecione o status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="draft">Rascunho</SelectItem>
+            <SelectItem value="review">Em Revisão</SelectItem>
+            <SelectItem value="final">Final</SelectItem>
+            <SelectItem value="signed">Assinado</SelectItem>
+            <SelectItem value="archived">Arquivado</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-2">
@@ -194,3 +227,6 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
 };
 
 export default DocumentForm;
+
+// Export the schema for reuse
+export { documentSchema, type DocumentFormValues };

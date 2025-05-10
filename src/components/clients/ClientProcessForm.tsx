@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,32 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { Client } from "@/types/client";
-
-
-export interface Process {
-  id: string;
-  number: string;
-  title: string;
-  description?: string;
-  status: 'active' | 'archived' | 'completed';
-  clientId: string;
-  documents?: Document[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface Document {
-  id: string;
-  title: string;
-  description?: string;
-  fileUrl: string;
-  fileType: "document" | "action" | "precedent" | "strategy";
-  clientId?: string;
-  processId?: string;
-  version: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import type { Process, ProcessStatus } from '@/types/process';
 
 interface ClientProcessFormProps {
   onSubmit: (data: Partial<Client | Process>) => void;
@@ -51,12 +27,13 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
       email: '',
       phone: '',
       address: '',
-      notes: ''
+      notes: '',
+      status: 'active'
     } as Partial<Client> : {
       number: '',
       title: '',
       description: '',
-      status: 'active',
+      status: 'new',
       clientId: ''
     } as Partial<Process>)
   );
@@ -66,10 +43,28 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
     onSubmit(formData);
   };
 
+  const handleStatusChange = (value: string) => {
+    if (type === 'client') {
+      // Ensure we only set valid client statuses
+      const clientStatus = value as Client['status'];
+      setFormData({ ...formData, status: clientStatus });
+    } else {
+      // Ensure we only set valid process statuses
+      const processStatus = value as ProcessStatus;
+      setFormData({ ...formData, status: processStatus });
+    }
+  };
+
+  // Safely cast the status value for proper rendering
+  const getStatusValue = () => {
+    const status = (formData as any).status;
+    return status ? status.toString() : '';
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {type === 'client' ? (
-        // Formulário de Cliente
+        // Cliente form
         <>
           <div className="space-y-2">
             <Label htmlFor="name">Nome do Cliente <span className="text-red-500">*</span></Label>
@@ -127,7 +122,7 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
           </div>
         </>
       ) : (
-        // Formulário de Processo
+        // Processo form
         <>
           <div className="space-y-2">
             <Label htmlFor="number">Número do Processo <span className="text-red-500">*</span></Label>
@@ -165,16 +160,27 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
           <div className="space-y-2">
             <Label htmlFor="status">Status <span className="text-red-500">*</span></Label>
             <Select
-              value={(formData as Partial<Process>).status}
-              onValueChange={(value: string) => setFormData({ ...formData, status: value as 'active' | 'archived' | 'completed' })}
+              value={getStatusValue()}
+              onValueChange={handleStatusChange}
             >
               <SelectTrigger id="status">
                 <SelectValue placeholder="Selecione o status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="active">Ativo</SelectItem>
-                <SelectItem value="archived">Arquivado</SelectItem>
-                <SelectItem value="completed">Concluído</SelectItem>
+                {type === 'process' ? (
+                  <>
+                    <SelectItem value="new">Novo</SelectItem>
+                    <SelectItem value="in_progress">Em Curso</SelectItem>
+                    <SelectItem value="completed">Concluído</SelectItem>
+                    <SelectItem value="archived">Arquivado</SelectItem>
+                  </>
+                ) : (
+                  <>
+                    <SelectItem value="active">Ativo</SelectItem>
+                    <SelectItem value="inactive">Inativo</SelectItem>
+                    <SelectItem value="prospect">Potencial</SelectItem>
+                  </>
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -182,8 +188,8 @@ const ClientProcessForm: React.FC<ClientProcessFormProps> = ({
           <div className="space-y-2">
             <Label htmlFor="clientId">Cliente <span className="text-red-500">*</span></Label>
             <Select
-              value={(formData as Partial<Process>).clientId}
-              onValueChange={(value: string) => setFormData({ ...formData, clientId: value })}
+              value={(formData as Partial<Process>).clientId || ''}
+              onValueChange={(value: string) => setFormData({ ...formData, clientId: value } as Partial<Client | Process>)}
             >
               <SelectTrigger id="clientId">
                 <SelectValue placeholder="Selecione o cliente" />
