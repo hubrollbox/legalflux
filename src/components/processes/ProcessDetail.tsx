@@ -80,7 +80,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({ process, documents }) => 
     }
   };
 
-  // Fix the formatDate call
+  // Format deadline date
   const formattedDate = fixDateFormatting(process.deadline);
 
   return (

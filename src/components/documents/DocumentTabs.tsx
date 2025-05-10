@@ -35,12 +35,12 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
   const formattedTemplates = filteredTemplates.map(template => ({
     id: template.id,
     name: template.name,
-    description: template.description,
-    category: template.category,
+    description: template.description || '',
+    category: template.category || '',
     type: template.type,
     createdAt: template.createdAt,
     updatedAt: template.updatedAt || template.createdAt,
-    tags: template.tags,
+    tags: template.tags || [],
     size: typeof template.size === 'number' ? `${template.size} KB` : (template.size?.toString() || "1MB"),
   }));
 

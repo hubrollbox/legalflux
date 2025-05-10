@@ -1,68 +1,133 @@
 
-import { useState, useEffect } from 'react';
-import { format, startOfMonth, endOfMonth } from 'date-fns';
-import { isWithinInterval } from '@/utils/dateUtils';
-
-interface Event {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  color: string;
-}
+import { useState, useEffect, useCallback } from 'react';
+import { CalendarEvent } from '@/types/calendar';
 
 const useCalendarEvents = () => {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [clientFilter, setClientFilter] = useState<string | null>(null);
+  const [processFilter, setProcessFilter] = useState<string | null>(null);
+  const [priorityFilter, setPriorityFilter] = useState<string | null>(null);
 
+  // Load events from localStorage on mount
   useEffect(() => {
-    const fetchEvents = async () => {
-      setLoading(true);
-      try {
-        // Simulação de busca de eventos (substitua pela sua lógica real)
-        const mockEvents: Event[] = [
-          {
-            id: '1',
-            title: 'Reunião com o cliente A',
-            start: new Date(2024, 6, 10, 10, 0, 0),
-            end: new Date(2024, 6, 10, 11, 0, 0),
-            color: '#FF5733',
-          },
-          {
-            id: '2',
-            title: 'Audiência do caso B',
-            start: new Date(2024, 6, 15, 14, 0, 0),
-            end: new Date(2024, 6, 15, 16, 0, 0),
-            color: '#337AFF',
-          },
-          {
-            id: '3',
-            title: 'Prazo para entrega de documentos',
-            start: new Date(2024, 6, 20, 0, 0, 0),
-            end: new Date(2024, 6, 20, 23, 59, 59),
-            color: '#33FF57',
-          },
-        ];
-
-        setEvents(mockEvents);
-      } catch (err: any) {
-        setError(err.message || 'Erro ao buscar eventos.');
-      } finally {
-        setLoading(false);
+    try {
+      const savedEvents = localStorage.getItem('calendar-events');
+      if (savedEvents) {
+        const parsedEvents = JSON.parse(savedEvents);
+        // Convert string dates back to Date objects
+        const eventsWithDates = parsedEvents.map((event: any) => ({
+          ...event,
+          start: new Date(event.start),
+          end: new Date(event.end)
+        }));
+        setEvents(eventsWithDates);
       }
-    };
-
-    fetchEvents();
+    } catch (error) {
+      console.error('Error loading events from localStorage:', error);
+    }
   }, []);
 
-  const getEventsForDate = (date: Date) => {
-    return events.filter(event => {
-      return isWithinInterval(date, { start: event.start, end: event.end });
-    });
-  };
+  // Save events to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem('calendar-events', JSON.stringify(events));
+    } catch (error) {
+      console.error('Error saving events to localStorage:', error);
+    }
+  }, [events]);
 
-  return { events, loading, error, getEventsForDate };
+  // Filter events based on filters
+  const filteredEvents = events.filter(event => {
+    const matchesCategory = !categoryFilter || event.category === categoryFilter;
+    const matchesClient = !clientFilter || event.client === clientFilter;
+    const matchesProcess = !processFilter || event.process === processFilter;
+    const matchesPriority = !priorityFilter || event.priority === priorityFilter;
+
+    return matchesCategory && matchesClient && matchesProcess && matchesPriority;
+  });
+
+  // CRUD operations
+  const addEvent = useCallback((event: CalendarEvent) => {
+    setEvents(prev => [...prev, event]);
+  }, []);
+
+  const updateEvent = useCallback((eventId: string, updatedData: Partial<CalendarEvent>) => {
+    setEvents(prev => 
+      prev.map(event => 
+        event.id === eventId
+          ? { ...event, ...updatedData }
+          : event
+      )
+    );
+  }, []);
+
+  const removeEvent = useCallback((eventId: string) => {
+    setEvents(prev => prev.filter(event => event.id !== eventId));
+  }, []);
+
+  const moveEvent = useCallback((eventId: string, newDate: Date) => {
+    setEvents(prev => 
+      prev.map(event => {
+        if (event.id === eventId) {
+          // Calculate time difference between start and end
+          const duration = event.end.getTime() - event.start.getTime();
+          
+          // Create new start date preserving the time component
+          const newStart = new Date(newDate.setHours(
+            event.start.getHours(),
+            event.start.getMinutes()
+          ));
+          
+          // Create new end date based on duration
+          const newEnd = new Date(newStart.getTime() + duration);
+          
+          return {
+            ...event,
+            start: newStart,
+            end: newEnd
+          };
+        }
+        return event;
+      })
+    );
+  }, []);
+
+  // Utility functions for getting unique values
+  const getUniqueClients = useCallback(() => {
+    const clients = new Set<string>();
+    events.forEach(event => {
+      if (event.client) clients.add(event.client);
+    });
+    return Array.from(clients);
+  }, [events]);
+
+  const getUniqueProcesses = useCallback(() => {
+    const processes = new Set<string>();
+    events.forEach(event => {
+      if (event.process) processes.add(event.process);
+    });
+    return Array.from(processes);
+  }, [events]);
+
+  return {
+    events,
+    filteredEvents,
+    categoryFilter,
+    clientFilter,
+    processFilter,
+    priorityFilter,
+    setCategoryFilter,
+    setClientFilter,
+    setProcessFilter,
+    setPriorityFilter,
+    addEvent,
+    updateEvent,
+    removeEvent,
+    moveEvent,
+    getUniqueClients,
+    getUniqueProcesses
+  };
 };
 
 export default useCalendarEvents;

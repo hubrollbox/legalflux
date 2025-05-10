@@ -40,6 +40,11 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
 
   // Função para converter documentos para o formato correto
   const formatDocumentForCards = (doc: Document) => {
+    // Ensure updatedAt is a string to avoid type issues
+    const updatedAt = doc.updatedAt ? 
+      (typeof doc.updatedAt === 'string' ? doc.updatedAt : doc.updatedAt.toISOString()) : 
+      (typeof doc.createdAt === 'string' ? doc.createdAt : doc.createdAt.toISOString());
+    
     return {
       id: doc.id,
       name: doc.name,
@@ -47,8 +52,8 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
       type: doc.type,
       // Ensure size is a string (for display purposes)
       size: typeof doc.size === 'number' ? `${doc.size} KB` : (doc.size?.toString() || "0 KB"),
-      // Ensure updatedAt is in the correct format (string for display in cards)
-      updatedAt: doc.updatedAt ? doc.updatedAt : doc.createdAt,
+      // Ensure updatedAt is in the correct format
+      updatedAt: updatedAt,
       owner: doc.owner || "",
       folder: doc.folder || "",
       process: doc.process || "",

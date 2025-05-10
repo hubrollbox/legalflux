@@ -1,5 +1,5 @@
 
-import { toast as sonnerToast } from "sonner";
+import { toast as sonnerToast, Toaster } from "sonner";
 
 interface ToastProps {
   title?: string;
@@ -35,13 +35,14 @@ const toastImpl = {
   }
 };
 
-// Export toast function
+// Export toast function with correct signature
 export const toast = (props: { title: string, description?: string }) => {
   if (typeof window !== 'undefined') {
     sonnerToast(props.title, {
       description: props.description
     });
   }
+  return null; // Return null to avoid type errors
 };
 
 // Add methods to the toast function
@@ -64,4 +65,4 @@ export function useToast() {
   };
 }
 
-export default toast;
+export default useToast;
