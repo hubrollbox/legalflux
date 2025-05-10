@@ -1,74 +1,40 @@
 
-export type UserRole = "client" | "lawyer" | "senior_lawyer" | "assistant" | "admin";
+export type UserRole = 'client' | 'admin' | 'lawyer' | 'senior_lawyer' | 'assistant';
 
-// Add UserType and UserTypes for PersonalDataStep and SignUpForm components
-export type UserType = "particular" | "professional" | "company";
+export const UserRoles = {
+  CLIENT: 'client' as UserRole,
+  ADMIN: 'admin' as UserRole,
+  LAWYER: 'lawyer' as UserRole,
+  SENIOR_LAWYER: 'senior_lawyer' as UserRole,
+  ASSISTANT: 'assistant' as UserRole
+};
+
+export type UserType = 'particular' | 'professional' | 'company';
 
 export const UserTypes = {
-  CLIENT: "particular",
-  PROFESSIONAL: "professional",
-  COMPANY: "company"
+  PARTICULAR: 'particular' as UserType,
+  PROFESSIONAL: 'professional' as UserType,
+  COMPANY: 'company' as UserType
 };
 
 export interface User {
   id: string;
   name: string;
-  email: string;
+  email: string | undefined;
   role?: UserRole;
   avatar?: string;
-  organization?: string;
   organizationId?: string;
-  isActive?: boolean;
-  hasTwoFactorEnabled?: boolean;
-  phone?: string;
-  createdAt?: string | Date;
+  userType?: UserType;
 }
 
-export interface AuthState {
+export interface Auth {
   user: User | null;
-  isAuthenticated: boolean;
+  session: any | null;
+  error: Error | null;
   isLoading: boolean;
-  error: string | null;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<any>;
+  logout: () => Promise<any>;
+  register: (email: string, password: string, name?: string) => Promise<any>;
+  checkEmailExists?: (email: string) => Promise<boolean>;
 }
-
-export interface LoginCredentials {
-  email: string;
-  password: string;
-  rememberMe?: boolean;
-}
-
-export interface RegistrationData {
-  name: string;
-  email: string;
-  password: string;
-  organizationName?: string;
-  acceptTerms: boolean;
-}
-
-export interface ResetPasswordData {
-  email: string;
-}
-
-export interface NewPasswordData {
-  password: string;
-  confirmPassword: string;
-  token: string;
-}
-
-// Permissions related to each user role
-export const USER_ROLE_NAMES: Record<UserRole, string> = {
-  client: "Cliente",
-  lawyer: "Advogado",
-  senior_lawyer: "Advogado Sénior",
-  assistant: "Assistente",
-  admin: "Administrador"
-};
-
-// Create UserRoles for components that need it
-export const UserRoles = {
-  CLIENT: "client" as UserRole,
-  LAWYER: "lawyer" as UserRole,
-  SENIOR_LAWYER: "senior_lawyer" as UserRole,
-  ASSISTANT: "assistant" as UserRole,
-  ADMIN: "admin" as UserRole
-};

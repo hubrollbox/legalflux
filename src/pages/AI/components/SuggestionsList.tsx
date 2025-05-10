@@ -6,6 +6,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, AlertCircle, CheckCircle } from "lucide-react";
+import { AlertTriangle, BookOpen, FileText, LightbulbIcon } from "lucide-react"; // Import the missing icons
 
 // Define a proper suggestion type
 interface Suggestion {

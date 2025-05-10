@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,12 +50,10 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
     initialData || {
       name: '',
       description: '',
-      url: '',
       type: 'document' as DocumentType,
       owner: '',
       process: selectedProcess || '',
       folder: '',
-      version: 1,
       status: 'draft' as DocumentStatus,
       tags: [],
       category: '',

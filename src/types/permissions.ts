@@ -1,51 +1,51 @@
 
 import { UserRole } from './auth';
 
-// Export UserRole to fix imports in other files
-export { UserRole } from './auth';
+export { UserRole };
 
-// Interface para permissões extendida para atender UserPermissionsDialog
-export interface Permission {
-  id: string;
-  resource: string;
-  action: string;
-  name: string;
-  description: string;
-  module: string;
-}
-
-// Mapeamento básico de permissões por função de usuário
 export const DEFAULT_PERMISSIONS: Record<UserRole, string[]> = {
   client: [
-    "view_own_documents",
-    "view_own_processes",
-    "view_own_financial",
-    "communicate_with_lawyer",
+    'processes.view_own',
+    'documents.view_own',
+    'documents.download_own',
+    'profile.edit_own',
   ],
   lawyer: [
-    "manage_processes",
-    "manage_documents",
-    "view_financial",
-    "communicate_with_client",
-    "manage_tasks",
+    'processes.view_own',
+    'processes.create',
+    'processes.edit_own',
+    'documents.view_own',
+    'documents.create',
+    'documents.edit_own',
+    'documents.download_own',
+    'clients.view_own',
+    'clients.create',
+    'profile.edit_own',
   ],
   senior_lawyer: [
-    "manage_processes",
-    "manage_documents",
-    "manage_financial",
-    "communicate_with_client",
-    "manage_tasks",
-    "manage_team",
-    "view_analytics",
+    'processes.view_all',
+    'processes.create',
+    'processes.edit_all',
+    'documents.view_all',
+    'documents.create',
+    'documents.edit_all',
+    'documents.download_all',
+    'clients.view_all',
+    'clients.create',
+    'clients.edit_all',
+    'team.view',
+    'team.assign',
+    'profile.edit_own',
   ],
   assistant: [
-    "view_processes",
-    "manage_documents",
-    "manage_tasks",
-    "communicate_with_client",
+    'processes.view_assigned',
+    'documents.view_assigned',
+    'documents.create',
+    'documents.edit_assigned',
+    'documents.download_assigned',
+    'profile.edit_own',
   ],
-  admin: ["*"], // Acesso total
+  admin: [
+    '*', // Admin has all permissions
+  ],
 };
-
-// Export UserRoles for components that need it
-export { UserRoles } from './auth';

@@ -1,49 +1,35 @@
 
-import React from "react";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { File, FileText, FileArchive, FileCode } from "lucide-react";
-import { DocumentType } from "@/types/document";
+import React from 'react';
+import { FileText, FileCode, FileImage, FilePieChart } from 'lucide-react';
+import { format, parseISO } from 'date-fns';
+import { pt } from 'date-fns/locale';
+import { DocumentType } from '@/types/document';
 
-export const getFileIcon = (type: DocumentType) => {
+// Function to get the appropriate file icon based on document type
+export const getFileIcon = (type: DocumentType | string) => {
   switch (type) {
-    case "document":
-      return <FileText className="h-4 w-4 text-blue-500" />;
-    case "action":
-      return <File className="h-4 w-4 text-green-500" />;
-    case "precedent":
-      return <FileArchive className="h-4 w-4 text-amber-500" />;
-    case "strategy":
-      return <FileCode className="h-4 w-4 text-purple-500" />;
+    case 'document':
+      return <FileText className="h-5 w-5 text-blue-600" />;
+    case 'action':
+      return <FileCode className="h-5 w-5 text-violet-600" />;
+    case 'precedent':
+      return <FileImage className="h-5 w-5 text-green-600" />;
+    case 'strategy':
+      return <FilePieChart className="h-5 w-5 text-orange-600" />;
     default:
-      return <File className="h-4 w-4 text-gray-500" />;
+      return <FileText className="h-5 w-5 text-gray-600" />;
   }
 };
 
+// Function to format date consistently
 export const formatDate = (date: string | Date) => {
+  if (!date) return '--';
+  
   try {
-    if (!date) return "";
-    const dateObj = typeof date === "string" ? new Date(date) : date;
-    if (isNaN(dateObj.getTime())) return "";
-    
-    return format(dateObj, "dd/MM/yyyy", { locale: ptBR });
+    const dateObj = typeof date === 'string' ? parseISO(date) : date;
+    return format(dateObj, 'dd/MM/yyyy', { locale: pt });
   } catch (error) {
-    console.error("Error formatting date:", error);
-    return "";
-  }
-};
-
-export const getDocumentTypeLabel = (type: DocumentType) => {
-  switch (type) {
-    case "document":
-      return "Documento";
-    case "action":
-      return "Ação";
-    case "precedent":
-      return "Precedente";
-    case "strategy":
-      return "Estratégia";
-    default:
-      return "Desconhecido";
+    console.error('Error formatting date:', error);
+    return '--';
   }
 };

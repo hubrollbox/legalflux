@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -76,14 +75,10 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
       <TabsContent value="templates" className="mt-6">
         <TemplatesContent 
           templates={filteredTemplates.map(template => ({
-            id: template.id,
-            name: template.name,
-            description: template.description || "",
-            category: template.category,
-            tags: template.tags || [],
-            type: template.type || "document" as DocumentType,
-            size: template.size || "N/A",
-            updatedAt: template.updatedAt || new Date().toISOString()
+            ...template,
+            updatedAt: typeof template.updatedAt === 'object' 
+              ? template.updatedAt.toISOString() 
+              : template.updatedAt
           }))} 
           viewMode={viewMode} 
         />

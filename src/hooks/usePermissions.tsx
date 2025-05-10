@@ -28,7 +28,7 @@ export function usePermissions() {
         const permissionMap: PermissionMap = {};
         
         if (user.role) {
-          const userPerms = DEFAULT_PERMISSIONS[user.role] || [];
+          const userPerms = DEFAULT_PERMISSIONS[user.role as UserRole] || [];
           
           // Convert permissions array to a map for easy checking
           userPerms.forEach(perm => {
