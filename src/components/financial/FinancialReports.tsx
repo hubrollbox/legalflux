@@ -1,77 +1,68 @@
-import React from 'react';
-import { format } from 'date-fns';
-import { pt } from 'date-fns/locale';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-interface FinancialData {
-  date: string;
-  revenue: number;
-  expenses: number;
-}
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDate } from "@/utils/dateUtils";
+import { Button } from "@/components/ui/button";
+import { Download, Filter } from "lucide-react";
 
 interface FinancialReportsProps {
-  data: FinancialData[];
+  // Add the required props here
 }
 
-const FinancialReports: React.FC<FinancialReportsProps> = ({ data }) => {
-  // Format date helper function
-  const formatDateString = (dateStr: string) => {
-    try {
-      // Fix: Remove the third parameter and use options in the second parameter
-      return format(new Date(dateStr), 'dd/MM/yyyy', { locale: pt });
-    } catch (error) {
-      console.error('Error formatting date:', error);
-      return dateStr;
-    }
+export const FinancialReports: React.FC<FinancialReportsProps> = () => {
+  // Generate sample reports
+  const generateSampleReport = (month: string) => {
+    // Fixed date format here
+    return {
+      id: `report-${month}`,
+      title: `Relatório Financeiro - ${month}`,
+      date: formatDate(new Date(), 'MMMM yyyy'),
+      type: 'PDF',
+      size: '2.4 MB',
+    };
   };
 
+  const reports = [
+    generateSampleReport('Janeiro'),
+    generateSampleReport('Fevereiro'),
+    generateSampleReport('Março'),
+  ];
+
   return (
-    <Card className="">
-      <CardHeader className="">
-        <CardTitle className="">Relatório Financeiro Detalhado</CardTitle>
+    <Card className="h-full">
+      <CardHeader className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
+        <CardTitle>Relatórios Financeiros</CardTitle>
+        <div className="flex items-center space-x-2">
+          <Button size="sm" variant="outline">
+            <Filter className="mr-2 h-4 w-4" />
+            Filtrar
+          </Button>
+          <Button size="sm">
+            <Download className="mr-2 h-4 w-4" />
+            Exportar
+          </Button>
+        </div>
       </CardHeader>
-      <CardContent className="p-4">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Data
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Receita
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Despesas
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Lucro
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {data.map((item) => (
-                <tr key={item.date}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {formatDateString(item.date)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {item.revenue}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {item.expenses}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {item.revenue - item.expenses}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <CardContent>
+        <div className="space-y-4">
+          {reports.map((report) => (
+            <div
+              key={report.id}
+              className="flex items-center justify-between rounded-lg border p-3"
+            >
+              <div>
+                <div className="font-medium">{report.title}</div>
+                <div className="text-sm text-muted-foreground">
+                  {report.date} • {report.type} • {report.size}
+                </div>
+              </div>
+              <Button size="sm" variant="ghost">
+                <Download className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>
   );
 };
-
-export default FinancialReports;

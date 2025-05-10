@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   Form,
@@ -68,6 +67,10 @@ const formatDateHelper = (date: Date | null | undefined) => {
   if (!date) return '';
   // Corrigido para usar apenas 2 parâmetros
   return format(date, 'dd/MM/yyyy', { locale: pt });
+};
+
+const handleDateFormat = (date: Date | string | undefined) => {
+  return formatDate(date);
 };
 
 const ProcessForm: React.FC<ProcessFormProps> = ({
@@ -238,7 +241,7 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
                           !field.value && "text-muted-foreground"
                         )}
                       >
-                        {field.value ? formatDateHelper(field.value) : "Selecione a data"}
+                        {field.value ? handleDateFormat(field.value) : "Selecione a data"}
                         <CalendarIcon className="ml-2 h-4 w-4" />
                       </Button>
                     </FormControl>
@@ -274,7 +277,7 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
                           !field.value && "text-muted-foreground"
                         )}
                       >
-                        {field.value ? formatDateHelper(field.value) : "Selecione a data"}
+                        {field.value ? handleDateFormat(field.value) : "Selecione a data"}
                         <CalendarIcon className="ml-2 h-4 w-4" />
                       </Button>
                     </FormControl>

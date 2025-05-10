@@ -43,7 +43,7 @@ export function useToast() {
 // Export the Toaster directly
 export { Toaster };
 
-// Export uma função toast global compatível
+// Export toast global functions
 export const toast = {
   error: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {

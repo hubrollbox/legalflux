@@ -6,14 +6,14 @@ import { ChevronRight, Lightbulb } from "lucide-react";
 import { Suggestion } from '../types';
 import SuggestionsList from './SuggestionsList';
 
-// Define o tipo para LegalSuggestion compatível com Suggestion
+// Define the type for LegalSuggestion making sure relevance is string type
 export interface LegalSuggestion {
   id: string;
   title: string;
   description: string;
   type: string;
   priority: string;
-  relevance: string;  // Corrigido para string para compatibilidade
+  relevance: string;  // Changed to string for compatibility
 }
 
 interface SmartSuggestionsProps {
@@ -27,7 +27,7 @@ const SmartSuggestions: React.FC<SmartSuggestionsProps> = ({
   onSelectSuggestion,
   isLoading = false 
 }) => {
-  // Converter LegalSuggestion[] para Suggestion[]
+  // Convert LegalSuggestion[] to Suggestion[]
   const convertedSuggestions: Suggestion[] = suggestions.map(suggestion => ({
     id: suggestion.id,
     title: suggestion.title,

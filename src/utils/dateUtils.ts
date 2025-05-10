@@ -2,7 +2,7 @@
 import { format, isWithinInterval as dateIsWithinInterval } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
-// Export isWithinInterval diretamente do date-fns
+// Export isWithinInterval directly from date-fns
 export const isWithinInterval = (date: Date, interval: { start: Date, end: Date }): boolean => {
   return dateIsWithinInterval(date, interval);
 };
