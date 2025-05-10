@@ -45,7 +45,7 @@ const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = ({
           <Calendar
             mode="single"
             selected={selectedDate}
-            onSelect={(date) => date && onDateChange(date)}
+            onSelect={(date: Date | undefined) => date && onDateChange(date)}
             className="rounded-md border"
           />
         </CardContent>

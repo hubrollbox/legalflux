@@ -68,27 +68,29 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
       <TabsContent value="templates" className="mt-6">
         <TemplatesContent 
           templates={filteredTemplates.map(template => ({
-            ...template,
-            // Ensure size is a string
-            size: typeof template.size === 'number' ? `${template.size}` : (template.size || "1MB"),
-            // Ensure updatedAt is a string
-            updatedAt: template.updatedAt 
-              ? (typeof template.updatedAt === 'string' ? template.updatedAt : template.updatedAt.toString())
-              : (typeof template.createdAt === 'string' ? template.createdAt : template.createdAt.toString())
+            id: template.id,
+            name: template.name,
+            description: template.description,
+            category: template.category,
+            type: template.type,
+            createdAt: template.createdAt,
+            updatedAt: template.updatedAt,
+            tags: template.tags,
+            size: typeof template.size === 'number' ? `${template.size} KB` : (template.size?.toString() || "1MB"),
           }))} 
           viewMode={viewMode} 
         />
       </TabsContent>
       
       <TabsContent value="recent">
-        <Card className="">
-          <CardHeader className="">
-            <CardTitle className="">Documentos Recentes</CardTitle>
-            <CardDescription className="">
+        <Card>
+          <CardHeader>
+            <CardTitle>Documentos Recentes</CardTitle>
+            <CardDescription>
               Documentos atualizados nas últimas 72 horas
             </CardDescription>
           </CardHeader>
-          <CardContent className="">
+          <CardContent>
             <div className="text-center py-8 text-muted-foreground">
               Esta secção mostrará os documentos mais recentemente modificados.
             </div>
@@ -97,14 +99,14 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
       </TabsContent>
       
       <TabsContent value="shared">
-        <Card className="">
-          <CardHeader className="">
-            <CardTitle className="">Documentos Partilhados</CardTitle>
-            <CardDescription className="">
+        <Card>
+          <CardHeader>
+            <CardTitle>Documentos Partilhados</CardTitle>
+            <CardDescription>
               Documentos partilhados consigo por outros utilizadores
             </CardDescription>
           </CardHeader>
-          <CardContent className="">
+          <CardContent>
             <div className="text-center py-8 text-muted-foreground">
               Esta secção mostrará os documentos partilhados com o utilizador.
             </div>
@@ -113,14 +115,14 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
       </TabsContent>
       
       <TabsContent value="deleted">
-        <Card className="">
-          <CardHeader className="">
-            <CardTitle className="">Documentos Eliminados</CardTitle>
-            <CardDescription className="">
+        <Card>
+          <CardHeader>
+            <CardTitle>Documentos Eliminados</CardTitle>
+            <CardDescription>
               Documentos na reciclagem (serão eliminados permanentemente após 30 dias)
             </CardDescription>
           </CardHeader>
-          <CardContent className="">
+          <CardContent>
             <div className="text-center py-8 text-muted-foreground">
               Esta secção mostrará os documentos que foram eliminados e podem ser recuperados.
             </div>

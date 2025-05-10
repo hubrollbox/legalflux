@@ -31,12 +31,12 @@ export interface DocumentTemplate {
   tags: string[];
   createdAt: string | Date;
   type: DocumentType;
-  updatedAt?: string | Date; // Added to match usage in code
-  size?: string | number; // Added to match usage in code
+  updatedAt?: string | Date;
+  size?: string | number;
 }
 
 export interface DocumentFilter {
-  type?: string;
+  type: string;
   date?: Date;
-  tags?: string[];
+  tags: string[];
 }

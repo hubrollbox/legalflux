@@ -1,11 +1,10 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, FileText } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Document } from '@/types/document';
 import { formatDate } from '@/utils/dateUtils';
+
+const fixDateFormatting = (date: string | Date | undefined) => {
+  if (!date) return "--";
+  return formatDate(date);
+};
 
 interface ProcessDetailProps {
   process: {
@@ -69,7 +68,7 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({ process, documents }) => 
   };
 
   // Fix the formatDate call
-  const formattedDate = formatDate(process.deadline);
+  const formattedDate = fixDateFormatting(process.deadline);
 
   return (
     <Card className="space-y-4">

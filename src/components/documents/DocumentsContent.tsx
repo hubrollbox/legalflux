@@ -43,7 +43,7 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
     return {
       id: doc.id,
       name: doc.name,
-      title: doc.title,
+      title: doc.title || "",
       type: doc.type,
       // Ensure size is a string (for display purposes)
       size: typeof doc.size === 'number' ? `${doc.size} KB` : (doc.size?.toString() || "0 KB"),
@@ -52,8 +52,8 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
       owner: doc.owner || "",
       folder: doc.folder || "",
       process: doc.process || "",
-      description: doc.description,
-      tags: doc.tags,
+      description: doc.description || "",
+      tags: doc.tags || [],
       fileUrl: doc.url
     };
   };
@@ -61,14 +61,14 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
   const formattedDocuments = safeDocuments.map(doc => formatDocumentForCards(doc));
 
   return (
-    <Card className="">
-      <CardHeader className="">
-        <CardTitle className="">{title}</CardTitle>
-        <CardDescription className="">
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>
           {description}
         </CardDescription>
       </CardHeader>
-      <CardContent className="">
+      <CardContent>
         {viewMode === "grid" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {formattedDocuments.map((doc) => (

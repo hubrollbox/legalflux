@@ -10,16 +10,15 @@ import { mockDocuments, mockTemplates } from "@/components/documents/DocumentsDa
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import DocumentCard from '@/components/documents/DocumentCard';
-import { Document } from "@/types/document";
+import { Document, DocumentFilter } from "@/types/document";
 
 const Documents = () => {
   const [filterSigned, setFilterSigned] = useState<'all' | 'signed' | 'unsigned'>('all');
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchTerm, setSearchTerm] = useState("");
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<DocumentFilter>({
     type: "todos",
-    date: undefined as Date | undefined,
-    tags: [] as string[]
+    tags: []
   });
   const { hasPermission } = usePermissions();
   const canCreateDocument = hasPermission("documents", "create");
@@ -77,9 +76,17 @@ const Documents = () => {
           </Select>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {docsToShow.map((doc) => (
-            <DocumentCard key={doc.id} doc={doc} />
-          ))}
+          {docsToShow.map((doc) => {
+            // Ensure document has required properties for DocumentCard
+            const processedDoc = {
+              ...doc,
+              size: typeof doc.size === 'number' ? `${doc.size} KB` : (doc.size?.toString() || "0 KB"),
+              owner: doc.owner || "",
+              folder: doc.folder || "",
+              process: doc.process || ""
+            };
+            return <DocumentCard key={doc.id} doc={processedDoc} />;
+          })}
         </div>
       </>
     );

@@ -7,26 +7,11 @@ interface ToastProps {
   variant?: "default" | "destructive";
 }
 
-// Função para mostrar toast notifications
-export function useToast() {
-  const showToast = ({ title, description, variant }: ToastProps) => {
-    if (variant === "destructive") {
-      toast.error(title || "", { description });
-    } else {
-      toast(title || "", { description });
-    }
-  };
-
-  return {
-    toast: showToast,
-  };
-}
-
-// Export the Toaster directly
+// Export the Toaster component from sonner
 export { Toaster } from "sonner";
 
-// Export toast global functions
-export const toast = {
+// Toast function implementation
+const toastImpl = {
   error: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {
       // Here we would normally call sonner.toast.error
@@ -47,12 +32,32 @@ export const toast = {
   }
 };
 
-// Basic implementation to make the default export work
-const toast = (title: string, options?: { description?: string }) => {
+// Default toast function
+export function toast(title: string, options?: { description?: string }) {
   if (typeof window !== 'undefined') {
     // Here we would normally call sonner.toast
     console.log(title, options?.description);
   }
-};
+}
+
+// Add methods to the toast function
+toast.error = toastImpl.error;
+toast.success = toastImpl.success;
+toast.info = toastImpl.info;
+
+// Hook for using toast in components
+export function useToast() {
+  const showToast = ({ title, description, variant }: ToastProps) => {
+    if (variant === "destructive") {
+      toast.error(title || "", { description });
+    } else {
+      toast(title || "", { description });
+    }
+  };
+
+  return {
+    toast: showToast,
+  };
+}
 
 export default toast;

@@ -141,6 +141,11 @@ const config: Config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
+  safelist: [
+    'border-gray-200',
+    'text-gray-200',
+    'bg-gray-200'
+  ]
 };
 
 export default config;

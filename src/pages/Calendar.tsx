@@ -14,7 +14,7 @@ import moment from "moment";
 import "moment/locale/pt-br";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import EnhancedCalendarSidebar from "@/components/calendar/EnhancedCalendarSidebar";
-import EventForm from "@/components/calendar/EventForm";
+import EventForm, { CalendarEvent } from "@/components/calendar/EventForm";
 import { useToast } from "@/hooks/use-toast";
 
 // Configure moment to use pt-BR locale
@@ -23,35 +23,13 @@ moment.locale("pt-br");
 // Use momentLocalizer instead of dateFnsLocalizer
 const localizer = momentLocalizer(moment);
 
-interface CalendarEvent {
-  id: string
-  title: string
-  start: Date
-  end: Date
-  category: 'meeting' | 'deadline' | 'task' | 'other'
-  description?: string
-  isRecurring?: boolean
-  recurrenceType?: 'daily' | 'weekly' | 'monthly' | 'yearly'
-}
-
 // Hook para simular o uso do calendário (poderia ser movido para um arquivo separado)
 const useCalendar = () => {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
 
-  const createEvent = async (eventData: Partial<CalendarEvent>) => {
-    const newEvent: CalendarEvent = {
-      id: Date.now().toString(),
-      title: eventData.title || 'Untitled',
-      start: eventData.start || new Date(),
-      end: eventData.end || new Date(),
-      category: eventData.category || 'other',
-      description: eventData.description,
-      isRecurring: eventData.isRecurring,
-      recurrenceType: eventData.recurrenceType,
-    };
-    
-    setEvents(prev => [...prev, newEvent]);
-    return newEvent;
+  const createEvent = async (eventData: CalendarEvent) => {
+    setEvents(prev => [...prev, eventData]);
+    return eventData;
   };
 
   const updateEvent = async (eventId: string, eventData: Partial<CalendarEvent>) => {
@@ -113,8 +91,8 @@ const CalendarPage = ({ initialEvents = [] }: CalendarPageProps) => {
     }
   };
 
-  // Define a proper type for the event parameter in eventStyleGetter
-  const eventStyleGetter = (event: CalendarEvent) => {
+  // Define a custom event style getter
+  const eventStyleGetter = (event: any) => {
     const categoryColors = {
       meeting: { bg: "bg-blue-100", text: "text-blue-700", icon: <Users className="h-4 w-4" /> },
       deadline: { bg: "bg-red-100", text: "text-red-700", icon: <Clock className="h-4 w-4" /> },
@@ -175,11 +153,11 @@ const CalendarPage = ({ initialEvents = [] }: CalendarPageProps) => {
               culture="pt-BR"
               view={view}
               onView={setView}
-              onSelectEvent={handleEventSelect}
+              onSelectEvent={(event: CalendarEvent) => handleEventSelect(event)}
               onNavigate={setDate}
               date={date}
               views={[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]}
-              eventPropGetter={eventStyleGetter as any}
+              eventPropGetter={eventStyleGetter}
               dayPropGetter={(date) => ({
                 style: {
                   backgroundColor: date.getDay() === 0 || date.getDay() === 6 ? "#f9fafb" : "transparent"

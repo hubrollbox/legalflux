@@ -1,36 +1,44 @@
 
-import React from 'react';
-import { FileText, FileCode, FileImage, FilePieChart } from 'lucide-react';
-import { format } from 'date-fns';
-import { pt } from 'date-fns/locale';
-import { DocumentType } from '@/types/document';
+import React from "react";
+import { 
+  FileText, 
+  FileSpreadsheet, 
+  FileImage, 
+  FilePen, 
+  FileCog, 
+  File 
+} from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
-// Function to get the appropriate file icon based on document type
-export const getFileIcon = (type: DocumentType | string) => {
-  switch (type) {
-    case 'document':
-      return <FileText className="h-5 w-5 text-blue-600" />;
-    case 'action':
-      return <FileCode className="h-5 w-5 text-violet-600" />;
-    case 'precedent':
-      return <FileImage className="h-5 w-5 text-green-600" />;
-    case 'strategy':
-      return <FilePieChart className="h-5 w-5 text-orange-600" />;
+// Function to get appropriate file icon based on document type
+export const getFileIcon = (fileType: string) => {
+  switch (fileType.toLowerCase()) {
+    case "document":
+      return <FileText className="h-8 w-8 text-blue-500" />;
+    case "spreadsheet":
+      return <FileSpreadsheet className="h-8 w-8 text-green-500" />;
+    case "image":
+      return <FileImage className="h-8 w-8 text-purple-500" />;
+    case "action":
+      return <FilePen className="h-8 w-8 text-amber-500" />;
+    case "precedent":
+      return <FileText className="h-8 w-8 text-red-500" />;
+    case "strategy":
+      return <FileCog className="h-8 w-8 text-indigo-500" />;
     default:
-      return <FileText className="h-5 w-5 text-gray-600" />;
+      return <File className="h-8 w-8 text-gray-500" />;
   }
 };
 
-// Function to format date consistently
+// Function to format date
 export const formatDate = (date: string | Date) => {
-  if (!date) return '--';
-  
+  if (!date) return "--";
   try {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    // Fixed to use only 2 arguments
-    return format(dateObj, 'dd/MM/yyyy', { locale: pt });
+    const dateObj = typeof date === "string" ? new Date(date) : date;
+    return format(dateObj, "dd/MM/yyyy", { locale: ptBR });
   } catch (error) {
-    console.error('Error formatting date:', error);
-    return '--';
+    console.error("Error formatting date:", error);
+    return "--";
   }
 };

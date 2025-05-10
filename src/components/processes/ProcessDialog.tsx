@@ -55,7 +55,6 @@ const ProcessDialog: React.FC<ProcessDialogProps> = ({
         <ProcessForm
           initialData={initialData}
           onSubmit={onSubmit}
-          isSubmitting={isSubmitting}
         />
       </DialogContent>
     </Dialog>
