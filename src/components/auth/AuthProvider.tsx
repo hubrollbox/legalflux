@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, ReactNode } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase-client';
@@ -48,7 +47,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
     getSession();
     
-    // Usar a subscription corretamente
+    // Fix the subscription handling
     const { data } = supabase.auth.onAuthStateChange(
       async (event: string, session: any) => {
         if (session?.user) {
@@ -71,11 +70,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     );
     
-    // Armazenamento e limpeza adequados da subscription
+    // Correct unsubscription
     return () => {
-      if (data?.subscription && typeof data.subscription.unsubscribe === 'function') {
-        data.subscription.unsubscribe();
-      }
+      data?.subscription?.unsubscribe?.();
     };
   }, []);
 
