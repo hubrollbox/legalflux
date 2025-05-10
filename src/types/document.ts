@@ -1,4 +1,5 @@
 
+// Define os tipos para documentos
 export type DocumentType = "document" | "action" | "precedent" | "strategy";
 export type DocumentStatus = "draft" | "review" | "final" | "archived" | "signed";
 
@@ -7,38 +8,29 @@ export interface Document {
   name: string;
   type: DocumentType;
   size: string;
-  updatedAt: string;
+  updatedAt: string | Date;
   owner: string;
   folder: string;
   process: string;
   tags?: string[];
   status: DocumentStatus;
-  url?: string;
   description?: string;
-  createdAt?: string | Date;
-  version?: number;
   category?: string;
-  clientId?: string;
-  processId?: string;
-  title?: string;
 }
 
 export interface DocumentTemplate {
   id: string;
   name: string;
+  type: DocumentType;
   description?: string;
+  updatedAt: string | Date;
   category: string;
   tags?: string[];
-  type?: DocumentType;
-  size?: string;
-  updatedAt?: string;
+  size: string;
 }
 
 export interface DocumentFilter {
-  search?: string;
   type?: DocumentType | "all";
-  status?: DocumentStatus | "all";
-  folder?: string;
   date?: Date;
   tags?: string[];
 }

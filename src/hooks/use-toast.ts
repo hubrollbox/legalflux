@@ -7,6 +7,7 @@ interface ToastProps {
   variant?: "default" | "destructive";
 }
 
+// Function to show toast notifications
 export function useToast() {
   const showToast = ({ title, description, variant }: ToastProps) => {
     if (variant === "destructive") {
@@ -21,4 +22,5 @@ export function useToast() {
   };
 }
 
+// Export Toaster component
 export { Toaster };

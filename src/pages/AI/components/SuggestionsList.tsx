@@ -1,10 +1,24 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { LegalSuggestion } from '../hooks/useLegalSuggestions';
-import { FileText, AlertTriangle, BookOpen, LightbulbIcon } from 'lucide-react';
+import React from "react";
+import { 
+  Card, CardHeader, CardTitle, CardContent, 
+  CardFooter 
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Clock, AlertCircle, CheckCircle } from "lucide-react";
+
+// Define a proper suggestion type
+interface Suggestion {
+  id: string;
+  type: string;
+  priority: string;
+  title: string;
+  description: string;
+  relevance: number;
+}
 
 interface SuggestionsListProps {
-  suggestions: LegalSuggestion[];
+  suggestions: Suggestion[];
 }
 
 const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {

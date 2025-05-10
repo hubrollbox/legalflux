@@ -1,27 +1,19 @@
 
+export type UserRole = "client" | "lawyer" | "senior_lawyer" | "assistant" | "admin";
+
 export interface User {
   id: string;
-  email?: string;
-  name?: string;
-  role: string;
+  name: string;
+  email: string;
+  role?: UserRole;
+  avatar?: string;
+  organization?: string;
+  organizationId?: string;
   isActive?: boolean;
   hasTwoFactorEnabled?: boolean;
-  organizationId?: string;
   phone?: string;
   createdAt?: string | Date;
-  avatar?: string;
 }
-
-export type UserType = "client" | "lawyer" | "senior_lawyer" | "assistant" | "admin";
-
-// Adicionar constantes para UserType
-export const UserTypes = {
-  CLIENT: "client" as UserType,
-  LAWYER: "lawyer" as UserType,
-  SENIOR_LAWYER: "senior_lawyer" as UserType,
-  ASSISTANT: "assistant" as UserType,
-  ADMIN: "admin" as UserType
-};
 
 export interface AuthState {
   user: User | null;
@@ -29,3 +21,36 @@ export interface AuthState {
   isLoading: boolean;
   error: string | null;
 }
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+}
+
+export interface RegistrationData {
+  name: string;
+  email: string;
+  password: string;
+  organizationName?: string;
+  acceptTerms: boolean;
+}
+
+export interface ResetPasswordData {
+  email: string;
+}
+
+export interface NewPasswordData {
+  password: string;
+  confirmPassword: string;
+  token: string;
+}
+
+// Permissions related to each user role
+export const USER_ROLE_NAMES: Record<UserRole, string> = {
+  client: "Cliente",
+  lawyer: "Advogado",
+  senior_lawyer: "Advogado Sénior",
+  assistant: "Assistente",
+  admin: "Administrador"
+};

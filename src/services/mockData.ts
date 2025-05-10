@@ -1,5 +1,5 @@
 
-import { FinancialTransaction, TransactionType, TransactionStatus } from "@/types";
+import { FinancialTransaction, TransactionType, TransactionStatus } from "@/types/financial";
 
 export const getRecentCases = () => {
   return [

@@ -1,13 +1,27 @@
 
-// Definindo os tipos como types para exportação explícita
-export type TransactionType = "income" | "expense" | "payment" | "invoice" | "refund";
-export type TransactionStatus = "pending" | "completed" | "cancelled" | "failed" | "canceled" | "processing";
+// Definindo os tipos como enums para melhor tipagem
+export enum TransactionType {
+  INCOME = "income",
+  EXPENSE = "expense",
+  PAYMENT = "payment",
+  INVOICE = "invoice",
+  REFUND = "refund"
+}
+
+export enum TransactionStatus {
+  PENDING = "pending",
+  COMPLETED = "completed", 
+  CANCELLED = "cancelled",
+  FAILED = "failed",
+  CANCELED = "canceled",
+  PROCESSING = "processing"
+}
 
 export interface FinancialTransaction {
   id: string;
-  type: TransactionType; 
+  type: TransactionType | string; 
   amount: number;
-  status: TransactionStatus;
+  status: TransactionStatus | string;
   description: string;
   date: string | Date;
   clientId?: string;

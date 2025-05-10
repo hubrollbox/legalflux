@@ -1,3 +1,4 @@
+
 import { formatDate } from '@/utils/dateUtils';
 import { File, FileText, Image, Brain } from 'lucide-react';
 
@@ -47,6 +48,10 @@ export const formatDocumentSize = (size: string | number) => {
 };
 
 // Função que formata a data de atualização
-export const formatDocumentDate = (date: string | Date) => {
-  return formatDate(date);
+export { formatDate };
+
+// Função auxiliar para retornar o ícone correto do arquivo
+export const getFileIcon = (type: string) => {
+  const IconComponent = getDocumentTypeIcon(type);
+  return <IconComponent className={`${getDocumentTypeColor(type)}`} />;
 };

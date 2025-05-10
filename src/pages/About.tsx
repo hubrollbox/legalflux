@@ -1,156 +1,143 @@
-import { Link } from "react-router-dom";
-import { Shield, Zap, Users } from "lucide-react";
-import PageTransition from "../components/PageTransition";
-import { Card, CardContent } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import LandingNavbar from "./landing/components/LandingNavbar";
-import LandingFooter from "../components/LandingFooter";
-import Image from "next/image";
+import React from "react";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import SectionHeader from "@/components/layout/SectionHeader";
 
-// Reusable StatisticCard component
-const StatisticCard = ({ percentage, description }) => (
-  <div className="bg-muted p-4 rounded-lg text-center">
-    <h3 className="text-3xl font-bold text-primary mb-2">{percentage}%</h3>
-    <p className="text-sm text-muted-foreground">{description}</p>
-  </div>
-);
+interface ProgressProps {
+  percentage: number;
+  description: string;
+}
+
+const Progress: React.FC<ProgressProps> = ({ percentage, description }) => {
+  return (
+    <div className="mb-4">
+      <div className="flex justify-between mb-1">
+        <span className="text-sm font-medium">{description}</span>
+        <span className="text-sm font-medium">{percentage}%</span>
+      </div>
+      <div className="w-full bg-gray-200 rounded-full h-2.5">
+        <div
+          className="bg-highlight h-2.5 rounded-full"
+          style={{ width: `${percentage}%` }}
+        ></div>
+      </div>
+    </div>
+  );
+};
 
 const About = () => {
   return (
-    <PageTransition>
-      <LandingNavbar />
-      <main className="pt-16">
-        <div className="container mx-auto px-4 py-12 max-w-6xl">
+    <DashboardLayout>
+      <div className="dashboard-header">
+        <SectionHeader
+          title="Sobre o LegalFlux"
+          description="Conheça mais sobre a plataforma e suas funcionalidades"
+        />
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
-          <div>
-            <h2 className="text-3xl font-bold mb-6">A nossa missão</h2>
-            <p className="text-lg mb-6">
-              Na LegalFlux, temos como missão transformar a forma como escritórios de advocacia 
-              gerem seus processos, documentos e prazos, através de uma plataforma tecnológica 
-              intuitiva e completa.
-            </p>
-            <p className="text-lg mb-6">
-              Acreditamos que a tecnologia deve ser uma aliada dos profissionais jurídicos, 
-              libertando-os de tarefas administrativas para que possam focar no que realmente 
-              importa: oferecer um serviço jurídico de excelência aos seus clientes.
-            </p>
-            <div className="grid grid-cols-2 gap-4">
-              <StatisticCard percentage={85} description="Redução em tarefas administrativas" />
-              <StatisticCard percentage={95} description="Taxa de satisfação dos utilizadores" />
-            </div>
-          </div>
-          <div className="rounded-lg overflow-hidden">
-            <Image 
-              src="/img/about-mission.jpg" 
-              alt="Nossa missão" 
-              width={800}
-              height={600}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-
-        <div className="mb-20">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Os nossos valores</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Os valores que guiam todas as nossas decisões e definem quem somos.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="mb-4 mx-auto bg-primary/10 w-16 h-16 flex items-center justify-center rounded-full">
-                  <Shield className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Segurança</h3>
-                <p className="text-muted-foreground">
-                  Protegemos os seus dados com os mais altos padrões de segurança e confidencialidade.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="mb-4 mx-auto bg-primary/10 w-16 h-16 flex items-center justify-center rounded-full">
-                  <Zap className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Inovação</h3>
-                <p className="text-muted-foreground">
-                  Buscamos constantemente novas formas de melhorar e simplificar a gestão jurídica.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <div className="mb-4 mx-auto bg-primary/10 w-16 h-16 flex items-center justify-center rounded-full">
-                  <Users className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold mb-2">Cliente no centro</h3>
-                <p className="text-muted-foreground">
-                  Todas as nossas decisões são tomadas com base nas necessidades dos nossos clientes.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        <div className="bg-primary text-primary-foreground rounded-xl p-12 mb-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl font-bold mb-6">Junte-se à revolução digital do setor jurídico</h2>
-              <p className="mb-6">
-                Experimente o LegalFlux e descubra como podemos transformar a gestão do seu escritório de advocacia.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Link to="/contact">
-                  <Button 
-                    size="lg"
-                    className="bg-primary text-white border border-white hover:bg-white hover:text-primary"
-                  >
-                    Agende uma demonstração
-                  </Button>
-                </Link>
-                <Link to="/register">
-                  <Button 
-                    size="lg"
-                    variant="outline"
-                    className="border-white text-white hover:bg-white hover:text-primary"
-                  >
-                    Comece gratuitamente
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="flex justify-center">
-              <img 
-                src="/img/about-cta.png" 
-                alt="App Interface" 
-                width={800}
-                height={600}
-                className="max-w-full rounded-lg shadow-lg"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Os nossos parceiros</h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-12">
-            Trabalhamos com empresas e instituições líderes para oferecer a melhor solução de gestão jurídica.
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h2 className="text-xl font-bold mb-4">Nossa Missão</h2>
+          <p className="text-gray-600 mb-4">
+            O LegalFlux foi criado com a missão de simplificar a gestão de escritórios de advocacia,
+            permitindo que advogados e suas equipes foquem no que realmente importa: oferecer
+            serviços jurídicos de excelência aos seus clientes.
           </p>
-          <div className="flex flex-wrap justify-center gap-12 items-center opacity-60">
-            <img src="/img/partners/partner1.svg" alt="Partner 1" width={100} height={48} className="h-12" />
-            <img src="/img/partners/partner2.svg" alt="Partner 2" width={100} height={48} className="h-12" />
-            <img src="/img/partners/partner3.svg" alt="Partner 3" width={100} height={48} className="h-12" />
-            <img src="/img/partners/partner4.svg" alt="Partner 4" width={100} height={48} className="h-12" />
-            <img src="/img/partners/partner5.svg" alt="Partner 5" width={100} height={48} className="h-12" />
+          <p className="text-gray-600">
+            Através de uma plataforma intuitiva e completa, buscamos transformar a maneira como os
+            profissionais do direito gerenciam seus processos, documentos e relacionamentos com
+            clientes.
+          </p>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h2 className="text-xl font-bold mb-4">Desenvolvimento Contínuo</h2>
+          <p className="text-gray-600 mb-4">
+            Estamos constantemente aprimorando o LegalFlux com base no feedback dos nossos usuários
+            e nas tendências do mercado jurídico.
+          </p>
+          <h3 className="font-semibold mt-4 mb-2">Progresso do Roadmap 2023</h3>
+          <Progress percentage={100} description="Gestão de Processos" />
+          <Progress percentage={85} description="Automação de Documentos" />
+          <Progress percentage={70} description="Integração com Tribunais" />
+          <Progress percentage={60} description="Análise de Dados Avançada" />
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow md:col-span-2">
+          <h2 className="text-xl font-bold mb-4">Recursos Principais</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="border p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Gestão de Processos</h3>
+              <p className="text-gray-600">
+                Acompanhe todos os seus processos em um só lugar, com alertas de prazos e
+                organização intuitiva.
+              </p>
+            </div>
+            <div className="border p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Automação de Documentos</h3>
+              <p className="text-gray-600">
+                Crie modelos e gere documentos automaticamente, economizando tempo e reduzindo
+                erros.
+              </p>
+            </div>
+            <div className="border p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Gestão Financeira</h3>
+              <p className="text-gray-600">
+                Controle faturamento, honorários e despesas com relatórios detalhados e
+                visualização clara.
+              </p>
+            </div>
+            <div className="border p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Portal do Cliente</h3>
+              <p className="text-gray-600">
+                Ofereça aos seus clientes acesso seguro aos seus processos e documentos.
+              </p>
+            </div>
+            <div className="border p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Agenda Integrada</h3>
+              <p className="text-gray-600">
+                Sincronize compromissos, audiências e prazos com seu calendário pessoal.
+              </p>
+            </div>
+            <div className="border p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Assistente IA</h3>
+              <p className="text-gray-600">
+                Utilize inteligência artificial para pesquisas jurídicas e análise de documentos.
+              </p>
+            </div>
           </div>
         </div>
       </div>
-      </main>
-      <LandingFooter />
-    </PageTransition>
+
+      <div className="bg-white p-6 rounded-lg shadow mt-6">
+        <h2 className="text-xl font-bold mb-4">Nossa Equipe</h2>
+        <p className="text-gray-600 mb-6">
+          O LegalFlux é desenvolvido por uma equipe multidisciplinar de profissionais com
+          experiência em direito, tecnologia e design de produto.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="text-center">
+            <div className="w-24 h-24 rounded-full bg-gray-300 mx-auto mb-2"></div>
+            <h3 className="font-semibold">Ana Silva</h3>
+            <p className="text-gray-600">CEO & Advogada</p>
+          </div>
+          <div className="text-center">
+            <div className="w-24 h-24 rounded-full bg-gray-300 mx-auto mb-2"></div>
+            <h3 className="font-semibold">Pedro Santos</h3>
+            <p className="text-gray-600">CTO</p>
+          </div>
+          <div className="text-center">
+            <div className="w-24 h-24 rounded-full bg-gray-300 mx-auto mb-2"></div>
+            <h3 className="font-semibold">Marta Costa</h3>
+            <p className="text-gray-600">UX Designer</p>
+          </div>
+          <div className="text-center">
+            <div className="w-24 h-24 rounded-full bg-gray-300 mx-auto mb-2"></div>
+            <h3 className="font-semibold">João Pereira</h3>
+            <p className="text-gray-600">Desenvolvedor</p>
+          </div>
+        </div>
+      </div>
+    </DashboardLayout>
   );
 };
 

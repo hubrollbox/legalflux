@@ -34,5 +34,5 @@ export * from "./permissions";
 export * from "./document";
 export * from "./process";
 
-// Export TransactionType e TransactionStatus explicitamente
-export type { TransactionType, TransactionStatus } from "./financial";
+// Re-export types from financial.ts
+export { TransactionType, TransactionStatus } from "./financial";

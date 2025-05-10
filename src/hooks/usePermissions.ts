@@ -1,69 +1,45 @@
 
-import { create } from 'zustand';
-import { UserRole, UserRoles } from '@/types/permissions';
+import { useCallback } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { User, UserRole } from "@/types/auth";
+import { DEFAULT_PERMISSIONS } from "@/types/permissions";
 
-interface PermissionsState {
-  userRole: UserRole | null;
-  userPermissions: string[];
-  isLoading: boolean;
-  hasRole: (role: UserRole) => boolean;
-  hasPermission: (resource: string, action: string) => boolean;
-}
+export const usePermissions = () => {
+  const { user } = useAuth();
 
-export const usePermissions = create<PermissionsState>((set, get) => ({
-  userRole: null,
-  userPermissions: [],
-  isLoading: true,
-
-  hasRole: (role: UserRole) => {
-    const state = get();
-    return state.userRole === role;
-  },
-
-  hasPermission: (resource: string, action: string) => {
-    const state = get();
+  const hasPermission = useCallback((permission: string): boolean => {
+    // Se não há usuário autenticado, não tem permissão
+    if (!user) return false;
     
-    // Se for administrador, tem todas as permissões
-    if (state.userRole === UserRoles.ADMIN) {
-      return true;
+    // Se for admin, tem todas as permissões
+    if (user.role === "admin") return true;
+    
+    // Se a permissão solicitada é complexa (com curingas)
+    if (permission.includes("*")) {
+      const permPrefix = permission.replace("*", "");
+      const userPerms = getUserPermissions(user);
+      return userPerms.some(p => p.startsWith(permPrefix));
     }
+    
+    // Verificação direta da permissão
+    const userPerms = getUserPermissions(user);
+    return userPerms.includes(permission);
+  }, [user]);
 
-    // Verificar permissão específica
-    const permissionKey = `${resource}:${action}`;
-    return state.userPermissions.includes(permissionKey);
-  },
-}));
+  const getUserPermissions = (user: User): string[] => {
+    if (!user.role) return [];
+    
+    // Recupera as permissões padrão com base na role
+    const rolePermissions: Record<string, string[]> = {};
+    
+    Object.keys(DEFAULT_PERMISSIONS).forEach(role => {
+      rolePermissions[role] = DEFAULT_PERMISSIONS[role as UserRole];
+    });
 
-// Exemplo de função para inicializar permissões com base no papel do utilizador
-export const initializePermissions = (role: UserRole) => {
-  const permissionsMap: Record<UserRole, string[]> = {
-    [UserRoles.ADMIN]: ['*:*'], // Todas as permissões
-    [UserRoles.LAWYER]: [
-      'cases:view', 'cases:create', 'cases:edit',
-      'documents:view', 'documents:create', 'documents:edit',
-      'clients:view'
-    ],
-    [UserRoles.SENIOR_LAWYER]: [
-      'cases:view', 'cases:create', 'cases:edit', 'cases:delete',
-      'documents:view', 'documents:create', 'documents:edit', 'documents:delete',
-      'clients:view', 'clients:create', 'clients:edit',
-      'lawyers:view'
-    ],
-    [UserRoles.ASSISTANT]: [
-      'cases:view',
-      'documents:view', 'documents:create',
-      'clients:view'
-    ],
-    [UserRoles.CLIENT]: [
-      'cases:view',
-      'documents:view'
-    ]
+    return user.role ? (rolePermissions[user.role] || []) : [];
   };
-
-  // Atualizar o estado do hook
-  usePermissions.setState({
-    userRole: role,
-    userPermissions: permissionsMap[role] || [],
-    isLoading: false
-  });
+  
+  return { hasPermission };
 };
+
+export default usePermissions;
