@@ -16,6 +16,10 @@ export const mockDocuments: Document[] = [
     status: "final",
     description: "Contrato padrão de prestação de serviços jurídicos",
     category: "Contratos",
+    clientId: "client1",
+    processId: "process1",
+    url: "/documents/doc1.pdf",
+    version: 1,
   },
   {
     id: "doc2",
@@ -30,6 +34,10 @@ export const mockDocuments: Document[] = [
     status: "review",
     description: "Petição inicial para processo trabalhista",
     category: "Petições",
+    clientId: "client2",
+    processId: "process2",
+    url: "/documents/doc2.pdf",
+    version: 1,
   },
   {
     id: "doc3",
@@ -44,6 +52,10 @@ export const mockDocuments: Document[] = [
     status: "archived",
     description: "Compilação de jurisprudência do STF sobre direito constitucional",
     category: "Jurisprudência",
+    clientId: "client3",
+    processId: "process3",
+    url: "/documents/doc3.pdf",
+    version: 1,
   },
   {
     id: "doc4",
@@ -58,6 +70,10 @@ export const mockDocuments: Document[] = [
     status: "draft",
     description: "Documento de estratégia processual para caso de direito empresarial",
     category: "Estratégias",
+    clientId: "client4",
+    processId: "process4",
+    url: "/documents/doc4.pdf",
+    version: 1,
   },
   {
     id: "doc5",
@@ -72,6 +88,10 @@ export const mockDocuments: Document[] = [
     status: "signed",
     description: "Procuração com poderes específicos",
     category: "Documentos Pessoais",
+    clientId: "client5",
+    processId: "process5",
+    url: "/documents/doc5.pdf",
+    version: 1,
   },
 ];
 
@@ -85,6 +105,7 @@ export const mockTemplates: DocumentTemplate[] = [
     tags: ["contrato", "serviços", "modelo"],
     type: "document",
     updatedAt: formatDate(new Date(2023, 4, 10)),
+    size: "1MB"
   },
   {
     id: "template2",
@@ -94,6 +115,7 @@ export const mockTemplates: DocumentTemplate[] = [
     tags: ["petição", "trabalhista", "modelo"],
     type: "action",
     updatedAt: formatDate(new Date(2023, 4, 15)),
+    size: "1MB"
   },
   {
     id: "template3",
@@ -103,6 +125,7 @@ export const mockTemplates: DocumentTemplate[] = [
     tags: ["procuração", "modelo", "judicial"],
     type: "document",
     updatedAt: formatDate(new Date(2023, 4, 20)),
+    size: "1MB"
   },
   {
     id: "template4",
@@ -112,6 +135,7 @@ export const mockTemplates: DocumentTemplate[] = [
     tags: ["contestação", "cível", "modelo"],
     type: "action",
     updatedAt: formatDate(new Date(2023, 4, 25)),
+    size: "1MB"
   },
 ];
 

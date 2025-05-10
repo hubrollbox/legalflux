@@ -1,4 +1,3 @@
-
 import { FinancialTransaction, TransactionType, TransactionStatus } from "@/types/financial";
 
 // Traduz o tipo de transação para português
@@ -104,4 +103,34 @@ export const exportToCSV = (
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+};
+
+export const groupTransactionsByClient = (transactions: FinancialTransaction[]) => {
+  const grouped: { [clientId: string]: FinancialTransaction[] } = {};
+  
+  transactions.forEach(transaction => {
+    if (transaction.clientId) {
+      if (!grouped[transaction.clientId]) {
+        grouped[transaction.clientId] = [];
+      }
+      grouped[transaction.clientId].push(transaction);
+    }
+  });
+  
+  return grouped;
+};
+
+export const groupTransactionsByProcess = (transactions: FinancialTransaction[]) => {
+  const grouped: { [processId: string]: FinancialTransaction[] } = {};
+  
+  transactions.forEach(transaction => {
+    if (transaction.processId) {
+      if (!grouped[transaction.processId]) {
+        grouped[transaction.processId] = [];
+      }
+      grouped[transaction.processId].push(transaction);
+    }
+  });
+  
+  return grouped;
 };

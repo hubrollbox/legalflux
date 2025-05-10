@@ -1,7 +1,7 @@
 
 import React, { ReactNode } from 'react';
 import { usePermissions } from '../../hooks/usePermissions';
-import { UserRole } from '../../types/permissions';
+import { UserRole } from '../../types/auth';
 
 interface RoleBasedAccessProps {
   children: ReactNode;
@@ -35,10 +35,9 @@ const RoleBasedAccess: React.FC<RoleBasedAccessProps> = ({
 
   // Verificar se o utilizador tem todas as permissões requeridas
   if (allowedPermissions && allowedPermissions.length > 0) {
-    const hasAllPermissions = allowedPermissions.every(permission => {
-      const [resource, action] = permission.split(':');
-      return hasPermission(resource as any, action as any);
-    });
+    const hasAllPermissions = allowedPermissions.every(permission => 
+      hasPermission(permission)
+    );
     
     if (!hasAllPermissions) {
       return <>{fallback}</>;

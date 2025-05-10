@@ -6,6 +6,8 @@ declare module 'react-markdown' {
     children: string;
     className?: string;
     components?: Record<string, React.ComponentType<any>>;
+    remarkPlugins?: any[];
+    rehypePlugins?: any[];
   }
 
   const ReactMarkdown: React.FC<ReactMarkdownOptions>;

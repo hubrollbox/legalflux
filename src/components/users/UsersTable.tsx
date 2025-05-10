@@ -46,7 +46,7 @@ const UsersTable = ({
               <TableRow key={user.id}>
                 <TableCell className="font-medium">{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell>{getUserRoleName(user.role)}</TableCell>
+                <TableCell>{getUserRoleName(user.role || '')}</TableCell>
                 <TableCell>
                   <span
                     className={`px-2 py-1 rounded-full text-xs ${
@@ -59,7 +59,7 @@ const UsersTable = ({
                   </span>
                 </TableCell>
                 <TableCell>
-                  {new Date(user.createdAt).toLocaleDateString("pt-PT")}
+                  {user.createdAt ? new Date(user.createdAt).toLocaleDateString("pt-PT") : "N/A"}
                 </TableCell>
                 <TableCell>
                   {user.hasTwoFactorEnabled ? "Ativado" : "Desativado"}

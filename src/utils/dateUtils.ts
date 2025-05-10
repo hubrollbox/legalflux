@@ -7,7 +7,7 @@ export const isWithinInterval = (date: Date, interval: { start: Date, end: Date 
   return dateIsWithinInterval(date, interval);
 };
 
-// Função formatDate corrigida com os argumentos corretos
+// Função formatDate corrigida para aceitar somente 1-2 argumentos
 export const formatDate = (date: Date | string | undefined, formatStr = 'dd/MM/yyyy'): string => {
   if (!date) return "";
   const dateObj = typeof date === "string" ? new Date(date) : date;

@@ -1,57 +1,49 @@
 
-import { formatDate } from '@/utils/dateUtils';
-import { File, FileText, Image, Brain } from 'lucide-react';
+import React from "react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { File, FileText, FileArchive, FileCode } from "lucide-react";
+import { DocumentType } from "@/types/document";
 
-// Função que retorna um ícone com base no tipo do documento
-export const getDocumentTypeIcon = (type: string) => {
+export const getFileIcon = (type: DocumentType) => {
   switch (type) {
-    case 'document':
-      return FileText;
-    case 'action':
-      return File;
-    case 'precedent':
-      return Image;
-    case 'strategy':
-      return Brain;
+    case "document":
+      return <FileText className="h-4 w-4 text-blue-500" />;
+    case "action":
+      return <File className="h-4 w-4 text-green-500" />;
+    case "precedent":
+      return <FileArchive className="h-4 w-4 text-amber-500" />;
+    case "strategy":
+      return <FileCode className="h-4 w-4 text-purple-500" />;
     default:
-      return FileText;
+      return <File className="h-4 w-4 text-gray-500" />;
   }
 };
 
-// Função que retorna uma cor com base no tipo do documento
-export const getDocumentTypeColor = (type: string) => {
+export const formatDate = (date: string | Date) => {
+  try {
+    if (!date) return "";
+    const dateObj = typeof date === "string" ? new Date(date) : date;
+    if (isNaN(dateObj.getTime())) return "";
+    
+    return format(dateObj, "dd/MM/yyyy", { locale: ptBR });
+  } catch (error) {
+    console.error("Error formatting date:", error);
+    return "";
+  }
+};
+
+export const getDocumentTypeLabel = (type: DocumentType) => {
   switch (type) {
-    case 'document':
-      return 'text-blue-500';
-    case 'action':
-      return 'text-green-500';
-    case 'precedent':
-      return 'text-yellow-500';
-    case 'strategy':
-      return 'text-purple-500';
+    case "document":
+      return "Documento";
+    case "action":
+      return "Ação";
+    case "precedent":
+      return "Precedente";
+    case "strategy":
+      return "Estratégia";
     default:
-      return 'text-gray-500';
+      return "Desconhecido";
   }
-};
-
-// Função que formata o tamanho do documento
-export const formatDocumentSize = (size: string | number) => {
-  if (typeof size === 'number') {
-    if (size < 1024) {
-      return `${size} KB`;
-    } else {
-      const sizeInMB = (size / 1024).toFixed(2);
-      return `${sizeInMB} MB`;
-    }
-  }
-  return size;
-};
-
-// Função que formata a data de atualização
-export { formatDate };
-
-// Função auxiliar para retornar o ícone correto do arquivo
-export const getFileIcon = (type: string) => {
-  const IconComponent = getDocumentTypeIcon(type);
-  return <IconComponent className={`${getDocumentTypeColor(type)}`} />;
 };

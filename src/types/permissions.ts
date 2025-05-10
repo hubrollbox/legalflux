@@ -1,6 +1,9 @@
 
 import { UserRole } from './auth';
 
+// Export UserRole to fix imports in other files
+export { UserRole } from './auth';
+
 // Interface para permissões extendida para atender UserPermissionsDialog
 export interface Permission {
   id: string;
@@ -43,3 +46,6 @@ export const DEFAULT_PERMISSIONS: Record<UserRole, string[]> = {
   ],
   admin: ["*"], // Acesso total
 };
+
+// Export UserRoles for components that need it
+export { UserRoles } from './auth';

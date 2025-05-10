@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { UserRole } from '@/types/permissions';
+import { UserRole } from '@/types/auth';
+import { DEFAULT_PERMISSIONS } from '@/types/permissions';
 
 type PermissionMap = Record<string, boolean>;
 
@@ -26,53 +27,13 @@ export function usePermissions() {
         // Define permissions based on user role
         const permissionMap: PermissionMap = {};
         
-        switch (user.role) {
-          case UserRole.ADMIN:
-            // Admin has all permissions
-            permissionMap.users = true;
-            permissionMap.clients = true;
-            permissionMap.processes = true;
-            permissionMap.documents = true;
-            permissionMap.calendar = true;
-            permissionMap.financial = true;
-            permissionMap.settings = true;
-            permissionMap.reports = true;
-            break;
-            
-          case UserRole.SENIOR_LAWYER:
-            // Senior lawyer has most permissions
-            permissionMap.clients = true;
-            permissionMap.processes = true;
-            permissionMap.documents = true;
-            permissionMap.calendar = true;
-            permissionMap.financial = true;
-            permissionMap.reports = true;
-            break;
-            
-          case UserRole.LAWYER:
-            // Regular lawyer
-            permissionMap.clients = true;
-            permissionMap.processes = true;
-            permissionMap.documents = true;
-            permissionMap.calendar = true;
-            break;
-            
-          case UserRole.ASSISTANT:
-            // Assistant has limited permissions
-            permissionMap.calendar = true;
-            permissionMap.documents = true;
-            break;
-            
-          case UserRole.CLIENT:
-            // Client has very limited access
-            permissionMap.clientDocuments = true;
-            permissionMap.clientProcesses = true;
-            permissionMap.clientCalendar = true;
-            break;
-            
-          default:
-            // No permissions by default
-            break;
+        if (user.role) {
+          const userPerms = DEFAULT_PERMISSIONS[user.role] || [];
+          
+          // Convert permissions array to a map for easy checking
+          userPerms.forEach(perm => {
+            permissionMap[perm] = true;
+          });
         }
         
         setPermissions(permissionMap);
@@ -87,13 +48,24 @@ export function usePermissions() {
     loadPermissions();
   }, [user, isAuthenticated]);
 
-  const hasPermission = (module: string): boolean => {
-    return !!permissions[module];
+  const hasPermission = (permission: string): boolean => {
+    // Admin has all permissions
+    if (user?.role === 'admin') return true;
+    
+    // Check if user has explicit permission
+    return !!permissions[permission];
+  };
+  
+  const hasRole = (role: UserRole): boolean => {
+    return user?.role === role;
   };
 
   return {
     permissions,
     hasPermission,
+    hasRole,
     isLoading
   };
 }
+
+export default usePermissions;

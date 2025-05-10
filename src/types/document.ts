@@ -16,6 +16,11 @@ export interface Document {
   status: DocumentStatus;
   description?: string;
   category?: string;
+  // Add missing properties referenced in DocumentForm
+  clientId?: string;
+  processId?: string;
+  url?: string;
+  version?: number;
 }
 
 export interface DocumentTemplate {
