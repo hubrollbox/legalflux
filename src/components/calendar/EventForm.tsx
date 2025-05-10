@@ -31,6 +31,10 @@ export interface CalendarEvent {
   description?: string;
   isRecurring?: boolean;
   recurrenceType?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  priority?: 'high' | 'medium' | 'low';
+  client?: string;
+  process?: string;
+  location?: string;
 }
 
 interface EventFormProps {
@@ -47,7 +51,11 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialData }) => {
     category: initialData?.category || 'meeting',
     description: initialData?.description || '',
     isRecurring: initialData?.isRecurring || false,
-    recurrenceType: initialData?.recurrenceType
+    recurrenceType: initialData?.recurrenceType,
+    priority: initialData?.priority,
+    client: initialData?.client,
+    process: initialData?.process,
+    location: initialData?.location
   });
 
   const handleSubmit = (e: React.FormEvent) => {

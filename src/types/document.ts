@@ -37,6 +37,6 @@ export interface DocumentTemplate {
 
 export interface DocumentFilter {
   type: string;
-  date?: Date;
+  date?: Date | undefined;
   tags: string[];
 }

@@ -4,9 +4,8 @@ import {
   FileText, 
   FileSpreadsheet, 
   FileImage, 
-  FilePen, 
-  FileCog, 
-  File 
+  File,
+  FileCog
 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -21,7 +20,7 @@ export const getFileIcon = (fileType: string) => {
     case "image":
       return <FileImage className="h-8 w-8 text-purple-500" />;
     case "action":
-      return <FilePen className="h-8 w-8 text-amber-500" />;
+      return <FileText className="h-8 w-8 text-amber-500" />;
     case "precedent":
       return <FileText className="h-8 w-8 text-red-500" />;
     case "strategy":

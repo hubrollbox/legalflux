@@ -1,9 +1,11 @@
-import React from 'react';
-import { formatDate } from '@/utils/dateUtils';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const fixDateFormatting = (date: string | Date | undefined) => {
   if (!date) return "--";
-  return formatDate(date);
+  return format(date, "dd/MM/yyyy", { locale: ptBR });
 };
 
 interface ProcessDetailProps {

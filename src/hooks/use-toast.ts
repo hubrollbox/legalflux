@@ -1,5 +1,5 @@
 
-import { Toaster as SonnerToaster } from "sonner";
+import { toast as sonnerToast, Toaster as SonnerToaster } from "sonner";
 
 interface ToastProps {
   title?: string;
@@ -14,31 +14,35 @@ export { Toaster } from "sonner";
 const toastImpl = {
   error: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {
-      // Here we would normally call sonner.toast.error
-      console.error(title, options?.description);
+      sonnerToast.error(title, {
+        description: options?.description
+      });
     }
   },
   success: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {
-      // Here we would normally call sonner.toast.success
-      console.log('SUCCESS:', title, options?.description);
+      sonnerToast.success(title, {
+        description: options?.description
+      });
     }
   },
   info: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {
-      // Here we would normally call sonner.toast.info
-      console.info(title, options?.description);
+      sonnerToast.info(title, {
+        description: options?.description
+      });
     }
   }
 };
 
-// Default toast function
-export function toast(title: string, options?: { description?: string }) {
+// Export toast function
+export const toast = (title: string, options?: { description?: string }) => {
   if (typeof window !== 'undefined') {
-    // Here we would normally call sonner.toast
-    console.log(title, options?.description);
+    sonnerToast(title, {
+      description: options?.description
+    });
   }
-}
+};
 
 // Add methods to the toast function
 toast.error = toastImpl.error;

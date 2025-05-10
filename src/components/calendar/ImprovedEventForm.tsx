@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +8,7 @@ import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import type { DateRange } from "react-day-picker";
-import type { CalendarEvent, CategoryKey } from '@/types';
+import type { CalendarEvent } from '@/types/calendar';
 import { AlertTriangle, MapPin } from 'lucide-react';
 
 interface EventFormProps {
@@ -28,7 +29,7 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
     description: '',
     start: new Date(),
     end: new Date(new Date().setHours(new Date().getHours() + 1)),
-    category: 'meeting' as CategoryKey,
+    category: 'meeting',
     priority: 'medium',
     client: '',
     process: '',
@@ -70,7 +71,9 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
           <Label htmlFor="category">Categoria <span className="text-red-500">*</span></Label>
           <Select
             value={formData.category}
-            onValueChange={(value: CategoryKey) => setFormData({ ...formData, category: value })}
+            onValueChange={(value: 'meeting' | 'deadline' | 'task' | 'hearing' | 'trial' | 'client' | 'other') => 
+              setFormData({ ...formData, category: value })
+            }
           >
             <SelectTrigger id="category">
               <SelectValue placeholder="Selecione uma categoria" />
@@ -226,7 +229,8 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
           <Label htmlFor="recurrenceType">Tipo de Recorrência</Label>
           <Select
             value={formData.recurrenceType || 'daily'}
-            onValueChange={(value: 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'yearly') => setFormData({ ...formData, recurrenceType: value })}
+            onValueChange={(value: 'daily' | 'weekly' | 'monthly' | 'yearly') => 
+              setFormData({ ...formData, recurrenceType: value })}
           >
             <SelectTrigger id="recurrenceType">
               <SelectValue placeholder="Selecione o tipo de recorrência" />
@@ -234,7 +238,6 @@ const ImprovedEventForm: React.FC<EventFormProps> = ({
             <SelectContent>
               <SelectItem value="daily">Diário</SelectItem>
               <SelectItem value="weekly">Semanal</SelectItem>
-              <SelectItem value="biweekly">Quinzenal</SelectItem>
               <SelectItem value="monthly">Mensal</SelectItem>
               <SelectItem value="yearly">Anual</SelectItem>
             </SelectContent>
