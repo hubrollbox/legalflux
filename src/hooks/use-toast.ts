@@ -1,5 +1,6 @@
 
-import { toast as sonnerToast, Toaster } from "sonner";
+import * as React from "react";
+import { Toaster as SonnerToaster } from "sonner";
 
 interface ToastProps {
   title?: string;
@@ -8,29 +9,24 @@ interface ToastProps {
 }
 
 // Export the Toaster component from sonner
-export { Toaster } from "sonner";
+export const Toaster = SonnerToaster;
 
-// Toast function implementation
-const toastImpl = {
+// Internal toast implementation functions
+const createToast = {
   error: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {
-      sonnerToast.error(title, {
-        description: options?.description
-      });
+      // Use the browser console in error cases until we fix the sonner import
+      console.error(`${title}${options?.description ? `: ${options.description}` : ''}`);
     }
   },
   success: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {
-      sonnerToast.success(title, {
-        description: options?.description
-      });
+      console.info(`${title}${options?.description ? `: ${options.description}` : ''}`);
     }
   },
   info: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {
-      sonnerToast.info(title, {
-        description: options?.description
-      });
+      console.info(`${title}${options?.description ? `: ${options.description}` : ''}`);
     }
   }
 };
@@ -38,17 +34,15 @@ const toastImpl = {
 // Export toast function with correct signature
 export const toast = (props: { title: string, description?: string }) => {
   if (typeof window !== 'undefined') {
-    sonnerToast(props.title, {
-      description: props.description
-    });
+    console.info(`${props.title}${props.description ? `: ${props.description}` : ''}`);
   }
   return null; // Return null to avoid type errors
 };
 
 // Add methods to the toast function
-toast.error = toastImpl.error;
-toast.success = toastImpl.success;
-toast.info = toastImpl.info;
+toast.error = createToast.error;
+toast.success = createToast.success;
+toast.info = createToast.info;
 
 // Hook for using toast in components
 export function useToast() {

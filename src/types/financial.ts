@@ -1,41 +1,44 @@
 
-// Definindo os tipos como enums para melhor tipagem
-export enum TransactionType {
-  INCOME = "income",
-  EXPENSE = "expense",
-  PAYMENT = "payment",
-  INVOICE = "invoice",
-  REFUND = "refund"
-}
-
-export enum TransactionStatus {
-  PENDING = "pending",
-  COMPLETED = "completed", 
-  CANCELLED = "cancelled",
-  FAILED = "failed",
-  CANCELED = "canceled",
-  PROCESSING = "processing"
-}
+export type TransactionType = 'income' | 'expense' | 'invoice' | 'payment' | 'refund' | 'other';
+export type TransactionStatus = 'completed' | 'pending' | 'failed' | 'cancelled' | 'refunded' | 'overdue';
 
 export interface FinancialTransaction {
   id: string;
-  type: TransactionType | string; 
-  amount: number;
-  status: TransactionStatus | string;
   description: string;
+  amount: number;
   date: string | Date;
+  type: TransactionType;
+  status: TransactionStatus;
+  category?: string;
   clientId?: string;
   clientName?: string;
   processId?: string;
-  category?: string;
+  processName?: string;
+  documentId?: string;
   paymentMethod?: string;
+  paymentDate?: string | Date;
+  dueDate?: string | Date;
   invoiceNumber?: string;
+  notes?: string;
+  tags?: string[];
+  createdAt: string | Date;
+  updatedAt?: string | Date;
 }
 
 export interface FinancialSummary {
-  income: number;
+  totalIncome: number;
+  totalExpenses: number;
+  netProfit: number;
+  pendingPayments: number;
+  overdueBills: number;
+  currentMonthIncome: number;
+  currentMonthExpenses: number;
+  previousMonthIncome: number;
+  previousMonthExpenses: number;
+}
+
+export interface FinancialChartData {
+  name: string;
+  revenue: number;
   expenses: number;
-  pending: number;
-  balance: number;
-  monthlyChange: number;
 }

@@ -10,9 +10,9 @@ export interface Document {
   status: DocumentStatus;
   type: DocumentType;
   createdAt: string | Date;
-  updatedAt?: string | Date;
+  updatedAt: string | Date;
   version?: string | number;
-  size?: string | number; // Allow both number and string for flexibility
+  size: string | number; // Allow both number and string for flexibility
   owner?: string;
   tags?: string[];
   processId?: string;
@@ -31,8 +31,8 @@ export interface DocumentTemplate {
   tags: string[];
   createdAt: string | Date;
   type: DocumentType;
-  updatedAt?: string | Date;
-  size?: string | number;
+  updatedAt: string | Date;
+  size: string | number;
 }
 
 export interface DocumentFilter {

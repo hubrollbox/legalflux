@@ -1,6 +1,5 @@
 
 import React from 'react';
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -31,7 +30,7 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
   filteredDocuments = [],
   filteredTemplates = []
 }) => {
-  // Convert template objects to the format expected by TemplatesContent
+  // Convert template objects to match the expected format in TemplatesContent
   const formattedTemplates = filteredTemplates.map(template => ({
     id: template.id,
     name: template.name,
@@ -42,6 +41,12 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
     updatedAt: template.updatedAt || template.createdAt,
     tags: template.tags || [],
     size: typeof template.size === 'number' ? `${template.size} KB` : (template.size?.toString() || "1MB"),
+  }));
+
+  // Ensure updatedAt is always a string for the TemplatesContent component
+  const templateFormatted = formattedTemplates.map(template => ({
+    ...template,
+    updatedAt: template.updatedAt instanceof Date ? template.updatedAt.toISOString() : template.updatedAt
   }));
 
   return (
@@ -80,7 +85,7 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
       
       <TabsContent value="templates" className="mt-6">
         <TemplatesContent 
-          templates={formattedTemplates} 
+          templates={templateFormatted} 
           viewMode={viewMode} 
         />
       </TabsContent>

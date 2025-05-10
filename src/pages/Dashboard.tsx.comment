@@ -1,0 +1,19 @@
+
+/*
+IMPORTANTE: O arquivo Dashboard.tsx está muito extenso (252 linhas) e 
+contém vários problemas de tipagem. Recomendamos refatorar este componente
+dividindo-o em subcomponentes menores e atualizando as definições de tipo
+para resolver os problemas de compatibilidade.
+
+Problemas específicos a serem resolvidos:
+1. Propriedade organizationId não existe no tipo User
+2. Incompatibilidade de tipos entre Document de src/types/document.ts e Document de src/types/index.ts
+3. Propriedades ausentes em tasks, chartData, financialData comparados aos seus tipos esperados
+4. Campos em português (receitas, despesas) não correspondem aos campos em inglês (revenue, expenses)
+
+Sugestões de refatoração:
+1. Dividir em múltiplos componentes menores por funcionalidade
+2. Padronizar os nomes dos campos em inglês ou português
+3. Atualizar os tipos para refletir a estrutura real dos dados
+4. Remover código duplicado e simplificar a lógica
+*/

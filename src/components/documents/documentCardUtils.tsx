@@ -1,43 +1,61 @@
 
-import React from "react";
 import { 
   FileText, 
-  FileSpreadsheet, 
-  FileImage, 
-  File,
-  FileCog
+  FilePlus, 
+  FileEdit, 
+  File, 
+  Clock, 
+  User, 
+  Folder,
+  BookMarked
 } from "lucide-react";
-import { format } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { DocumentType } from "@/types/document";
 
-// Function to get appropriate file icon based on document type
-export const getFileIcon = (fileType: string) => {
-  switch (fileType.toLowerCase()) {
-    case "document":
-      return <FileText className="h-8 w-8 text-blue-500" />;
-    case "spreadsheet":
-      return <FileSpreadsheet className="h-8 w-8 text-green-500" />;
-    case "image":
-      return <FileImage className="h-8 w-8 text-purple-500" />;
-    case "action":
-      return <FileText className="h-8 w-8 text-amber-500" />;
-    case "precedent":
-      return <FileText className="h-8 w-8 text-red-500" />;
-    case "strategy":
-      return <FileCog className="h-8 w-8 text-indigo-500" />;
+// Get the appropriate icon based on document type
+export const getDocumentIcon = (type: DocumentType | string) => {
+  switch (type) {
+    case 'precedent':
+      return <BookMarked className="h-5 w-5 text-blue-500" />;
+    case 'strategy':
+      return <FileEdit className="h-5 w-5 text-purple-500" />;
+    case 'action':
+      return <FilePlus className="h-5 w-5 text-green-500" />;
+    case 'document':
     default:
-      return <File className="h-8 w-8 text-gray-500" />;
+      return <FileText className="h-5 w-5 text-gray-500" />;
   }
 };
 
-// Function to format date
-export const formatDate = (date: string | Date) => {
-  if (!date) return "--";
+// Format relative time for document updates (e.g., "há 3 horas")
+export const formatRelativeTime = (date: string | Date) => {
+  // First parse the date if it's a string
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
   try {
-    const dateObj = typeof date === "string" ? new Date(date) : date;
-    return format(dateObj, "dd/MM/yyyy", { locale: ptBR });
+    return formatDistanceToNow(dateObj, { 
+      addSuffix: true,
+      locale: ptBR 
+    });
   } catch (error) {
-    console.error("Error formatting date:", error);
-    return "--";
+    console.error('Error formatting date:', error);
+    return 'Data desconhecida';
   }
+};
+
+// Format file size for display
+export const formatFileSize = (size: string | number) => {
+  if (typeof size === 'number') {
+    if (size < 1024) {
+      return `${size} B`;
+    } else if (size < 1024 * 1024) {
+      return `${(size / 1024).toFixed(1)} KB`;
+    } else if (size < 1024 * 1024 * 1024) {
+      return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+    } else {
+      return `${(size / (1024 * 1024 * 1024)).toFixed(1)} GB`;
+    }
+  }
+  return size;
 };

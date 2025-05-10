@@ -52,7 +52,7 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
       type: doc.type,
       // Ensure size is a string (for display purposes)
       size: typeof doc.size === 'number' ? `${doc.size} KB` : (doc.size?.toString() || "0 KB"),
-      // Ensure updatedAt is in the correct format
+      // Ensure updatedAt is always a string
       updatedAt: updatedAt,
       owner: doc.owner || "",
       folder: doc.folder || "",
