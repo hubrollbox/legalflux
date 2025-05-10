@@ -14,7 +14,8 @@ export type UserType = 'particular' | 'professional' | 'company';
 export const UserTypes = {
   PARTICULAR: 'particular' as UserType,
   PROFESSIONAL: 'professional' as UserType,
-  COMPANY: 'company' as UserType
+  COMPANY: 'company' as UserType,
+  CLIENT: 'particular' as UserType // Adding CLIENT as an alias for PARTICULAR for backward compatibility
 };
 
 export interface User {
@@ -25,6 +26,10 @@ export interface User {
   avatar?: string;
   organizationId?: string;
   userType?: UserType;
+  isActive?: boolean;
+  hasTwoFactorEnabled?: boolean;
+  createdAt?: string | Date;
+  phone?: string;
 }
 
 export interface Auth {

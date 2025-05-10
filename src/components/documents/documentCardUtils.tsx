@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { FileText, FileCode, FileImage, FilePieChart } from 'lucide-react';
-import { format, parseISO } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import { DocumentType } from '@/types/document';
 
@@ -26,7 +26,7 @@ export const formatDate = (date: string | Date) => {
   if (!date) return '--';
   
   try {
-    const dateObj = typeof date === 'string' ? parseISO(date) : date;
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
     return format(dateObj, 'dd/MM/yyyy', { locale: pt });
   } catch (error) {
     console.error('Error formatting date:', error);

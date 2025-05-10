@@ -1,4 +1,3 @@
-
 import { 
   Home, 
   FileText, 
@@ -16,7 +15,8 @@ import {
   CreditCard
 } from "lucide-react";
 import { ComponentType } from "react";
-import { UserRole, UserRoles } from "@/types/permissions";
+import { UserRole } from "@/types/permissions";
+import { UserRoles } from "@/types/auth"; 
 
 export interface SidebarItem {
   name: string;

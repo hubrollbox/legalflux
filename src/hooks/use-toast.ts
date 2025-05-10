@@ -26,5 +26,5 @@ export function useToast() {
   };
 }
 
-// Export Toaster component
+export { sonnerToast as toast };
 export { Toaster };

@@ -49,3 +49,9 @@ export const DEFAULT_PERMISSIONS: Record<UserRole, string[]> = {
     '*', // Admin has all permissions
   ],
 };
+
+export interface Permission {
+  id: string;
+  name: string;
+  description: string;
+}

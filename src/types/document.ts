@@ -22,6 +22,7 @@ export interface Document {
   title?: string;
   clientId?: string;
   processId?: string;
+  url?: string; // Added url for backward compatibility
 }
 
 export interface DocumentTemplate {

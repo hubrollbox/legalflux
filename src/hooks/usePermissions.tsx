@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { UserRole } from '@/types/auth';
 import { DEFAULT_PERMISSIONS } from '@/types/permissions';
@@ -48,17 +48,17 @@ export function usePermissions() {
     loadPermissions();
   }, [user, isAuthenticated]);
 
-  const hasPermission = (permission: string): boolean => {
+  const hasPermission = useCallback((permission: string): boolean => {
     // Admin has all permissions
     if (user?.role === 'admin') return true;
     
     // Check if user has explicit permission
     return !!permissions[permission];
-  };
+  }, [user, permissions]);
   
-  const hasRole = (role: UserRole): boolean => {
+  const hasRole = useCallback((role: UserRole): boolean => {
     return user?.role === role;
-  };
+  }, [user]);
 
   return {
     permissions,
