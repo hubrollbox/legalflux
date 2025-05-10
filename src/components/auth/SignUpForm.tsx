@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from "../../hooks/useAuth";
-import { UserType } from '../../types/auth';
+import { UserType, UserTypes } from '../../types/auth';
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
@@ -15,7 +16,7 @@ const SignUpForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [userType, setUserType] = useState<UserType>(UserType.CLIENT);
+  const [userType, setUserType] = useState<UserType>(UserTypes.CLIENT);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [step, setStep] = useState(1);

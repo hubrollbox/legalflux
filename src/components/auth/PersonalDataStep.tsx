@@ -1,5 +1,5 @@
 
-import { UserType } from '../../types/auth';
+import { UserType, UserTypes } from '../../types/auth';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import {
@@ -97,7 +97,7 @@ export default function PersonalDataStep({ userType, initialValues, onNext, onBa
           )}
         />
 
-        {userType !== UserType.CLIENT && (
+        {userType !== UserTypes.CLIENT && (
           <>
             <FormField
               control={form.control}

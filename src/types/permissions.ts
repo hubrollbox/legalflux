@@ -17,6 +17,15 @@ export interface UserPermissions {
   [key: string]: Permission[];
 }
 
+// Define constantes para UserRole para uso em lugar de enums
+export const UserRoles = {
+  ADMIN: "admin" as UserRole,
+  LAWYER: "lawyer" as UserRole,
+  SENIOR_LAWYER: "senior_lawyer" as UserRole,
+  ASSISTANT: "assistant" as UserRole,
+  CLIENT: "client" as UserRole
+};
+
 export const defaultPermissions: Record<UserRole, UserPermissions> = {
   admin: {
     dashboard: ["view"],

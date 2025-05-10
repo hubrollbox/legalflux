@@ -22,3 +22,18 @@ export interface Document {
   processId?: string;
   title?: string;
 }
+
+export interface DocumentTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  category: string;
+  tags?: string[];
+}
+
+export interface DocumentFilter {
+  search?: string;
+  type?: DocumentType | "all";
+  status?: DocumentStatus | "all";
+  folder?: string;
+}

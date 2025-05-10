@@ -1,9 +1,10 @@
+
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
 import { Card } from "@/components/ui/card";
-import { AnalysisTab } from "./components/AnalysisTab"; // Fixed import
+import { AnalysisTab } from "./components/AnalysisTab"; // Corrigindo a importação
 import AssistantTab from "./components/AssistantTab";
 import ContextualAssistantTab from "./components/ContextualAssistantTab";
 

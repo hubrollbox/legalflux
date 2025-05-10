@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { type Document } from "@/types/document";
+import { Document, DocumentType, DocumentStatus } from "@/types/document";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { 
@@ -52,12 +52,12 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
       name: '',
       description: '',
       url: '',
-      type: '',
+      type: 'document' as DocumentType,
       owner: '',
       process: selectedProcess || '',
       folder: '',
       version: 1,
-      status: 'draft',
+      status: 'draft' as DocumentStatus,
       tags: [],
       category: '',
       clientId: selectedClient || '',
@@ -68,9 +68,9 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
   const form = useForm<DocumentFormValues>({
     resolver: zodResolver(documentSchema),
     defaultValues: {
-      status: 'draft',
+      status: 'draft' as DocumentStatus,
       name: initialData?.name || '',
-      type: initialData?.type || '',
+      type: (initialData?.type || 'document') as DocumentType,
       description: initialData?.description || '',
       category: initialData?.category || '',
       clientId: initialData?.clientId || selectedClient || '',
@@ -82,9 +82,21 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
     const files = e.target.files;
     if (!files || files.length === 0) return;
     
+    // Determinar o tipo de documento com base no tipo de arquivo
+    let docType: DocumentType = "document";
+    const fileType = files[0]?.type || '';
+    
+    if (fileType.includes('pdf')) {
+      docType = "document";
+    } else if (fileType.includes('image')) {
+      docType = "precedent";
+    } else if (fileType.includes('text')) {
+      docType = "action";
+    }
+    
     setFormData(prev => ({
       ...prev,
-      type: files[0]?.type || ''
+      type: docType
     }));
   };
 

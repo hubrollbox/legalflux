@@ -16,7 +16,7 @@ import {
   CreditCard
 } from "lucide-react";
 import { ComponentType } from "react";
-import { UserRole } from "@/types/permissions";
+import { UserRole, UserRoles } from "@/types/permissions";
 
 export interface SidebarItem {
   name: string;
@@ -37,61 +37,61 @@ export const sidebarItems: SidebarItem[] = [
     name: "Dashboard",
     href: "/dashboard",
     icon: Home,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
+    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
   },
   {
     name: "Processos",
     href: "/processes",
     icon: Briefcase,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
+    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
   },
   {
     name: "Clientes",
     href: "/clients",
     icon: Users,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT]
+    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT]
   },
   {
     name: "Documentos",
     href: "/documents",
     icon: FileText,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
+    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
   },
   {
     name: "Calendário",
     href: "/calendar",
     icon: Calendar,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
+    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
   },
   {
     name: "Mensagens",
     href: "/messages",
     icon: MessageSquare,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
+    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
   },
   {
     name: "Financeiro",
     href: "/financial",
     icon: DollarSign,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER]
+    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER]
   },
   {
     name: "Links Úteis",
     href: "/useful-links",
     icon: Link,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
+    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
   },
   {
     name: "Central de Ajuda",
     href: "/help-center",
     icon: HelpCircle,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
+    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
   },
   {
     name: "Configurações",
     href: "/settings",
     icon: Settings,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
+    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
   },
 ];
 
@@ -100,18 +100,18 @@ export const userMenuItems = [
     label: "Perfil",
     href: "/profile",
     icon: User,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
+    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
   },
   {
     label: "Assinaturas",
     href: "/subscriptions",
     icon: CreditCard,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER]
+    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER]
   },
   {
     label: "Configurações",
     href: "/settings",
     icon: Settings,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
+    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
   },
 ];
