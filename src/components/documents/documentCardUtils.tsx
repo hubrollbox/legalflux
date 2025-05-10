@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { FileText, FileCode, FileImage, FilePieChart } from 'lucide-react';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import { DocumentType } from '@/types/document';
 
@@ -27,6 +27,7 @@ export const formatDate = (date: string | Date) => {
   
   try {
     const dateObj = typeof date === 'string' ? new Date(date) : date;
+    // Fix format call to use only two arguments instead of three
     return format(dateObj, 'dd/MM/yyyy', { locale: pt });
   } catch (error) {
     console.error('Error formatting date:', error);

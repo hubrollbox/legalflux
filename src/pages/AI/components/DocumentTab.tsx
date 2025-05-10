@@ -1,90 +1,55 @@
+import React, { useRef } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search } from 'lucide-react';
 
-import { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { File, Loader2 } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useMessages } from '../hooks/useMessages';
-import MessageList from './MessageList';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
+interface DocumentTabProps {
+  documents: any[];
+}
 
-const DocumentTab = () => {
-  const [documentType, setDocumentType] = useState('contract');
-  const { toast } = useToast();
-  const {
-    messages,
-    setMessages,
-    loading,
-    messagesEndRef
-  } = useMessages();
+const DocumentTab: React.FC<DocumentTabProps> = ({ documents }) => {
+  const messagesEndRef = useRef<HTMLDivElement>(document.createElement('div'));
 
-  const generateDocument = async () => {
-    if (!documentType) return;
-    
-    try {
-      setMessages([]);
-      const { data, error } = await supabase.functions.invoke('ai-assistant', {
-        body: {
-          prompt: `Gere um modelo de ${documentType} em português de Portugal.`,
-          context: 'O utilizador está a solicitar um modelo de documento jurídico. Forneça um modelo completo seguindo as melhores práticas jurídicas portuguesas.',
-          role: 'lawyer',
-          model: 'gpt-4o-mini'
-        },
-      });
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
-      if (error) throw error;
-
-      setMessages([
-        {
-          id: '1',
-          role: 'assistant',
-          content: `### Modelo de ${documentType}\n\n${data.response}`,
-          timestamp: new Date()
-        }
-      ]);
-    } catch (error) {
-      console.error('Erro ao gerar documento:', error);
-      toast({
-        title: 'Erro',
-        description: 'Não foi possível gerar o documento. Por favor, tente novamente.',
-        variant: 'destructive',
-      });
-    }
-  };
+  React.useEffect(() => {
+    scrollToBottom()
+  }, [documents]);
 
   return (
-    <Card className="flex flex-col h-[75vh]">
-      <CardHeader className="pb-3">
-        <CardTitle>Redação de Documentos</CardTitle>
-        <CardDescription>
-          Gere modelos de documentos jurídicos
-        </CardDescription>
-        <div className="flex space-x-2 mt-2">
-          <Select value={documentType} onValueChange={setDocumentType}>
-            <SelectTrigger className="flex-grow">
-              <SelectValue placeholder="Selecione o tipo de documento" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="contract">Contrato</SelectItem>
-              <SelectItem value="petition">Petição Inicial</SelectItem>
-              <SelectItem value="power-of-attorney">Procuração</SelectItem>
-              <SelectItem value="complaint">Reclamação</SelectItem>
-              <SelectItem value="legal-opinion">Parecer Jurídico</SelectItem>
-              <SelectItem value="settlement">Acordo</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button onClick={generateDocument} disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <File className="h-4 w-4 mr-2" />}
-            Gerar
-          </Button>
-        </div>
-      </CardHeader>
-      
-      <CardContent className="flex-grow overflow-auto">
-        <MessageList messages={messages} messagesEndRef={messagesEndRef} />
-      </CardContent>
-    </Card>
+    <div className="flex flex-col h-full">
+      <Card className="mb-4">
+        <CardHeader>
+          <CardTitle>Documentos</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center space-x-2">
+            <Input type="text" placeholder="Pesquisar documentos..." className="flex-1" />
+            <Button variant="outline">
+              <Search className="w-4 h-4 mr-2" />
+              Pesquisar
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="overflow-y-auto flex-1">
+        {documents.map((document) => (
+          <Card key={document.id} className="mb-4">
+            <CardHeader>
+              <CardTitle>{document.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>{document.description}</p>
+            </CardContent>
+          </Card>
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
+    </div>
   );
 };
 

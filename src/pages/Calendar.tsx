@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
@@ -6,14 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Plus, Users, Clock, FileText, Calendar as CalendarIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Calendar as BigCalendar, dateFnsLocalizer, Views } from "react-big-calendar";
+import { Calendar as BigCalendar, momentLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import EventForm from "@/components/calendar/EventForm";
-import EnhancedCalendarSidebar from "@/components/calendar/EnhancedCalendarSidebar";
-import { useToast } from "@/hooks/use-toast";
+import moment from "moment";
+import "moment/locale/pt-br";
+
+// Configure moment to use pt-BR locale
+moment.locale("pt-br");
+
+// Use momentLocalizer instead of dateFnsLocalizer
+const localizer = momentLocalizer(moment);
 
 interface CalendarEvent {
   id: string
@@ -76,7 +79,8 @@ const CalendarPage = ({ initialEvents }: CalendarPageProps) => {
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const eventStyleGetter = (event: any) => {
+  // Define a proper type for the event parameter in eventStyleGetter
+  const eventStyleGetter = (event: { category: string }) => {
     const categoryColors = {
       meeting: { bg: "bg-blue-100", text: "text-blue-700", icon: <Users className="h-4 w-4" /> },
       deadline: { bg: "bg-red-100", text: "text-red-700", icon: <Clock className="h-4 w-4" /> },
@@ -84,70 +88,17 @@ const CalendarPage = ({ initialEvents }: CalendarPageProps) => {
       other: { bg: "bg-gray-100", text: "text-gray-700", icon: <CalendarIcon className="h-4 w-4" /> }
     };
 
+    // Use explicit category check
     const style = {
       className: cn(
-        categoryColors[event.category]?.bg || "bg-gray-100",
-        categoryColors[event.category]?.text || "text-gray-700",
+        categoryColors[event.category as keyof typeof categoryColors]?.bg || "bg-gray-100",
+        categoryColors[event.category as keyof typeof categoryColors]?.text || "text-gray-700",
         "rounded-md border border-transparent transition-colors hover:border-gray-300"
       )
     };
 
     return { style };
   };
-
-  const locales = { 'pt-BR': ptBR };
-  const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
-
-  const handleEventCreate = useCallback(async (eventData: CalendarEvent) => {
-    try {
-      await createEvent({
-        title: eventData.title,
-        start: eventData.start,
-        end: eventData.end,
-        category: eventData.category,
-        description: eventData.description,
-        isRecurring: eventData.isRecurring,
-        recurrenceType: eventData.recurrenceType
-      });
-      setIsEventFormOpen(false);
-      toast({
-        title: "Evento criado",
-        description: "O evento foi adicionado com sucesso.",
-        variant: "default"
-      });
-    } catch (error) {
-      toast({
-        title: "Erro ao criar evento",
-        description: "Não foi possível criar o evento. Por favor, tente novamente.",
-        variant: "destructive"
-      });
-    }
-  }, [createEvent, toast]);
-
-  const handleEventSelect = useCallback((event: any) => {
-    setSelectedEvent(event);
-    setIsEventFormOpen(true);
-  }, []);
-
-  const handleEventUpdate = useCallback(async (eventData: CalendarEvent) => {
-    try {
-      if (!selectedEvent) return;
-      await updateEvent(selectedEvent.id, eventData);
-      setIsEventFormOpen(false);
-      setSelectedEvent(null);
-      toast({
-        title: "Evento atualizado",
-        description: "As alterações foram salvas com sucesso.",
-        variant: "default"
-      });
-    } catch (error) {
-      toast({
-        title: "Erro ao atualizar evento",
-        description: "Não foi possível atualizar o evento. Por favor, tente novamente.",
-        variant: "destructive"
-      });
-    }
-  }, [selectedEvent, updateEvent, toast]);
 
   const filteredEvents = categoryFilter
     ? events.filter(event => event.category === categoryFilter)
@@ -208,7 +159,7 @@ const CalendarPage = ({ initialEvents }: CalendarPageProps) => {
                 today: "Hoje",
                 next: "Próximo",
                 previous: "Anterior",
-                showMore: total => `+${total} mais`
+                showMore: (total: number) => `+${total} mais`
               }}
             />
           </CardContent>

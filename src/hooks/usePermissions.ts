@@ -6,6 +6,9 @@ import { DEFAULT_PERMISSIONS } from "@/types/permissions";
 
 export const usePermissions = () => {
   const { user } = useAuth();
+  
+  // Add isLoading property that RoleBasedAccess component expects
+  const isLoading = false;
 
   const hasPermission = useCallback((permission: string): boolean => {
     // Se não há usuário autenticado, não tem permissão
@@ -36,10 +39,16 @@ export const usePermissions = () => {
       rolePermissions[role] = DEFAULT_PERMISSIONS[role as UserRole];
     });
 
-    return user.role ? (rolePermissions[user.role] || []) : [];
+    return user.role ? (rolePermissions[user.role as UserRole] || []) : [];
   };
   
-  return { hasPermission };
+  // Add hasRole function that RoleBasedAccess component expects
+  const hasRole = useCallback((role: UserRole): boolean => {
+    if (!user || !user.role) return false;
+    return user.role === role;
+  }, [user]);
+  
+  return { hasPermission, hasRole, isLoading };
 };
 
 export default usePermissions;

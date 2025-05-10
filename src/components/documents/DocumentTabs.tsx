@@ -76,8 +76,8 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
         <TemplatesContent 
           templates={filteredTemplates.map(template => ({
             ...template,
-            updatedAt: typeof template.updatedAt === 'object' && template.updatedAt instanceof Date 
-              ? template.updatedAt.toISOString() 
+            updatedAt: typeof template.updatedAt === 'string' 
+              ? template.updatedAt 
               : String(template.updatedAt)
           }))} 
           viewMode={viewMode} 

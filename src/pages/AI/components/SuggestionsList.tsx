@@ -15,7 +15,7 @@ interface Suggestion {
   priority: string;
   title: string;
   description: string;
-  relevance: number;
+  relevance: string;
 }
 
 interface SuggestionsListProps {
@@ -53,7 +53,7 @@ const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
     safeSuggestion.description = safeSuggestion.description || '';
     safeSuggestion.type = suggestionType;
     safeSuggestion.priority = suggestionPriority;
-    safeSuggestion.relevance = typeof safeSuggestion.relevance === 'number' ? safeSuggestion.relevance : 0;
+    safeSuggestion.relevance = typeof safeSuggestion.relevance === 'string' ? safeSuggestion.relevance : '0';
     
     // Atualizamos o objeto original com os valores seguros
     Object.assign(suggestion, safeSuggestion);
@@ -135,7 +135,7 @@ const SuggestionsList = ({ suggestions }: SuggestionsListProps) => {
         const priority = safeObj.priority && typeof safeObj.priority === 'string' ? safeObj.priority : 'medium';
         const title = safeObj.title && typeof safeObj.title === 'string' ? safeObj.title : 'Sugestão';
         const description = safeObj.description && typeof safeObj.description === 'string' ? safeObj.description : '';
-        const relevance = safeObj.relevance && typeof safeObj.relevance === 'number' ? safeObj.relevance : 0;
+        const relevance = safeObj.relevance && typeof safeObj.relevance === 'string' ? safeObj.relevance : '0';
         const id = safeObj.id && typeof safeObj.id === 'string' ? safeObj.id : `suggestion-${Math.random().toString(36).substr(2, 9)}`;
 
         return (

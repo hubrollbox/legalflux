@@ -1,6 +1,7 @@
 
 export type DocumentType = 'document' | 'action' | 'precedent' | 'strategy';
 
+// Update DocumentStatus to include 'signed' as a valid value
 export type DocumentStatus = 'draft' | 'review' | 'final' | 'archived' | 'signed';
 
 export interface Document {

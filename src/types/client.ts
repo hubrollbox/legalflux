@@ -2,17 +2,25 @@
 export interface Client {
   id: string;
   name: string;
-  taxId?: string; // NIF
-  nif?: string; // Para compatibilidade
-  email?: string;
+  email: string;
   phone?: string;
+  nif?: string;
   address?: string;
-  status: 'active' | 'inactive' | 'prospect';
-  userId?: string;
-  lawyerId?: string;
-  notes?: string;
-  photoUrl?: string;
-  createdAt: Date;
-  updatedAt?: Date;
-  created_at?: string; // Para compatibilidade com APIs
+  createdAt?: string;
+  status?: ClientStatus;
+}
+
+export type ClientStatus = 'active' | 'inactive' | 'pending' | 'archived';
+
+export interface CreateClientDTO {
+  name: string;
+  email: string;
+  phone?: string;
+  nif?: string;
+  address?: string;
+  status?: ClientStatus;
+}
+
+export interface UpdateClientDTO extends Partial<CreateClientDTO> {
+  id: string;
 }

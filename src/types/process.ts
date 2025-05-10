@@ -5,34 +5,29 @@ export type ProcessStatus = 'new' | 'in_progress' | 'completed' | 'archived';
 export interface Process {
   id: string;
   title: string;
+  clientId: string;
+  clientName?: string;
   number: string;
   type: ProcessType;
-  status: ProcessStatus;
-  clientId: string;
-  startDate: string; // Padronizado para string
-  endDate?: string; // Padronizado para string
   description?: string;
-  createdAt: string; // Padronizado para string
-  updatedAt?: string; // Padronizado para string
-  documents?: Array<{
-    id: string;
-    name: string;
-    type?: string;
-    status?: string;
-    updatedAt?: string; // Padronizado para string
-    version?: number;
-  }>;
+  startDate?: string | Date;
+  endDate?: string | Date;
+  status: ProcessStatus;
+  deadline?: string | Date;
+  documents?: Document[];
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 export interface CreateProcessDTO {
   title: string;
+  clientId: string;
   number: string;
   type: ProcessType;
-  clientId: string;
-  status?: ProcessStatus;
   description?: string;
   startDate: string;
   endDate?: string;
+  status: ProcessStatus;
 }
 
 export interface UpdateProcessDTO extends Partial<CreateProcessDTO> {

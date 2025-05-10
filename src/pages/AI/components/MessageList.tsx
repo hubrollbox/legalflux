@@ -1,3 +1,13 @@
+import React from 'react';
+import { User } from '@/types/auth';
+
+// Create a custom user type for this component if needed
+interface ExtendedUser extends User {
+  avatar?: string;
+}
+
+// Then update the component to use this extended type
+// If the user prop is defined elsewhere, cast it to the extended type
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Message } from '../types';

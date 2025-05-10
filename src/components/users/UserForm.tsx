@@ -1,4 +1,3 @@
-
 import React from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -22,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { UserRoles } from "@/types/permissions";
+import { UserRoles } from "@/types/auth"; // Fix the import to use auth instead of permissions";
 
 // Create and export the schema
 export const userFormSchema = z.object({

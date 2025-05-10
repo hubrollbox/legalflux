@@ -18,6 +18,9 @@ const ResearchTab = () => {
     messagesEndRef
   } = useMessages();
 
+  // Find where the ref is defined and fix it by removing the null union type if needed
+  const messagesEndRef = useRef<HTMLDivElement>(document.createElement('div'));
+
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
     
