@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { User } from "@/types/auth";
 import { Permission } from "@/types/permissions";
 import { 
@@ -22,8 +22,18 @@ import {
 } from "@/components/ui/accordion";
 import { getUserRoleName } from "@/lib/utils";
 
+// Tipo complexo de permissão para o mock
+interface ExtendedPermission {
+  id: string;
+  resource: string;
+  action: string;
+  name: string;
+  description: string;
+  module: string;
+}
+
 // Permissões simuladas para cada módulo
-const MOCK_PERMISSIONS: Permission[] = [
+const MOCK_PERMISSIONS: ExtendedPermission[] = [
   // Casos
   { id: "cases-read", resource: "cases", action: "read", name: "Ver Processos", description: "Ver detalhes dos processos", module: "cases" },
   { id: "cases-create", resource: "cases", action: "create", name: "Criar Processos", description: "Criar novos processos", module: "cases" },
@@ -99,6 +109,7 @@ const UserPermissionsDialog: React.FC<UserPermissionsDialogProps> = ({
   open,
   onOpenChange,
 }) => {
+  const { toast } = useToast();
   const [rolePermissions, setRolePermissions] = useState<Record<string, boolean>>({});
   
   // Inicializa permissões com base na função do utilizador
@@ -135,7 +146,7 @@ const UserPermissionsDialog: React.FC<UserPermissionsDialogProps> = ({
   };
   
   // Agrupar permissões por módulo
-  const permissionsByModule: Record<string, Permission[]> = {};
+  const permissionsByModule: Record<string, ExtendedPermission[]> = {};
   MOCK_PERMISSIONS.forEach(permission => {
     if (!permissionsByModule[permission.module]) {
       permissionsByModule[permission.module] = [];

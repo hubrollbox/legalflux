@@ -42,10 +42,9 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
   const formatDocumentForCards = (doc: Document): Document => {
     return {
       ...doc,
-      type: doc.type,
       size: typeof doc.size === 'number' ? `${doc.size} KB` : doc.size,
       updatedAt: typeof doc.updatedAt === 'object' 
-        ? (doc.updatedAt as Date).toISOString() 
+        ? new Date(doc.updatedAt).toISOString()
         : doc.updatedAt
     };
   };

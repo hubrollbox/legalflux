@@ -1,4 +1,5 @@
 
+// Definindo os tipos como types para exportação explícita
 export type TransactionType = "income" | "expense" | "payment" | "invoice" | "refund";
 export type TransactionStatus = "pending" | "completed" | "cancelled" | "failed" | "canceled" | "processing";
 

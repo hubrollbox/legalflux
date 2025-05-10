@@ -15,8 +15,16 @@ interface DocumentTabsProps {
   setViewMode: (mode: "grid" | "list") => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filters: DocumentFilter;
-  setFilters: (filters: DocumentFilter) => void;
+  filters: {
+    type: string;
+    date: Date | undefined;
+    tags: string[];
+  };
+  setFilters: (filters: {
+    type: string;
+    date: Date | undefined;
+    tags: string[];
+  }) => void;
   filteredDocuments: Document[];
   filteredTemplates: DocumentTemplate[];
 }
@@ -68,11 +76,14 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
       <TabsContent value="templates" className="mt-6">
         <TemplatesContent 
           templates={filteredTemplates.map(template => ({
-            ...template,
-            size: template.size || "N/A",
+            id: template.id,
+            name: template.name,
+            description: template.description || "",
+            category: template.category,
+            tags: template.tags || [],
             type: template.type || "document" as DocumentType,
-            updatedAt: template.updatedAt || new Date().toISOString(),
-            description: template.description || ""
+            size: template.size || "N/A",
+            updatedAt: template.updatedAt || new Date().toISOString()
           }))} 
           viewMode={viewMode} 
         />

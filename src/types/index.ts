@@ -1,5 +1,4 @@
 
-
 export interface Document {
   id: string;
   name: string;
@@ -35,5 +34,5 @@ export * from "./permissions";
 export * from "./document";
 export * from "./process";
 
-// Export TransactionType and TransactionStatus explicitly
-export { TransactionType, TransactionStatus } from "./financial";
+// Export TransactionType e TransactionStatus explicitamente
+export type { TransactionType, TransactionStatus } from "./financial";

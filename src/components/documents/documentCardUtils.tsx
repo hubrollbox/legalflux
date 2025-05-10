@@ -1,43 +1,52 @@
+import { formatDate } from '@/utils/dateUtils';
+import { File, FileText, Image, Brain } from 'lucide-react';
 
-import React from 'react';
-import { FileText, FileImage, FileArchive, FileCode } from 'lucide-react';
-import { format, isValid } from 'date-fns';
-import { pt } from 'date-fns/locale';
-
-export const getFileIcon = (fileType: string) => {
-  switch(fileType?.toLowerCase()) {
-    case 'pdf':
-      return <FileText className="text-red-500" />; // Use FileText for PDF with red color instead of FilePdf
-    case 'jpg':
-    case 'jpeg':
-    case 'png':
-    case 'gif':
-      return <FileImage />;
-    case 'zip':
-    case 'rar':
-      return <FileArchive />;
-    case 'js':
-    case 'ts':
-    case 'jsx':
-    case 'tsx':
-    case 'html':
-    case 'css':
-      return <FileCode />;
+// Função que retorna um ícone com base no tipo do documento
+export const getDocumentTypeIcon = (type: string) => {
+  switch (type) {
+    case 'document':
+      return FileText;
+    case 'action':
+      return File;
+    case 'precedent':
+      return Image;
+    case 'strategy':
+      return Brain;
     default:
-      return <FileText />;
+      return FileText;
   }
 };
 
-export const formatDate = (date: Date | string | undefined) => {
-  if (!date) return '';
-  
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  if (!isValid(dateObj)) return '';
-  
-  return format(dateObj, 'dd MMM yyyy', { locale: pt });
+// Função que retorna uma cor com base no tipo do documento
+export const getDocumentTypeColor = (type: string) => {
+  switch (type) {
+    case 'document':
+      return 'text-blue-500';
+    case 'action':
+      return 'text-green-500';
+    case 'precedent':
+      return 'text-yellow-500';
+    case 'strategy':
+      return 'text-purple-500';
+    default:
+      return 'text-gray-500';
+  }
 };
 
-export default {
-  getFileIcon,
-  formatDate
+// Função que formata o tamanho do documento
+export const formatDocumentSize = (size: string | number) => {
+  if (typeof size === 'number') {
+    if (size < 1024) {
+      return `${size} KB`;
+    } else {
+      const sizeInMB = (size / 1024).toFixed(2);
+      return `${sizeInMB} MB`;
+    }
+  }
+  return size;
+};
+
+// Função que formata a data de atualização
+export const formatDocumentDate = (date: string | Date) => {
+  return formatDate(date);
 };

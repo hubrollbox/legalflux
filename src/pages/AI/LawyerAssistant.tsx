@@ -10,6 +10,7 @@ import ContextualAssistantTab from "./components/ContextualAssistantTab";
 
 const LawyerAssistant: React.FC = () => {
   const [activeTab, setActiveTab] = useState("assistant");
+  const [contextText, setContextText] = useState("");
 
   return (
     <DashboardLayout>
@@ -33,7 +34,7 @@ const LawyerAssistant: React.FC = () => {
         </TabsContent>
         <TabsContent value="contextual" className="space-y-6">
           <Card>
-            <ContextualAssistantTab contextText="" />
+            <ContextualAssistantTab contextText={contextText} />
           </Card>
         </TabsContent>
         <TabsContent value="analysis" className="space-y-6">
