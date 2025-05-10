@@ -1,7 +1,6 @@
+
 import { create } from 'zustand';
 import type { Notification, NotificationPreference } from '@/types';
-
-
 
 interface NotificationState {
   notifications: Notification[];
@@ -31,77 +30,79 @@ const defaultPreferences: NotificationPreference = {
   deliveryMethod: 'push', // Changed from 'all' to 'push'
 };
 
-export const useNotificationStore = create<NotificationState>((set, get) => ({ // Removed one opening parenthesis here
-  notifications: [],
-  preferences: defaultPreferences,
-  unreadCount: 0,
-  isConnected: false,
-  lastSyncTimestamp: null,
+export const useNotificationStore = create<NotificationState>((set, get) => {
+  return {
+    notifications: [],
+    preferences: defaultPreferences,
+    unreadCount: 0,
+    isConnected: false,
+    lastSyncTimestamp: null,
 
-  setNotifications: (notifications: Notification[]) => {
-    set({
-      notifications,
-      unreadCount: notifications.filter((n) => !n.read).length,
-    });
-  },
+    setNotifications: (notifications: Notification[]) => {
+      set({
+        notifications,
+        unreadCount: notifications.filter((n) => !n.read).length,
+      });
+    },
 
-  addNotification: (notification: Notification) => {
-    const { notifications, preferences } = get();
-    const { priority: priorityPrefs, deliveryMethod } = preferences;
+    addNotification: (notification: Notification) => {
+      const { notifications, preferences } = get();
+      const { priority: priorityPrefs, deliveryMethod } = preferences;
 
-    // Verificar se a notificação deve ser adicionada com base nas preferências
-    if (
-      deliveryMethod === 'none' ||
-      (notification.priority === 'high' && !priorityPrefs.high) ||
-      (notification.priority === 'medium' && !priorityPrefs.medium) ||
-      (notification.priority === 'low' && !priorityPrefs.low)
-    ) {
-      return;
-    }
+      // Verificar se a notificação deve ser adicionada com base nas preferências
+      if (
+        deliveryMethod === 'none' ||
+        (notification.priority === 'high' && !priorityPrefs.high) ||
+        (notification.priority === 'medium' && !priorityPrefs.medium) ||
+        (notification.priority === 'low' && !priorityPrefs.low)
+      ) {
+        return;
+      }
 
-    set({
-      notifications: [notification, ...notifications],
-      unreadCount: get().unreadCount + 1,
-    });
+      set({
+        notifications: [notification, ...notifications],
+        unreadCount: get().unreadCount + 1,
+      });
 
-    // Reproduzir som se estiver habilitado
-    if (preferences.sound) {
-      const audio = new Audio('/notification-sound.mp3');
-      audio.play().catch(console.error);
-    }
-  },
+      // Reproduzir som se estiver habilitado
+      if (preferences.sound) {
+        const audio = new Audio('/notification-sound.mp3');
+        audio.play().catch(console.error);
+      }
+    },
 
-  markAsRead: (id: string) => {
-    set((state) => ({
-      notifications: state.notifications.map((n) =>
-        n.id === id ? { ...n, read: true } : n
-      ),
-      unreadCount: state.notifications.filter((n) => !n.read && n.id !== id).length,
-    }));
-  },
+    markAsRead: (id: string) => {
+      set((state) => ({
+        notifications: state.notifications.map((n) =>
+          n.id === id ? { ...n, read: true } : n
+        ),
+        unreadCount: state.notifications.filter((n) => !n.read && n.id !== id).length,
+      }));
+    },
 
-  markAllAsRead: () => {
-    set((state) => ({
-      notifications: state.notifications.map((n) => ({ ...n, read: true })),
-      unreadCount: 0,
-    }));
-  },
+    markAllAsRead: () => {
+      set((state) => ({
+        notifications: state.notifications.map((n) => ({ ...n, read: true })),
+        unreadCount: 0,
+      }));
+    },
 
-  updatePreferences: (preferences) => {
-    set({ preferences });
-  },
+    updatePreferences: (preferences) => {
+      set({ preferences });
+    },
 
-  setConnectionStatus: (status: boolean) => {
-    set({ isConnected: status });
-  },
+    setConnectionStatus: (status: boolean) => {
+      set({ isConnected: status });
+    },
 
-  removeNotification: (id: string) => {
-    set((state) => ({
-      notifications: state.notifications.filter((n) => n.id !== id),
-      unreadCount: state.notifications.filter((n) => !n.read && n.id !== id).length,
-    }));
-  },
-})); // Removed one closing parenthesis here
+    removeNotification: (id: string) => {
+      set((state) => ({
+        notifications: state.notifications.filter((n) => n.id !== id),
+        unreadCount: state.notifications.filter((n) => !n.read && n.id !== id).length,
+      }));
+    },
+  };
+});
 
 // Classe para gerenciar a conexão WebSocket
 class NotificationWebSocket {
@@ -109,6 +110,7 @@ class NotificationWebSocket {
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
   private reconnectTimeout = 1000; // Tempo inicial de reconexão em ms
+  private cleanupFunctions: Array<() => void> = [];
 
   constructor() {
     this.connect();
@@ -124,13 +126,13 @@ class NotificationWebSocket {
       this.ws = socket;
 
       if (this.ws) {
-        this.ws.onopen = () => {
+        const openHandler = () => {
           useNotificationStore.getState().setConnectionStatus(true);
           this.reconnectAttempts = 0;
           this.reconnectTimeout = 1000;
         };
 
-        this.ws.onmessage = (event) => {
+        const messageHandler = (event: MessageEvent) => {
           try {
             const notification = JSON.parse(event.data);
             useNotificationStore.getState().addNotification(notification);
@@ -139,15 +141,30 @@ class NotificationWebSocket {
           }
         };
 
-        this.ws.onclose = () => {
+        const closeHandler = () => {
           useNotificationStore.getState().setConnectionStatus(false);
           this.handleReconnect();
         };
 
-        this.ws.onerror = (error) => {
+        const errorHandler = (error: Event) => {
           console.error('Erro na conexão WebSocket:', error);
           useNotificationStore.getState().setConnectionStatus(false);
         };
+
+        this.ws.onopen = openHandler;
+        this.ws.onmessage = messageHandler;
+        this.ws.onclose = closeHandler;
+        this.ws.onerror = errorHandler;
+
+        // Store cleanup functions
+        this.cleanupFunctions.push(() => {
+          if (this.ws) {
+            this.ws.removeEventListener('open', openHandler);
+            this.ws.removeEventListener('message', messageHandler);
+            this.ws.removeEventListener('close', closeHandler);
+            this.ws.removeEventListener('error', errorHandler);
+          }
+        });
       }
     } catch (error) {
       console.error('Erro ao estabelecer conexão WebSocket:', error);
@@ -166,15 +183,18 @@ class NotificationWebSocket {
   }
 
   public close() {
+    this.cleanupFunctions.forEach(cleanup => cleanup());
+    this.cleanupFunctions = [];
+    
     if (this.ws) {
       this.ws.close();
+      this.ws = null;
     }
   }
 }
 
 // Exportar uma instância do WebSocket para ser usada na aplicação
 export const notificationWS = new NotificationWebSocket();
-
 
 export async function notifyUsers(notification: {
   title: string;

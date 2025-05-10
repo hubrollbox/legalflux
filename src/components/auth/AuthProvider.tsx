@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, ReactNode } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase-client';
@@ -48,7 +49,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     getSession();
     
     // Fix the subscription handling
-    const { data } = supabase.auth.onAuthStateChange(
+    const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event: string, session: any) => {
         if (session?.user) {
           const { data, error } = await supabase
@@ -72,7 +73,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     
     // Correct unsubscription
     return () => {
-      data?.subscription?.unsubscribe?.();
+      if (authListener && typeof authListener.subscription?.unsubscribe === 'function') {
+        authListener.subscription.unsubscribe();
+      }
     };
   }, []);
 

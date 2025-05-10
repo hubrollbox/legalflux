@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/lib/supabase-client';
 import { useToast } from '@/hooks/use-toast';
@@ -61,7 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     getInitialSession();
 
     // Fix the subscription handling
-    const { data } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
       setSession(newSession);
       if (newSession?.user) {
         const supabaseUser = newSession.user;
@@ -79,7 +80,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
 
     return () => {
-      data?.subscription?.unsubscribe?.();
+      if (authListener && typeof authListener.subscription?.unsubscribe === 'function') {
+        authListener.subscription.unsubscribe();
+      }
     };
   }, []);
 

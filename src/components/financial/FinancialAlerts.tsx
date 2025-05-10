@@ -1,143 +1,78 @@
 
-import React from "react";
-import { toast } from "@/hooks/use-toast";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Bell, AlertCircle, Check, X } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
-interface FinancialAlertProps {
-  id: string;
-  title: string;
-  description: string;
-  type: "payment" | "invoice" | "notice";
-  status: "pending" | "due" | "overdue" | "paid";
-  amount?: number;
-  date?: string;
-}
+// Sample alert data
+const alerts = [
+  { 
+    id: '1', 
+    title: 'Prazo de pagamento próximo', 
+    description: 'Fatura #INV-2023-001 vence em 3 dias',
+    type: 'warning'
+  },
+  { 
+    id: '2',
+    title: 'Pagamento recebido',
+    description: 'R$ 5.000,00 recebido de Cliente XYZ',
+    type: 'success'
+  }
+];
 
-export const FinancialAlerts: React.FC = () => {
-  const handlePaymentNotification = (alert: FinancialAlertProps) => {
+export const FinancialAlerts = () => {
+  const { toast } = useToast();
+
+  const handleDismiss = (id: string) => {
     toast({
-      title: `Pagamento ${alert.status === "paid" ? "efetuado" : "agendado"}`,
-      description: `${alert.title} - ${alert.amount?.toLocaleString("pt-PT", {
-        style: "currency",
-        currency: "EUR",
-      })}`,
-      duration: 5000,
+      title: "Alerta descartado",
+      description: "O alerta foi removido com sucesso."
     });
   };
 
-  const handleDismissAlert = (id: string) => {
-    // Aqui você removeria o alerta do estado/banco de dados
+  const handleAction = (id: string) => {
     toast({
-      title: "Alerta ignorado",
-      description: "Este alerta não será mais mostrado.",
-      duration: 3000,
+      title: "Ação executada",
+      description: "A ação foi realizada com sucesso."
     });
   };
-
-  // Dados simulados de alertas
-  const alerts: FinancialAlertProps[] = [
-    {
-      id: "1",
-      title: "Fatura #2023-089",
-      description: "Pagamento pendente - Cliente: Empresa ABC",
-      type: "invoice",
-      status: "due",
-      amount: 1250.0,
-      date: "2025-05-15",
-    },
-    {
-      id: "2",
-      title: "Declaração IRS",
-      description: "Prazo limite em 5 dias",
-      type: "notice",
-      status: "pending",
-      date: "2025-05-20",
-    },
-    {
-      id: "3",
-      title: "Honorários Processo #P-2023-045",
-      description: "Recebimento confirmado",
-      type: "payment",
-      status: "paid",
-      amount: 3450.0,
-      date: "2025-05-09",
-    },
-  ];
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Notificações Financeiras</h3>
-
-      {alerts.length === 0 ? (
-        <Card>
-          <CardContent className="py-4 text-center text-muted-foreground">
-            Não há notificações financeiras pendentes.
+      <h3 className="text-lg font-medium">Alertas Financeiros</h3>
+      
+      {alerts.map((alert) => (
+        <Card key={alert.id} className={
+          alert.type === 'warning' ? "border-yellow-300 bg-yellow-50" : 
+          alert.type === 'success' ? "border-green-300 bg-green-50" : 
+          "border-red-300 bg-red-50"
+        }>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">{alert.title}</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0 pb-2">
+            <p className="text-sm text-gray-600">{alert.description}</p>
           </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-3">
-          {alerts.map((alert) => (
-            <Alert
-              key={alert.id}
-              className="flex items-start justify-between"
-              variant={alert.status === "overdue" ? "destructive" : "default"}
+          <CardFooter className="pt-0 flex justify-end gap-2">
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              onClick={() => handleDismiss(alert.id)}
             >
-              <div className="flex gap-2">
-                {alert.type === "payment" && (
-                  <Check className="h-5 w-5 mt-0.5 text-green-500" />
-                )}
-                {alert.type === "invoice" && (
-                  <AlertCircle className="h-5 w-5 mt-0.5 text-amber-500" />
-                )}
-                {alert.type === "notice" && (
-                  <Bell className="h-5 w-5 mt-0.5 text-blue-500" />
-                )}
-                <div>
-                  <AlertTitle>{alert.title}</AlertTitle>
-                  <AlertDescription className="flex flex-col">
-                    <span>{alert.description}</span>
-                    {alert.amount && (
-                      <span className="font-semibold">
-                        {alert.amount.toLocaleString("pt-PT", {
-                          style: "currency",
-                          currency: "EUR",
-                        })}
-                      </span>
-                    )}
-                    {alert.date && (
-                      <span className="text-xs text-muted-foreground mt-1">
-                        {new Date(alert.date).toLocaleDateString("pt-PT")}
-                      </span>
-                    )}
-                  </AlertDescription>
-                </div>
-              </div>
-              <div className="flex gap-2 ml-4 shrink-0">
-                {(alert.type === "invoice" || alert.type === "payment") && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handlePaymentNotification(alert)}
-                  >
-                    {alert.status === "paid"
-                      ? "Ver detalhes"
-                      : "Agendar pagamento"}
-                  </Button>
-                )}
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => handleDismissAlert(alert.id)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </Alert>
-          ))}
-        </div>
+              Descartar
+            </Button>
+            <Button 
+              size="sm" 
+              onClick={() => handleAction(alert.id)}
+            >
+              Ver Detalhes
+            </Button>
+          </CardFooter>
+        </Card>
+      ))}
+      
+      {alerts.length === 0 && (
+        <p className="text-sm text-gray-500">Não há alertas financeiros no momento.</p>
       )}
     </div>
   );

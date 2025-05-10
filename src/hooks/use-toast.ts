@@ -26,8 +26,5 @@ export function useToast() {
   };
 }
 
-// Export toast function for direct usage
-export const toast = sonnerToast;
-
 // Export Toaster component
 export { Toaster };
