@@ -1,11 +1,22 @@
-import React, { useEffect, useState } from "react";
+
+import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, FileText } from "lucide-react";
+import { Document } from "@/types/document";
 
 const fixDateFormatting = (date: string | Date | undefined) => {
   if (!date) return "--";
-  return format(date, "dd/MM/yyyy", { locale: ptBR });
+  try {
+    return format(new Date(date), "dd/MM/yyyy", { locale: ptBR });
+  } catch (error) {
+    console.error("Error formatting date:", error);
+    return "--";
+  }
 };
 
 interface ProcessDetailProps {
@@ -123,14 +134,13 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({ process, documents }) => 
             <p>Nenhum documento associado a este processo.</p>
           ) : (
             <div>
-              {/* Fix document property access by ensuring it matches the Document type from types/document.ts */}
               {documents.map((doc) => (
                 <div key={doc.id} className="flex items-center justify-between py-2 border-b last:border-0">
                   <div>
                     <p className="font-medium">{doc.name}</p>
                     <p className="text-sm text-muted-foreground">
                       {doc.version && `v${doc.version} • `}
-                      {doc.updatedAt && `Última atualização: ${formatDate(doc.updatedAt)}`}
+                      {doc.updatedAt && `Última atualização: ${fixDateFormatting(doc.updatedAt)}`}
                     </p>
                   </div>
                   <Button variant="ghost">

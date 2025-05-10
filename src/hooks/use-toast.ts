@@ -1,5 +1,5 @@
 
-import { toast as sonnerToast, Toaster as SonnerToaster } from "sonner";
+import { toast as sonnerToast } from "sonner";
 
 interface ToastProps {
   title?: string;
@@ -36,10 +36,10 @@ const toastImpl = {
 };
 
 // Export toast function
-export const toast = (title: string, options?: { description?: string }) => {
+export const toast = (props: { title: string, description?: string }) => {
   if (typeof window !== 'undefined') {
-    sonnerToast(title, {
-      description: options?.description
+    sonnerToast(props.title, {
+      description: props.description
     });
   }
 };
@@ -55,7 +55,7 @@ export function useToast() {
     if (variant === "destructive") {
       toast.error(title || "", { description });
     } else {
-      toast(title || "", { description });
+      toast({ title: title || "", description });
     }
   };
 

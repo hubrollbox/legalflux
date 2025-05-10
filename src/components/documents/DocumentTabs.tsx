@@ -31,6 +31,19 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
   filteredDocuments = [],
   filteredTemplates = []
 }) => {
+  // Convert template objects to the format expected by TemplatesContent
+  const formattedTemplates = filteredTemplates.map(template => ({
+    id: template.id,
+    name: template.name,
+    description: template.description,
+    category: template.category,
+    type: template.type,
+    createdAt: template.createdAt,
+    updatedAt: template.updatedAt || template.createdAt,
+    tags: template.tags,
+    size: typeof template.size === 'number' ? `${template.size} KB` : (template.size?.toString() || "1MB"),
+  }));
+
   return (
     <Tabs defaultValue="all" className="mb-6">
       <div className="flex justify-between items-center">
@@ -67,17 +80,7 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
       
       <TabsContent value="templates" className="mt-6">
         <TemplatesContent 
-          templates={filteredTemplates.map(template => ({
-            id: template.id,
-            name: template.name,
-            description: template.description,
-            category: template.category,
-            type: template.type,
-            createdAt: template.createdAt,
-            updatedAt: template.updatedAt,
-            tags: template.tags,
-            size: typeof template.size === 'number' ? `${template.size} KB` : (template.size?.toString() || "1MB"),
-          }))} 
+          templates={formattedTemplates} 
           viewMode={viewMode} 
         />
       </TabsContent>

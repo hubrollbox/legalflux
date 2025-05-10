@@ -8,14 +8,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Calendar as BigCalendar, momentLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { format, parse, startOfWeek, getDay } from "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import moment from "moment";
 import "moment/locale/pt-br";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import EnhancedCalendarSidebar from "@/components/calendar/EnhancedCalendarSidebar";
 import EventForm, { CalendarEvent } from "@/components/calendar/EventForm";
 import { useToast } from "@/hooks/use-toast";
+
+// Import the EnhancedCalendarSidebar component
+import EnhancedCalendarSidebar from "@/components/calendar/EnhancedCalendarSidebar";
 
 // Configure moment to use pt-BR locale
 moment.locale("pt-br");
@@ -63,8 +65,10 @@ const CalendarPage = ({ initialEvents = [] }: CalendarPageProps) => {
   const { toast } = useToast();
 
   // Define handler for event selection
-  const handleEventSelect = (event: CalendarEvent) => {
-    setSelectedEvent(event);
+  const handleEventSelect = (event: any) => {
+    // Cast the event to CalendarEvent type
+    const calEvent = event as unknown as CalendarEvent;
+    setSelectedEvent(calEvent);
     setIsEventFormOpen(true);
   };
 
@@ -93,23 +97,26 @@ const CalendarPage = ({ initialEvents = [] }: CalendarPageProps) => {
 
   // Define a custom event style getter
   const eventStyleGetter = (event: any) => {
-    const categoryColors = {
+    const categoryColors: {[key: string]: { bg: string; text: string; icon: React.ReactNode }} = {
       meeting: { bg: "bg-blue-100", text: "text-blue-700", icon: <Users className="h-4 w-4" /> },
       deadline: { bg: "bg-red-100", text: "text-red-700", icon: <Clock className="h-4 w-4" /> },
       task: { bg: "bg-green-100", text: "text-green-700", icon: <FileText className="h-4 w-4" /> },
       other: { bg: "bg-gray-100", text: "text-gray-700", icon: <CalendarIcon className="h-4 w-4" /> }
     };
 
-    // Use explicit category check
-    const style = {
-      className: cn(
-        categoryColors[event.category]?.bg || "bg-gray-100",
-        categoryColors[event.category]?.text || "text-gray-700",
-        "rounded-md border border-transparent transition-colors hover:border-gray-300"
-      )
+    // Use explicit category check with safe access
+    const eventCategory = event.category || 'other';
+    const colorInfo = categoryColors[eventCategory] || categoryColors.other;
+    
+    return {
+      style: {
+        className: cn(
+          colorInfo.bg,
+          colorInfo.text,
+          "rounded-md border border-transparent transition-colors hover:border-gray-300"
+        )
+      }
     };
-
-    return { style };
   };
 
   const filteredEvents = categoryFilter
@@ -152,12 +159,20 @@ const CalendarPage = ({ initialEvents = [] }: CalendarPageProps) => {
               style={{ height: 700 }}
               culture="pt-BR"
               view={view}
-              onView={setView}
-              onSelectEvent={(event: CalendarEvent) => handleEventSelect(event)}
+              onView={(newView) => setView(newView)}
+              onSelectEvent={handleEventSelect}
               onNavigate={setDate}
               date={date}
               views={[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]}
-              eventPropGetter={eventStyleGetter}
+              eventPropGetter={(event) => ({
+                className: cn(
+                  event.category === 'meeting' ? "bg-blue-100 text-blue-700" :
+                  event.category === 'deadline' ? "bg-red-100 text-red-700" :
+                  event.category === 'task' ? "bg-green-100 text-green-700" :
+                  "bg-gray-100 text-gray-700",
+                  "rounded-md border border-transparent transition-colors hover:border-gray-300"
+                )
+              })}
               dayPropGetter={(date) => ({
                 style: {
                   backgroundColor: date.getDay() === 0 || date.getDay() === 6 ? "#f9fafb" : "transparent"
