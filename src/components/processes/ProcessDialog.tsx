@@ -29,7 +29,11 @@ const ProcessDialog: React.FC<ProcessDialogProps> = ({
   title,
   description,
 }) => {
-  const initialData: Process = process || {
+  // Ensure the initialData is created with proper types for deadline
+  const initialData = process ? {
+    ...process,
+    deadline: process.startDate ? new Date(process.startDate) : undefined
+  } : {
     id: '',
     title: '',
     number: '',

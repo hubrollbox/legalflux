@@ -10,6 +10,7 @@ import { mockDocuments, mockTemplates } from "@/components/documents/DocumentsDa
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import DocumentCard from '@/components/documents/DocumentCard';
+import { Document } from "@/types/document";
 
 const Documents = () => {
   const [filterSigned, setFilterSigned] = useState<'all' | 'signed' | 'unsigned'>('all');
@@ -27,13 +28,13 @@ const Documents = () => {
     return mockDocuments.filter(doc => {
       const matchesSearch = 
         doc.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-        doc.folder.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doc.process.toLowerCase().includes(searchTerm.toLowerCase());
+        (doc.folder ? doc.folder.toLowerCase().includes(searchTerm.toLowerCase()) : false) ||
+        (doc.process ? doc.process.toLowerCase().includes(searchTerm.toLowerCase()) : false);
 
       const matchesType = filters.type === "todos" || (doc.type && doc.type.toLowerCase() === filters.type);
       
       const matchesDate = !filters.date || 
-        new Date(doc.updatedAt).toDateString() === filters.date.toDateString();
+        (doc.updatedAt && new Date(doc.updatedAt).toDateString() === filters.date.toDateString());
       
       const matchesTags = filters.tags.length === 0 || 
         (doc.tags && filters.tags.every(tag => doc.tags?.includes(tag)));
@@ -94,7 +95,7 @@ const Documents = () => {
             setViewMode={setViewMode}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
-            filteredDocuments={filteredDocuments as Document[]}
+            filteredDocuments={filteredDocuments}
             filteredTemplates={filteredTemplates}
             filters={filters}
             setFilters={setFilters}

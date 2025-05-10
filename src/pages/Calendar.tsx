@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
@@ -11,6 +12,10 @@ import { format, parse, startOfWeek, getDay } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import moment from "moment";
 import "moment/locale/pt-br";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import EnhancedCalendarSidebar from "@/components/calendar/EnhancedCalendarSidebar";
+import EventForm from "@/components/calendar/EventForm";
+import { useToast } from "@/hooks/use-toast";
 
 // Configure moment to use pt-BR locale
 moment.locale("pt-br");
@@ -67,10 +72,10 @@ const useCalendar = () => {
 };
 
 interface CalendarPageProps {
-  initialEvents: CalendarEvent[]
+  initialEvents?: CalendarEvent[]
 }
 
-const CalendarPage = ({ initialEvents }: CalendarPageProps) => {
+const CalendarPage = ({ initialEvents = [] }: CalendarPageProps) => {
   const [date, setDate] = useState(new Date());
   const { events, createEvent, updateEvent, deleteEvent } = useCalendar();
   const [view, setView] = useState(Views.MONTH);
@@ -79,8 +84,37 @@ const CalendarPage = ({ initialEvents }: CalendarPageProps) => {
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const { toast } = useToast();
 
+  // Define handler for event selection
+  const handleEventSelect = (event: CalendarEvent) => {
+    setSelectedEvent(event);
+    setIsEventFormOpen(true);
+  };
+
+  // Define handlers for event create/update
+  const handleEventCreate = (data: CalendarEvent) => {
+    createEvent(data).then(() => {
+      toast({
+        title: "Evento criado",
+        description: `O evento "${data.title}" foi criado com sucesso.`,
+      });
+      setIsEventFormOpen(false);
+    });
+  };
+
+  const handleEventUpdate = (data: CalendarEvent) => {
+    if (selectedEvent) {
+      updateEvent(selectedEvent.id, data).then(() => {
+        toast({
+          title: "Evento atualizado",
+          description: `O evento "${data.title}" foi atualizado com sucesso.`,
+        });
+        setIsEventFormOpen(false);
+      });
+    }
+  };
+
   // Define a proper type for the event parameter in eventStyleGetter
-  const eventStyleGetter = (event: { category: string }) => {
+  const eventStyleGetter = (event: CalendarEvent) => {
     const categoryColors = {
       meeting: { bg: "bg-blue-100", text: "text-blue-700", icon: <Users className="h-4 w-4" /> },
       deadline: { bg: "bg-red-100", text: "text-red-700", icon: <Clock className="h-4 w-4" /> },
@@ -91,8 +125,8 @@ const CalendarPage = ({ initialEvents }: CalendarPageProps) => {
     // Use explicit category check
     const style = {
       className: cn(
-        categoryColors[event.category as keyof typeof categoryColors]?.bg || "bg-gray-100",
-        categoryColors[event.category as keyof typeof categoryColors]?.text || "text-gray-700",
+        categoryColors[event.category]?.bg || "bg-gray-100",
+        categoryColors[event.category]?.text || "text-gray-700",
         "rounded-md border border-transparent transition-colors hover:border-gray-300"
       )
     };
@@ -145,7 +179,7 @@ const CalendarPage = ({ initialEvents }: CalendarPageProps) => {
               onNavigate={setDate}
               date={date}
               views={[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]}
-              eventPropGetter={eventStyleGetter}
+              eventPropGetter={eventStyleGetter as any}
               dayPropGetter={(date) => ({
                 style: {
                   backgroundColor: date.getDay() === 0 || date.getDay() === 6 ? "#f9fafb" : "transparent"

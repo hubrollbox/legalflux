@@ -8,22 +8,15 @@ import DocumentsSearchBar from "./DocumentsSearchBar";
 import DocumentsViewMode from "./DocumentsViewMode";
 import DocumentsContent from "./DocumentsContent";
 import TemplatesContent from "./TemplatesContent";
-import { Document, DocumentTemplate, DocumentType } from "@/types/document";
-
-// Define local interface for filters to replace the missing DocumentFilter type
-interface DocumentFilters {
-  type: string;
-  date: Date | undefined;
-  tags: string[];
-}
+import { Document, DocumentTemplate, DocumentType, DocumentFilter } from "@/types/document";
 
 interface DocumentTabsProps {
   viewMode: "grid" | "list";
   setViewMode: (mode: "grid" | "list") => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filters: DocumentFilters;
-  setFilters: (filters: DocumentFilters) => void;
+  filters: DocumentFilter;
+  setFilters: (filters: DocumentFilter) => void;
   filteredDocuments: Document[];
   filteredTemplates: DocumentTemplate[];
 }
@@ -76,10 +69,12 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
         <TemplatesContent 
           templates={filteredTemplates.map(template => ({
             ...template,
-            // Ensure size is present
-            size: template.size || "1MB",
-            // Ensure updatedAt is present and in string format
-            updatedAt: template.updatedAt || template.createdAt
+            // Ensure size is a string
+            size: typeof template.size === 'number' ? `${template.size}` : (template.size || "1MB"),
+            // Ensure updatedAt is a string
+            updatedAt: template.updatedAt 
+              ? (typeof template.updatedAt === 'string' ? template.updatedAt : template.updatedAt.toString())
+              : (typeof template.createdAt === 'string' ? template.createdAt : template.createdAt.toString())
           }))} 
           viewMode={viewMode} 
         />

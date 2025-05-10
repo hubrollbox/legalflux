@@ -12,7 +12,7 @@ export interface Document {
   createdAt: string | Date;
   updatedAt?: string | Date;
   version?: string | number;
-  size?: number | string; // Allow both number and string for flexibility
+  size?: string | number; // Allow both number and string for flexibility
   owner?: string;
   tags?: string[];
   processId?: string;

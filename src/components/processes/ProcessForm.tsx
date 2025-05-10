@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +9,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { formatDate } from "@/utils/dateUtils";
+import { format } from "date-fns";
 
 interface Client {
   id: string;
@@ -66,11 +67,8 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleDateChange = (date: Date) => {
-    // Example of fixing formatDate usage
-    const formattedDate = formatDate(date); // Using correct argument count
-    
-    setDeadlineDate(date);
+  const formatDate = (date: Date): string => {
+    return format(date, "PPP");
   };
 
   return (
@@ -172,7 +170,7 @@ const ProcessForm: React.FC<ProcessFormProps> = ({
               <Calendar
                 mode="single"
                 selected={deadlineDate}
-                onSelect={handleDateChange}
+                onSelect={setDeadlineDate}
                 initialFocus
               />
             </PopoverContent>

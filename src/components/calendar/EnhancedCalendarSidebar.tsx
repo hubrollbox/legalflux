@@ -1,254 +1,125 @@
 
-import React from "react";
-import Calendar from "react-calendar";
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import React from 'react';
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
-import { Users, Clock, FileText, Calendar as CalendarIcon, Briefcase, Gavel, Scale } from "lucide-react";
-import { cn } from "@/lib/utils";
-import type { CategoryKey } from '@/types';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { useCalendar } from './CalendarContext';
 
-// Defining the type Value locally based on react-calendar's definition
-type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
-
-interface CategoryConfig {
-  label: string;
-  color: string;
-  icon: React.ReactNode;
-  hoverColor: string;
+interface Event {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  category: 'meeting' | 'deadline' | 'task' | 'other';
+  description?: string;
+  isRecurring?: boolean;
+  recurrenceType?: 'daily' | 'weekly' | 'monthly' | 'yearly';
 }
-
-const categoryConfig: Record<string, CategoryConfig> = {
-  meeting: {
-    label: "Reuniões",
-    color: "bg-blue-100 text-blue-700",
-    hoverColor: "hover:bg-blue-50",
-    icon: <Users className="h-4 w-4" />
-  },
-  deadline: {
-    label: "Prazos",
-    color: "bg-red-100 text-red-700",
-    hoverColor: "hover:bg-red-50",
-    icon: <Clock className="h-4 w-4" />
-  },
-  task: {
-    label: "Tarefas",
-    color: "bg-green-100 text-green-700",
-    hoverColor: "hover:bg-green-50",
-    icon: <FileText className="h-4 w-4" />
-  },
-  hearing: {
-    label: "Audiências",
-    color: "bg-purple-100 text-purple-700",
-    hoverColor: "hover:bg-purple-50",
-    icon: <Gavel className="h-4 w-4" />
-  },
-  trial: {
-    label: "Julgamentos",
-    color: "bg-amber-100 text-amber-700",
-    hoverColor: "hover:bg-amber-50",
-    icon: <Scale className="h-4 w-4" />
-  },
-  client: {
-    label: "Clientes",
-    color: "bg-indigo-100 text-indigo-700",
-    hoverColor: "hover:bg-indigo-50",
-    icon: <Briefcase className="h-4 w-4" />
-  },
-  other: {
-    label: "Outros",
-    color: "bg-gray-100 text-gray-700",
-    hoverColor: "hover:bg-gray-50",
-    icon: <CalendarIcon className="h-4 w-4" />
-  },
-  reminder: {
-    label: "Lembretes",
-    color: "bg-yellow-100 text-yellow-700",
-    hoverColor: "hover:bg-yellow-50",
-    icon: <Clock className="h-4 w-4" />
-  },
-  document: {
-    label: "Documentos",
-    color: "bg-purple-100 text-purple-700",
-    hoverColor: "hover:bg-purple-50",
-    icon: <FileText className="h-4 w-4" />
-  },
-  case: {
-    label: "Processos",
-    color: "bg-blue-100 text-blue-700",
-    hoverColor: "hover:bg-blue-50",
-    icon: <FileText className="h-4 w-4" />
-  }
-};
 
 interface EnhancedCalendarSidebarProps {
-  className?: string;
-  initialDate?: Date;
-  onDateChange?: (date: Date) => void;
-  onCategoryChange?: (category: CategoryKey | null) => void;
+  events: Event[];
+  selectedDate: Date;
+  onDateChange: (date: Date) => void;
+  onCategoryFilter: (category: string | null) => void;
 }
 
-export const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = () => {
-  const {
-    events,
-    selectedDate = new Date(),
-    handleDateChange: onDateChange,
-    handleCategoryChange: onCategoryFilter,
-    selectedCategory
-  } = useCalendar();
-  
-  const handleDateChange = React.useCallback((value: Value) => {
-    if (!value) return;
-    
-    if (value instanceof Date) {
-      onDateChange(value);
-    } else if (Array.isArray(value) && value.length > 0 && value[0] instanceof Date) {
-      onDateChange(value[0]);
-    }
-  }, [onDateChange]);
-
-  const eventsByCategory = React.useMemo(() => {
-    const result: Record<string, number> = {};
-    
-    events.forEach(event => {
-      const category = event.category || 'other';
-      result[category] = (result[category] || 0) + 1;
-    });
-    
-    return result;
-  }, [events]);
-
-  const upcomingEvents = React.useMemo(() => {
-    const now = new Date();
-    return events
-      .filter(event => new Date(event.start) >= now)
-      .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
-      .slice(0, 5);
-  }, [events]);
-
-  const renderCategoryFilter = (category: CategoryKey | null) => {
-    const config = category && categoryConfig[category] 
-      ? categoryConfig[category] 
-      : {
-        label: "Todos",
-        color: "bg-gray-100 text-gray-700",
-        hoverColor: "hover:bg-gray-50",
-        icon: <CalendarIcon className="h-4 w-4" />
-      };
-
-    const isSelected = selectedCategory === category;
-    const count = category ? (eventsByCategory[category] || 0) : events.length;
-
-    return (
-      <div
-        key={category || 'all'}
-        onClick={() => onCategoryFilter(category)}
-        className={cn(
-          "flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors",
-          isSelected ? config.color : config.hoverColor
-        )}
-      >
-        <div className="flex items-center gap-2">
-          {config.icon}
-          <span>{config.label}</span>
-        </div>
-        <Badge variant="secondary">{count}</Badge>
-      </div>
-    );
-  };
+const EnhancedCalendarSidebar: React.FC<EnhancedCalendarSidebarProps> = ({
+  events,
+  selectedDate,
+  onDateChange,
+  onCategoryFilter
+}) => {
+  const eventsForDate = events.filter(event => 
+    event.start.getDate() === selectedDate.getDate() &&
+    event.start.getMonth() === selectedDate.getMonth() &&
+    event.start.getFullYear() === selectedDate.getFullYear()
+  );
 
   return (
-    <div className="w-80 space-y-4">
+    <aside className="w-64 space-y-4">
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">Calendário</CardTitle>
+        <CardHeader className="p-4">
+          <h3 className="text-lg font-medium">Calendário</h3>
         </CardHeader>
-        <CardContent className="p-4">
+        <CardContent className="p-3">
           <Calendar
-            onChange={handleDateChange}
-            value={selectedDate ?? new Date()}
-            className={cn(
-              "w-full",
-              "rounded-lg",
-              "border-none",
-              "shadow-none"
-            )}
+            mode="single"
+            selected={selectedDate}
+            onSelect={(date) => date && onDateChange(date)}
+            className="rounded-md border"
           />
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">Filtros</CardTitle>
+        <CardHeader className="p-4">
+          <h3 className="text-lg font-medium">Filtros</h3>
         </CardHeader>
-        <CardContent className="p-4">
-          <div className="space-y-2">
-            {renderCategoryFilter(null)}
-            {(Object.keys(categoryConfig) as CategoryKey[]).map(category => 
-              renderCategoryFilter(category)
-            )}
-          </div>
+        <CardContent className="p-3 space-y-2">
+          <Button 
+            variant="outline" 
+            className="w-full justify-start" 
+            onClick={() => onCategoryFilter(null)}
+          >
+            Todos
+          </Button>
+          <Button 
+            variant="outline" 
+            className="w-full justify-start text-blue-700" 
+            onClick={() => onCategoryFilter('meeting')}
+          >
+            <Badge className="bg-blue-100 text-blue-700 mr-2">
+              {events.filter(e => e.category === 'meeting').length}
+            </Badge>
+            Reuniões
+          </Button>
+          <Button 
+            variant="outline" 
+            className="w-full justify-start text-red-700" 
+            onClick={() => onCategoryFilter('deadline')}
+          >
+            <Badge className="bg-red-100 text-red-700 mr-2">
+              {events.filter(e => e.category === 'deadline').length}
+            </Badge>
+            Prazos
+          </Button>
+          <Button 
+            variant="outline" 
+            className="w-full justify-start text-green-700" 
+            onClick={() => onCategoryFilter('task')}
+          >
+            <Badge className="bg-green-100 text-green-700 mr-2">
+              {events.filter(e => e.category === 'task').length}
+            </Badge>
+            Tarefas
+          </Button>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">Próximos Eventos</CardTitle>
+        <CardHeader className="p-4">
+          <h3 className="text-lg font-medium">Eventos para {selectedDate.toLocaleDateString()}</h3>
         </CardHeader>
-        <CardContent className="p-4">
-          <ScrollArea className="h-[300px]">
-            <div className="space-y-4">
-              {upcomingEvents.map(event => {
-                const category = event.category || 'other';
-                const config = categoryConfig[category] || categoryConfig.other;
-                
-                return (
-                  <div
-                    key={event.id}
-                    className={cn(
-                      'p-3 rounded-lg',
-                      config.color
-                    )}
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      {config.icon}
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-medium">{event.title}</h4>
-                        {event.priority && (
-                          <Badge 
-                            variant="outline"
-                            className={cn(
-                              'text-xs capitalize',
-                              event.priority === 'high' && 'bg-red-100 text-red-700',
-                              event.priority === 'medium' && 'bg-orange-100 text-orange-700',
-                              event.priority === 'low' && 'bg-green-100 text-green-700'
-                            )}
-                          >
-                            {event.priority}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                    <p className="text-sm opacity-80">
-                      {format(new Date(event.start), 'dd/MM/yyyy HH:mm')}
-                    </p>
-                    {event.description && (
-                      <p className="text-sm mt-1 opacity-70 line-clamp-2">
-                        {event.description}
-                      </p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </ScrollArea>
+        <CardContent className="p-3">
+          {eventsForDate.length === 0 ? (
+            <p className="text-sm text-gray-500">
+              Nenhum evento para esta data.
+            </p>
+          ) : (
+            <ul className="space-y-2">
+              {eventsForDate.map((event) => (
+                <li key={event.id} className="p-2 text-sm border rounded">
+                  <p className="font-medium">{event.title}</p>
+                  <p className="text-xs text-gray-500">
+                    {event.start.toLocaleTimeString()} - {event.end.toLocaleTimeString()}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
         </CardContent>
       </Card>
-    </div>
+    </aside>
   );
 };
 
