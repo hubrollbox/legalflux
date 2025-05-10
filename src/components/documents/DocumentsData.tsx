@@ -1,105 +1,137 @@
+import { formatDate } from "@/utils/dateUtils";
+import { Document, DocumentTemplate } from "@/types/document";
 
-// Verificar se este arquivo existe e se contém dados de exemplo
-// Se não existir, criamos um com dados mockados
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-
-// Dados de exemplo para documentos
-export const mockDocuments = [
+// Mock documents data
+export const mockDocuments: Document[] = [
   {
     id: "doc1",
-    name: "Contrato de Prestação de Serviços.pdf",
+    name: "Contrato de Prestação de Serviços",
     type: "document",
     size: "2.4 MB",
-    updatedAt: new Date().toISOString(),
+    updatedAt: formatDate(new Date(2023, 5, 15)),
     owner: "João Silva",
     folder: "Contratos",
-    process: "2023/001",
-    tags: ["Contrato", "Cliente"],
-    status: "signed"
+    process: "Processo 2023/001",
+    tags: ["contrato", "serviços", "cliente"],
+    status: "final",
+    description: "Contrato padrão de prestação de serviços jurídicos",
+    category: "Contratos",
   },
   {
     id: "doc2",
-    name: "Procuração.docx",
-    type: "document",
-    size: "1.5 MB",
-    updatedAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+    name: "Petição Inicial",
+    type: "action",
+    size: "1.8 MB",
+    updatedAt: formatDate(new Date(2023, 5, 20)),
     owner: "Maria Santos",
-    folder: "Documentos Pessoais",
-    process: "2023/002",
-    tags: ["Procuração"],
-    status: "unsigned"
+    folder: "Processos",
+    process: "Processo 2023/002",
+    tags: ["petição", "trabalhista"],
+    status: "review",
+    description: "Petição inicial para processo trabalhista",
+    category: "Petições",
   },
   {
     id: "doc3",
-    name: "Petição Inicial.pdf",
-    type: "document",
+    name: "Jurisprudência STF",
+    type: "precedent",
     size: "3.2 MB",
-    updatedAt: new Date(Date.now() - 3600000 * 48).toISOString(),
-    owner: "António Costa",
-    folder: "Processos",
-    process: "2023/003",
-    tags: ["Petição", "Processo"],
-    status: "signed"
+    updatedAt: formatDate(new Date(2023, 5, 10)),
+    owner: "Carlos Mendes",
+    folder: "Jurisprudência",
+    process: "Processo 2023/003",
+    tags: ["jurisprudência", "stf", "constitucional"],
+    status: "archived",
+    description: "Compilação de jurisprudência do STF sobre direito constitucional",
+    category: "Jurisprudência",
   },
   {
     id: "doc4",
-    name: "Relatório Financeiro.xlsx",
+    name: "Estratégia Processual",
+    type: "strategy",
+    size: "1.1 MB",
+    updatedAt: formatDate(new Date(2023, 5, 25)),
+    owner: "Ana Oliveira",
+    folder: "Estratégias",
+    process: "Processo 2023/004",
+    tags: ["estratégia", "processo", "cliente"],
+    status: "draft",
+    description: "Documento de estratégia processual para caso de direito empresarial",
+    category: "Estratégias",
+  },
+  {
+    id: "doc5",
+    name: "Procuração",
     type: "document",
-    size: "1.8 MB",
-    updatedAt: new Date(Date.now() - 3600000 * 72).toISOString(),
-    owner: "Ana Pereira",
-    folder: "Financeiro",
-    process: "2023/004",
-    tags: ["Financeiro", "Relatório"],
-    status: "unsigned"
-  }
+    size: "0.8 MB",
+    updatedAt: formatDate(new Date(2023, 5, 18)),
+    owner: "Pedro Costa",
+    folder: "Documentos",
+    process: "Processo 2023/005",
+    tags: ["procuração", "cliente"],
+    status: "signed",
+    description: "Procuração com poderes específicos",
+    category: "Documentos Pessoais",
+  },
 ];
 
-// Dados de exemplo para templates
-export const mockTemplates = [
+// Mock templates data
+export const mockTemplates: DocumentTemplate[] = [
   {
-    id: "temp1",
-    name: "Contrato de Trabalho",
-    type: "document",
-    size: "125 KB",
-    description: "Template de contrato de trabalho para novos colaboradores",
-    updatedAt: format(new Date(), "dd/MM/yyyy", { locale: ptBR }),
-    category: "Contratos"
-  },
-  {
-    id: "temp2",
-    name: "Petição Inicial Padrão",
-    type: "document",
-    size: "345 KB",
-    description: "Modelo base para petição inicial em processos civis",
-    updatedAt: format(new Date(Date.now() - 3600000 * 24), "dd/MM/yyyy", { locale: ptBR }),
-    category: "Petições"
-  },
-  {
-    id: "temp3",
-    name: "Procuração Ad Judicia",
-    type: "document",
-    size: "98 KB",
-    description: "Modelo de procuração para representação judicial",
-    updatedAt: format(new Date(Date.now() - 3600000 * 48), "dd/MM/yyyy", { locale: ptBR }),
-    category: "Documentos"
-  },
-  {
-    id: "temp4",
+    id: "template1",
     name: "Contrato de Prestação de Serviços",
+    description: "Modelo padrão de contrato de prestação de serviços jurídicos",
+    category: "Contratos",
+    tags: ["contrato", "serviços", "modelo"],
     type: "document",
-    size: "215 KB",
-    description: "Template para contrato de prestação de serviços",
-    updatedAt: format(new Date(Date.now() - 3600000 * 72), "dd/MM/yyyy", { locale: ptBR }),
-    category: "Contratos"
-  }
+    updatedAt: formatDate(new Date(2023, 4, 10)),
+  },
+  {
+    id: "template2",
+    name: "Petição Inicial - Trabalhista",
+    description: "Modelo de petição inicial para processos trabalhistas",
+    category: "Petições",
+    tags: ["petição", "trabalhista", "modelo"],
+    type: "action",
+    updatedAt: formatDate(new Date(2023, 4, 15)),
+  },
+  {
+    id: "template3",
+    name: "Procuração Ad Judicia",
+    description: "Modelo de procuração com poderes para representação judicial",
+    category: "Documentos",
+    tags: ["procuração", "modelo", "judicial"],
+    type: "document",
+    updatedAt: formatDate(new Date(2023, 4, 20)),
+  },
+  {
+    id: "template4",
+    name: "Contestação - Cível",
+    description: "Modelo de contestação para processos cíveis",
+    category: "Petições",
+    tags: ["contestação", "cível", "modelo"],
+    type: "action",
+    updatedAt: formatDate(new Date(2023, 4, 25)),
+  },
 ];
 
-// Função utilizada para formatar datas (se necessário)
-export function formatDocumentDate(date: Date | string): string {
-  if (!date) return "";
-  const dateObj = typeof date === "string" ? new Date(date) : date;
-  if (isNaN(dateObj.getTime())) return "";
-  return format(dateObj, "dd/MM/yyyy");
-}
+// Mock folders data
+export const mockFolders = [
+  { id: "folder1", name: "Contratos", count: 12 },
+  { id: "folder2", name: "Processos", count: 8 },
+  { id: "folder3", name: "Jurisprudência", count: 15 },
+  { id: "folder4", name: "Estratégias", count: 5 },
+  { id: "folder5", name: "Documentos", count: 20 },
+];
+
+// Mock tags data
+export const mockTags = [
+  { id: "tag1", name: "contrato", count: 8 },
+  { id: "tag2", name: "petição", count: 6 },
+  { id: "tag3", name: "jurisprudência", count: 12 },
+  { id: "tag4", name: "estratégia", count: 4 },
+  { id: "tag5", name: "cliente", count: 15 },
+  { id: "tag6", name: "trabalhista", count: 7 },
+  { id: "tag7", name: "cível", count: 9 },
+  { id: "tag8", name: "constitucional", count: 5 },
+];

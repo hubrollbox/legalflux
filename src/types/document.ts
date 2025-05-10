@@ -29,6 +29,9 @@ export interface DocumentTemplate {
   description?: string;
   category: string;
   tags?: string[];
+  type?: DocumentType;
+  size?: string;
+  updatedAt?: string;
 }
 
 export interface DocumentFilter {
@@ -36,4 +39,6 @@ export interface DocumentFilter {
   type?: DocumentType | "all";
   status?: DocumentStatus | "all";
   folder?: string;
+  date?: Date;
+  tags?: string[];
 }

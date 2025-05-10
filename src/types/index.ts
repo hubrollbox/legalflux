@@ -29,9 +29,10 @@ export * from "./category";
 export * from "./task";
 export * from "./priority-level";
 export * from "./financial";
-// Não precisamos mais exportar novamente, já estamos exportando tudo acima
-// export { TransactionType, TransactionStatus } from "./financial";
 export * from "./auth";
 export * from "./permissions";
 export * from "./document";
 export * from "./process";
+
+// Export TransactionType and TransactionStatus explicitly
+export { TransactionType, TransactionStatus } from "./financial";

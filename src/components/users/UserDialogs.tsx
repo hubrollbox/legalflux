@@ -72,10 +72,8 @@ export const EditUserDialog = ({
       email: user?.email || "",
       name: user?.name || "",
       role: user?.role || "client",
-      isActive: user?.isActive !== undefined ? user.isActive : true,
-      hasTwoFactorEnabled: user?.hasTwoFactorEnabled || false,
-      organizationId: user?.organizationId,
-      phone: user?.phone,
+      isActive: true,
+      hasTwoFactorEnabled: false,
     },
   });
 
@@ -85,10 +83,10 @@ export const EditUserDialog = ({
         email: user.email,
         name: user.name,
         role: user.role,
-        isActive: user.isActive,
-        hasTwoFactorEnabled: user.hasTwoFactorEnabled,
-        organizationId: user.organizationId,
-        phone: user.phone,
+        isActive: user.isActive || true,
+        hasTwoFactorEnabled: user.hasTwoFactorEnabled || false,
+        organizationId: user.organizationId || "",
+        phone: user.phone || "",
       });
     }
   }, [user, form]);

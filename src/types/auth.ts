@@ -4,6 +4,10 @@ export interface User {
   email?: string;
   name?: string;
   role: string;
+  isActive?: boolean;
+  hasTwoFactorEnabled?: boolean;
+  organizationId?: string;
+  phone?: string;
 }
 
 export type UserType = "client" | "lawyer" | "senior_lawyer" | "assistant" | "admin";

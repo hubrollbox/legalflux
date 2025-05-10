@@ -8,7 +8,7 @@ import { Document } from "@/types/document";
 interface DocumentsContentProps {
   title: string;
   description: string;
-  documents: Array<Document>;
+  documents: Document[];
   viewMode: "grid" | "list";
 }
 
@@ -44,7 +44,9 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
       ...doc,
       type: doc.type,
       size: typeof doc.size === 'number' ? `${doc.size} KB` : doc.size,
-      updatedAt: typeof doc.updatedAt === 'object' && doc.updatedAt instanceof Date ? doc.updatedAt.toISOString() : doc.updatedAt
+      updatedAt: typeof doc.updatedAt === 'object' 
+        ? (doc.updatedAt instanceof Date ? doc.updatedAt.toISOString() : doc.updatedAt) 
+        : doc.updatedAt
     };
   };
 
