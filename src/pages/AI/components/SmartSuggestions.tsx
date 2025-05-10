@@ -1,84 +1,69 @@
-import { useEffect, useState } from 'react';
-import { Card, CardContent } from '../../../components/ui/card';
-import { Button } from '../../../components/ui/button';
-import { Lightbulb, Loader2 } from 'lucide-react';
-import { useLegalSuggestions } from '../hooks/useLegalSuggestions';
-import SuggestionsList from './SuggestionsList';
-import { Message } from '../types/index';
-import { ContextualInfo } from '../hooks/useContextualAssistant';
 
-interface SmartSuggestionsProps {
-  messages: Message[];
-  contextInfo: ContextualInfo;
-  isContextSet: boolean;
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ChevronRight, Lightbulb } from "lucide-react";
+import { Suggestion } from '../types';
+import SuggestionsList from './SuggestionsList';
+
+// Define the correct types for legal suggestions
+export interface LegalSuggestion {
+  id: string;
+  title: string;
+  description: string;
+  type: string;
+  priority: string;
+  relevance: string;  // Changed from number to string for compatibility
 }
 
-const SmartSuggestions = ({ messages, contextInfo, isContextSet }: SmartSuggestionsProps) => {
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [lastProcessedMessage, setLastProcessedMessage] = useState<string | null>(null);
+interface SmartSuggestionsProps {
+  suggestions: LegalSuggestion[];
+  onSelectSuggestion: (suggestion: Suggestion) => void;
+  isLoading?: boolean;
+}
+
+const SmartSuggestions: React.FC<SmartSuggestionsProps> = ({ 
+  suggestions, 
+  onSelectSuggestion,
+  isLoading = false 
+}) => {
+  // Convert LegalSuggestion[] to Suggestion[]
+  const convertedSuggestions: Suggestion[] = suggestions.map(suggestion => ({
+    id: suggestion.id,
+    title: suggestion.title,
+    description: suggestion.description,
+    type: suggestion.type,
+    priority: suggestion.priority,
+    relevance: suggestion.relevance
+  }));
   
-  const {
-    suggestions,
-    isLoading,
-    generateSuggestions
-  } = useLegalSuggestions();
-
-  // Gerar sugestões automaticamente quando houver novas mensagens do usuário
-  useEffect(() => {
-    if (!isContextSet || messages.length === 0) return;
-    
-    const userMessages = messages.filter(msg => msg.role === 'user');
-    if (userMessages.length === 0) return;
-    
-    const lastUserMessage = userMessages[userMessages.length - 1];
-    
-    // Evitar gerar sugestões para a mesma mensagem repetidamente
-    if (lastUserMessage.content === lastProcessedMessage) return;
-    
-    // Construir o contexto para as sugestões
-    const contextString = `Área jurídica: ${contextInfo.area}. Jurisdição: ${contextInfo.jurisdiction}. ${contextInfo.caseDetails ? `Detalhes do caso: ${contextInfo.caseDetails}.` : ''} ${contextInfo.clientType ? `Tipo de cliente: ${contextInfo.clientType}.` : ''}`;
-    
-    // Gerar sugestões com base na última mensagem do usuário
-    generateSuggestions(lastUserMessage.content, contextString);
-    setLastProcessedMessage(lastUserMessage.content);
-  }, [messages, isContextSet, contextInfo, lastProcessedMessage, generateSuggestions]);
-
-  if (!isContextSet || messages.length === 0) return null;
-
   return (
-    <div className="mt-4">
-      <Button 
-        variant="outline" 
-        size="sm" 
-        className="w-full flex justify-between items-center" 
-        onClick={() => setShowSuggestions(!showSuggestions)}
-      >
-        <span className="flex items-center">
-          <Lightbulb className="h-4 w-4 mr-2" />
-          Sugestões Inteligentes
-        </span>
-        {isLoading && <Loader2 className="h-4 w-4 animate-spin ml-2" />}
-      </Button>
-      
-      {showSuggestions && (
-        <Card className="mt-2">
-          <CardContent className="p-4">
-            {isLoading ? (
-              <div className="flex justify-center items-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin" />
-                <span className="ml-2">Gerando sugestões...</span>
-              </div>
-            ) : suggestions && Array.isArray(suggestions) && suggestions.length > 0 ? (
-              <SuggestionsList suggestions={suggestions.filter(s => s && typeof s === 'object' && s !== null)} />
-            ) : (
-              <div className="text-center py-4 text-muted-foreground">
-                Nenhuma sugestão disponível para o contexto atual.
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
-    </div>
+    <Card className="h-full">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg flex items-center">
+            <Lightbulb className="h-5 w-5 mr-2 text-yellow-500" />
+            Sugestões Inteligentes
+          </CardTitle>
+          <Button variant="ghost" size="sm" className="text-xs">
+            Ver todas
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0">
+        {isLoading ? (
+          <div className="flex justify-center items-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        ) : (
+          <SuggestionsList 
+            suggestions={convertedSuggestions} 
+            onSelectSuggestion={onSelectSuggestion}
+          />
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

@@ -170,12 +170,12 @@ const ProcessDetail: React.FC<ProcessDetailProps> = ({
               {process.documents && process.documents.length > 0 ? (
                 <div className="space-y-4">
                   {process.documents!.map((doc) => (
-                    <Card key={doc.id || doc.name}>
+                    <Card key={doc.id || doc.title || doc.name || 'doc-key'}>
                       <CardContent className="p-4 flex items-center justify-between">
                         <div className="flex items-center">
                           <FileText className="h-5 w-5 mr-2 text-blue-600" />
                           <div>
-                            <p className="font-medium">{doc.title || doc.name}</p>
+                            <p className="font-medium">{doc.title || doc.name || "Documento sem nome"}</p>
                             <p className="text-sm text-muted-foreground">
                               Versão {doc.version ?? '--'} • Atualizado em {doc.updatedAt ? safeFormatDate(doc.updatedAt) : '--'}
                             </p>

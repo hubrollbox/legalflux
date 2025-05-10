@@ -26,5 +26,7 @@ export function useToast() {
   };
 }
 
-// Export the toast and Toaster directly so they can be used without the hook if needed
-export { sonnerToast as toast, Toaster };
+// Export the Toaster directly
+export { Toaster };
+// Export the sonnerToast as toast for direct usage
+export const toast = sonnerToast;

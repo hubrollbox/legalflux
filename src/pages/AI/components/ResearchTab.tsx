@@ -1,92 +1,73 @@
-import { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { BookOpen, Loader2 } from 'lucide-react';
-import { useMessages } from '../hooks/useMessages';
+
+import React, { useRef, useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Send } from "lucide-react";
+import { Message } from '../types';
+import MessageInput from './MessageInput';
 import MessageList from './MessageList';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
 
-const ResearchTab = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const { toast } = useToast();
-  const {
-    messages,
-    setMessages,
-    loading,
-    messagesEndRef
-  } = useMessages();
+interface ResearchTabProps {
+  onSendMessage: (message: string) => void;
+  messages: Message[];
+  isLoading: boolean;
+}
 
-  // Find where the ref is defined and fix it by removing the null union type if needed
-  const messagesEndRef = useRef<HTMLDivElement>(document.createElement('div'));
+const ResearchTab: React.FC<ResearchTabProps> = ({ 
+  onSendMessage, 
+  messages, 
+  isLoading 
+}) => {
+  const [inputValue, setInputValue] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) return;
-    
-    const context = 'O utilizador está a realizar uma pesquisa jurídica. Forneça informações detalhadas, precedentes relevantes e análise doutrinária sobre o tema.';
-    
-    try {
-      setMessages([]);
-      const { data, error } = await supabase.functions.invoke('ai-assistant', {
-        body: {
-          prompt: `Pesquisa jurídica sobre: ${searchQuery}`,
-          context: context,
-          role: 'lawyer',
-          model: 'gpt-4o-mini'
-        },
-      });
-
-      if (error) throw error;
-
-      setMessages([
-        {
-          id: '1',
-          role: 'assistant',
-          content: `### Resultados da pesquisa: "${searchQuery}"\n\n${data.response}`,
-          timestamp: new Date()
-        }
-      ]);
-    } catch (error) {
-      console.error('Erro ao realizar pesquisa:', error);
-      toast({
-        title: 'Erro',
-        description: 'Não foi possível realizar a pesquisa. Por favor, tente novamente.',
-        variant: 'destructive',
-      });
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (inputValue.trim() && !isLoading) {
+      onSendMessage(inputValue);
+      setInputValue('');
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  React.useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
-    <Card className="flex flex-col h-[75vh]">
-      <CardHeader className="pb-3">
-        <CardTitle>Pesquisa Jurídica</CardTitle>
-        <CardDescription>
-          Pesquise legislação, jurisprudência e doutrina
-        </CardDescription>
-        <div className="flex space-x-2 mt-2">
-          <Input 
-            placeholder="O que deseja pesquisar?" 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-grow"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleSearch();
-              }
-            }}
+    <div className="flex flex-col h-full">
+      <div className="flex-1 overflow-y-auto p-4">
+        <MessageList 
+          messages={messages}
+          messagesEndRef={messagesEndRef}
+        />
+      </div>
+
+      <div className="p-4 border-t">
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <MessageInput 
+            value={inputValue}
+            onChange={handleInputChange}
+            placeholder="Faça uma pergunta para pesquisa jurídica..."
+            disabled={isLoading}
+            className="flex-1"
           />
-          <Button onClick={handleSearch} disabled={loading || !searchQuery.trim()}>
-            {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <BookOpen className="h-4 w-4 mr-2" />}
-            Pesquisar
+          <Button 
+            type="submit" 
+            size="icon"
+            disabled={!inputValue.trim() || isLoading}
+          >
+            <Send className="h-5 w-5" />
           </Button>
-        </div>
-      </CardHeader>
-      
-      <CardContent className="flex-grow overflow-auto">
-        <MessageList messages={messages} messagesEndRef={messagesEndRef} />
-      </CardContent>
-    </Card>
+        </form>
+      </div>
+    </div>
   );
 };
 

@@ -18,6 +18,7 @@ const FinancialReports: React.FC<FinancialReportsProps> = ({ data }) => {
   // Format date helper function
   const formatDateString = (dateStr: string) => {
     try {
+      // Fix: Remove the third parameter and use options in the second parameter
       return format(new Date(dateStr), 'dd/MM/yyyy', { locale: pt });
     } catch (error) {
       console.error('Error formatting date:', error);

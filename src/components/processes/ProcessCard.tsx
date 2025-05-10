@@ -64,10 +64,12 @@ const getProcessTypeName = (type: ProcessType) => {
 
 const ProcessCard: React.FC<ProcessCardProps> = ({ process, onView }) => {
   // Função auxiliar segura para formatação de data
-  const formatDate = (dateString: string | undefined) => {
+  const formatDate = (dateString: string | Date | undefined) => {
     if (!dateString) return "Data não especificada";
     try {
-      return format(new Date(dateString), 'PPP');
+      // For Date objects, convert to string first
+      const dateValue = typeof dateString === 'string' ? dateString : dateString.toISOString();
+      return format(new Date(dateValue), 'PPP', { locale: pt });
     } catch (error) {
       console.error("Erro ao formatar data:", error);
       return "Data inválida";
