@@ -1,32 +1,26 @@
 
-export type TransactionType = 'income' | 'expense' | 'payment' | 'invoice' | 'refund';
-export type TransactionStatus = 'pending' | 'completed' | 'cancelled' | 'failed' | 'canceled' | 'refunded' | 'overdue';
+export type TransactionType = "income" | "expense" | "payment" | "invoice" | "refund";
+export type TransactionStatus = "pending" | "completed" | "cancelled" | "failed" | "canceled" | "processing";
 
 export interface FinancialTransaction {
   id: string;
-  date: Date | string;
-  description: string;
+  type: TransactionType; 
   amount: number;
-  type: TransactionType;
-  category: string;
   status: TransactionStatus;
-  clientName: string;
+  description: string;
+  date: string | Date;
   clientId?: string;
+  clientName?: string;
   processId?: string;
-  process?: string;
-  client?: string;
+  category?: string;
+  paymentMethod?: string;
+  invoiceNumber?: string;
 }
 
 export interface FinancialSummary {
-  totalIncome: number;
-  totalExpense: number;
-  balance: number;
-  pendingIncome: number;
-  pendingExpense: number;
-}
-
-export interface FinancialChartData {
-  month: string;
   income: number;
-  expense: number;
+  expenses: number;
+  pending: number;
+  balance: number;
+  monthlyChange: number;
 }

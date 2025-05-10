@@ -45,7 +45,7 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
       type: doc.type,
       size: typeof doc.size === 'number' ? `${doc.size} KB` : doc.size,
       updatedAt: typeof doc.updatedAt === 'object' 
-        ? (doc.updatedAt instanceof Date ? doc.updatedAt.toISOString() : doc.updatedAt) 
+        ? (doc.updatedAt as Date).toISOString() 
         : doc.updatedAt
     };
   };

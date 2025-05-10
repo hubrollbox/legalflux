@@ -1,6 +1,6 @@
 
 import { create } from 'zustand';
-import { UserRole } from '@/types/permissions';
+import { UserRole, UserRoles } from '@/types/permissions';
 
 interface PermissionsState {
   userRole: UserRole | null;
@@ -24,7 +24,7 @@ export const usePermissions = create<PermissionsState>((set, get) => ({
     const state = get();
     
     // Se for administrador, tem todas as permissões
-    if (state.userRole === UserRole.ADMIN) {
+    if (state.userRole === UserRoles.ADMIN) {
       return true;
     }
 
@@ -37,24 +37,24 @@ export const usePermissions = create<PermissionsState>((set, get) => ({
 // Exemplo de função para inicializar permissões com base no papel do utilizador
 export const initializePermissions = (role: UserRole) => {
   const permissionsMap: Record<UserRole, string[]> = {
-    [UserRole.ADMIN]: ['*:*'], // Todas as permissões
-    [UserRole.LAWYER]: [
+    [UserRoles.ADMIN]: ['*:*'], // Todas as permissões
+    [UserRoles.LAWYER]: [
       'cases:view', 'cases:create', 'cases:edit',
       'documents:view', 'documents:create', 'documents:edit',
       'clients:view'
     ],
-    [UserRole.SENIOR_LAWYER]: [
+    [UserRoles.SENIOR_LAWYER]: [
       'cases:view', 'cases:create', 'cases:edit', 'cases:delete',
       'documents:view', 'documents:create', 'documents:edit', 'documents:delete',
       'clients:view', 'clients:create', 'clients:edit',
       'lawyers:view'
     ],
-    [UserRole.ASSISTANT]: [
+    [UserRoles.ASSISTANT]: [
       'cases:view',
       'documents:view', 'documents:create',
       'clients:view'
     ],
-    [UserRole.CLIENT]: [
+    [UserRoles.CLIENT]: [
       'cases:view',
       'documents:view'
     ]

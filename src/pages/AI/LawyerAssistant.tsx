@@ -33,7 +33,7 @@ const LawyerAssistant: React.FC = () => {
         </TabsContent>
         <TabsContent value="contextual" className="space-y-6">
           <Card>
-            <ContextualAssistantTab />
+            <ContextualAssistantTab contextText="" />
           </Card>
         </TabsContent>
         <TabsContent value="analysis" className="space-y-6">

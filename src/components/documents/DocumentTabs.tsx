@@ -8,7 +8,7 @@ import DocumentsSearchBar from "./DocumentsSearchBar";
 import DocumentsViewMode from "./DocumentsViewMode";
 import DocumentsContent from "./DocumentsContent";
 import TemplatesContent from "./TemplatesContent";
-import { Document, DocumentTemplate, DocumentFilter } from "@/types/document";
+import { Document, DocumentTemplate, DocumentFilter, DocumentType } from "@/types/document";
 
 interface DocumentTabsProps {
   viewMode: "grid" | "list";
@@ -70,8 +70,9 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
           templates={filteredTemplates.map(template => ({
             ...template,
             size: template.size || "N/A",
-            type: template.type || "document",
-            updatedAt: template.updatedAt || new Date().toISOString()
+            type: template.type || "document" as DocumentType,
+            updatedAt: template.updatedAt || new Date().toISOString(),
+            description: template.description || ""
           }))} 
           viewMode={viewMode} 
         />

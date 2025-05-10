@@ -1,6 +1,7 @@
+
 import React, { useMemo } from 'react';
 import { format, isToday, isTomorrow, isThisWeek, isThisMonth } from 'date-fns';
-import { ptBR } from 'date-fns/locale/pt-BR';
+import { ptBR } from 'date-fns/locale';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -8,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import type { CalendarEvent } from '@/types';
 import DraggableEvent from './DraggableEvent';
 import { cn } from '@/lib/utils';
+import { formatDate } from '@/utils/dateUtils';
 
 interface AgendaViewProps {
   events: CalendarEvent[];
@@ -72,7 +74,7 @@ const AgendaView: React.FC<AgendaViewProps> = ({
         groups.today.events.push(event);
       } else if (isTomorrow(eventDate)) {
         groups.tomorrow.events.push(event);
-      } else if (isThisWeek(eventDate, { locale: ptBR })) {
+      } else if (isThisWeek(eventDate, { weekStartsOn: 1 })) {
         groups.thisWeek.events.push(event);
       } else if (isThisMonth(eventDate)) {
         groups.thisMonth.events.push(event);
@@ -119,11 +121,11 @@ const AgendaView: React.FC<AgendaViewProps> = ({
                         <div key={event.id} className="space-y-1">
                           <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <span className="font-medium">
-                              {format(eventDate, "EEEE, dd 'de' MMMM")}
+                              {formatDate(eventDate, "EEEE, dd 'de' MMMM")}
                             </span>
                             <span>
-                              {format(eventDate, "HH:mm")}
-                              {event.end && ` - ${format(new Date(event.end), "HH:mm")}`}
+                              {formatDate(eventDate, "HH:mm")}
+                              {event.end && ` - ${formatDate(new Date(event.end), "HH:mm")}`}
                             </span>
                           </div>
                           <DraggableEvent 

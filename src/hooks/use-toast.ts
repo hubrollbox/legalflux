@@ -1,5 +1,5 @@
 
-import { toast as sonnerToast, Toaster } from "sonner";
+import { Toaster } from "sonner";
 
 interface ToastProps {
   title?: string;
@@ -10,13 +10,9 @@ interface ToastProps {
 export function useToast() {
   const showToast = ({ title, description, variant }: ToastProps) => {
     if (variant === "destructive") {
-      sonnerToast.error(title, {
-        description,
-      });
+      console.error(title, description);
     } else {
-      sonnerToast(title, {
-        description,
-      });
+      console.log(title, description);
     }
   };
 
@@ -25,4 +21,4 @@ export function useToast() {
   };
 }
 
-export { sonnerToast as toast, Toaster };
+export { Toaster };

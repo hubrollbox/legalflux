@@ -8,6 +8,8 @@ export interface User {
   hasTwoFactorEnabled?: boolean;
   organizationId?: string;
   phone?: string;
+  createdAt?: string | Date;
+  avatar?: string;
 }
 
 export type UserType = "client" | "lawyer" | "senior_lawyer" | "assistant" | "admin";

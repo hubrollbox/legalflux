@@ -68,7 +68,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
   const form = useForm<DocumentFormValues>({
     resolver: zodResolver(documentSchema),
     defaultValues: {
-      status: 'draft' as DocumentStatus,
+      status: (initialData?.status || 'draft') as DocumentStatus,
       name: initialData?.name || '',
       type: (initialData?.type || 'document') as DocumentType,
       description: initialData?.description || '',

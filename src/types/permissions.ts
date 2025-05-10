@@ -1,14 +1,19 @@
 
 export type UserRole = "admin" | "lawyer" | "senior_lawyer" | "assistant" | "client";
 
-export type Permission = "view" | "create" | "edit" | "delete" | {
-  id: string;
-  resource: string;
-  action: string;
-  name: string;
-  description: string;
-  module: string;
-};
+export type Permission = 
+  | "view" 
+  | "create" 
+  | "edit" 
+  | "delete" 
+  | {
+      id: string;
+      resource: string;
+      action: string;
+      name: string;
+      description: string;
+      module: string;
+    };
 
 export type PermissionArea =
   | "dashboard"
