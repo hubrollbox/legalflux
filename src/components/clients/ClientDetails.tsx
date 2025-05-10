@@ -48,7 +48,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string | undefined) => {
     switch (status) {
       case "active":
         return <Badge className="bg-green-500">Ativo</Badge>;
@@ -57,7 +57,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
       case "prospect":
         return <Badge className="bg-blue-500">Potencial</Badge>;
       default:
-        return <Badge>{status}</Badge>;
+        return <Badge>{status || "N/A"}</Badge>;
     }
   };
 
@@ -93,11 +93,11 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
           email: apiClient.email || "Unknown",
           phone: apiClient.telefone || "Unknown",
           address: apiClient.morada || "Unknown",
-          status: (apiClient.estado as Client["status"]) || "prospect",
+          status: (apiClient.estado as Client["status"]) || "pending",
           notes: apiClient.notas || "",
           userId: String(apiClient.user_id),
           lawyerId: apiClient.advogado_id ? String(apiClient.advogado_id) : undefined,
-          createdAt: apiClient.criado_em ? new Date(apiClient.criado_em) : new Date(),
+          createdAt: apiClient.criado_em || new Date().toISOString(),
         };
         onEdit(mappedClient);
         toast({
@@ -134,7 +134,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <h3 className="text-sm font-medium text-muted-foreground">Tax ID</h3>
-            <p className="text-base">{client.taxId}</p>
+            <p className="text-base">{client.taxId || client.nif || "N/A"}</p>
           </div>
           <div>
             <h3 className="text-sm font-medium text-muted-foreground">Email</h3>
@@ -142,11 +142,15 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
           </div>
           <div>
             <h3 className="text-sm font-medium text-muted-foreground">Phone</h3>
-            <p className="text-base">{client.phone}</p>
+            <p className="text-base">{client.phone || "N/A"}</p>
           </div>
           <div>
             <h3 className="text-sm font-medium text-muted-foreground">Creation Date</h3>
-            <p className="text-base">{new Date(client.createdAt).toLocaleDateString()}</p>
+            <p className="text-base">
+              {client.createdAt 
+                ? new Date(client.createdAt).toLocaleDateString()
+                : "N/A"}
+            </p>
           </div>
         </div>
 
@@ -154,7 +158,7 @@ const ClientDetails: React.FC<ClientDetailsProps> = ({
 
         <div>
           <h3 className="text-sm font-medium text-muted-foreground">Address</h3>
-          <p className="text-base">{client.address}</p>
+          <p className="text-base">{client.address || "N/A"}</p>
         </div>
 
         {client.notes && (

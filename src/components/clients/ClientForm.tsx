@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,9 +20,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Client } from "@/types/client";
+import type { Client, ClientStatus } from "@/types/client";
 import { Loader2 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 // Schema de validação para o formulário de cliente
@@ -33,14 +34,14 @@ const clientFormSchema = z.object({
   phone: z.string().min(9, { message: "Telefone inválido" }),
   address: z.string().min(5, { message: "Morada deve ter pelo menos 5 caracteres" }),
   notes: z.string().optional(),
-  status: z.enum(["active", "inactive", "prospect"]),
+  status: z.enum(["active", "inactive", "prospect"] as const),
 });
 
 type ClientFormValues = z.infer<typeof clientFormSchema>;
 
 interface ClientFormProps {
   initialData?: Client;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: ClientFormValues) => void;
   isSubmitting?: boolean;
 }
 
@@ -50,18 +51,35 @@ const ClientForm: React.FC<ClientFormProps> = ({
   isSubmitting = false,
 }) => {
   const { toast } = useToast();
+  
+  // Create default values ensuring they match the schema
+  const defaultValues: ClientFormValues = {
+    name: "",
+    nif: "",
+    taxId: "",
+    email: "",
+    phone: "",
+    address: "",
+    notes: "",
+    status: "active" as const,
+  };
+
   const form = useForm<ClientFormValues>({
     resolver: zodResolver(clientFormSchema),
-    defaultValues: initialData || {
-      name: "",
-      nif: "",
-      taxId: "",
-      email: "",
-      phone: "",
-      address: "",
-      notes: "",
-      status: "active" as const,
-    },
+    defaultValues: initialData 
+      ? {
+          name: initialData.name || "",
+          nif: initialData.nif || "",
+          taxId: initialData.taxId || "",
+          email: initialData.email || "",
+          phone: initialData.phone || "",
+          address: initialData.address || "",
+          notes: initialData.notes || "",
+          status: (initialData.status === "active" || initialData.status === "inactive" || initialData.status === "prospect") 
+            ? initialData.status 
+            : "active" as const,
+        }
+      : defaultValues,
   });
   
   // Verificar autenticação ao montar o componente

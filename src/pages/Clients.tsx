@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -21,7 +21,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import ClientForm from "@/components/clients/ClientForm";
 import ClientList from "@/components/clients/ClientList";
 import ClientDetails from "@/components/clients/ClientDetails";
-import { Client, ClientStatus, CreateClientDTO, UpdateClientDTO } from "@/types/client";
+import { Client } from "@/types/client";
 import { clientService } from "@/services/clientService";
 import { Container } from "@/components/ui/container";
 import { supabase } from "@/integrations/supabase/client";
@@ -161,7 +161,7 @@ const Clients = () => {
   };
 
   // Funções para criar, atualizar e excluir clientes
-  const handleCreateClient = async (data: CreateClientDTO) => {
+  const handleCreateClient = async (data: any) => {
     setIsSubmitting(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -188,7 +188,7 @@ const Clients = () => {
     }
   };
 
-  const handleUpdateClient = async (data: UpdateClientDTO) => {
+  const handleUpdateClient = async (data: any) => {
     if (!selectedClient) return;
 
     setIsSubmitting(true);
@@ -433,4 +433,3 @@ const Clients = () => {
 };
 
 export default Clients;
-
