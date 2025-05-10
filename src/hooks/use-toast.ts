@@ -1,5 +1,5 @@
 
-import { Toaster } from "sonner";
+import { toast as sonnerToast, Toaster } from "sonner";
 
 interface ToastProps {
   title?: string;
@@ -11,27 +11,9 @@ interface ToastProps {
 export function useToast() {
   const showToast = ({ title, description, variant }: ToastProps) => {
     if (variant === "destructive") {
-      // Usando a API correta do Toaster
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('toast', {
-          detail: {
-            type: 'error',
-            title,
-            description
-          }
-        }));
-      }
+      sonnerToast.error(title || "", { description });
     } else {
-      // Toast padrão
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('toast', {
-          detail: {
-            type: 'default',
-            title,
-            description
-          }
-        }));
-      }
+      sonnerToast(title || "", { description });
     }
   };
 
@@ -46,36 +28,12 @@ export { Toaster };
 // Export toast global functions
 export const toast = {
   error: (title: string, options?: { description?: string }) => {
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('toast', {
-        detail: {
-          type: 'error',
-          title,
-          description: options?.description
-        }
-      }));
-    }
+    sonnerToast.error(title, { description: options?.description });
   },
   success: (title: string, options?: { description?: string }) => {
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('toast', {
-        detail: {
-          type: 'success',
-          title,
-          description: options?.description
-        }
-      }));
-    }
+    sonnerToast.success(title, { description: options?.description });
   },
   info: (title: string, options?: { description?: string }) => {
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('toast', {
-        detail: {
-          type: 'info',
-          title,
-          description: options?.description
-        }
-      }));
-    }
+    sonnerToast.info(title, { description: options?.description });
   }
 };

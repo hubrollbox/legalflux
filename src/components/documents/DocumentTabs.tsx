@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,23 +8,22 @@ import DocumentsSearchBar from "./DocumentsSearchBar";
 import DocumentsViewMode from "./DocumentsViewMode";
 import DocumentsContent from "./DocumentsContent";
 import TemplatesContent from "./TemplatesContent";
-import { Document, DocumentTemplate, DocumentFilter, DocumentType } from "@/types/document";
+import { Document, DocumentTemplate, DocumentType } from "@/types/document";
+
+// Define local interface for filters to replace the missing DocumentFilter type
+interface DocumentFilters {
+  type: string;
+  date: Date | undefined;
+  tags: string[];
+}
 
 interface DocumentTabsProps {
   viewMode: "grid" | "list";
   setViewMode: (mode: "grid" | "list") => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filters: {
-    type: string;
-    date: Date | undefined;
-    tags: string[];
-  };
-  setFilters: (filters: {
-    type: string;
-    date: Date | undefined;
-    tags: string[];
-  }) => void;
+  filters: DocumentFilters;
+  setFilters: (filters: DocumentFilters) => void;
   filteredDocuments: Document[];
   filteredTemplates: DocumentTemplate[];
 }
@@ -76,9 +76,10 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
         <TemplatesContent 
           templates={filteredTemplates.map(template => ({
             ...template,
-            updatedAt: typeof template.updatedAt === 'string' 
-              ? template.updatedAt 
-              : String(template.updatedAt)
+            // Ensure size is present
+            size: template.size || "1MB",
+            // Ensure updatedAt is present and in string format
+            updatedAt: template.updatedAt || template.createdAt
           }))} 
           viewMode={viewMode} 
         />

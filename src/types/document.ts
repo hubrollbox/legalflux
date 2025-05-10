@@ -5,22 +5,22 @@ export type DocumentType = 'document' | 'action' | 'precedent' | 'strategy';
 export interface Document {
   id: string;
   title?: string;
-  name: string; // Changed from optional to required
+  name: string; // Required property
   description?: string;
   status: DocumentStatus;
   type: DocumentType;
   createdAt: string | Date;
   updatedAt?: string | Date;
-  version?: string;
-  size?: number;
+  version?: string | number;
+  size?: number | string; // Allow both number and string for flexibility
   owner?: string;
   tags?: string[];
   processId?: string;
   folder?: string;
   process?: string;
   url?: string;
-  category?: string; // Added missing property
-  clientId?: string; // Added missing property
+  category?: string;
+  clientId?: string;
 }
 
 export interface DocumentTemplate {
@@ -31,6 +31,8 @@ export interface DocumentTemplate {
   tags: string[];
   createdAt: string | Date;
   type: DocumentType;
+  updatedAt?: string | Date; // Added to match usage in code
+  size?: string | number; // Added to match usage in code
 }
 
 export interface DocumentFilter {

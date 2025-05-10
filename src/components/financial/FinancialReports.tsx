@@ -16,7 +16,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = () => {
     return {
       id: `report-${month}`,
       title: `Relatório Financeiro - ${month}`,
-      date: formatDate(new Date(), 'MMMM yyyy'),
+      date: formatDate(new Date()), // Corrected to use only one argument
       type: 'PDF',
       size: '2.4 MB',
     };

@@ -1,5 +1,5 @@
 
-import { Document as DocumentBase } from './document';
+import { Document as DocumentBase, DocumentType as DocType } from './document';
 
 // For components that expect Document to have specific required properties
 declare global {
@@ -14,4 +14,5 @@ declare global {
   }
 }
 
+export type DocumentType = DocType;
 export type { EnhancedDocument as Document };

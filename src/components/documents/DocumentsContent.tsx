@@ -39,13 +39,13 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
   }
 
   // Função para converter documentos para o formato correto
-  const formatDocumentForCards = (doc: Document): Document => {
+  const formatDocumentForCards = (doc: Document) => {
     return {
       ...doc,
-      size: typeof doc.size === 'number' ? `${doc.size} KB` : doc.size,
-      updatedAt: typeof doc.updatedAt === 'object' 
-        ? new Date(doc.updatedAt).toISOString()
-        : doc.updatedAt
+      // Ensure size is a string (for display purposes)
+      size: typeof doc.size === 'number' ? `${doc.size} KB` : (doc.size || "0 KB"),
+      // Ensure updatedAt is in the correct format
+      updatedAt: doc.updatedAt ? doc.updatedAt : doc.createdAt
     };
   };
 

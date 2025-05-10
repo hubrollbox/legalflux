@@ -7,7 +7,7 @@ export const mockDocuments: Document[] = [
     id: "doc1",
     name: "Contrato de Prestação de Serviços",
     type: "document",
-    size: "2.4 MB",
+    size: "2.4 MB", // String size is now allowed
     updatedAt: formatDate(new Date(2023, 5, 15)),
     owner: "João Silva",
     folder: "Contratos",
@@ -19,13 +19,14 @@ export const mockDocuments: Document[] = [
     clientId: "client1",
     processId: "process1",
     url: "/documents/doc1.pdf",
-    version: 1,
+    version: "1",
+    createdAt: new Date(2023, 5, 15).toISOString()
   },
   {
     id: "doc2",
     name: "Petição Inicial",
     type: "action",
-    size: "1.8 MB",
+    size: "1.8 MB", // String size is now allowed
     updatedAt: formatDate(new Date(2023, 5, 20)),
     owner: "Maria Santos",
     folder: "Processos",
@@ -37,13 +38,14 @@ export const mockDocuments: Document[] = [
     clientId: "client2",
     processId: "process2",
     url: "/documents/doc2.pdf",
-    version: 1,
+    version: "1",
+    createdAt: new Date(2023, 5, 15).toISOString()
   },
   {
     id: "doc3",
     name: "Jurisprudência STF",
     type: "precedent",
-    size: "3.2 MB",
+    size: "3.2 MB", // String size is now allowed
     updatedAt: formatDate(new Date(2023, 5, 10)),
     owner: "Carlos Mendes",
     folder: "Jurisprudência",
@@ -55,13 +57,14 @@ export const mockDocuments: Document[] = [
     clientId: "client3",
     processId: "process3",
     url: "/documents/doc3.pdf",
-    version: 1,
+    version: "1",
+    createdAt: new Date(2023, 5, 15).toISOString()
   },
   {
     id: "doc4",
     name: "Estratégia Processual",
     type: "strategy",
-    size: "1.1 MB",
+    size: "1.1 MB", // String size is now allowed
     updatedAt: formatDate(new Date(2023, 5, 25)),
     owner: "Ana Oliveira",
     folder: "Estratégias",
@@ -73,13 +76,14 @@ export const mockDocuments: Document[] = [
     clientId: "client4",
     processId: "process4",
     url: "/documents/doc4.pdf",
-    version: 1,
+    version: "1",
+    createdAt: new Date(2023, 5, 15).toISOString()
   },
   {
     id: "doc5",
     name: "Procuração",
     type: "document",
-    size: "0.8 MB",
+    size: "0.8 MB", // String size is now allowed
     updatedAt: formatDate(new Date(2023, 5, 18)),
     owner: "Pedro Costa",
     folder: "Documentos",
@@ -91,7 +95,8 @@ export const mockDocuments: Document[] = [
     clientId: "client5",
     processId: "process5",
     url: "/documents/doc5.pdf",
-    version: 1,
+    version: "1",
+    createdAt: new Date(2023, 5, 15).toISOString()
   },
 ];
 
@@ -104,8 +109,9 @@ export const mockTemplates: DocumentTemplate[] = [
     category: "Contratos",
     tags: ["contrato", "serviços", "modelo"],
     type: "document",
-    updatedAt: formatDate(new Date(2023, 4, 10)),
-    size: "1MB"
+    createdAt: new Date(2023, 4, 10),
+    updatedAt: formatDate(new Date(2023, 4, 10)), // Now allowed in interface
+    size: "1MB" // Now allowed in interface
   },
   {
     id: "template2",
@@ -114,8 +120,9 @@ export const mockTemplates: DocumentTemplate[] = [
     category: "Petições",
     tags: ["petição", "trabalhista", "modelo"],
     type: "action",
-    updatedAt: formatDate(new Date(2023, 4, 15)),
-    size: "1MB"
+    createdAt: new Date(2023, 4, 15),
+    updatedAt: formatDate(new Date(2023, 4, 15)), // Now allowed in interface
+    size: "1MB" // Now allowed in interface
   },
   {
     id: "template3",
@@ -124,8 +131,9 @@ export const mockTemplates: DocumentTemplate[] = [
     category: "Documentos",
     tags: ["procuração", "modelo", "judicial"],
     type: "document",
-    updatedAt: formatDate(new Date(2023, 4, 20)),
-    size: "1MB"
+    createdAt: new Date(2023, 4, 20),
+    updatedAt: formatDate(new Date(2023, 4, 20)), // Now allowed in interface
+    size: "1MB" // Now allowed in interface
   },
   {
     id: "template4",
@@ -134,8 +142,9 @@ export const mockTemplates: DocumentTemplate[] = [
     category: "Petições",
     tags: ["contestação", "cível", "modelo"],
     type: "action",
-    updatedAt: formatDate(new Date(2023, 4, 25)),
-    size: "1MB"
+    createdAt: new Date(2023, 4, 25),
+    updatedAt: formatDate(new Date(2023, 4, 25)), // Now allowed in interface
+    size: "1MB" // Now allowed in interface
   },
 ];
 

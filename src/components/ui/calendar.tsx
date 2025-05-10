@@ -1,15 +1,14 @@
-
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { buttonVariants } from "@/components/ui/buttonVariants";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { DayPicker as _DayPicker } from "react-day-picker"; // Renamed import
+import { DayPicker as DayPickerPrimitive } from "react-day-picker";
 
 // Create a type alias for the imported DayPicker
-type DayPicker = typeof _DayPicker;
+type DayPicker = typeof DayPickerPrimitive;
 
 // Re-export as DayPicker to maintain compatibility
-const DayPicker = _DayPicker;
+const DayPicker = DayPickerPrimitive;
 
 export type CalendarProps = React.ComponentProps<DayPicker>;
 
