@@ -1,33 +1,16 @@
 
-export type TransactionType = 'income' | 'expense' | 'invoice' | 'payment' | 'refund' | 'other';
-export type TransactionStatus = 'completed' | 'pending' | 'failed' | 'cancelled' | 'canceled' | 'refunded' | 'overdue' | 'processing';
+// Financial transaction statuses
+export type TransactionStatus = 'pending' | 'completed' | 'cancelled' | 'canceled' | 'failed' | 'processing';
 
-// Define const enums to be used as values
-export const TransactionType = {
-  INCOME: 'income' as TransactionType,
-  EXPENSE: 'expense' as TransactionType,
-  INVOICE: 'invoice' as TransactionType,
-  PAYMENT: 'payment' as TransactionType,
-  REFUND: 'refund' as TransactionType,
-  OTHER: 'other' as TransactionType
-};
+// Financial transaction types
+export type TransactionType = 'income' | 'expense' | 'payment' | 'invoice' | 'refund';
 
-export const TransactionStatus = {
-  COMPLETED: 'completed' as TransactionStatus,
-  PENDING: 'pending' as TransactionStatus,
-  FAILED: 'failed' as TransactionStatus,
-  CANCELLED: 'cancelled' as TransactionStatus,
-  CANCELED: 'canceled' as TransactionStatus,
-  REFUNDED: 'refunded' as TransactionStatus,
-  OVERDUE: 'overdue' as TransactionStatus,
-  PROCESSING: 'processing' as TransactionStatus
-};
-
+// Financial transaction interface
 export interface FinancialTransaction {
   id: string;
+  date: string | Date;
   description: string;
   amount: number;
-  date: string | Date;
   type: TransactionType;
   status: TransactionStatus;
   category?: string;
@@ -35,31 +18,88 @@ export interface FinancialTransaction {
   clientName?: string;
   processId?: string;
   processName?: string;
-  documentId?: string;
   paymentMethod?: string;
-  paymentDate?: string | Date;
-  dueDate?: string | Date;
-  invoiceNumber?: string;
+  reference?: string;
+  currency?: string;
   notes?: string;
-  tags?: string[];
+  createdBy?: string;
+  createdAt: string | Date;
+  updatedAt?: string | Date;
+  dueDate?: string | Date;
+  attachments?: string[];
+}
+
+// Financial account interface
+export interface FinancialAccount {
+  id: string;
+  name: string;
+  type: 'bank' | 'cash' | 'credit' | 'investment';
+  balance: number;
+  currency: string;
+  institution?: string;
+  number?: string;
+  isActive: boolean;
   createdAt: string | Date;
   updatedAt?: string | Date;
 }
 
-export interface FinancialSummary {
-  totalIncome: number;
-  totalExpenses: number;
-  netProfit: number;
-  pendingPayments: number;
-  overdueBills: number;
-  currentMonthIncome: number;
-  currentMonthExpenses: number;
-  previousMonthIncome: number;
-  previousMonthExpenses: number;
+// Financial invoice interface
+export interface Invoice {
+  id: string;
+  number: string;
+  clientId: string;
+  clientName: string;
+  issueDate: string | Date;
+  dueDate: string | Date;
+  totalAmount: number;
+  paidAmount: number;
+  status: 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled' | 'refunded';
+  currency: string;
+  notes?: string;
+  items: InvoiceItem[];
+  createdAt: string | Date;
+  updatedAt?: string | Date;
 }
 
-export interface FinancialChartData {
+// Invoice item interface
+export interface InvoiceItem {
+  id: string;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+  taxRate?: number;
+  taxAmount?: number;
+}
+
+// Budget interface
+export interface Budget {
+  id: string;
   name: string;
-  revenue: number;
-  expenses: number;
+  period: 'monthly' | 'quarterly' | 'annual';
+  startDate: string | Date;
+  endDate: string | Date;
+  categories: BudgetCategory[];
+  totalBudget: number;
+  totalSpent: number;
+  createdAt: string | Date;
+  updatedAt?: string | Date;
+}
+
+// Budget category interface
+export interface BudgetCategory {
+  id: string;
+  name: string;
+  budgetAmount: number;
+  spentAmount: number;
+  color?: string;
+}
+
+// Financial stats interface
+export interface FinancialStats {
+  totalRevenue: number;
+  monthlyRevenue: number;
+  revenueChange: number;
+  pendingPayments: number;
+  averageInvoice: number;
 }

@@ -21,10 +21,10 @@ import * as z from "zod";
 // Define a schema that matches the updated DocumentStatus type 
 const documentSchema = z.object({
   name: z.string().min(2, { message: "O nome deve ter pelo menos 2 caracteres" }),
-  type: z.enum(["document", "action", "precedent", "strategy"] as const, {
+  type: z.enum(["document", "contract", "petition", "template", "action", "precedent", "strategy"] as const, {
     required_error: "Selecione um tipo",
   }),
-  status: z.enum(["draft", "review", "final", "archived", "signed"] as const).default("draft"),
+  status: z.enum(["draft", "review", "final", "archived", "signed", "unsigned"] as const).default("draft"),
   description: z.string().optional(),
   category: z.string().optional(),
   clientId: z.string().optional(),
@@ -72,9 +72,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
       folder: '',
       status: 'draft' as DocumentStatus,
       tags: [],
-      category: '',
       clientId: selectedClient || '',
-      processId: selectedProcess || ''
     }
   );
 
@@ -95,7 +93,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
     const files = e.target.files;
     if (!files || files.length === 0) return;
     
-    // Determinar o tipo de documento com base no tipo de arquivo
+    // Determine the document type based on file type
     let docType: DocumentType = "document";
     const fileType = files[0]?.type || '';
     
@@ -115,7 +113,10 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit({
+      ...formData,
+      process: formData.process || formData.processId
+    });
   };
 
   const filteredProcesses = formData.clientId
@@ -152,7 +153,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
           id="file"
           type="file"
           onChange={handleFileChange}
-          required={!initialData?.url}
+          required={!initialData?.fileUrl && !initialData?.url}
           className="cursor-pointer"
         />
       </div>
@@ -171,6 +172,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
             <SelectItem value="review">Em Revisão</SelectItem>
             <SelectItem value="final">Final</SelectItem>
             <SelectItem value="signed">Assinado</SelectItem>
+            <SelectItem value="unsigned">Não Assinado</SelectItem>
             <SelectItem value="archived">Arquivado</SelectItem>
           </SelectContent>
         </Select>
@@ -180,7 +182,7 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
         <Label htmlFor="clientId">Cliente</Label>
         <Select
           value={formData.clientId}
-          onValueChange={(value: string) => setFormData({ ...formData, clientId: value, processId: undefined, process: '' })}
+          onValueChange={(value: string) => setFormData({ ...formData, clientId: value, process: '' })}
           disabled={!!selectedClient}
         >
           <SelectTrigger id="clientId">
@@ -195,13 +197,13 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="processId">Processo</Label>
+        <Label htmlFor="process">Processo</Label>
         <Select
-          value={formData.processId}
-          onValueChange={(value: string) => setFormData({ ...formData, processId: value, process: value })}
+          value={formData.process}
+          onValueChange={(value: string) => setFormData({ ...formData, process: value })}
           disabled={!!selectedProcess || !formData.clientId}
         >
-          <SelectTrigger id="processId">
+          <SelectTrigger id="process">
             <SelectValue placeholder="Selecione o processo" />
           </SelectTrigger>
           <SelectContent>
@@ -211,13 +213,6 @@ const DocumentForm: React.FC<DocumentFormProps> = ({
           </SelectContent>
         </Select>
       </div>
-
-      {initialData?.version && (
-        <div className="space-y-2">
-          <Label>Versão</Label>
-          <p className="text-sm text-gray-500">Versão atual: {initialData.version}</p>
-        </div>
-      )}
 
       <Button type="submit" className="w-full bg-highlight hover:bg-highlight/90">
         {initialData?.id ? 'Atualizar' : 'Criar'} Documento

@@ -82,7 +82,7 @@ const DocumentsSearchBar: React.FC<DocumentsSearchBarProps> = ({
               <Calendar
                 mode="single"
                 selected={filters.date}
-                onSelect={(date) => handleFilterChange("date", date)}
+                onSelect={(date: Date | undefined) => handleFilterChange("date", date)}
                 className="border rounded-md p-3"
               />
             </div>

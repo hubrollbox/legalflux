@@ -9,7 +9,6 @@ import DocumentsContent from "./DocumentsContent";
 import TemplatesContent from "./TemplatesContent";
 import { Document, DocumentTemplate, DocumentType, DocumentFilter } from "@/types/document";
 
-// Update the DocumentFilter type to match what's expected
 interface DocumentTabsProps {
   viewMode: "grid" | "list";
   setViewMode: (mode: "grid" | "list") => void;
@@ -86,7 +85,7 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
       
       <TabsContent value="templates" className="mt-6">
         <TemplatesContent 
-          templates={templateFormatted} 
+          templates={templateFormatted as any} 
           viewMode={viewMode} 
         />
       </TabsContent>

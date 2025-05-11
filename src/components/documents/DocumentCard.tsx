@@ -13,14 +13,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { getFileIcon, formatDate } from './documentCardUtils';
+import { getFileIcon, formatDate, getDocumentTypeLabel } from './documentCardUtils';
 import CustomImage from '@/components/ui/CustomImage';
+import { DocumentType } from "@/types/document";
 
 interface DocumentCardProps {
   doc: {
     id: string;
     name: string;
-    type: string;
+    type: DocumentType;
     size: string;
     updatedAt: string | Date;
     owner: string;

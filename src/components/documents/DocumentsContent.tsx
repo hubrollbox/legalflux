@@ -18,10 +18,10 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
   documents, 
   viewMode 
 }) => {
-  // Certifique-se de que documents nunca seja undefined
+  // Make sure documents is never undefined
   const safeDocuments = documents || [];
   
-  // Se não houver documentos, mostra uma mensagem
+  // If no documents, show a message
   if (safeDocuments.length === 0) {
     return (
       <Card>
@@ -38,7 +38,7 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
     );
   }
 
-  // Função para converter documentos para o formato correto
+  // Function to convert documents to the correct format
   const formatDocumentForCards = (doc: Document) => {
     // Ensure updatedAt is a string to avoid type issues
     const updatedAt = doc.updatedAt ? 
@@ -59,7 +59,7 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
       process: doc.process || "",
       description: doc.description || "",
       tags: doc.tags || [],
-      fileUrl: doc.url
+      fileUrl: doc.fileUrl || doc.url
     };
   };
 
@@ -77,11 +77,11 @@ const DocumentsContent: React.FC<DocumentsContentProps> = ({
         {viewMode === "grid" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {formattedDocuments.map((doc) => (
-              <DocumentCard key={doc.id} doc={doc} />
+              <DocumentCard key={doc.id} doc={doc as any} />
             ))}
           </div>
         ) : (
-          <DocumentList documents={formattedDocuments} />
+          <DocumentList documents={formattedDocuments as any} />
         )}
       </CardContent>
     </Card>

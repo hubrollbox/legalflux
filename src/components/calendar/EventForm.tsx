@@ -27,7 +27,7 @@ export interface CalendarEvent {
   title: string;
   start: Date;
   end: Date;
-  category: 'meeting' | 'deadline' | 'task' | 'other';
+  category: 'meeting' | 'deadline' | 'task' | 'other' | 'hearing' | 'trial' | 'client' | 'document';
   description?: string;
   isRecurring?: boolean;
   recurrenceType?: 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -122,7 +122,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialData }) => {
         <label className="block text-sm font-medium mb-1">Categoria</label>
         <Select
           value={formData.category}
-          onValueChange={(value: 'meeting' | 'deadline' | 'task' | 'other') => 
+          onValueChange={(value: 'meeting' | 'deadline' | 'task' | 'other' | 'hearing' | 'trial' | 'client' | 'document') => 
             setFormData({ ...formData, category: value })
           }
         >
@@ -134,6 +134,10 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialData }) => {
             <SelectItem value="deadline">Prazo</SelectItem>
             <SelectItem value="task">Tarefa</SelectItem>
             <SelectItem value="other">Outro</SelectItem>
+            <SelectItem value="hearing">Audiência</SelectItem>
+            <SelectItem value="trial">Julgamento</SelectItem>
+            <SelectItem value="client">Cliente</SelectItem>
+            <SelectItem value="document">Documento</SelectItem>
           </SelectContent>
         </Select>
       </div>

@@ -27,6 +27,10 @@ export interface Document {
   tags?: string[];
   fileUrl?: string;
   preview?: string;
+  category?: string; // Added category field
+  version?: string; // Added version field
+  processId?: string; // Added processId field
+  url?: string; // Added url field
 }
 
 export interface DocumentTemplate {
