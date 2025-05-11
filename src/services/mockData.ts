@@ -1,5 +1,5 @@
 
-import { FinancialTransaction, TransactionType, TransactionStatus } from "@/types/financial";
+import { FinancialTransaction } from "@/types/financial";
 
 export const getRecentCases = () => {
   return [
@@ -66,32 +66,35 @@ export const MOCK_FINANCIAL_TRANSACTIONS: FinancialTransaction[] = [
     date: new Date("2023-05-20"),
     description: "Pagamento de honorários",
     amount: 1500.00,
-    type: TransactionType.INCOME,
-    status: TransactionStatus.COMPLETED,
+    type: 'income',
+    status: 'completed',
     category: "Honorários",
     clientName: "João Silva",
-    processId: "2023/001"
+    processId: "2023/001",
+    createdAt: new Date("2023-05-20")
   },
   {
     id: "f2",
     date: new Date("2023-05-18"),
     description: "Pagamento de despesas processuais",
     amount: -300.00,
-    type: TransactionType.EXPENSE,
-    status: TransactionStatus.COMPLETED,
+    type: 'expense',
+    status: 'completed',
     category: "Despesas Processuais",
     clientName: "Maria Santos",
-    processId: "2023/002"
+    processId: "2023/002",
+    createdAt: new Date("2023-05-18")
   },
   {
     id: "f3",
     date: new Date("2023-05-15"),
     description: "Recebimento de cliente",
     amount: 2000.00,
-    type: TransactionType.INCOME,
-    status: TransactionStatus.COMPLETED,
+    type: 'income',
+    status: 'completed',
     category: "Recebimento",
     clientName: "António Costa",
-    processId: "2023/003"
+    processId: "2023/003",
+    createdAt: new Date("2023-05-15")
   }
 ];

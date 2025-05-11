@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Plus, Trash } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Calendar as BigCalendar, dateFnsLocalizer, Views } from "react-big-calendar";
+import { Calendar as BigCalendar, Views } from "react-big-calendar";
+import dateFnsLocalizer from "react-big-calendar/lib/localizers/date-fns";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
@@ -21,10 +22,10 @@ import CalendarViewSelector from "@/components/calendar/CalendarViewSelector";
 import EventDetailsCard from "@/components/calendar/EventDetailsCard";
 import AgendaView from "@/components/calendar/AgendaView";
 import DroppableCalendarCell from "@/components/calendar/DroppableCalendarCell";
-import type { CalendarEvent } from '@/types';
+import type { CalendarEvent } from '@/components/calendar/EventForm';
 
 // Hook personalizado
-import { useCalendarEvents } from "@/components/calendar/hooks/useCalendarEvents";
+import useCalendarEvents from "@/components/calendar/hooks/useCalendarEvents";
 
 type ViewType = 'month' | 'week' | 'day' | 'agenda';
 

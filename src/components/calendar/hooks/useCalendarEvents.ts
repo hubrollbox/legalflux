@@ -1,86 +1,109 @@
-
 import { useState, useEffect, useCallback } from 'react';
-import { CalendarEvent } from '@/types/calendar';
+import { CalendarEvent } from '@/components/calendar/EventForm';
 
 const useCalendarEvents = () => {
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
-  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
-  const [clientFilter, setClientFilter] = useState<string | null>(null);
-  const [processFilter, setProcessFilter] = useState<string | null>(null);
-  const [priorityFilter, setPriorityFilter] = useState<string | null>(null);
-
-  // Load events from localStorage on mount
-  useEffect(() => {
-    try {
-      const savedEvents = localStorage.getItem('calendar-events');
-      if (savedEvents) {
-        const parsedEvents = JSON.parse(savedEvents);
-        // Convert string dates back to Date objects
-        const eventsWithDates = parsedEvents.map((event: any) => ({
-          ...event,
-          start: new Date(event.start),
-          end: new Date(event.end)
-        }));
-        setEvents(eventsWithDates);
+  const [events, setEvents] = useState<CalendarEvent[]>(() => {
+    // Try to load events from localStorage
+    const savedEvents = localStorage.getItem('calendarEvents');
+    return savedEvents ? JSON.parse(savedEvents) : [
+      {
+        id: '1',
+        title: 'Reunião com cliente',
+        start: new Date(new Date().setHours(10, 0, 0, 0)),
+        end: new Date(new Date().setHours(11, 0, 0, 0)),
+        category: 'meeting',
+        description: 'Discussão sobre o caso nº 2023-001',
+        priority: 'high',
+        client: 'João Silva',
+        process: 'Processo nº 2023-001'
+      },
+      {
+        id: '2',
+        title: 'Prazo processual',
+        start: new Date(new Date().setDate(new Date().getDate() + 2)),
+        end: new Date(new Date().setDate(new Date().getDate() + 2)),
+        category: 'deadline',
+        description: 'Entrega de contestação',
+        priority: 'high',
+        client: 'Empresa ABC',
+        process: 'Processo nº 2023-002'
+      },
+      {
+        id: '3',
+        title: 'Audiência preliminar',
+        start: new Date(new Date().setDate(new Date().getDate() + 5)),
+        end: new Date(new Date().setDate(new Date().getDate() + 5)),
+        category: 'meeting',
+        description: 'Tribunal da Comarca de Lisboa',
+        priority: 'medium',
+        client: 'Maria Oliveira',
+        process: 'Processo nº 2023-003',
+        location: 'Tribunal da Comarca de Lisboa'
       }
-    } catch (error) {
-      console.error('Error loading events from localStorage:', error);
-    }
-  }, []);
-
+    ];
+  });
+  
+  const [categoryFilter, setCategoryFilter] = useState<string[]>([]);
+  const [clientFilter, setClientFilter] = useState<string[]>([]);
+  const [processFilter, setProcessFilter] = useState<string[]>([]);
+  const [priorityFilter, setPriorityFilter] = useState<string[]>([]);
+  
   // Save events to localStorage whenever they change
   useEffect(() => {
-    try {
-      localStorage.setItem('calendar-events', JSON.stringify(events));
-    } catch (error) {
-      console.error('Error saving events to localStorage:', error);
-    }
+    localStorage.setItem('calendarEvents', JSON.stringify(events));
   }, [events]);
-
-  // Filter events based on filters
+  
+  // Filter events based on selected filters
   const filteredEvents = events.filter(event => {
-    const matchesCategory = !categoryFilter || event.category === categoryFilter;
-    const matchesClient = !clientFilter || event.client === clientFilter;
-    const matchesProcess = !processFilter || event.process === processFilter;
-    const matchesPriority = !priorityFilter || event.priority === priorityFilter;
-
+    const matchesCategory = categoryFilter.length === 0 || categoryFilter.includes(event.category);
+    const matchesClient = clientFilter.length === 0 || 
+      (event.client && clientFilter.includes(event.client));
+    const matchesProcess = processFilter.length === 0 || 
+      (event.process && processFilter.includes(event.process));
+    const matchesPriority = priorityFilter.length === 0 || 
+      (event.priority && priorityFilter.includes(event.priority));
+    
     return matchesCategory && matchesClient && matchesProcess && matchesPriority;
   });
-
-  // CRUD operations
+  
+  // Add a new event
   const addEvent = useCallback((event: CalendarEvent) => {
     setEvents(prev => [...prev, event]);
   }, []);
-
-  const updateEvent = useCallback((eventId: string, updatedData: Partial<CalendarEvent>) => {
+  
+  // Update an existing event
+  const updateEvent = useCallback((id: string, newData: Partial<CalendarEvent>) => {
     setEvents(prev => 
       prev.map(event => 
-        event.id === eventId
-          ? { ...event, ...updatedData }
-          : event
+        event.id === id ? { ...event, ...newData } : event
       )
     );
   }, []);
-
-  const removeEvent = useCallback((eventId: string) => {
-    setEvents(prev => prev.filter(event => event.id !== eventId));
+  
+  // Remove an event
+  const removeEvent = useCallback((id: string) => {
+    setEvents(prev => prev.filter(event => event.id !== id));
   }, []);
-
-  const moveEvent = useCallback((eventId: string, newDate: Date) => {
-    setEvents(prev => 
-      prev.map(event => {
-        if (event.id === eventId) {
-          // Calculate time difference between start and end
-          const duration = event.end.getTime() - event.start.getTime();
+  
+  // Move an event to a different date
+  const moveEvent = useCallback((id: string, newDate: Date) => {
+    setEvents(prev => {
+      return prev.map(event => {
+        if (event.id === id) {
+          // Calculate the difference between start and end times
+          const duration = Number(event.end) - Number(event.start);
           
-          // Create new start date preserving the time component
-          const newStart = new Date(newDate.setHours(
+          // Create new start date based on the provided date
+          const newStart = new Date(newDate);
+          // Keep the original time
+          newStart.setHours(
             event.start.getHours(),
-            event.start.getMinutes()
-          ));
+            event.start.getMinutes(),
+            event.start.getSeconds()
+          );
           
-          // Create new end date based on duration
-          const newEnd = new Date(newStart.getTime() + duration);
+          // Create new end date by adding the original duration
+          const newEnd = new Date(Number(newStart) + duration);
           
           return {
             ...event,
@@ -89,27 +112,28 @@ const useCalendarEvents = () => {
           };
         }
         return event;
-      })
-    );
+      });
+    });
   }, []);
-
-  // Utility functions for getting unique values
+  
+  // Get unique clients from events for filtering
   const getUniqueClients = useCallback(() => {
-    const clients = new Set<string>();
-    events.forEach(event => {
-      if (event.client) clients.add(event.client);
-    });
-    return Array.from(clients);
+    const clients = events
+      .filter(event => event.client)
+      .map(event => event.client as string);
+    
+    return Array.from(new Set(clients));
   }, [events]);
-
+  
+  // Get unique processes from events for filtering
   const getUniqueProcesses = useCallback(() => {
-    const processes = new Set<string>();
-    events.forEach(event => {
-      if (event.process) processes.add(event.process);
-    });
-    return Array.from(processes);
+    const processes = events
+      .filter(event => event.process)
+      .map(event => event.process as string);
+    
+    return Array.from(new Set(processes));
   }, [events]);
-
+  
   return {
     events,
     filteredEvents,

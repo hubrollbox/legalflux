@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import SectionHeader from '@/components/layout/SectionHeader';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { DollarSign, Download, Plus } from 'lucide-react';
@@ -31,6 +32,7 @@ const Financial = () => {
       category: 'Serviços Jurídicos',
       clientName: 'Empresa ABC',
       processId: 'P-2023-001',
+      createdAt: '2023-01-15',
     },
     {
       id: '2',
@@ -42,6 +44,7 @@ const Financial = () => {
       category: 'Despesas Operacionais',
       clientName: null,
       processId: null,
+      createdAt: '2023-02-20',
     },
     {
       id: '3',
@@ -53,17 +56,18 @@ const Financial = () => {
       category: 'Serviços Jurídicos',
       clientName: 'Cliente XYZ',
       processId: 'P-2023-002',
+      createdAt: '2023-03-10',
     },
   ];
 
   const financialData = [
-    { month: 'Jan', receitas: 4000, despesas: 2400 },
-    { month: 'Fev', receitas: 3000, despesas: 1398 },
-    { month: 'Mar', receitas: 2000, despesas: 9800 },
-    { month: 'Abr', receitas: 2780, despesas: 3908 },
-    { month: 'Mai', receitas: 1890, despesas: 4800 },
-    { month: 'Jun', receitas: 2390, despesas: 3800 },
-    { month: 'Jul', receitas: 3490, despesas: 4300 },
+    { name: 'Jan', revenue: 4000, expenses: 2400 },
+    { name: 'Fev', revenue: 3000, expenses: 1398 },
+    { name: 'Mar', revenue: 2000, expenses: 9800 },
+    { name: 'Abr', revenue: 2780, expenses: 3908 },
+    { name: 'Mai', revenue: 1890, expenses: 4800 },
+    { name: 'Jun', revenue: 2390, expenses: 3800 },
+    { name: 'Jul', revenue: 3490, expenses: 4300 },
   ];
 
   return (
@@ -124,12 +128,12 @@ const Financial = () => {
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={financialData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
+                  <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="receitas" fill="#82ca9d" />
-                  <Bar dataKey="despesas" fill="#e48383" />
+                  <Bar dataKey="revenue" name="Receitas" fill="#82ca9d" />
+                  <Bar dataKey="expenses" name="Despesas" fill="#e48383" />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>

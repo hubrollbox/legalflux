@@ -1,9 +1,11 @@
 
 import React from 'react';
-import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowUpDown } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { FileText, Pencil, Trash } from "lucide-react";
 import { FinancialTransaction } from '@/types/financial';
+import { formatCurrency } from '@/utils/formatters';
 
 interface TransactionTableProps {
   transactions: FinancialTransaction[];
@@ -22,78 +24,63 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   toggleSort,
   translateTransactionType,
   translateTransactionStatus,
-  getStatusColor,
+  getStatusColor
 }) => {
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px] cursor-pointer" onClick={() => toggleSort('id')}>
-              <div className="flex items-center">
-                ID
-                {sortField === 'id' && (
-                  <ArrowUpDown className="ml-2 h-4 w-4" />
-                )}
-              </div>
+            <TableHead className="cursor-pointer" onClick={() => toggleSort('date')}>
+              Data {sortField === 'date' && (sortDirection === 'asc' ? '↑' : '↓')}
+            </TableHead>
+            <TableHead className="cursor-pointer" onClick={() => toggleSort('description')}>
+              Descrição {sortField === 'description' && (sortDirection === 'asc' ? '↑' : '↓')}
             </TableHead>
             <TableHead className="cursor-pointer" onClick={() => toggleSort('amount')}>
-              <div className="flex items-center">
-                Valor
-                {sortField === 'amount' && (
-                  <ArrowUpDown className="ml-2 h-4 w-4" />
-                )}
-              </div>
+              Valor {sortField === 'amount' && (sortDirection === 'asc' ? '↑' : '↓')}
             </TableHead>
-            <TableHead className="cursor-pointer" onClick={() => toggleSort('type')}>
-              <div className="flex items-center">
-                Tipo
-                {sortField === 'type' && (
-                  <ArrowUpDown className="ml-2 h-4 w-4" />
-                )}
-              </div>
-            </TableHead>
-            <TableHead className="cursor-pointer" onClick={() => toggleSort('status')}>
-              <div className="flex items-center">
-                Status
-                {sortField === 'status' && (
-                  <ArrowUpDown className="ml-2 h-4 w-4" />
-                )}
-              </div>
-            </TableHead>
-            <TableHead className="cursor-pointer" onClick={() => toggleSort('date')}>
-              <div className="flex items-center">
-                Data
-                {sortField === 'date' && (
-                  <ArrowUpDown className="ml-2 h-4 w-4" />
-                )}
-              </div>
-            </TableHead>
-            <TableHead>Descrição</TableHead>
+            <TableHead>Tipo</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Cliente</TableHead>
+            <TableHead>Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {transactions.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="h-24 text-center">
-                Nenhuma transação encontrada.
+              <TableCell colSpan={7} className="text-center py-8 text-gray-500">
+                Nenhuma transação encontrada
               </TableCell>
             </TableRow>
           ) : (
             transactions.map((transaction) => (
-              <TableRow key={transaction.id} className="financial-table">
-                <TableCell className="font-medium">{transaction.id}</TableCell>
-                <TableCell className="font-medium">
-                  {transaction.amount.toLocaleString('pt-PT')}
+              <TableRow key={transaction.id}>
+                <TableCell>{new Date(transaction.date).toLocaleDateString('pt-PT')}</TableCell>
+                <TableCell>{transaction.description}</TableCell>
+                <TableCell className={transaction.amount < 0 ? 'text-red-500' : 'text-green-500'}>
+                  {formatCurrency(transaction.amount)}
                 </TableCell>
-                <TableCell>{translateTransactionType(transaction.type)}</TableCell>
+                <TableCell>
+                  <Badge variant="outline">{translateTransactionType(transaction.type)}</Badge>
+                </TableCell>
                 <TableCell>
                   <Badge className={getStatusColor(transaction.status)}>
                     {translateTransactionStatus(transaction.status)}
                   </Badge>
                 </TableCell>
-                <TableCell>{new Date(transaction.date).toLocaleDateString('pt-PT')}</TableCell>
-                <TableCell className="max-w-[200px] truncate">{transaction.description || 'N/A'}</TableCell>
+                <TableCell>{transaction.clientName || '-'}</TableCell>
+                <TableCell className="space-x-1">
+                  <Button variant="ghost" size="icon">
+                    <FileText className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon">
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon">
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                </TableCell>
               </TableRow>
             ))
           )}

@@ -1,6 +1,6 @@
 
 import * as React from "react";
-import { Toaster as SonnerToaster } from "sonner";
+import { Toaster } from "sonner";
 
 interface ToastProps {
   title?: string;
@@ -9,7 +9,7 @@ interface ToastProps {
 }
 
 // Export the Toaster component from sonner
-export const Toaster = SonnerToaster;
+export const Toaster = Toaster;
 
 // Internal toast implementation functions
 const createToast = {

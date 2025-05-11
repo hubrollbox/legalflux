@@ -1,80 +1,54 @@
 
 import React from 'react';
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { AlertCircle, Calendar, CreditCard } from "lucide-react";
 
-// Sample alert data
-const alerts = [
-  { 
-    id: '1', 
-    title: 'Prazo de pagamento próximo', 
-    description: 'Fatura #INV-2023-001 vence em 3 dias',
-    type: 'warning'
-  },
-  { 
-    id: '2',
-    title: 'Pagamento recebido',
-    description: 'R$ 5.000,00 recebido de Cliente XYZ',
-    type: 'success'
-  }
-];
-
-export const FinancialAlerts = () => {
-  const { toast } = useToast();
-
-  const handleDismiss = (id: string) => {
-    toast({
-      title: "Alerta descartado",
-      description: "O alerta foi removido com sucesso."
-    });
-  };
-
-  const handleAction = (id: string) => {
-    toast({
-      title: "Ação executada",
-      description: "A ação foi realizada com sucesso."
-    });
-  };
+const FinancialAlerts = () => {
+  const alerts = [
+    {
+      title: "Faturas a vencer",
+      description: "3 faturas vencem nos próximos 7 dias",
+      icon: <Calendar className="h-5 w-5 text-amber-500" />,
+      action: "Ver faturas"
+    },
+    {
+      title: "Faturas vencidas",
+      description: "2 faturas estão vencidas",
+      icon: <AlertCircle className="h-5 w-5 text-red-500" />,
+      action: "Ver detalhes"
+    },
+    {
+      title: "Pagamentos pendentes",
+      description: "4 pagamentos aguardam aprovação",
+      icon: <CreditCard className="h-5 w-5 text-blue-500" />,
+      action: "Processar"
+    }
+  ];
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-medium">Alertas Financeiros</h3>
-      
-      {alerts.map((alert) => (
-        <Card key={alert.id} className={
-          alert.type === 'warning' ? "border-yellow-300 bg-yellow-50" : 
-          alert.type === 'success' ? "border-green-300 bg-green-50" : 
-          "border-red-300 bg-red-50"
-        }>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">{alert.title}</CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0 pb-2">
-            <p className="text-sm text-gray-600">{alert.description}</p>
-          </CardContent>
-          <CardFooter className="pt-0 flex justify-end gap-2">
-            <Button 
-              size="sm" 
-              variant="ghost" 
-              onClick={() => handleDismiss(alert.id)}
-            >
-              Descartar
-            </Button>
-            <Button 
-              size="sm" 
-              onClick={() => handleAction(alert.id)}
-            >
-              Ver Detalhes
-            </Button>
-          </CardFooter>
-        </Card>
-      ))}
-      
-      {alerts.length === 0 && (
-        <p className="text-sm text-gray-500">Não há alertas financeiros no momento.</p>
-      )}
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Alertas Financeiros</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {alerts.map((alert, index) => (
+            <div key={index} className="flex items-start space-x-3 border-b border-gray-100 last:border-0 pb-3 last:pb-0">
+              <div className="bg-gray-50 p-2 rounded-md">
+                {alert.icon}
+              </div>
+              <div className="flex-1">
+                <h4 className="font-medium">{alert.title}</h4>
+                <p className="text-sm text-gray-500">{alert.description}</p>
+              </div>
+              <button className="text-sm text-highlight hover:underline">
+                {alert.action}
+              </button>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

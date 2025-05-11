@@ -1,68 +1,82 @@
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDate } from "@/utils/dateUtils";
-import { Button } from "@/components/ui/button";
-import { Download, Filter } from "lucide-react";
+import React from 'react';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import TransactionList from './TransactionList';
+import TransactionFilters from './TransactionFilters';
+import TransactionExport from './TransactionExport';
+import { getTransactionsByUser } from '@/services/mockData';
+import { useState } from 'react';
 
-interface FinancialReportsProps {
-  // Add the required props here
-}
-
-export const FinancialReports: React.FC<FinancialReportsProps> = () => {
-  // Generate sample reports
-  const generateSampleReport = (month: string) => {
-    // Fixed date format here
-    return {
-      id: `report-${month}`,
-      title: `Relatório Financeiro - ${month}`,
-      date: formatDate(new Date()), // Corrected to use only one argument
-      type: 'PDF',
-      size: '2.4 MB',
-    };
+export const FinancialReports = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
+  
+  const transactions = getTransactionsByUser();
+  
+  // Filter transactions
+  const filteredTransactions = transactions.filter(transaction => {
+    const matchesSearch = transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || transaction.status === statusFilter;
+    const matchesType = typeFilter === 'all' || transaction.type === typeFilter;
+    
+    return matchesSearch && matchesStatus && matchesType;
+  });
+  
+  const handleExport = (format: 'csv' | 'pdf' | 'excel') => {
+    alert(`Exportando em formato ${format}...`);
   };
 
-  const reports = [
-    generateSampleReport('Janeiro'),
-    generateSampleReport('Fevereiro'),
-    generateSampleReport('Março'),
-  ];
-
   return (
-    <Card className="h-full">
-      <CardHeader className="flex flex-col space-y-2 md:flex-row md:items-center md:justify-between md:space-y-0">
-        <CardTitle>Relatórios Financeiros</CardTitle>
-        <div className="flex items-center space-x-2">
-          <Button size="sm" variant="outline">
-            <Filter className="mr-2 h-4 w-4" />
-            Filtrar
-          </Button>
-          <Button size="sm">
-            <Download className="mr-2 h-4 w-4" />
-            Exportar
-          </Button>
-        </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Transações Financeiras</CardTitle>
+        <CardDescription>Visualize e gerencie todas as transações do seu escritório</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          {reports.map((report) => (
-            <div
-              key={report.id}
-              className="flex items-center justify-between rounded-lg border p-3"
-            >
-              <div>
-                <div className="font-medium">{report.title}</div>
-                <div className="text-sm text-muted-foreground">
-                  {report.date} • {report.type} • {report.size}
-                </div>
-              </div>
-              <Button size="sm" variant="ghost">
-                <Download className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
-        </div>
+        <Tabs defaultValue="transactions">
+          <TabsList className="mb-4">
+            <TabsTrigger value="transactions">Transações</TabsTrigger>
+            <TabsTrigger value="invoices">Faturas</TabsTrigger>
+            <TabsTrigger value="expenses">Despesas</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="transactions">
+            <TransactionFilters
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
+              typeFilter={typeFilter}
+              setTypeFilter={setTypeFilter}
+            />
+            
+            <TransactionExport onExport={handleExport} />
+            
+            <TransactionList 
+              transactions={filteredTransactions} 
+              onViewDetails={(transaction) => alert(`Visualizando detalhes da transação: ${transaction.description}`)}
+              onEditTransaction={(transaction) => alert(`Editando transação: ${transaction.description}`)}
+              onDeleteTransaction={(id) => alert(`Excluindo transação: ${id}`)}
+            />
+          </TabsContent>
+          
+          <TabsContent value="invoices">
+            <p className="text-center text-gray-500 py-8">
+              Módulo de Faturas em desenvolvimento
+            </p>
+          </TabsContent>
+          
+          <TabsContent value="expenses">
+            <p className="text-center text-gray-500 py-8">
+              Módulo de Despesas em desenvolvimento
+            </p>
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );
 };
+
+export default FinancialReports;

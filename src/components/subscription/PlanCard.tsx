@@ -1,86 +1,96 @@
 
-import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import React from 'react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
-import { Plan } from "@/types/plan";
+import { Plan } from '@/types/plan';
+import { formatCurrency } from '@/utils/formatters';
 
 interface PlanCardProps {
   plan: Plan;
-  isCurrentPlan?: boolean;
-  publicView?: boolean;
+  onSelectPlan: (plan: Plan) => void;
+  isSelected?: boolean;
+  showDetails?: boolean;
 }
 
-const PlanCard: React.FC<PlanCardProps> = ({ plan, isCurrentPlan = false, publicView = false }) => {
-  const navigate = useNavigate();
+const PlanCard: React.FC<PlanCardProps> = ({ 
+  plan, 
+  onSelectPlan, 
+  isSelected = false,
+  showDetails = true
+}) => {
+  const { name, price, description, features, highlight, recommended } = plan;
 
-  const handleSelectPlan = () => {
-    if (publicView) {
-      navigate("/register", { state: { selectedPlan: plan.id } });
-    } else {
-      // Lógica para mudar de plano quando já está autenticado
-      console.log("Solicitação para mudar para o plano:", plan.id);
-    }
-  };
+  // Function to render a feature item with its status (included or not)
+  const renderFeature = (feature: { name: string; included: boolean }) => (
+    <li key={feature.name} className="flex items-center py-2">
+      {feature.included ? (
+        <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+      ) : (
+        <X className="h-4 w-4 text-red-500 mr-2 flex-shrink-0" />
+      )}
+      <span className="text-sm">
+        {feature.name}
+      </span>
+    </li>
+  );
 
   return (
-    <Card
-      className={cn(
-        "flex flex-col h-full transition-all duration-200 hover:shadow-lg",
-        isCurrentPlan && "border-2 border-primary"
+    <Card className={cn(
+      "relative overflow-hidden transition-all duration-300",
+      highlight ? "border-highlight shadow-lg" : "border-gray-200",
+      isSelected && "ring-2 ring-highlight"
+    )}>
+      {recommended && (
+        <div className="absolute top-0 right-0">
+          <div className="bg-highlight text-white text-xs font-medium px-3 py-1 rounded-bl">
+            Recomendado
+          </div>
+        </div>
       )}
-    >
-      <CardHeader className={cn(
-        "pb-4"
-      )}>
-        <div className="flex justify-between items-start">
-          <CardTitle>{plan.name}</CardTitle>
-          {plan.recommended && (
-            <Badge className="bg-highlight text-white hover:bg-highlight/90">
-              Popular
-            </Badge>
-          )}
-          {isCurrentPlan && (
-            <Badge variant="outline" className="border-primary text-primary">
-              Atual
-            </Badge>
-          )}
-        </div>
+      
+      <CardHeader>
+        <CardTitle className={highlight ? "text-highlight" : ""}>
+          {name}
+        </CardTitle>
+        <CardDescription>{description}</CardDescription>
         <div className="mt-2">
-          <span className="text-3xl font-bold">{plan.price !== null ? `${plan.price}€` : "Sob orçamento"}</span>
-          {plan.name !== "Personalizado" && plan.price !== null && <span className="text-muted-foreground">/mês</span>}
+          <span className="text-3xl font-bold">
+            {price === null ? "Personalizado" : formatCurrency(price)}
+          </span>
+          {price !== null && <span className="text-sm text-gray-500">/mês</span>}
         </div>
-        <CardDescription className="mt-2">{plan.description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow flex flex-col">
-        <ul className="space-y-2 mb-6 flex-grow">
-          {plan.features.map((feature, index) => (
-            <li key={index} className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
-              <span>{feature}</span>
-            </li>
-          ))}
-        </ul>
-        <Button
+      
+      {showDetails && (
+        <CardContent>
+          <ul className="space-y-1 mt-4">
+            {features.map((feature) => React.createElement('li', {
+              key: feature.name,
+              className: "flex items-center py-2"
+            }, [
+              feature.included ? 
+                React.createElement(Check, { className: "h-4 w-4 text-green-500 mr-2 flex-shrink-0" }) : 
+                React.createElement(X, { className: "h-4 w-4 text-red-500 mr-2 flex-shrink-0" }),
+              React.createElement('span', { className: "text-sm" }, feature.name)
+            ]))}
+          </ul>
+        </CardContent>
+      )}
+      
+      <CardFooter>
+        <Button 
+          variant={highlight ? "default" : "outline"} 
           className={cn(
-            "w-full mt-auto",
-            plan.recommended ? "bg-highlight hover:bg-highlight/90" : "",
-            plan.name === "Personalizado" ? "bg-primary hover:bg-primary/90" : ""
+            "w-full", 
+            highlight ? "bg-highlight hover:bg-highlight/90" : ""
           )}
-          variant={isCurrentPlan ? "outline" : "default"}
-          disabled={isCurrentPlan}
-          onClick={handleSelectPlan}
+          onClick={() => onSelectPlan(plan)}
         >
-          {isCurrentPlan
-            ? "Plano Atual"
-            : plan.name === "Personalizado"
-              ? "Contacte-nos"
-              : "Selecionar Plano"}
+          {price === null ? "Solicitar orçamento" : "Selecionar plano"}
         </Button>
-      </CardContent>
+      </CardFooter>
     </Card>
   );
 };

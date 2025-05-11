@@ -1,17 +1,18 @@
+
 import { FinancialTransaction, TransactionType, TransactionStatus } from "@/types/financial";
 
 // Traduz o tipo de transação para português
 export const translateTransactionType = (type: string): string => {
   switch (type) {
-    case TransactionType.INCOME:
+    case 'income':
       return "Receita";
-    case TransactionType.EXPENSE:
+    case 'expense':
       return "Despesa";
-    case TransactionType.PAYMENT:
+    case 'payment':
       return "Pagamento";
-    case TransactionType.INVOICE:
+    case 'invoice':
       return "Fatura";
-    case TransactionType.REFUND:
+    case 'refund':
       return "Reembolso";
     default:
       return type;
@@ -21,16 +22,16 @@ export const translateTransactionType = (type: string): string => {
 // Traduz o status da transação para português
 export const translateTransactionStatus = (status: string): string => {
   switch (status) {
-    case TransactionStatus.PENDING:
+    case 'pending':
       return "Pendente";
-    case TransactionStatus.COMPLETED:
+    case 'completed':
       return "Concluída";
-    case TransactionStatus.CANCELLED:
-    case TransactionStatus.CANCELED:
+    case 'cancelled':
+    case 'canceled':
       return "Cancelada";
-    case TransactionStatus.FAILED:
+    case 'failed':
       return "Falha";
-    case TransactionStatus.PROCESSING:
+    case 'processing':
       return "Em processamento";
     default:
       return status;
@@ -40,16 +41,16 @@ export const translateTransactionStatus = (status: string): string => {
 // Retorna a cor do badge baseada no status
 export const getStatusColor = (status: string): string => {
   switch (status) {
-    case TransactionStatus.PENDING:
+    case 'pending':
       return "bg-amber-100 text-amber-800 hover:bg-amber-200";
-    case TransactionStatus.COMPLETED:
+    case 'completed':
       return "bg-green-100 text-green-800 hover:bg-green-200";
-    case TransactionStatus.CANCELLED:
-    case TransactionStatus.CANCELED:
+    case 'cancelled':
+    case 'canceled':
       return "bg-gray-100 text-gray-800 hover:bg-gray-200";
-    case TransactionStatus.FAILED:
+    case 'failed':
       return "bg-red-100 text-red-800 hover:bg-red-200";
-    case TransactionStatus.PROCESSING:
+    case 'processing':
       return "bg-blue-100 text-blue-800 hover:bg-blue-200";
     default:
       return "bg-gray-100 text-gray-800 hover:bg-gray-200";
@@ -88,49 +89,20 @@ export const exportToCSV = (
     transaction.processId || "",
   ]);
 
-  // Junta os cabeçalhos e os dados em um string CSV
-  const csv = [headers, ...csvData].map((row) => row.join(",")).join("\n");
+  // Combina cabeçalhos e dados
+  const csvContent = [headers, ...csvData]
+    .map((e) => e.join(","))
+    .join("\n");
 
-  // Cria um blob e download
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
+  // Cria um Blob com o conteúdo CSV
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
 
+  // Cria um link para download e clica nele
+  const link = document.createElement("a");
   link.setAttribute("href", url);
-  link.setAttribute("download", `transacoes_${new Date().toLocaleDateString("pt-PT").replace(/\//g, "-")}.csv`);
-  link.style.visibility = "hidden";
-
+  link.setAttribute("download", `transacoes_${new Date().toISOString().slice(0, 10)}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-};
-
-export const groupTransactionsByClient = (transactions: FinancialTransaction[]) => {
-  const grouped: { [clientId: string]: FinancialTransaction[] } = {};
-  
-  transactions.forEach(transaction => {
-    if (transaction.clientId) {
-      if (!grouped[transaction.clientId]) {
-        grouped[transaction.clientId] = [];
-      }
-      grouped[transaction.clientId].push(transaction);
-    }
-  });
-  
-  return grouped;
-};
-
-export const groupTransactionsByProcess = (transactions: FinancialTransaction[]) => {
-  const grouped: { [processId: string]: FinancialTransaction[] } = {};
-  
-  transactions.forEach(transaction => {
-    if (transaction.processId) {
-      if (!grouped[transaction.processId]) {
-        grouped[transaction.processId] = [];
-      }
-      grouped[transaction.processId].push(transaction);
-    }
-  });
-  
-  return grouped;
 };

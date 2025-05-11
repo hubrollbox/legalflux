@@ -144,7 +144,25 @@ const config: Config = {
   safelist: [
     'border-gray-200',
     'text-gray-200',
-    'bg-gray-200'
+    'bg-gray-200',
+    'text-green-500',
+    'text-green-700',
+    'text-red-500',
+    'text-red-700',
+    'text-amber-500',
+    'bg-green-100',
+    'bg-red-100',
+    'bg-amber-100',
+    'bg-blue-100',
+    'text-blue-700',
+    'text-amber-700',
+    'border-green-200',
+    'border-red-200',
+    'border-blue-200',
+    'border-amber-200',
+    'bg-gray-100',
+    'text-gray-700',
+    'border-gray-300'
   ]
 };
 

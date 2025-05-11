@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Search } from 'lucide-react';
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -24,8 +24,9 @@ const TransactionFilters: React.FC<TransactionFiltersProps> = ({
   return (
     <div className="flex flex-col md:flex-row gap-4 mb-6">
       <div className="relative flex-1">
-        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
         <Input
+          type="search"
           placeholder="Pesquisar transações..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -33,37 +34,31 @@ const TransactionFilters: React.FC<TransactionFiltersProps> = ({
         />
       </div>
       
-      <div className="flex flex-col sm:flex-row gap-2">
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filtrar por status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os status</SelectItem>
-            <SelectItem value="pending">Pendente</SelectItem>
-            <SelectItem value="completed">Concluído</SelectItem>
-            <SelectItem value="failed">Falhou</SelectItem>
-            <SelectItem value="cancelled">Cancelado</SelectItem>
-            <SelectItem value="refunded">Reembolsado</SelectItem>
-            <SelectItem value="overdue">Vencido</SelectItem>
-          </SelectContent>
-        </Select>
-        
-        <Select value={typeFilter} onValueChange={setTypeFilter}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filtrar por tipo" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os tipos</SelectItem>
-            <SelectItem value="income">Receita</SelectItem>
-            <SelectItem value="expense">Despesa</SelectItem>
-            <SelectItem value="invoice">Fatura</SelectItem>
-            <SelectItem value="payment">Pagamento</SelectItem>
-            <SelectItem value="refund">Reembolso</SelectItem>
-            <SelectItem value="other">Outro</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <Select value={statusFilter} onValueChange={setStatusFilter}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Todos</SelectItem>
+          <SelectItem value="completed">Concluídas</SelectItem>
+          <SelectItem value="pending">Pendentes</SelectItem>
+          <SelectItem value="cancelled">Canceladas</SelectItem>
+          <SelectItem value="failed">Falhas</SelectItem>
+        </SelectContent>
+      </Select>
+      
+      <Select value={typeFilter} onValueChange={setTypeFilter}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Tipo" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Todos</SelectItem>
+          <SelectItem value="income">Receitas</SelectItem>
+          <SelectItem value="expense">Despesas</SelectItem>
+          <SelectItem value="invoice">Faturas</SelectItem>
+          <SelectItem value="payment">Pagamentos</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 };

@@ -1,63 +1,75 @@
 
-// Função para determinar o nome do papel com base no código do papel
-export const getUserRoleName = (role: string): string => {
-  switch (role) {
-    case 'admin':
-      return 'Administrador';
-    case 'lawyer':
-      return 'Advogado';
-    case 'senior_lawyer':
-      return 'Advogado Sênior';
-    case 'assistant':
-      return 'Assistente';
-    case 'client':
-      return 'Cliente';
-    default:
-      return 'Utilizador';
-  }
+/**
+ * Converts user role ID to a readable name
+ * @param roleId The role ID from the user object
+ * @returns A user-friendly role name
+ */
+export const getUserRoleName = (roleId: string): string => {
+  const roles: Record<string, string> = {
+    'admin': 'Administrador',
+    'lawyer': 'Advogado',
+    'senior_lawyer': 'Advogado Sênior',
+    'assistant': 'Assistente',
+    'client': 'Cliente'
+  };
+  
+  return roles[roleId] || 'Utilizador';
 };
 
-// Função para gerar dados de gráfico de exemplo
+/**
+ * Generates mock chart data for dashboard
+ * @returns Array of chart data points
+ */
 export const getChartData = () => {
   return [
-    { month: 'Jan', processos: 5, documentos: 12 },
-    { month: 'Fev', processos: 8, documentos: 15 },
-    { month: 'Mar', processos: 12, documentos: 18 },
-    { month: 'Abr', processos: 10, documentos: 22 },
-    { month: 'Mai', processos: 14, documentos: 25 },
-    { month: 'Jun', processos: 18, documentos: 30 },
+    { name: 'Jan', cases: 12 },
+    { name: 'Fev', cases: 19 },
+    { name: 'Mar', cases: 7 },
+    { name: 'Abr', cases: 15 },
+    { name: 'Mai', cases: 10 },
+    { name: 'Jun', cases: 8 }
   ];
 };
 
-// Função para gerar dados financeiros de exemplo
+/**
+ * Generates mock financial data for dashboard charts
+ * @returns Array of financial data points
+ */
 export const getFinancialData = () => {
   return [
-    { month: 'Jan', receitas: 15000, despesas: 8000 },
-    { month: 'Fev', receitas: 18000, despesas: 7500 },
-    { month: 'Mar', receitas: 22000, despesas: 9000 },
-    { month: 'Abr', receitas: 19000, despesas: 8500 },
-    { month: 'Mai', receitas: 24000, despesas: 10000 },
-    { month: 'Jun', receitas: 28000, despesas: 11000 },
+    { name: 'Jan', revenue: 4000, expenses: 2400 },
+    { name: 'Fev', revenue: 3000, expenses: 1398 },
+    { name: 'Mar', revenue: 2000, expenses: 9800 },
+    { name: 'Abr', revenue: 2780, expenses: 3908 },
+    { name: 'Mai', revenue: 1890, expenses: 4800 },
+    { name: 'Jun', revenue: 2390, expenses: 3800 },
+    { name: 'Jul', revenue: 3490, expenses: 4300 },
   ];
 };
 
-// Função para gerar dados de desempenho de exemplo
+/**
+ * Generates mock performance data for dashboard
+ * @returns Array of performance data points
+ */
 export const getPerformanceData = () => {
   return [
-    { dia: 'Seg', concluidas: 5, pendentes: 3 },
-    { dia: 'Ter', concluidas: 7, pendentes: 2 },
-    { dia: 'Qua', concluidas: 4, pendentes: 4 },
-    { dia: 'Qui', concluidas: 6, pendentes: 2 },
-    { dia: 'Sex', concluidas: 9, pendentes: 1 },
+    { name: 'Seg', completed: 12, pending: 4 },
+    { name: 'Ter', completed: 9, pending: 7 },
+    { name: 'Qua', completed: 5, pending: 10 },
+    { name: 'Qui', completed: 8, pending: 8 },
+    { name: 'Sex', completed: 15, pending: 2 }
   ];
 };
 
-// Função para gerar estatísticas gerais
-export const getStatisticsData = () => {
+/**
+ * Generates mock statistics data for dashboard
+ * @returns Object with statistics values
+ */
+export const getStatisticsData = (processes: any[] = [], documents: any[] = []) => {
   return {
-    activeProcesses: 24,
-    pendingDocuments: 15,
-    completedCases: 42,
+    activeProcesses: processes.filter(p => p.status === 'active').length || 12,
+    pendingDocuments: documents.filter(d => d.status === 'pending').length || 8,
+    completedCases: processes.filter(p => p.status === 'closed').length || 24,
     averageResolutionTime: 45
   };
 };

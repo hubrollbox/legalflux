@@ -1,6 +1,27 @@
 
 export type TransactionType = 'income' | 'expense' | 'invoice' | 'payment' | 'refund' | 'other';
-export type TransactionStatus = 'completed' | 'pending' | 'failed' | 'cancelled' | 'refunded' | 'overdue';
+export type TransactionStatus = 'completed' | 'pending' | 'failed' | 'cancelled' | 'canceled' | 'refunded' | 'overdue' | 'processing';
+
+// Define const enums to be used as values
+export const TransactionType = {
+  INCOME: 'income' as TransactionType,
+  EXPENSE: 'expense' as TransactionType,
+  INVOICE: 'invoice' as TransactionType,
+  PAYMENT: 'payment' as TransactionType,
+  REFUND: 'refund' as TransactionType,
+  OTHER: 'other' as TransactionType
+};
+
+export const TransactionStatus = {
+  COMPLETED: 'completed' as TransactionStatus,
+  PENDING: 'pending' as TransactionStatus,
+  FAILED: 'failed' as TransactionStatus,
+  CANCELLED: 'cancelled' as TransactionStatus,
+  CANCELED: 'canceled' as TransactionStatus,
+  REFUNDED: 'refunded' as TransactionStatus,
+  OVERDUE: 'overdue' as TransactionStatus,
+  PROCESSING: 'processing' as TransactionStatus
+};
 
 export interface FinancialTransaction {
   id: string;

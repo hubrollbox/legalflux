@@ -9,7 +9,7 @@ import {
   Folder,
   BookMarked
 } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { ptBR } from "date-fns/locale";
 import { DocumentType } from "@/types/document";
 
@@ -28,6 +28,9 @@ export const getDocumentIcon = (type: DocumentType | string) => {
   }
 };
 
+// Additional export for getFileIcon (alias for backward compatibility)
+export const getFileIcon = getDocumentIcon;
+
 // Format relative time for document updates (e.g., "há 3 horas")
 export const formatRelativeTime = (date: string | Date) => {
   // First parse the date if it's a string
@@ -43,6 +46,9 @@ export const formatRelativeTime = (date: string | Date) => {
     return 'Data desconhecida';
   }
 };
+
+// Export formatDate as an alias for formatRelativeTime for backward compatibility
+export const formatDate = formatRelativeTime;
 
 // Format file size for display
 export const formatFileSize = (size: string | number) => {
