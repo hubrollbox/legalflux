@@ -1,42 +1,43 @@
 
-export type DocumentStatus = 'draft' | 'review' | 'final' | 'archived' | 'signed';
-export type DocumentType = 'document' | 'action' | 'precedent' | 'strategy';
+export type DocumentStatus = 'draft' | 'review' | 'final' | 'archived' | 'signed' | 'unsigned';
+export type DocumentType = 'document' | 'contract' | 'petition' | 'template' | 'action' | 'precedent' | 'strategy';
+
+export interface DocumentFilter {
+  type: string;
+  date?: Date;
+  tags: string[];
+}
 
 export interface Document {
   id: string;
+  name: string;
   title?: string;
-  name: string; // Required property
   description?: string;
-  status: DocumentStatus;
+  content?: string;
   type: DocumentType;
-  createdAt: string | Date;
+  status: DocumentStatus;
+  size: string | number;
   updatedAt: string | Date;
-  version?: string | number;
-  size: string | number; // Allow both number and string for flexibility
+  createdAt: string | Date;
   owner?: string;
-  tags?: string[];
-  processId?: string;
   folder?: string;
   process?: string;
-  url?: string;
-  category?: string;
   clientId?: string;
+  clientName?: string;
+  tags?: string[];
+  fileUrl?: string;
+  preview?: string;
 }
 
 export interface DocumentTemplate {
   id: string;
   name: string;
-  description: string;
-  category: string;
-  tags: string[];
-  createdAt: string | Date;
+  description?: string;
+  content?: string;
   type: DocumentType;
-  updatedAt: string | Date;
-  size: string | number;
-}
-
-export interface DocumentFilter {
-  type: string;
-  date?: Date | undefined;
-  tags: string[];
+  category: string;
+  createdAt: string | Date;
+  updatedAt?: string | Date;
+  tags?: string[];
+  size?: string | number;
 }

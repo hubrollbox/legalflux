@@ -6,7 +6,7 @@ export interface CalendarEvent {
   title: string;
   start: Date;
   end: Date;
-  category: CategoryKey;
+  category: 'meeting' | 'deadline' | 'task' | 'other' | 'hearing' | 'trial' | 'client' | 'document';
   description?: string;
   isRecurring?: boolean;
   recurrenceType?: 'daily' | 'weekly' | 'monthly' | 'yearly';

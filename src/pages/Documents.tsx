@@ -20,6 +20,7 @@ const Documents = () => {
     type: "todos",
     tags: []
   });
+  
   const { hasPermission } = usePermissions();
   const canCreateDocument = hasPermission("documents", "create");
   

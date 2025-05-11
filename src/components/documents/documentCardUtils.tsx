@@ -1,67 +1,86 @@
 
+import React from 'react';
+import { formatDistance } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { 
   FileText, 
+  FileCode, 
   FilePlus, 
-  FileEdit, 
-  File, 
-  Clock, 
-  User, 
-  Folder,
-  BookMarked
-} from "lucide-react";
-import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
-import { ptBR } from "date-fns/locale";
-import { DocumentType } from "@/types/document";
+  FileCheck, 
+  File
+} from 'lucide-react';
+import { DocumentType } from '@/types/document';
 
-// Get the appropriate icon based on document type
-export const getDocumentIcon = (type: DocumentType | string) => {
-  switch (type) {
-    case 'precedent':
-      return <BookMarked className="h-5 w-5 text-blue-500" />;
-    case 'strategy':
-      return <FileEdit className="h-5 w-5 text-purple-500" />;
-    case 'action':
-      return <FilePlus className="h-5 w-5 text-green-500" />;
-    case 'document':
-    default:
-      return <FileText className="h-5 w-5 text-gray-500" />;
-  }
-};
-
-// Additional export for getFileIcon (alias for backward compatibility)
-export const getFileIcon = getDocumentIcon;
-
-// Format relative time for document updates (e.g., "há 3 horas")
-export const formatRelativeTime = (date: string | Date) => {
-  // First parse the date if it's a string
+// Format date for display
+export function formatDate(date: string | Date | undefined): string {
+  if (!date) return 'Data desconhecida';
+  
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   
   try {
-    return formatDistanceToNow(dateObj, { 
+    return formatDistance(dateObj, new Date(), { 
       addSuffix: true,
-      locale: ptBR 
+      locale: ptBR
     });
   } catch (error) {
     console.error('Error formatting date:', error);
-    return 'Data desconhecida';
+    return 'Data inválida';
   }
-};
+}
 
-// Export formatDate as an alias for formatRelativeTime for backward compatibility
-export const formatDate = formatRelativeTime;
-
-// Format file size for display
-export const formatFileSize = (size: string | number) => {
-  if (typeof size === 'number') {
-    if (size < 1024) {
-      return `${size} B`;
-    } else if (size < 1024 * 1024) {
-      return `${(size / 1024).toFixed(1)} KB`;
-    } else if (size < 1024 * 1024 * 1024) {
-      return `${(size / (1024 * 1024)).toFixed(1)} MB`;
-    } else {
-      return `${(size / (1024 * 1024 * 1024)).toFixed(1)} GB`;
-    }
+// Get appropriate icon based on file type
+export function getFileIcon(type: DocumentType): React.ReactNode {
+  switch (type) {
+    case 'contract':
+      return <FileCheck className="h-6 w-6 text-blue-500" />;
+    case 'petition':
+      return <FilePlus className="h-6 w-6 text-amber-500" />;
+    case 'template':
+      return <FileCode className="h-6 w-6 text-green-500" />;
+    case 'document':
+      return <FileText className="h-6 w-6 text-gray-500" />;
+    default:
+      return <File className="h-6 w-6 text-gray-400" />;
   }
-  return size;
-};
+}
+
+// Get CSS class based on document status
+export function getStatusClass(status: string): string {
+  switch(status) {
+    case 'draft':
+      return 'bg-gray-100 text-gray-800';
+    case 'review':
+      return 'bg-yellow-100 text-yellow-800';
+    case 'final':
+      return 'bg-green-100 text-green-800';
+    case 'archived':
+      return 'bg-blue-100 text-blue-800';
+    case 'signed':
+      return 'bg-emerald-100 text-emerald-800';
+    case 'unsigned':
+      return 'bg-orange-100 text-orange-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+}
+
+// Get human-readable document type
+export function getDocumentTypeLabel(type: DocumentType): string {
+  switch(type) {
+    case 'contract':
+      return 'Contrato';
+    case 'petition':
+      return 'Petição';
+    case 'template':
+      return 'Template';
+    case 'action':
+      return 'Acção';
+    case 'precedent':
+      return 'Precedente';
+    case 'strategy':
+      return 'Estratégia';
+    case 'document':
+    default:
+      return 'Documento';
+  }
+}

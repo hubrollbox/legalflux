@@ -1,6 +1,6 @@
 
 import * as React from "react";
-import { Toaster } from "sonner";
+import { toast as sonnerToast, Toaster as SonnerToaster } from "sonner";
 
 interface ToastProps {
   title?: string;
@@ -9,24 +9,23 @@ interface ToastProps {
 }
 
 // Export the Toaster component from sonner
-export const Toaster = Toaster;
+export const Toaster = SonnerToaster;
 
 // Internal toast implementation functions
 const createToast = {
   error: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {
-      // Use the browser console in error cases until we fix the sonner import
-      console.error(`${title}${options?.description ? `: ${options.description}` : ''}`);
+      sonnerToast.error(title, { description: options?.description });
     }
   },
   success: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {
-      console.info(`${title}${options?.description ? `: ${options.description}` : ''}`);
+      sonnerToast.success(title, { description: options?.description });
     }
   },
   info: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {
-      console.info(`${title}${options?.description ? `: ${options.description}` : ''}`);
+      sonnerToast.info(title, { description: options?.description });
     }
   }
 };
@@ -34,7 +33,7 @@ const createToast = {
 // Export toast function with correct signature
 export const toast = (props: { title: string, description?: string }) => {
   if (typeof window !== 'undefined') {
-    console.info(`${props.title}${props.description ? `: ${props.description}` : ''}`);
+    sonnerToast(props.title, { description: props.description });
   }
   return null; // Return null to avoid type errors
 };

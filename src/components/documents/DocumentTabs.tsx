@@ -9,6 +9,7 @@ import DocumentsContent from "./DocumentsContent";
 import TemplatesContent from "./TemplatesContent";
 import { Document, DocumentTemplate, DocumentType, DocumentFilter } from "@/types/document";
 
+// Update the DocumentFilter type to match what's expected
 interface DocumentTabsProps {
   viewMode: "grid" | "list";
   setViewMode: (mode: "grid" | "list") => void;
@@ -43,10 +44,10 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
     size: typeof template.size === 'number' ? `${template.size} KB` : (template.size?.toString() || "1MB"),
   }));
 
-  // Ensure updatedAt is always a string for the TemplatesContent component
+  // Make sure updatedAt is a string for the templates
   const templateFormatted = formattedTemplates.map(template => ({
     ...template,
-    updatedAt: template.updatedAt instanceof Date ? template.updatedAt.toISOString() : template.updatedAt
+    updatedAt: template.updatedAt instanceof Date ? template.updatedAt.toISOString() : String(template.updatedAt)
   }));
 
   return (
