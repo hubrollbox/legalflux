@@ -1,17 +1,16 @@
+
 import React from "react";
 import { useAuth } from "../hooks/useAuth";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
-import PlanCard from "@/components/subscription/PlanCard";
+import PlanCard, { Plan, PlanFeature } from "@/components/subscription/PlanCard";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, CreditCard } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import LandingNavbar from "@/pages/landing/components/LandingNavbar";
 import LandingFooter from "@/pages/landing/components/LandingFooter";
 
-import { plans } from "@/shared/plans";
-
-const subscriptionPlans = [
+const subscriptionPlans: Plan[] = [
   {
     id: "basic",
     name: "Basic",

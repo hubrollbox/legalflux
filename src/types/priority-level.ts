@@ -1,8 +1,15 @@
 
 export enum PriorityLevel {
-  LOW = "low",
-  MEDIUM = "medium",
-  HIGH = "high"
+  HIGH = 'high',
+  MEDIUM = 'medium',
+  LOW = 'low',
 }
 
-// Removido export { PriorityLevel as PriorityLevelEnum }; que estava causando confusão
+// Create a UserRole enum to fix related errors
+export enum UserRole {
+  ADMIN = 'admin',
+  LAWYER = 'lawyer',
+  SENIOR_LAWYER = 'senior_lawyer',
+  ASSISTANT = 'assistant',
+  CLIENT = 'client',
+}

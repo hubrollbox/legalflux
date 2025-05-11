@@ -1,94 +1,100 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Plan } from '@/types/plan';
-import { formatCurrency } from '@/utils/formatters';
 
-interface PlanCardProps {
+export interface PlanFeature {
+  name: string;
+  included: boolean;
+}
+
+export interface Plan {
+  id: string;
+  name: string;
+  price: number | null;
+  description: string;
+  features: PlanFeature[];
+  highlight: boolean;
+  priceId: string;
+}
+
+export interface PlanCardProps {
   plan: Plan;
-  onSelectPlan: (plan: Plan) => void;
-  isSelected?: boolean;
-  showDetails?: boolean;
+  isCurrentPlan?: boolean;
+  publicView?: boolean;
 }
 
 const PlanCard: React.FC<PlanCardProps> = ({ 
   plan, 
-  onSelectPlan, 
-  isSelected = false,
-  showDetails = true
+  isCurrentPlan = false,
+  publicView = false 
 }) => {
-  const { name, price, description, features, highlight, recommended } = plan;
-
-  // Function to render a feature item with its status (included or not)
-  const renderFeature = (feature: { name: string; included: boolean }) => (
-    <li key={feature.name} className="flex items-center py-2">
-      {feature.included ? (
-        <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-      ) : (
-        <X className="h-4 w-4 text-red-500 mr-2 flex-shrink-0" />
-      )}
-      <span className="text-sm">
-        {feature.name}
-      </span>
-    </li>
-  );
-
   return (
     <Card className={cn(
-      "relative overflow-hidden transition-all duration-300",
-      highlight ? "border-highlight shadow-lg" : "border-gray-200",
-      isSelected && "ring-2 ring-highlight"
+      "flex flex-col border", 
+      plan.highlight ? "border-primary shadow-lg" : "border-gray-200",
+      isCurrentPlan ? "ring-2 ring-primary" : ""
     )}>
-      {recommended && (
-        <div className="absolute top-0 right-0">
-          <div className="bg-highlight text-white text-xs font-medium px-3 py-1 rounded-bl">
-            Recomendado
+      <CardHeader className={cn(
+        "pb-8",
+        plan.highlight ? "bg-primary text-primary-foreground" : ""
+      )}>
+        <CardTitle className="text-xl font-bold">{plan.name}</CardTitle>
+        <CardDescription className={cn(
+          plan.highlight ? "text-primary-foreground/90" : "text-muted-foreground"
+        )}>
+          {plan.description}
+        </CardDescription>
+        <div className="mt-2 flex items-baseline">
+          {plan.price !== null ? (
+            <>
+              <span className="text-3xl font-bold">{plan.price}€</span>
+              <span className="ml-1 text-sm text-muted-foreground">/mês</span>
+            </>
+          ) : (
+            <span className="text-lg font-medium">Contacte-nos</span>
+          )}
+        </div>
+        {isCurrentPlan && (
+          <div className="mt-2">
+            <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+              Plano Atual
+            </span>
           </div>
-        </div>
-      )}
-      
-      <CardHeader>
-        <CardTitle className={highlight ? "text-highlight" : ""}>
-          {name}
-        </CardTitle>
-        <CardDescription>{description}</CardDescription>
-        <div className="mt-2">
-          <span className="text-3xl font-bold">
-            {price === null ? "Personalizado" : formatCurrency(price)}
-          </span>
-          {price !== null && <span className="text-sm text-gray-500">/mês</span>}
-        </div>
+        )}
       </CardHeader>
-      
-      {showDetails && (
-        <CardContent>
-          <ul className="space-y-1 mt-4">
-            {features.map((feature) => React.createElement('li', {
-              key: feature.name,
-              className: "flex items-center py-2"
-            }, [
-              feature.included ? 
-                React.createElement(Check, { className: "h-4 w-4 text-green-500 mr-2 flex-shrink-0" }) : 
-                React.createElement(X, { className: "h-4 w-4 text-red-500 mr-2 flex-shrink-0" }),
-              React.createElement('span', { className: "text-sm" }, feature.name)
-            ]))}
-          </ul>
-        </CardContent>
-      )}
-      
-      <CardFooter>
+      <CardContent className="flex-1 pt-6">
+        <ul className="space-y-3">
+          {plan.features.map((feature, index) => (
+            <li key={index} className="flex items-start">
+              <div className="mr-3 mt-1">
+                <Check 
+                  className={cn(
+                    "h-4 w-4", 
+                    feature.included ? "text-green-500" : "text-gray-300"
+                  )} 
+                />
+              </div>
+              <span className={feature.included ? "" : "text-gray-400 line-through"}>
+                {feature.name}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+      <CardFooter className="pt-4 pb-6">
         <Button 
-          variant={highlight ? "default" : "outline"} 
           className={cn(
             "w-full", 
-            highlight ? "bg-highlight hover:bg-highlight/90" : ""
+            plan.highlight 
+              ? "bg-primary-foreground text-primary hover:bg-primary-foreground/90" 
+              : ""
           )}
-          onClick={() => onSelectPlan(plan)}
+          variant={plan.highlight ? "default" : "outline"}
         >
-          {price === null ? "Solicitar orçamento" : "Selecionar plano"}
+          {isCurrentPlan ? "Gerir Plano" : "Selecionar Plano"}
         </Button>
       </CardFooter>
     </Card>

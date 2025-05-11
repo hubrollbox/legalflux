@@ -4,7 +4,7 @@ export type DocumentType = 'document' | 'contract' | 'petition' | 'template' | '
 
 export interface DocumentFilter {
   type: string;
-  date?: Date;
+  date?: Date | undefined;
   tags: string[];
 }
 
@@ -27,10 +27,10 @@ export interface Document {
   tags?: string[];
   fileUrl?: string;
   preview?: string;
-  category?: string; // Added category field
-  version?: string; // Added version field
-  processId?: string; // Added processId field
-  url?: string; // Added url field
+  category?: string;
+  version?: string;
+  processId?: string;
+  url?: string;
 }
 
 export interface DocumentTemplate {

@@ -30,23 +30,17 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
   filteredDocuments = [],
   filteredTemplates = []
 }) => {
-  // Convert template objects to match the expected format in TemplatesContent
+  // Make sure template objects have the correct format for TemplatesContent
   const formattedTemplates = filteredTemplates.map(template => ({
     id: template.id,
     name: template.name,
     description: template.description || '',
     category: template.category || '',
     type: template.type,
-    createdAt: template.createdAt,
-    updatedAt: template.updatedAt || template.createdAt,
-    tags: template.tags || [],
+    updatedAt: template.updatedAt ? 
+      (template.updatedAt instanceof Date ? template.updatedAt.toISOString() : String(template.updatedAt)) 
+      : new Date().toISOString(),
     size: typeof template.size === 'number' ? `${template.size} KB` : (template.size?.toString() || "1MB"),
-  }));
-
-  // Make sure updatedAt is a string for the templates
-  const templateFormatted = formattedTemplates.map(template => ({
-    ...template,
-    updatedAt: template.updatedAt instanceof Date ? template.updatedAt.toISOString() : String(template.updatedAt)
   }));
 
   return (
@@ -85,7 +79,7 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
       
       <TabsContent value="templates" className="mt-6">
         <TemplatesContent 
-          templates={templateFormatted as any} 
+          templates={formattedTemplates} 
           viewMode={viewMode} 
         />
       </TabsContent>

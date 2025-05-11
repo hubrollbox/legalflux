@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon, Clock } from "lucide-react";
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 
 // Define the CalendarEvent interface
@@ -157,7 +156,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialData }) => {
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {formData.start ? (
-                    format(formData.start, "PPP", { locale: ptBR })
+                    format(formData.start, "PPP")
                   ) : (
                     <span>Selecionar data</span>
                   )}
@@ -203,7 +202,7 @@ const EventForm: React.FC<EventFormProps> = ({ onSubmit, initialData }) => {
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {formData.end ? (
-                    format(formData.end, "PPP", { locale: ptBR })
+                    format(formData.end, "PPP")
                   ) : (
                     <span>Selecionar data</span>
                   )}

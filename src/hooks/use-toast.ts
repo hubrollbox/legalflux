@@ -1,6 +1,7 @@
 
 import * as React from "react";
-import { Toaster as SonnerToaster, toast as sonnerToast } from "sonner";
+import { Toaster as SonnerToaster } from "sonner";
+import { toast as sonnerToast } from "sonner";
 
 interface ToastProps {
   title?: string;

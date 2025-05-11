@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { formatDistanceToNow } from 'date-fns';
+import { format, formatDistance } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { 
   FileText, 
@@ -18,7 +18,7 @@ export function formatDate(date: string | Date | undefined): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   
   try {
-    return formatDistanceToNow(dateObj, { 
+    return formatDistance(dateObj, new Date(), { 
       addSuffix: true,
       locale: ptBR
     });
