@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import PageTransition from '@/components/PageTransition';
 import { mockTemplates } from '@/components/documents/DocumentsData';
 import TemplatesContent from '@/components/documents/TemplatesContent';
+import { DocumentType } from "@/types/document";
 
 // Filter types for the templates
 type FilterType = 'all' | 'contracts' | 'petitions' | 'proceedings' | 'other';
@@ -37,7 +38,7 @@ const DocumentTypes = () => {
     name: template.name,
     description: template.description || '',
     category: template.category,
-    type: template.type === 'template' ? 'document' as const : template.type,
+    type: template.type,
     updatedAt: template.updatedAt ? 
       (template.updatedAt instanceof Date ? template.updatedAt.toISOString() : String(template.updatedAt)) 
       : new Date().toISOString(),

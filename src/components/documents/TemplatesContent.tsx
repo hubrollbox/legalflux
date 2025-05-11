@@ -4,12 +4,14 @@ import { FileText } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import TemplateCard from "./TemplateCard";
 import TemplateList from "./TemplateList";
+import { DocumentType } from "@/types/document";
 
+// Update the interface to accept all document types
 interface TemplatesContentProps {
   templates: Array<{
     id: string;
     name: string;
-    type: "document" | "action" | "precedent" | "strategy";
+    type: DocumentType;
     size: string;
     description: string;
     updatedAt: string;

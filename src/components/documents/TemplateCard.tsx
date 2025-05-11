@@ -13,12 +13,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "./documentCardUtils";
+import { DocumentType } from "@/types/document";
 
+// Update the interface to accept all document types
 interface TemplateCardProps {
   template: {
     id: string;
     name: string;
-    type: "document" | "action" | "precedent" | "strategy";
+    type: DocumentType;
     size: string;
     description: string;
     updatedAt: Date;

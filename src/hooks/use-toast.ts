@@ -1,7 +1,6 @@
 
 import * as React from "react";
-import { Toaster as SonnerToaster } from "sonner";
-import * as SonnerFns from "sonner";
+import { toast as sonnerToast, Toaster as SonnerToaster } from "sonner";
 
 interface ToastProps {
   title?: string;
@@ -16,17 +15,17 @@ export const Toaster = SonnerToaster;
 const createToast = {
   error: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {
-      SonnerFns.toast.error(title, { description: options?.description });
+      sonnerToast.error(title, { description: options?.description });
     }
   },
   success: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {
-      SonnerFns.toast.success(title, { description: options?.description });
+      sonnerToast.success(title, { description: options?.description });
     }
   },
   info: (title: string, options?: { description?: string }) => {
     if (typeof window !== 'undefined') {
-      SonnerFns.toast.info(title, { description: options?.description });
+      sonnerToast.info(title, { description: options?.description });
     }
   }
 };
@@ -34,7 +33,7 @@ const createToast = {
 // Export toast function with correct signature
 export const toast = (props: { title: string, description?: string }) => {
   if (typeof window !== 'undefined') {
-    SonnerFns.toast(props.title, { description: props.description });
+    sonnerToast(props.title, { description: props.description });
   }
   return null; // Return null to avoid type errors
 };
