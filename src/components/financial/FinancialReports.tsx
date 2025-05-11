@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TransactionList from './TransactionList';
 import TransactionFilters from './TransactionFilters';
 import TransactionExport from './TransactionExport';
-import { getTransactionsByUser } from '@/services/mockData';
+import { getTransactionsByUser, FinancialTransaction } from '@/services/mockData';
 import { useState } from 'react';
 
 export const FinancialReports = () => {
@@ -16,7 +16,7 @@ export const FinancialReports = () => {
   const transactions = getTransactionsByUser();
   
   // Filter transactions
-  const filteredTransactions = transactions.filter(transaction => {
+  const filteredTransactions = transactions.filter((transaction: FinancialTransaction) => {
     const matchesSearch = transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || transaction.status === statusFilter;
     const matchesType = typeFilter === 'all' || transaction.type === typeFilter;

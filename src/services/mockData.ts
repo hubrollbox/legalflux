@@ -15,6 +15,19 @@ export interface MockUser {
   avatar?: string;
 }
 
+export interface FinancialTransaction {
+  id: string;
+  type: 'income' | 'expense' | 'invoice' | 'payment';
+  amount: number;
+  currency: string;
+  description: string;
+  date: string;
+  status: 'completed' | 'pending' | 'cancelled' | 'failed';
+  category: string;
+  processId?: string;
+  clientId?: string;
+}
+
 export const MOCK_USERS: MockUser[] = [
   {
     id: "1",
@@ -82,3 +95,70 @@ export const MOCK_USERS: MockUser[] = [
     avatar: "/avatars/sofia.jpg"
   }
 ];
+
+export const mockTransactions: FinancialTransaction[] = [
+  {
+    id: "tr-1",
+    type: "income",
+    amount: 1250.00,
+    currency: "EUR",
+    description: "Pagamento consulta inicial - Processo #P-123",
+    date: "2023-05-15T10:30:00Z",
+    status: "completed",
+    category: "Honorários",
+    processId: "P-123",
+    clientId: "C-1"
+  },
+  {
+    id: "tr-2",
+    type: "expense",
+    amount: 150.00,
+    currency: "EUR",
+    description: "Despesas de Tribunal - Processo #P-123",
+    date: "2023-05-16T14:45:00Z",
+    status: "completed",
+    category: "Despesas Processo",
+    processId: "P-123"
+  },
+  {
+    id: "tr-3",
+    type: "invoice",
+    amount: 750.00,
+    currency: "EUR",
+    description: "Fatura #INV-456 - Representação em Tribunal",
+    date: "2023-05-20T09:00:00Z",
+    status: "pending",
+    category: "Honorários",
+    processId: "P-456",
+    clientId: "C-2"
+  },
+  {
+    id: "tr-4",
+    type: "payment",
+    amount: 500.00,
+    currency: "EUR",
+    description: "Recebimento parcial - Fatura #INV-456",
+    date: "2023-05-25T11:30:00Z",
+    status: "completed",
+    category: "Pagamento Parcial",
+    processId: "P-456",
+    clientId: "C-2"
+  },
+  {
+    id: "tr-5",
+    type: "expense",
+    amount: 75.50,
+    currency: "EUR",
+    description: "Despesas de Deslocação - Processo #P-456",
+    date: "2023-05-27T15:20:00Z",
+    status: "completed",
+    category: "Despesas Deslocação",
+    processId: "P-456"
+  }
+];
+
+export const getTransactionsByUser = (userId?: string): FinancialTransaction[] => {
+  // Numa implementação real, filtraríamos pelo ID do usuário
+  // Nesta mock, retornamos todas as transações
+  return mockTransactions;
+};

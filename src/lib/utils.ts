@@ -43,3 +43,74 @@ export function getStatusColor(status: string): string {
       return 'bg-gray-100 text-gray-800';
   }
 }
+
+export function getUserRoleName(role?: string): string {
+  switch (role) {
+    case 'ADMIN':
+    case 'admin':
+      return 'Administrador';
+    case 'LAWYER':
+    case 'lawyer':
+      return 'Advogado';
+    case 'SENIOR_LAWYER':
+    case 'senior_lawyer':
+      return 'Advogado Sénior';
+    case 'ASSISTANT':
+    case 'assistant':
+      return 'Assistente';
+    case 'CLIENT':
+    case 'client':
+      return 'Cliente';
+    default:
+      return 'Utilizador';
+  }
+}
+
+// Função para adicionar mock data de transações para testes
+export const getPlanDetails = (planId: string) => {
+  const plans = {
+    basic: {
+      name: "Basic",
+      price: "49€",
+      features: [
+        "Acesso ao portal do cliente",
+        "Processos ilimitados",
+        "Suporte por email"
+      ]
+    },
+    solo: {
+      name: "Solo",
+      price: "99€",
+      features: [
+        "Tudo no plano Basic",
+        "Até 3 utilizadores",
+        "Suporte prioritário",
+        "Assinatura de documentos"
+      ]
+    },
+    enterprise: {
+      name: "Enterprise",
+      price: "199€",
+      features: [
+        "Tudo no plano Solo",
+        "Até 10 utilizadores",
+        "Suporte 24/7",
+        "Automação de fluxos de trabalho",
+        "Integrações personalizadas"
+      ]
+    },
+    custom: {
+      name: "Personalizado",
+      price: "Consulte-nos",
+      features: [
+        "Utilizadores ilimitados",
+        "Suporte dedicado",
+        "Customizações avançadas",
+        "Implementação personalizada",
+        "API acesso completo"
+      ]
+    }
+  };
+  
+  return plans[planId as keyof typeof plans] || plans.basic;
+};

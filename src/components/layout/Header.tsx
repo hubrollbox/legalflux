@@ -24,39 +24,24 @@ const userMenuItems = [
     label: "Perfil",
     href: "/profile",
     icon: User,
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"] as UserRole[]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     label: "Assinaturas",
     href: "/subscriptions",
     icon: CreditCard,
-    roles: ["admin", "lawyer", "senior_lawyer"] as UserRole[]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER]
   },
   {
     label: "Configurações",
     href: "/settings",
     icon: Settings,
-    roles: ["admin", "lawyer", "senior_lawyer", "assistant", "client"] as UserRole[]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
 ];
 
 // Utilitário para obter o nome da função do utilizador
-const getUserRoleName = (role?: string): string => {
-  switch (role) {
-    case 'admin':
-      return 'Administrador';
-    case 'lawyer':
-      return 'Advogado';
-    case 'senior_lawyer':
-      return 'Advogado Sénior';
-    case 'assistant':
-      return 'Assistente';
-    case 'client':
-      return 'Cliente';
-    default:
-      return 'Utilizador';
-  }
-};
+import { getUserRoleName } from "@/lib/utils";
 
 interface HeaderProps {
   user: any;

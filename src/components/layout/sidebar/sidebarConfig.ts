@@ -1,3 +1,4 @@
+
 import { 
   Home, 
   FileText, 
@@ -16,7 +17,6 @@ import {
 } from "lucide-react";
 import { ComponentType } from "react";
 import { UserRole } from "@/types/permissions";
-import { UserRoles } from "@/types/auth"; 
 
 export interface SidebarItem {
   name: string;
@@ -37,61 +37,61 @@ export const sidebarItems: SidebarItem[] = [
     name: "Dashboard",
     href: "/dashboard",
     icon: Home,
-    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Processos",
     href: "/processes",
     icon: Briefcase,
-    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Clientes",
     href: "/clients",
     icon: Users,
-    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT]
   },
   {
     name: "Documentos",
     href: "/documents",
     icon: FileText,
-    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Calendário",
     href: "/calendar",
     icon: Calendar,
-    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Mensagens",
     href: "/messages",
     icon: MessageSquare,
-    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Financeiro",
     href: "/financial",
     icon: DollarSign,
-    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER]
   },
   {
     name: "Links Úteis",
     href: "/useful-links",
     icon: Link,
-    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Central de Ajuda",
     href: "/help-center",
     icon: HelpCircle,
-    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     name: "Configurações",
     href: "/settings",
     icon: Settings,
-    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
 ];
 
@@ -100,18 +100,18 @@ export const userMenuItems = [
     label: "Perfil",
     href: "/profile",
     icon: User,
-    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
   {
     label: "Assinaturas",
     href: "/subscriptions",
     icon: CreditCard,
-    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER]
   },
   {
     label: "Configurações",
     href: "/settings",
     icon: Settings,
-    roles: [UserRoles.ADMIN, UserRoles.LAWYER, UserRoles.SENIOR_LAWYER, UserRoles.ASSISTANT, UserRoles.CLIENT]
+    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
   },
 ];
