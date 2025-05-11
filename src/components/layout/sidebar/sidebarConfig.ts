@@ -16,7 +16,6 @@ import {
   CreditCard
 } from "lucide-react";
 import { ComponentType } from "react";
-import { UserRole } from "@/types/permissions";
 import { USER_ROLES } from "@/constants/userRoles";
 
 export interface SidebarItem {
