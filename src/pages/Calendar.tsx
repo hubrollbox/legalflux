@@ -7,6 +7,7 @@ import { Plus, Users, Clock, FileText, Calendar as CalendarIcon } from "lucide-r
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Calendar as BigCalendar, momentLocalizer, Views } from "react-big-calendar";
+import { DayPicker } from "react-day-picker";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";

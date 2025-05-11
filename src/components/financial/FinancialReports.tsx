@@ -13,7 +13,10 @@ export const FinancialReports = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   
-  const transactions = getTransactionsByUser();
+  const transactions: FinancialTransaction[] = getTransactionsByUser().map(t => ({
+    ...t,
+    createdAt: t.createdAt || new Date().toISOString()
+  }));
   
   // Filter transactions
   const filteredTransactions = transactions.filter((transaction: FinancialTransaction) => {

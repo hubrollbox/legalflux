@@ -1,4 +1,8 @@
 
-import { useToast, Toaster } from "@/hooks/use-toast";
+import { toast, Toaster } from "sonner";
 
-export { useToast, Toaster };
+export function useToast() {
+  return { toast };
+}
+
+export { Toaster };

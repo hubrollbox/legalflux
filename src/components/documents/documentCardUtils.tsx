@@ -18,7 +18,7 @@ export function formatDate(date: string | Date | undefined): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   
   try {
-    return format(dateObj, 'PPP', { locale: ptBR });
+    return format(dateObj, 'PPP', ptBR);
   } catch (error) {
     console.error('Error formatting date:', error);
     return 'Data inválida';

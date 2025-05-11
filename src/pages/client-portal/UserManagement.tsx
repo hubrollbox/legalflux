@@ -189,22 +189,33 @@ const UserManagement = () => {
     user.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleUserClick = (user) => {
+  // Definição explícita do tipo User
+  interface User {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+    status: string;
+    avatarUrl: string;
+    lastActive: string;
+    processes: number;
+  }
+  const handleUserClick = (user: User) => {
     setSelectedUser(user);
     setIsUserDialogOpen(true);
   };
 
-  const handleRoleClick = (role) => {
+  const handleRoleClick = (role: string) => {
     setSelectedRole(role);
     setIsRoleDialogOpen(true);
   };
 
-  const handleOpenPermissions = (role) => {
+  const handleOpenPermissions = (role: string) => {
     setSelectedRole(role);
     setIsPermissionsDialogOpen(true);
   };
   
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'Ativo':
         return 'bg-green-100 text-green-800';

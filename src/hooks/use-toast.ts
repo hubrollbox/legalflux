@@ -9,7 +9,7 @@ interface ToastProps {
 }
 
 // Export the Toaster component from sonner
-export const Toaster = Toaster;
+export const Toaster: React.FC = (props) => React.createElement(Toaster, props);
 
 // Internal toast implementation functions
 const createToast = {

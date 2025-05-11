@@ -33,6 +33,7 @@ export * from "./auth";
 export * from "./permissions";
 export * from "./document";
 export * from "./process";
+export * from "./plan";
 
 // Re-export types from financial.ts
 export { TransactionType, TransactionStatus } from "./financial";
