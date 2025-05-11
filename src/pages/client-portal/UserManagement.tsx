@@ -177,8 +177,8 @@ const mockRoles = [
 const UserManagement = () => {
   const [activeTab, setActiveTab] = useState("utilizadores");
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [selectedRole, setSelectedRole] = useState(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
   const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
   const [isPermissionsDialogOpen, setIsPermissionsDialogOpen] = useState(false);
@@ -200,17 +200,27 @@ const UserManagement = () => {
     lastActive: string;
     processes: number;
   }
+
+  interface Role {
+    id: number;
+    name: string;
+    description: string;
+    permissions: number[];
+    users: number;
+    color: string;
+  }
+
   const handleUserClick = (user: User) => {
     setSelectedUser(user);
     setIsUserDialogOpen(true);
   };
 
-  const handleRoleClick = (role: string) => {
+  const handleRoleClick = (role: Role) => {
     setSelectedRole(role);
     setIsRoleDialogOpen(true);
   };
 
-  const handleOpenPermissions = (role: string) => {
+  const handleOpenPermissions = (role: Role) => {
     setSelectedRole(role);
     setIsPermissionsDialogOpen(true);
   };

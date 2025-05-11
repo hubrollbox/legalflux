@@ -17,19 +17,20 @@ import {
 } from "lucide-react";
 import { ComponentType } from "react";
 import { USER_ROLES } from "@/constants/userRoles";
+import { UserRole } from "@/types/auth";
 
 export interface SidebarItem {
   name: string;
   href: string;
   icon: ComponentType<any>;
   items?: SidebarSubItem[];
-  roles?: string[];
+  roles?: UserRole[];
 }
 
 interface SidebarSubItem {
   name: string;
   href: string;
-  roles?: string[];
+  roles?: UserRole[];
 }
 
 export const sidebarItems: SidebarItem[] = [
