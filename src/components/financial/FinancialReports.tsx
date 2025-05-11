@@ -5,18 +5,80 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TransactionList from './TransactionList';
 import TransactionFilters from './TransactionFilters';
 import TransactionExport from './TransactionExport';
-import { getTransactionsByUser, FinancialTransaction } from '@/services/mockData';
 import { useState } from 'react';
+
+// Definição do tipo FinancialTransaction para uso interno
+interface FinancialTransaction {
+  id: string;
+  amount: number;
+  description: string;
+  status: string;
+  type: string;
+  client?: string;
+  process?: string;
+  createdAt: string; // Garantindo que createdAt exista
+}
+
+// Mock de transações para demonstração
+const MOCK_TRANSACTIONS: FinancialTransaction[] = [
+  {
+    id: '1',
+    amount: 1500.00,
+    description: 'Honorários - Processo Judicial 123/2023',
+    status: 'paid',
+    type: 'income',
+    client: 'João Silva',
+    process: '123/2023',
+    createdAt: '2023-10-15T10:30:00Z'
+  },
+  {
+    id: '2',
+    amount: -250.50,
+    description: 'Despesas de Deslocação - Tribunal',
+    status: 'completed',
+    type: 'expense',
+    process: '123/2023',
+    createdAt: '2023-10-14T14:45:00Z'
+  },
+  {
+    id: '3',
+    amount: 2000.00,
+    description: 'Honorários - Consultoria Empresarial',
+    status: 'pending',
+    type: 'income',
+    client: 'Empresa ABC, Lda.',
+    createdAt: '2023-10-13T09:15:00Z'
+  },
+  {
+    id: '4',
+    amount: -120.00,
+    description: 'Material de Escritório',
+    status: 'completed',
+    type: 'expense',
+    createdAt: '2023-10-10T16:20:00Z'
+  },
+  {
+    id: '5',
+    amount: 750.00,
+    description: 'Avaliação de Contratos',
+    status: 'pending',
+    type: 'income',
+    client: 'Maria Oliveira',
+    createdAt: '2023-10-08T11:00:00Z'
+  }
+];
+
+// Função auxiliar para recuperar transações
+const getTransactionsByUser = (): FinancialTransaction[] => {
+  return MOCK_TRANSACTIONS;
+};
 
 export const FinancialReports = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   
-  const transactions: FinancialTransaction[] = getTransactionsByUser().map(t => ({
-    ...t,
-    createdAt: t.createdAt || new Date().toISOString()
-  }));
+  const transactions: FinancialTransaction[] = getTransactionsByUser();
   
   // Filter transactions
   const filteredTransactions = transactions.filter((transaction: FinancialTransaction) => {

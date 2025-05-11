@@ -16,7 +16,7 @@ import {
 import ThemeToggle from "@/components/ui/theme-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth";
-import { UserRole } from "@/types/permissions";
+import { USER_ROLES } from "@/constants/userRoles";
 
 // Menu de usuário definido aqui já que estava faltando no arquivo importado
 const userMenuItems = [
@@ -24,19 +24,19 @@ const userMenuItems = [
     label: "Perfil",
     href: "/profile",
     icon: User,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
+    roles: [USER_ROLES.ADMIN, USER_ROLES.LAWYER, USER_ROLES.SENIOR_LAWYER, USER_ROLES.ASSISTANT, USER_ROLES.CLIENT]
   },
   {
     label: "Assinaturas",
     href: "/subscriptions",
     icon: CreditCard,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER]
+    roles: [USER_ROLES.ADMIN, USER_ROLES.LAWYER, USER_ROLES.SENIOR_LAWYER]
   },
   {
     label: "Configurações",
     href: "/settings",
     icon: Settings,
-    roles: [UserRole.ADMIN, UserRole.LAWYER, UserRole.SENIOR_LAWYER, UserRole.ASSISTANT, UserRole.CLIENT]
+    roles: [USER_ROLES.ADMIN, USER_ROLES.LAWYER, USER_ROLES.SENIOR_LAWYER, USER_ROLES.ASSISTANT, USER_ROLES.CLIENT]
   },
 ];
 
@@ -57,7 +57,7 @@ const UserNav: React.FC<{ user: any; onLogout: () => void }> = ({ user, onLogout
   
   const filteredMenuItems = userMenuItems.filter(item => {
     if (!authUser?.role) return true;
-    return item.roles.includes(authUser.role as UserRole);
+    return item.roles.includes(authUser.role as string);
   });
 
   return (

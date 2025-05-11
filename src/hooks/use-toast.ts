@@ -30,7 +30,7 @@ const createToast = {
   }
 };
 
-// Export toast function with correct signature
+// Função toast principal
 export const toast = (props: { title: string, description?: string, variant?: "default" | "destructive" }) => {
   if (typeof window !== 'undefined') {
     if (props.variant === "destructive") {
@@ -39,15 +39,15 @@ export const toast = (props: { title: string, description?: string, variant?: "d
       sonnerToast(props.title, { description: props.description });
     }
   }
-  return null; // Return null to avoid type errors
+  return null; // Retornar null para evitar erros de tipagem
 };
 
-// Add methods to the toast function
+// Adicionar métodos à função toast
 toast.error = createToast.error;
 toast.success = createToast.success;
 toast.info = createToast.info;
 
-// Hook for using toast in components
+// Hook para usar toast em componentes
 export function useToast() {
   const showToast = ({ title, description, variant }: ToastProps) => {
     if (variant === "destructive") {
