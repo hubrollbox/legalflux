@@ -1,14 +1,12 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import type { UserRole } from "@/types";
 import DashboardLayout from "../components/layout/DashboardLayout";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
-import type { User } from "../types";
-import type { UserRole } from "@/types";
+import { useToast } from "@/hooks/use-toast";
+import { User, UserRole } from "@/types/permissions";
 import { UserPlus, Search } from "lucide-react";
 import { MOCK_USERS } from "@/services/mockData";
 import UsersTable from "@/components/users/UsersTable";
@@ -37,14 +35,15 @@ const Users = () => {
     navigate("/dashboard");
     toast({
       title: "Acesso Negado",
-      description: "Não tem permissões para aceder a esta página.",
-      variant: "destructive",
+      description: "Não tem permissões para aceder a esta página."
     });
     return null;
   }
 
   // Filtrar utilizadores com base no termo de pesquisa
   const filteredUsers = users.filter((u) => {
+    if (!u.email || !u.name) return false;
+    
     const searchLower = searchTerm.toLowerCase();
     return (
       u.name.toLowerCase().includes(searchLower) ||
@@ -57,8 +56,7 @@ const Users = () => {
     if (users.some((u) => u.email === data.email)) {
       toast({
         title: "Erro",
-        description: "Já existe um utilizador com este email.",
-        variant: "destructive",
+        description: "Já existe um utilizador com este email."
       });
       return;
     }
@@ -67,20 +65,18 @@ const Users = () => {
       id: String(Math.floor(Math.random() * 10000)),
       email: data.email,
       name: data.name,
-      role: UserRole[data.role as keyof typeof UserRole],
+      role: data.role as UserRole,
       isActive: data.isActive,
       createdAt: new Date().toISOString(),
-      lastLogin: new Date().toISOString(),
-      hasTwoFactorEnabled: data.hasTwoFactorEnabled,
-      organizationId: data.organizationId || '', // Provide empty string default
-      phone: data.phone || '', // Provide empty string default
+      organizationId: data.organizationId || '', 
+      phone: data.phone || '',
     };
 
     setUsers([...users, newUser]);
     setIsAddUserDialogOpen(false);
     toast({
       title: "Utilizador adicionado",
-      description: `${newUser.name} foi adicionado com sucesso.`,
+      description: `${newUser.name} foi adicionado com sucesso.`
     });
   };
 
@@ -91,8 +87,7 @@ const Users = () => {
     if (users.some((u) => u.email === data.email && u.id !== selectedUser.id)) {
       toast({
         title: "Erro",
-        description: "Já existe um utilizador com este email.",
-        variant: "destructive",
+        description: "Já existe um utilizador com este email."
       });
       return;
     }
@@ -103,11 +98,10 @@ const Users = () => {
             ...u,
             email: data.email,
             name: data.name,
-            role: UserRole[data.role as keyof typeof UserRole],
+            role: data.role as UserRole,
             isActive: data.isActive,
-            hasTwoFactorEnabled: data.hasTwoFactorEnabled,
-            organizationId: data.organizationId || '', // Provide empty string default
-            phone: data.phone || '', // Provide empty string default
+            organizationId: data.organizationId || '',
+            phone: data.phone || '',
           }
         : u
     );
@@ -117,7 +111,7 @@ const Users = () => {
     setSelectedUser(null);
     toast({
       title: "Utilizador atualizado",
-      description: `${data.name} foi atualizado com sucesso.`,
+      description: `${data.name} foi atualizado com sucesso.`
     });
   };
 
@@ -128,8 +122,7 @@ const Users = () => {
     if (selectedUser.id === user?.id) {
       toast({
         title: "Erro",
-        description: "Não pode eliminar a sua própria conta.",
-        variant: "destructive",
+        description: "Não pode eliminar a sua própria conta."
       });
       setIsDeleteDialogOpen(false);
       return;
@@ -141,7 +134,7 @@ const Users = () => {
     setSelectedUser(null);
     toast({
       title: "Utilizador eliminado",
-      description: `${selectedUser.name} foi eliminado com sucesso.`,
+      description: `${selectedUser.name} foi eliminado com sucesso.`
     });
   };
 

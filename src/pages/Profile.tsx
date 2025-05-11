@@ -1,3 +1,4 @@
+
 import React from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
@@ -5,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { User } from "@/types/permissions";
 
 const Profile = () => {
   const { user } = useAuth();

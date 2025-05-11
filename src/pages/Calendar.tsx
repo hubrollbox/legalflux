@@ -15,6 +15,7 @@ import "moment/locale/pt-br";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import EventForm, { CalendarEvent } from "@/components/calendar/EventForm";
 import { useToast } from "@/hooks/use-toast";
+import { CategoryKey } from '@/types/calendar';
 
 // Import the EnhancedCalendarSidebar component
 import EnhancedCalendarSidebar from "@/components/calendar/EnhancedCalendarSidebar";
@@ -31,7 +32,7 @@ type ExtendedEvent = {
   title: string;
   start: Date;
   end: Date;
-  category: "meeting" | "deadline" | "task" | "other" | "document" | "hearing" | "trial" | "client";
+  category: CategoryKey;
   description?: string;
   priority?: "high" | "medium" | "low";
   location?: string;
@@ -115,7 +116,11 @@ const CalendarPage = ({ initialEvents = [] }: CalendarPageProps) => {
       meeting: { bg: "bg-blue-100", text: "text-blue-700", icon: <Users className="h-4 w-4" /> },
       deadline: { bg: "bg-red-100", text: "text-red-700", icon: <Clock className="h-4 w-4" /> },
       task: { bg: "bg-green-100", text: "text-green-700", icon: <FileText className="h-4 w-4" /> },
-      other: { bg: "bg-gray-100", text: "text-gray-700", icon: <CalendarIcon className="h-4 w-4" /> }
+      other: { bg: "bg-gray-100", text: "text-gray-700", icon: <CalendarIcon className="h-4 w-4" /> },
+      document: { bg: "bg-purple-100", text: "text-purple-700", icon: <FileText className="h-4 w-4" /> },
+      hearing: { bg: "bg-yellow-100", text: "text-yellow-700", icon: <Users className="h-4 w-4" /> },
+      trial: { bg: "bg-orange-100", text: "text-orange-700", icon: <Users className="h-4 w-4" /> },
+      client: { bg: "bg-indigo-100", text: "text-indigo-700", icon: <Users className="h-4 w-4" /> }
     };
 
     // Use explicit category check with safe access
@@ -183,6 +188,10 @@ const CalendarPage = ({ initialEvents = [] }: CalendarPageProps) => {
                   event.category === 'meeting' ? "bg-blue-100 text-blue-700" :
                   event.category === 'deadline' ? "bg-red-100 text-red-700" :
                   event.category === 'task' ? "bg-green-100 text-green-700" :
+                  event.category === 'document' ? "bg-purple-100 text-purple-700" :
+                  event.category === 'hearing' ? "bg-yellow-100 text-yellow-700" :
+                  event.category === 'trial' ? "bg-orange-100 text-orange-700" :
+                  event.category === 'client' ? "bg-indigo-100 text-indigo-700" :
                   "bg-gray-100 text-gray-700",
                   "rounded-md border border-transparent transition-colors hover:border-gray-300"
                 )

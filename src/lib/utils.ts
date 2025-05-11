@@ -6,57 +6,40 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function isValidPassword(password: string): boolean {
+  const minLength = 8;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  return (
+    password.length >= minLength &&
+    hasUppercase &&
+    hasNumber &&
+    hasSpecialChar
+  );
+}
+
 export function getStatusColor(status: string): string {
   switch (status.toLowerCase()) {
-    case "active":
-    case "completed":
-    case "approved":
-    case "paid":
-    case "signed":
-      return "bg-green-500 text-white";
-    case "pending":
-    case "in progress":
-    case "review":
-    case "draft":
-      return "bg-yellow-500 text-white";
-    case "cancelled":
-    case "failed":
-    case "rejected":
-    case "overdue":
-      return "bg-red-500 text-white";
-    case "on hold":
-    case "waiting":
-      return "bg-blue-500 text-white";
+    case 'active':
+    case 'open':
+    case 'approved':
+      return 'bg-green-100 text-green-800';
+    case 'pending':
+    case 'review':
+      return 'bg-yellow-100 text-yellow-800';
+    case 'closed':
+    case 'completed':
+    case 'finished':
+      return 'bg-blue-100 text-blue-800';
+    case 'cancelled':
+    case 'rejected':
+      return 'bg-red-100 text-red-800';
+    case 'archived':
+    case 'inactive':
+      return 'bg-gray-100 text-gray-800';
     default:
-      return "bg-gray-500 text-white";
-  }
-}
-
-export function formatDate(date: Date | string): string {
-  if (!date) return "";
-  const d = typeof date === "string" ? new Date(date) : date;
-  if (isNaN(d.getTime())) return "";
-  
-  return d.toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
-}
-
-export function getUserRoleName(role: string): string {
-  switch (role?.toLowerCase()) {
-    case "admin":
-      return "Administrador";
-    case "lawyer":
-      return "Advogado";
-    case "senior_lawyer":
-      return "Advogado Sênior";
-    case "assistant":
-      return "Assistente";
-    case "client":
-      return "Cliente";
-    default:
-      return "Utilizador";
+      return 'bg-gray-100 text-gray-800';
   }
 }

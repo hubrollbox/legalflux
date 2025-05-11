@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import type { DropResult } from 'react-beautiful-dnd';
-import { format } from 'date-fns/format';
+import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import SectionHeader from '@/components/layout/SectionHeader';

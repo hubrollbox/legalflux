@@ -31,9 +31,13 @@ const createToast = {
 };
 
 // Export toast function with correct signature
-export const toast = (props: { title: string, description?: string }) => {
+export const toast = (props: { title: string, description?: string, variant?: "default" | "destructive" }) => {
   if (typeof window !== 'undefined') {
-    sonnerToast(props.title, { description: props.description });
+    if (props.variant === "destructive") {
+      sonnerToast.error(props.title, { description: props.description });
+    } else {
+      sonnerToast(props.title, { description: props.description });
+    }
   }
   return null; // Return null to avoid type errors
 };
@@ -47,9 +51,9 @@ toast.info = createToast.info;
 export function useToast() {
   const showToast = ({ title, description, variant }: ToastProps) => {
     if (variant === "destructive") {
-      toast.error(title || "", { description });
+      sonnerToast.error(title || "", { description });
     } else {
-      toast({ title: title || "", description });
+      sonnerToast(title || "", { description });
     }
   };
 
