@@ -17,7 +17,7 @@ const DocumentTypes = () => {
   const filteredTemplates = mockTemplates.filter(template => {
     const matchesSearch = 
       template.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      template.description.toLowerCase().includes(searchTerm.toLowerCase());
+      (template.description || '').toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesFilter = 
       filter === 'all' || 
@@ -30,6 +30,19 @@ const DocumentTypes = () => {
     
     return matchesSearch && matchesFilter;
   });
+
+  // Format templates to match what TemplatesContent expects
+  const formattedTemplates = filteredTemplates.map(template => ({
+    id: template.id,
+    name: template.name,
+    description: template.description || '',
+    category: template.category,
+    type: template.type === 'template' ? 'document' as const : template.type,
+    updatedAt: template.updatedAt ? 
+      (template.updatedAt instanceof Date ? template.updatedAt.toISOString() : String(template.updatedAt)) 
+      : new Date().toISOString(),
+    size: typeof template.size === 'number' ? `${template.size} KB` : (template.size?.toString() || "1MB")
+  }));
 
   return (
     <PageTransition>
@@ -44,7 +57,7 @@ const DocumentTypes = () => {
         />
         
         <TemplatesContent 
-          templates={filteredTemplates} 
+          templates={formattedTemplates} 
           viewMode={viewMode} 
         />
       </div>

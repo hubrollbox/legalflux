@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Plus, Search, Filter, ArrowUpDown } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -32,6 +31,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { usePermissions } from "@/hooks/usePermissions";
+import { toast } from "@/hooks/use-toast";
 
 // Mock data for processes
 const processesMockData = [
@@ -119,6 +119,14 @@ const Processes = () => {
   // Move handleProcessSelect inside the component
   const handleProcessSelect = (processId: string) => {
     setSelectedProcess(selectedProcess === processId ? null : processId);
+  };
+
+  const handleStatusChange = (id: string, newStatus: string) => {
+    // Update process status logic
+    toast({
+      title: "Status atualizado",
+      description: `O processo foi atualizado para ${newStatus}`
+    });
   };
 
   const filteredProcesses = processesMockData.filter(process => {

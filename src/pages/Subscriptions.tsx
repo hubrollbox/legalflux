@@ -1,29 +1,28 @@
 
 import React from "react";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import SectionHeader from "@/components/layout/SectionHeader";
 import PlanCard from "@/components/subscription/PlanCard";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CreditCard } from "lucide-react"; // Removed unused ArrowLeft
+import { ArrowRight, CreditCard } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
 import LandingNavbar from "@/pages/landing/components/LandingNavbar";
 import LandingFooter from "@/pages/landing/components/LandingFooter";
+import { Plan, PlanFeature } from "@/types/subscription";
 
-import { plans } from "@/shared/plans";
-
-const subscriptionPlans = [
+const subscriptionPlans: Plan[] = [
   {
     id: "basic",
     name: "Basic",
     price: 49,
     description: "Para advogados individuais com funcionalidades básicas.",
     features: [
-      "Gestão de casos",
-      "Calendário de prazos",
-      "Gestão de documentos",
-      "1 utilizador",
-      "Suporte por email"
+      { name: "Gestão de casos", included: true },
+      { name: "Calendário de prazos", included: true },
+      { name: "Gestão de documentos", included: true },
+      { name: "1 utilizador", included: true },
+      { name: "Suporte por email", included: true }
     ],
     highlight: false,
     priceId: "price_basic"
@@ -34,11 +33,11 @@ const subscriptionPlans = [
     price: 99,
     description: "Para advogados independentes com funcionalidades adicionais.",
     features: [
-      "Tudo do plano Basic",
-      "Comunicação com clientes",
-      "Modelos de documentos",
-      "Até 3 utilizadores",
-      "Suporte prioritário"
+      { name: "Tudo do plano Basic", included: true },
+      { name: "Comunicação com clientes", included: true },
+      { name: "Modelos de documentos", included: true },
+      { name: "Até 3 utilizadores", included: true },
+      { name: "Suporte prioritário", included: true }
     ],
     highlight: true,
     priceId: "price_solo"
@@ -49,11 +48,11 @@ const subscriptionPlans = [
     price: 199,
     description: "Para escritórios com equipas e funcionalidades avançadas.",
     features: [
-      "Tudo do plano Solo",
-      "Painel de análise financeira",
-      "Integração contábil",
-      "Até 10 utilizadores",
-      "Suporte dedicado"
+      { name: "Tudo do plano Solo", included: true },
+      { name: "Painel de análise financeira", included: true },
+      { name: "Integração contábil", included: true },
+      { name: "Até 10 utilizadores", included: true },
+      { name: "Suporte dedicado", included: true }
     ],
     highlight: false,
     priceId: "price_enterprise"
@@ -61,14 +60,14 @@ const subscriptionPlans = [
   {
     id: "custom",
     name: "Personalizado",
-    price: 0,
+    price: null,
     description: "Para grandes escritórios com necessidades específicas.",
     features: [
-      "Tudo do plano Enterprise",
-      "Integrações personalizadas",
-      "Suporte VIP 24/7",
-      "Utilizadores ilimitados",
-      "Formação e implementação"
+      { name: "Tudo do plano Enterprise", included: true },
+      { name: "Integrações personalizadas", included: true },
+      { name: "Suporte VIP 24/7", included: true },
+      { name: "Utilizadores ilimitados", included: true },
+      { name: "Formação e implementação", included: true }
     ],
     highlight: false,
     priceId: "price_custom"
@@ -97,7 +96,8 @@ const Subscriptions = () => {
             <PlanCard
               key={index}
               plan={plan}
-              isCurrentPlan={plan.name === "Solo"} // Exemplo
+              isCurrentPlan={plan.name === "Solo"} 
+              publicView={false}
             />
           ))}
         </div>

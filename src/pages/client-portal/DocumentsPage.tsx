@@ -2,7 +2,7 @@
 import { useState, useCallback } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
+import { toast } from '@/hooks/use-toast';
 import { FileUploader } from './components/FileUploader';
 import DocumentPreviewModal from './components/DocumentPreviewModal';
 import { DocumentsHeader } from './components/DocumentsHeader';
@@ -70,7 +70,8 @@ const DocumentsPage = () => {
       setDocuments(prev => [...newDocuments, ...prev]);
       setUploading(false);
       
-      toast.success('Documentos carregados com sucesso', {
+      toast({
+        title: 'Documentos carregados com sucesso',
         description: `${files.length} documento(s) carregado(s) e aguardando aprovação.`
       });
     }, 1500);

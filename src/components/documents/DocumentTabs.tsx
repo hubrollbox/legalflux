@@ -30,8 +30,19 @@ const DocumentTabs: React.FC<DocumentTabsProps> = ({
   filteredDocuments = [],
   filteredTemplates = []
 }) => {
-  // Make sure template objects have the correct format for TemplatesContent
-  const formattedTemplates = filteredTemplates.map(template => ({
+  // Define an interface for the template format expected by TemplatesContent
+  interface TemplateContentItem {
+    id: string;
+    name: string;
+    type: 'document' | 'action' | 'precedent' | 'strategy' | 'contract' | 'petition' | 'template';
+    size: string;
+    description: string;
+    updatedAt: string;
+    category: string;
+  }
+
+  // Format templates to match what TemplatesContent expects
+  const formattedTemplates: TemplateContentItem[] = filteredTemplates.map(template => ({
     id: template.id,
     name: template.name,
     description: template.description || '',

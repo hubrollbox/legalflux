@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { format, formatDistance } from 'date-fns';
+import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { 
   FileText, 
@@ -18,10 +18,7 @@ export function formatDate(date: string | Date | undefined): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   
   try {
-    return formatDistance(dateObj, new Date(), { 
-      addSuffix: true,
-      locale: ptBR
-    });
+    return format(dateObj, 'PPP', { locale: ptBR });
   } catch (error) {
     console.error('Error formatting date:', error);
     return 'Data inválida';
