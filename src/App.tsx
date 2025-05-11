@@ -10,7 +10,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Toaster position="top-right" />
+        <Toaster position="top-right" richColors />
         <AppRoutes />
       </AuthProvider>
     </BrowserRouter>

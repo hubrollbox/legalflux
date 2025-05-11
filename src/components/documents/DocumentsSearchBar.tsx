@@ -8,7 +8,7 @@ import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { DocumentFilter } from '@/types/document';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { pt } from 'date-fns/locale';
 
 interface DocumentsSearchBarProps {
   searchTerm: string;
@@ -77,7 +77,7 @@ const DocumentsSearchBar: React.FC<DocumentsSearchBarProps> = ({
           <PopoverTrigger asChild>
             <Button variant="outline" className="w-[140px]">
               <Calendar className="w-4 h-4 mr-2" />
-              {filters.date ? format(filters.date, 'PPP', ptBR) : "Data"}
+              {filters.date ? format(filters.date, 'PP', { locale: pt }) : "Data"}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="end">

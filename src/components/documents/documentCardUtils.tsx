@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { pt } from 'date-fns/locale';
 import { 
   FileText, 
   FileCode, 
@@ -18,7 +18,7 @@ export function formatDate(date: string | Date | undefined): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   
   try {
-    return format(dateObj, 'PPP', ptBR);
+    return format(dateObj, 'PPP', { locale: pt });
   } catch (error) {
     console.error('Error formatting date:', error);
     return 'Data inválida';

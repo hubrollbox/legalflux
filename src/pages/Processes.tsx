@@ -1,291 +1,290 @@
-
-import React, { useState } from "react";
-import DashboardLayout from "@/components/layout/DashboardLayout";
-import SectionHeader from "@/components/layout/SectionHeader";
-import { Button } from "@/components/ui/button";
-import { Plus, Search, Filter, ArrowUpDown } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import React, { useState, useEffect } from 'react';
+import { Plus, Edit, Trash2, Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { useToast } from "@/hooks/use-toast";
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Process } from '@/types';
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { useToast } from "@/components/ui/use-toast"
+import { format } from 'date-fns';
+import { pt } from 'date-fns/locale';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
+import { CalendarIcon } from "@radix-ui/react-icons"
 
-// Process mock data interface
-interface Process {
-  id: string;
-  number: string;
-  title: string;
-  client: string;
-  lawyer: string;
-  status: "open" | "closed" | "archived" | "pending";
-  priority: "high" | "medium" | "low";
-  type: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+const Processes = () => {
+  const [processes, setProcesses] = useState<Process[]>([
+    {
+      id: "1",
+      title: "Análise Contratual",
+      clientName: "Empresa XPTO",
+      type: "Contratos",
+      deadline: "2024-07-15",
+      status: "Em andamento",
+      progress: 60,
+      responsible: "João Silva",
+      priority: "Alta"
+    },
+    {
+      id: "2",
+      title: "Defesa em Litígio",
+      clientName: "Maria Oliveira",
+      type: "Cível",
+      deadline: "2024-08-20",
+      status: "Pendente",
+      progress: 25,
+      responsible: "Ana Santos",
+      priority: "Média"
+    },
+    {
+      id: "3",
+      title: "Consultoria Tributária",
+      clientName: "Organização Beta",
+      type: "Tributário",
+      deadline: "2024-09-10",
+      status: "Concluído",
+      progress: 100,
+      responsible: "Carlos Pereira",
+      priority: "Baixa"
+    },
+  ]);
+  const [search, setSearch] = useState("");
+  const [open, setOpen] = useState(false)
+  const [date, setDate] = useState<Date | undefined>(new Date("2024-12-20"))
+  const { toast } = useToast()
 
-// Mock data for processes
-const mockProcesses: Process[] = [
-  {
-    id: "1",
-    number: "2023/0001",
-    title: "Processo de Reclamação Trabalhista",
-    client: "João Silva",
-    lawyer: "Maria Advogada",
-    status: "open",
-    priority: "high",
-    type: "Trabalhista",
-    createdAt: new Date(2023, 0, 15),
-    updatedAt: new Date(2023, 2, 20),
-  },
-  {
-    id: "2",
-    number: "2023/0015",
-    title: "Ação de Cobrança de Dívidas",
-    client: "Empresa XYZ",
-    lawyer: "Pedro Jurídico",
-    status: "pending",
-    priority: "medium",
-    type: "Civil",
-    createdAt: new Date(2023, 1, 10),
-    updatedAt: new Date(2023, 2, 15),
-  },
-  {
-    id: "3",
-    number: "2022/0125",
-    title: "Processo de Divórcio",
-    client: "Ana Oliveira",
-    lawyer: "Carlos Advocacia",
-    status: "closed",
-    priority: "low",
-    type: "Família",
-    createdAt: new Date(2022, 10, 5),
-    updatedAt: new Date(2023, 1, 20),
-  },
-  {
-    id: "4",
-    number: "2023/0042",
-    title: "Defesa Criminal",
-    client: "Roberto Pessoa",
-    lawyer: "Maria Advogada",
-    status: "open",
-    priority: "high",
-    type: "Criminal",
-    createdAt: new Date(2023, 2, 1),
-    updatedAt: new Date(2023, 3, 10),
-  },
-  {
-    id: "5",
-    number: "2022/0098",
-    title: "Registro de Propriedade Intelectual",
-    client: "Startup ABC",
-    lawyer: "Pedro Jurídico",
-    status: "archived",
-    priority: "medium",
-    type: "Propriedade Intelectual",
-    createdAt: new Date(2022, 8, 12),
-    updatedAt: new Date(2022, 11, 5),
-  },
-];
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
 
-// Get status badge variant based on status
-const getStatusBadge = (status: Process["status"]) => {
-  switch (status) {
-    case "open":
-      return "bg-green-100 text-green-800";
-    case "closed":
-      return "bg-gray-100 text-gray-800";
-    case "archived":
-      return "bg-blue-100 text-blue-800";
-    case "pending":
-      return "bg-yellow-100 text-yellow-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-};
+    return () => document.body.style.overflow = 'unset';
+  }, [open]);
 
-// Get priority badge variant based on priority
-const getPriorityBadge = (priority: Process["priority"]) => {
-  switch (priority) {
-    case "high":
-      return "bg-red-100 text-red-800";
-    case "medium":
-      return "bg-amber-100 text-amber-800";
-    case "low":
-      return "bg-blue-100 text-blue-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-};
-
-const Processes: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const { toast } = useToast();
-
-  // Filter processes based on search term and filters
-  const filteredProcesses = mockProcesses.filter((process) => {
-    const matchesSearch =
-      process.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      process.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      process.client.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesStatus =
-      statusFilter === "all" || process.status === statusFilter;
-
-    const matchesType =
-      typeFilter === "all" || process.type === typeFilter;
-
-    return matchesSearch && matchesStatus && matchesType;
-  });
-
-  // Get unique process types for filter
-  const processTypes = Array.from(
-    new Set(mockProcesses.map((process) => process.type))
+  const filteredProcesses = processes.filter(process =>
+    process.title.toLowerCase().includes(search.toLowerCase()) ||
+    process.clientName.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleNewProcess = () => {
-    // Fixed by providing the correct number of arguments
-    toast({
-      title: "Funcionalidade em desenvolvimento",
-      description: "Esta funcionalidade será implementada em breve."
-    });
-  };
-
   return (
-    <DashboardLayout>
-      <div className="flex justify-between items-center">
-        <SectionHeader
-          title="Processos"
-          description="Gerencie todos os seus processos jurídicos"
-        />
-        <Button onClick={handleNewProcess}>
-          <Plus className="mr-2 h-4 w-4" />
-          Novo Processo
-        </Button>
+    <div>
+      <div className="flex items-center justify-between space-y-2">
+        <div className="flex items-center">
+          <Input
+            placeholder="Pesquisar processos..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="max-w-sm"
+          />
+        </div>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">
+              <Plus className="mr-2 h-4 w-4" />
+              Adicionar
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Adicionar Processo</DialogTitle>
+              <DialogDescription>
+                Adicione um novo processo à sua lista.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Título
+                </Label>
+                <Input id="name" value="Teste" className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="username" className="text-right">
+                  Cliente
+                </Label>
+                <Input id="username" value="Teste" className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="username" className="text-right">
+                  Tipo
+                </Label>
+                <Select>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Selecione o tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="light">Cível</SelectItem>
+                    <SelectItem value="dark">Criminal</SelectItem>
+                    <SelectItem value="system">Trabalhista</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="username" className="text-right">
+                  Data Limite
+                </Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] pl-3 text-left font-normal",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      {date ? format(date, "PPP", { locale: pt }) : (
+                        <span>Escolha uma data</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="end">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      disabled={(date) =>
+                        date < new Date("2022-01-01")
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="username" className="text-right">
+                  Status
+                </Label>
+                <Select>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Selecione o status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="light">Em andamento</SelectItem>
+                    <SelectItem value="dark">Concluído</SelectItem>
+                    <SelectItem value="system">Pendente</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="bio" className="text-right">
+                  Descrição
+                </Label>
+                <Textarea id="bio" value="Teste" className="col-span-3" />
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
-
-      <div className="grid gap-6 mt-6">
-        {/* Filters */}
-        <div className="flex flex-wrap gap-4">
-          <div className="relative flex-grow max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Pesquisar por número, título ou cliente..."
-              className="pl-9"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="open">Abertos</SelectItem>
-              <SelectItem value="pending">Pendentes</SelectItem>
-              <SelectItem value="closed">Concluídos</SelectItem>
-              <SelectItem value="archived">Arquivados</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Tipo" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              {processTypes.map((type) => (
-                <SelectItem key={type} value={type}>
-                  {type}
-                </SelectItem>
+      <div className="md:block">
+        <ScrollArea>
+          <Table>
+            <TableCaption>Lista de processos jurídicos.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[200px]">Processo</TableHead>
+                <TableHead>Cliente</TableHead>
+                <TableHead>Tipo</TableHead>
+                <TableHead>Data Limite</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredProcesses.map((process) => (
+                <TableRow key={process.id}>
+                  <TableCell className="font-medium">{process.title}</TableCell>
+                  <TableCell>{process.clientName}</TableCell>
+                  <TableCell>{process.type}</TableCell>
+                  <TableCell>{format(new Date(process.deadline), 'PP', { locale: pt })}</TableCell>
+                  <TableCell>
+                    {process.status === "Concluído" ? (
+                      <Badge variant="success">Concluído</Badge>
+                    ) : process.status === "Em andamento" ? (
+                      <Badge variant="default">Em andamento</Badge>
+                    ) : (
+                      <Badge variant="destructive">Pendente</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <span className="sr-only">Abrir menu</span>
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                          Editar
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setOpen(true)
+                            toast({
+                              title: "Tem a certeza que quer eliminar este processo?",
+                              description: "Esta ação não pode ser revertida.",
+                            })
+                          }}
+                        >
+                          Eliminar
+                          <Trash2 className="ml-2 h-4 w-4" />
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
               ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Process List */}
-        <div className="grid gap-4">
-          {filteredProcesses.length === 0 ? (
-            <Card className="p-8 text-center text-gray-500">
-              Nenhum processo encontrado com os critérios de filtro atuais.
-            </Card>
-          ) : (
-            filteredProcesses.map((process) => (
-              <Card
-                key={process.id}
-                className="p-5 hover:bg-gray-50 cursor-pointer transition-colors"
-              >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-500">
-                        Processo nº {process.number}
-                      </span>
-                      <Badge className={getStatusBadge(process.status)}>
-                        {process.status === "open"
-                          ? "Aberto"
-                          : process.status === "closed"
-                          ? "Concluído"
-                          : process.status === "archived"
-                          ? "Arquivado"
-                          : "Pendente"}
-                      </Badge>
-                      <Badge className={getPriorityBadge(process.priority)}>
-                        {process.priority === "high"
-                          ? "Alta Prioridade"
-                          : process.priority === "medium"
-                          ? "Prioridade Média"
-                          : "Baixa Prioridade"}
-                      </Badge>
-                    </div>
-                    <h3 className="text-lg font-semibold">{process.title}</h3>
-                    <p className="text-gray-600">
-                      <span className="font-medium">Cliente:</span>{" "}
-                      {process.client}
-                    </p>
-                  </div>
-                  <div className="flex flex-col lg:items-end justify-between">
-                    <div className="space-y-1">
-                      <Badge variant="outline">{process.type}</Badge>
-                      <p className="text-sm text-gray-500">
-                        <span className="font-medium">Advogado:</span>{" "}
-                        {process.lawyer}
-                      </p>
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      <div>
-                        Criado em:{" "}
-                        {format(process.createdAt, "dd/MM/yyyy", {
-                          locale: ptBR,
-                        })}
-                      </div>
-                      <div>
-                        Última atualização:{" "}
-                        {format(process.updatedAt, "dd/MM/yyyy", {
-                          locale: ptBR,
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))
-          )}
-        </div>
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={6}>
+                  Total de processos: {processes.length}
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </ScrollArea>
       </div>
-    </DashboardLayout>
+    </div>
   );
 };
 

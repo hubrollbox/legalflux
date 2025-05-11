@@ -1,6 +1,6 @@
 
 import * as React from "react";
-import { Toaster, toast as sonnerToast } from "sonner";
+import { toast as sonnerToast, Toaster as SonnerToaster } from "sonner";
 
 interface ToastProps {
   title?: string;
@@ -9,7 +9,7 @@ interface ToastProps {
 }
 
 // Export the Toaster component from sonner
-export const Toaster: React.FC = (props) => React.createElement(Toaster, props);
+export const Toaster: React.FC = (props) => React.createElement(SonnerToaster, props);
 
 // Internal toast implementation functions
 const createToast = {
