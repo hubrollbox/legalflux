@@ -77,7 +77,7 @@ const DocumentsSearchBar: React.FC<DocumentsSearchBarProps> = ({
           <PopoverTrigger asChild>
             <Button variant="outline" className="w-[140px]">
               <Calendar className="w-4 h-4 mr-2" />
-              {filters.date ? format(filters.date, 'PP', { locale: pt }) : "Data"}
+              {filters.date ? format(filters.date, 'PP') : "Data"}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="end">

@@ -6,18 +6,7 @@ import TransactionList from './TransactionList';
 import TransactionFilters from './TransactionFilters';
 import TransactionExport from './TransactionExport';
 import { useState } from 'react';
-
-// Definição do tipo FinancialTransaction para uso interno
-interface FinancialTransaction {
-  id: string;
-  amount: number;
-  description: string;
-  status: string;
-  type: string;
-  client?: string;
-  process?: string;
-  createdAt: string; // Garantindo que createdAt exista
-}
+import { FinancialTransaction } from "@/types/financial";
 
 // Mock de transações para demonstração
 const MOCK_TRANSACTIONS: FinancialTransaction[] = [
@@ -29,6 +18,7 @@ const MOCK_TRANSACTIONS: FinancialTransaction[] = [
     type: 'income',
     client: 'João Silva',
     process: '123/2023',
+    date: '2023-10-15T10:30:00Z',
     createdAt: '2023-10-15T10:30:00Z'
   },
   {
@@ -38,6 +28,7 @@ const MOCK_TRANSACTIONS: FinancialTransaction[] = [
     status: 'completed',
     type: 'expense',
     process: '123/2023',
+    date: '2023-10-14T14:45:00Z',
     createdAt: '2023-10-14T14:45:00Z'
   },
   {
@@ -47,6 +38,7 @@ const MOCK_TRANSACTIONS: FinancialTransaction[] = [
     status: 'pending',
     type: 'income',
     client: 'Empresa ABC, Lda.',
+    date: '2023-10-13T09:15:00Z',
     createdAt: '2023-10-13T09:15:00Z'
   },
   {
@@ -55,6 +47,7 @@ const MOCK_TRANSACTIONS: FinancialTransaction[] = [
     description: 'Material de Escritório',
     status: 'completed',
     type: 'expense',
+    date: '2023-10-10T16:20:00Z',
     createdAt: '2023-10-10T16:20:00Z'
   },
   {
@@ -64,6 +57,7 @@ const MOCK_TRANSACTIONS: FinancialTransaction[] = [
     status: 'pending',
     type: 'income',
     client: 'Maria Oliveira',
+    date: '2023-10-08T11:00:00Z',
     createdAt: '2023-10-08T11:00:00Z'
   }
 ];

@@ -14,9 +14,7 @@ import { DocumentType } from '@/types/document';
 // Format date for display
 export function formatDate(date: string | Date | undefined): string {
   if (!date) return 'Data desconhecida';
-  
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
   try {
     return format(dateObj, 'PPP', { locale: pt });
   } catch (error) {
