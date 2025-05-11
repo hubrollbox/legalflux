@@ -25,12 +25,26 @@ moment.locale("pt-br");
 // Use momentLocalizer instead of dateFnsLocalizer
 const localizer = momentLocalizer(moment);
 
+// Extended Event type to support all possible categories for our calendar
+type ExtendedEvent = {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  category: "meeting" | "deadline" | "task" | "other" | "document" | "hearing" | "trial" | "client";
+  description?: string;
+  priority?: "high" | "medium" | "low";
+  location?: string;
+  client?: string;
+  process?: string;
+};
+
 // Hook para simular o uso do calendário (poderia ser movido para um arquivo separado)
 const useCalendar = () => {
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [events, setEvents] = useState<ExtendedEvent[]>([]);
 
   const createEvent = async (eventData: CalendarEvent) => {
-    setEvents(prev => [...prev, eventData]);
+    setEvents(prev => [...prev, eventData as ExtendedEvent]);
     return eventData;
   };
 
@@ -38,7 +52,7 @@ const useCalendar = () => {
     setEvents(prev => 
       prev.map(event => 
         event.id === eventId
-          ? { ...event, ...eventData }
+          ? { ...event, ...eventData } as ExtendedEvent
           : event
       )
     );
@@ -143,7 +157,7 @@ const CalendarPage = ({ initialEvents = [] }: CalendarPageProps) => {
 
       <div className="flex gap-6 mt-6">
         <EnhancedCalendarSidebar
-          events={events}
+          events={events as CalendarEvent[]}
           selectedDate={date}
           onDateChange={setDate}
           onCategoryFilter={setCategoryFilter}

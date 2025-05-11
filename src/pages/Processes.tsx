@@ -1,474 +1,291 @@
+
 import React, { useState } from "react";
-import { Plus, Search, Filter, ArrowUpDown } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import PageTransition from "@/components/PageTransition";
+import SectionHeader from "@/components/layout/SectionHeader";
 import { Button } from "@/components/ui/button";
+import { Plus, Search, Filter, ArrowUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
-// Remove unused chart imports
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { usePermissions } from "@/hooks/usePermissions";
-import { toast } from "@/hooks/use-toast";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { useToast } from "@/hooks/use-toast";
+
+// Process mock data interface
+interface Process {
+  id: string;
+  number: string;
+  title: string;
+  client: string;
+  lawyer: string;
+  status: "open" | "closed" | "archived" | "pending";
+  priority: "high" | "medium" | "low";
+  type: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 // Mock data for processes
-const processesMockData = [
+const mockProcesses: Process[] = [
   {
-    id: "2023/1234",
-    title: "Silva vs. Estado Português",
-    client: "António Silva",
-    type: "Administrativo",
-    status: "Em Curso",
-    lastUpdate: "2023-12-01",
-    priority: "Alta"
+    id: "1",
+    number: "2023/0001",
+    title: "Processo de Reclamação Trabalhista",
+    client: "João Silva",
+    lawyer: "Maria Advogada",
+    status: "open",
+    priority: "high",
+    type: "Trabalhista",
+    createdAt: new Date(2023, 0, 15),
+    updatedAt: new Date(2023, 2, 20),
   },
   {
-    id: "2023/1235",
-    title: "Ferreira Imobiliária, Lda. vs. Construções ABC",
-    client: "Ferreira Imobiliária, Lda.",
+    id: "2",
+    number: "2023/0015",
+    title: "Ação de Cobrança de Dívidas",
+    client: "Empresa XYZ",
+    lawyer: "Pedro Jurídico",
+    status: "pending",
+    priority: "medium",
     type: "Civil",
-    status: "Em Espera",
-    lastUpdate: "2023-11-28",
-    priority: "Média"
+    createdAt: new Date(2023, 1, 10),
+    updatedAt: new Date(2023, 2, 15),
   },
   {
-    id: "2023/1236",
-    title: "Herança de Maria Oliveira",
-    client: "José Oliveira",
-    type: "Sucessões",
-    status: "Concluído",
-    lastUpdate: "2023-11-15",
-    priority: "Baixa"
+    id: "3",
+    number: "2022/0125",
+    title: "Processo de Divórcio",
+    client: "Ana Oliveira",
+    lawyer: "Carlos Advocacia",
+    status: "closed",
+    priority: "low",
+    type: "Família",
+    createdAt: new Date(2022, 10, 5),
+    updatedAt: new Date(2023, 1, 20),
   },
   {
-    id: "2023/1237",
-    title: "Cobrança de Dívida - Martins & Filhos",
-    client: "Tech Solutions, S.A.",
-    type: "Comercial",
-    status: "Em Curso",
-    lastUpdate: "2023-12-05",
-    priority: "Alta"
+    id: "4",
+    number: "2023/0042",
+    title: "Defesa Criminal",
+    client: "Roberto Pessoa",
+    lawyer: "Maria Advogada",
+    status: "open",
+    priority: "high",
+    type: "Criminal",
+    createdAt: new Date(2023, 2, 1),
+    updatedAt: new Date(2023, 3, 10),
   },
   {
-    id: "2023/1238",
-    title: "Processo de Insolvência - Café Central",
-    client: "Banco Investimento",
-    type: "Insolvência",
-    status: "Em Curso",
-    lastUpdate: "2023-12-03",
-    priority: "Alta"
-  }
+    id: "5",
+    number: "2022/0098",
+    title: "Registro de Propriedade Intelectual",
+    client: "Startup ABC",
+    lawyer: "Pedro Jurídico",
+    status: "archived",
+    priority: "medium",
+    type: "Propriedade Intelectual",
+    createdAt: new Date(2022, 8, 12),
+    updatedAt: new Date(2022, 11, 5),
+  },
 ];
 
-const getPriorityColor = (priority: string) => {
-  switch (priority) {
-    case "Alta":
-      return "bg-red-100 text-red-800";
-    case "Média":
-      return "bg-orange-100 text-orange-800";
-    case "Baixa":
+// Get status badge variant based on status
+const getStatusBadge = (status: Process["status"]) => {
+  switch (status) {
+    case "open":
       return "bg-green-100 text-green-800";
+    case "closed":
+      return "bg-gray-100 text-gray-800";
+    case "archived":
+      return "bg-blue-100 text-blue-800";
+    case "pending":
+      return "bg-yellow-100 text-yellow-800";
     default:
       return "bg-gray-100 text-gray-800";
   }
 };
 
-// Add these helper functions before the component
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "Em Curso":
-      return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
-    case "Em Espera":
-      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-    case "Concluído":
-      return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+// Get priority badge variant based on priority
+const getPriorityBadge = (priority: Process["priority"]) => {
+  switch (priority) {
+    case "high":
+      return "bg-red-100 text-red-800";
+    case "medium":
+      return "bg-amber-100 text-amber-800";
+    case "low":
+      return "bg-blue-100 text-blue-800";
     default:
-      return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200";
+      return "bg-gray-100 text-gray-800";
   }
 };
 
-const Processes = () => {
+const Processes: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState("all");
-  const [selectedProcess, setSelectedProcess] = useState<string | null>(null);
-  const { hasPermission } = usePermissions();
-  const canCreateProcess = hasPermission("processes", "create");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const { toast } = useToast();
 
-  // Move handleProcessSelect inside the component
-  const handleProcessSelect = (processId: string) => {
-    setSelectedProcess(selectedProcess === processId ? null : processId);
-  };
+  // Filter processes based on search term and filters
+  const filteredProcesses = mockProcesses.filter((process) => {
+    const matchesSearch =
+      process.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      process.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      process.client.toLowerCase().includes(searchTerm.toLowerCase());
 
-  const handleStatusChange = (id: string, newStatus: string) => {
-    // Update process status logic
+    const matchesStatus =
+      statusFilter === "all" || process.status === statusFilter;
+
+    const matchesType =
+      typeFilter === "all" || process.type === typeFilter;
+
+    return matchesSearch && matchesStatus && matchesType;
+  });
+
+  // Get unique process types for filter
+  const processTypes = Array.from(
+    new Set(mockProcesses.map((process) => process.type))
+  );
+
+  const handleNewProcess = () => {
+    // Fixed by providing the correct number of arguments
     toast({
-      title: "Status atualizado",
-      description: `O processo foi atualizado para ${newStatus}`
+      title: "Funcionalidade em desenvolvimento",
+      description: "Esta funcionalidade será implementada em breve."
     });
   };
 
-  const filteredProcesses = processesMockData.filter(process => {
-    const matchesSearch = 
-      process.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      process.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      process.id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = activeFilter === "all" || process.status === activeFilter;
-    return matchesSearch && matchesFilter;
-  });
-  
-  // Remove this unused variable
-  // const chartData = [
-  //   { name: "Em Curso", value: processesMockData.filter(p => p.status === "Em Curso").length },
-  //   { name: "Em Espera", value: processesMockData.filter(p => p.status === "Em Espera").length },
-  //   { name: "Concluído", value: processesMockData.filter(p => p.status === "Concluído").length },
-  // ];
-
   return (
-    <PageTransition>
-      <DashboardLayout>
-        <div className="container mx-auto p-4">
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h1 className="text-3xl font-bold">Processos</h1>
-              <p className="text-muted-foreground">
-                Gerencie os seus processos jurídicos
-              </p>
-            </div>
-            {canCreateProcess && (
-              <Button>
-                <Plus className="mr-2 h-4 w-4" /> Novo Processo
-              </Button>
-            )}
+    <DashboardLayout>
+      <div className="flex justify-between items-center">
+        <SectionHeader
+          title="Processos"
+          description="Gerencie todos os seus processos jurídicos"
+        />
+        <Button onClick={handleNewProcess}>
+          <Plus className="mr-2 h-4 w-4" />
+          Novo Processo
+        </Button>
+      </div>
+
+      <div className="grid gap-6 mt-6">
+        {/* Filters */}
+        <div className="flex flex-wrap gap-4">
+          <div className="relative flex-grow max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Pesquisar por número, título ou cliente..."
+              className="pl-9"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
 
-          <Card className="mb-6">
-          <CardHeader className="pb-3">
-            <CardTitle>Filtros de Pesquisa</CardTitle>
-            <CardDescription>
-              Refine a sua pesquisa utilizando diferentes critérios
-            </CardDescription>
-          </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Buscar processos..."
-                    className="pl-8"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button className="flex items-center">
-                      <Filter className="mr-2 h-4 w-4" />
-                      Filtrar
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => setActiveFilter("all")}>
-                      Todos
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setActiveFilter("Em Curso")}>
-                      Em Curso
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setActiveFilter("Em Espera")}>
-                      Em Espera
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setActiveFilter("Concluído")}>
-                      Concluído
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </CardContent>
-          </Card>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="open">Abertos</SelectItem>
+              <SelectItem value="pending">Pendentes</SelectItem>
+              <SelectItem value="closed">Concluídos</SelectItem>
+              <SelectItem value="archived">Arquivados</SelectItem>
+            </SelectContent>
+          </Select>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Processos Ativos</CardTitle>
-              <CardDescription>Processos em andamento</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">
-                {processesMockData.filter(p => p.status === "Em Curso").length}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Processos em Espera</CardTitle>
-              <CardDescription>Processos aguardando ação</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">
-                {processesMockData.filter(p => p.status === "Em Espera").length}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Processos Concluídos</CardTitle>
-              <CardDescription>Processos finalizados</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">
-                {processesMockData.filter(p => p.status === "Concluído").length}
-              </p>
-            </CardContent>
-          </Card>
+          <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Tipo" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              {processTypes.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
-        <Card className="mb-6">
-          <CardHeader className="pb-3">
-            <CardTitle>Filtros de Pesquisa</CardTitle>
-            <CardDescription>
-              Refine a sua pesquisa utilizando diferentes critérios
-            </CardDescription>
-          </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="search"
-                    placeholder="Pesquisar processos..."
-                    className="pl-8"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button className="w-full justify-between">
-                        <span>Estado</span>
-                        <Filter className="h-4 w-4 opacity-50" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuLabel>Filtrar por estado</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Em Curso</DropdownMenuItem>
-                      <DropdownMenuItem>Em Espera</DropdownMenuItem>
-                      <DropdownMenuItem>Concluído</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-                <div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button className="w-full justify-between">
-                        <span>Tipo</span>
-                        <Filter className="h-4 w-4 opacity-50" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuLabel>Filtrar por tipo</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Civil</DropdownMenuItem>
-                      <DropdownMenuItem>Comercial</DropdownMenuItem>
-                      <DropdownMenuItem>Administrativo</DropdownMenuItem>
-                      <DropdownMenuItem>Insolvência</DropdownMenuItem>
-                      <DropdownMenuItem>Sucessões</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </div>
-            </CardContent>
+        {/* Process List */}
+        <div className="grid gap-4">
+          {filteredProcesses.length === 0 ? (
+            <Card className="p-8 text-center text-gray-500">
+              Nenhum processo encontrado com os critérios de filtro atuais.
             </Card>
-            
-
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <Card className="lg:col-span-2">
-              <CardHeader className="pb-3">
-              <CardTitle>Lista de Processos</CardTitle>
-              <CardDescription>
-                {filteredProcesses.length} processos encontrados
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded-md border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[100px]">
-                        <div className="flex items-center">
-                          Ref.
-                          <ArrowUpDown className="ml-1 h-4 w-4" />
-                        </div>
-                      </TableHead>
-                      <TableHead>
-                        <div className="flex items-center">
-                          Título
-                          <ArrowUpDown className="ml-1 h-4 w-4" />
-                        </div>
-                      </TableHead>
-                      <TableHead>Cliente</TableHead>
-                      <TableHead>Tipo</TableHead>
-                      <TableHead>Estado</TableHead>
-                      <TableHead>
-                        <div className="flex items-center">
-                          Atualização
-                          <ArrowUpDown className="ml-1 h-4 w-4" />
-                        </div>
-                      </TableHead>
-                      <TableHead>Prioridade</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredProcesses.map((process) => (
-                      <TableRow 
-                        key={process.id} 
-                        className={`cursor-pointer hover:bg-muted/50 ${selectedProcess === process.id ? 'bg-muted' : ''}`}
-                        onClick={() => handleProcessSelect(process.id)}
-                      >
-                        <TableCell className="font-medium">{process.id}</TableCell>
-                        <TableCell>
-                          <div className="flex flex-col">
-                            <span className="font-medium">{process.title}</span>
-                            <span className="text-sm text-muted-foreground">{process.client}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>{process.client}</TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className="font-normal">
-                            {process.type}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={`${getStatusColor(process.status)} inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2`}>
-                            <span className={`flex w-2 h-2 rounded-full mr-1 ${process.status === 'Em Curso' ? 'bg-blue-500' : process.status === 'Em Espera' ? 'bg-yellow-500' : 'bg-green-500'}`}></span>
-                            {process.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-col">
-                            <span>{new Date(process.lastUpdate).toLocaleDateString('pt-PT')}</span>
-                            <span className="text-xs text-muted-foreground">{new Date(process.lastUpdate).toLocaleTimeString('pt-PT')}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={`${getPriorityColor(process.priority)} inline-flex items-center gap-1`}>
-                            <span className="w-2 h-2 rounded-full ${process.priority === 'Alta' ? 'bg-red-500' : process.priority === 'Média' ? 'bg-orange-500' : 'bg-green-500'}"></span>
-                            {process.priority}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    {filteredProcesses.length === 0 && (
-                      <TableRow>
-                        <TableCell colSpan={7} className="text-center py-6 text-muted-foreground">
-                          Nenhum processo encontrado com os critérios de pesquisa atuais.
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button className="bg-transparent border border-input hover:bg-accent hover:text-accent-foreground">Exportar</Button>
-              <div className="flex space-x-2">
-                <Button className="bg-transparent border border-input hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2" disabled>
-                  Anterior
-                </Button>
-                <Button className="bg-transparent border border-input hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
-                  Próximo
-                </Button>
-              </div>
-            </CardFooter>
-            </Card>
-
-            {selectedProcess && (
-              <Card className="lg:col-span-2">
-                <CardHeader>
-                  <CardTitle>Detalhes do Processo</CardTitle>
-                  <CardDescription>
-                    Informações detalhadas e timeline do processo
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    {/* Informações básicas */}
-                    <div className="grid grid-cols-2 gap-4">
+          ) : (
+            filteredProcesses.map((process) => (
+              <Card
+                key={process.id}
+                className="p-5 hover:bg-gray-50 cursor-pointer transition-colors"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-500">
+                        Processo nº {process.number}
+                      </span>
+                      <Badge className={getStatusBadge(process.status)}>
+                        {process.status === "open"
+                          ? "Aberto"
+                          : process.status === "closed"
+                          ? "Concluído"
+                          : process.status === "archived"
+                          ? "Arquivado"
+                          : "Pendente"}
+                      </Badge>
+                      <Badge className={getPriorityBadge(process.priority)}>
+                        {process.priority === "high"
+                          ? "Alta Prioridade"
+                          : process.priority === "medium"
+                          ? "Prioridade Média"
+                          : "Baixa Prioridade"}
+                      </Badge>
+                    </div>
+                    <h3 className="text-lg font-semibold">{process.title}</h3>
+                    <p className="text-gray-600">
+                      <span className="font-medium">Cliente:</span>{" "}
+                      {process.client}
+                    </p>
+                  </div>
+                  <div className="flex flex-col lg:items-end justify-between">
+                    <div className="space-y-1">
+                      <Badge variant="outline">{process.type}</Badge>
+                      <p className="text-sm text-gray-500">
+                        <span className="font-medium">Advogado:</span>{" "}
+                        {process.lawyer}
+                      </p>
+                    </div>
+                    <div className="text-sm text-gray-500">
                       <div>
-                        <h4 className="text-sm font-medium text-muted-foreground">Processo</h4>
-                        <p className="text-lg font-semibold">{processesMockData.find(p => p.id === selectedProcess)?.title}</p>
+                        Criado em:{" "}
+                        {format(process.createdAt, "dd/MM/yyyy", {
+                          locale: ptBR,
+                        })}
                       </div>
                       <div>
-                        <h4 className="text-sm font-medium text-muted-foreground">Cliente</h4>
-                        <p className="text-lg font-semibold">{processesMockData.find(p => p.id === selectedProcess)?.client}</p>
+                        Última atualização:{" "}
+                        {format(process.updatedAt, "dd/MM/yyyy", {
+                          locale: ptBR,
+                        })}
                       </div>
-                    </div>
-
-                    {/* Timeline */}
-                    <div className="relative space-y-4">
-                      <h4 className="text-sm font-medium text-muted-foreground mb-4">Timeline do Processo</h4>
-                      <div className="border-l-2 border-muted pl-4 space-y-6">
-                        <div className="relative">
-                          <div className="bg-muted/50 rounded-lg p-3">
-                            <p className="text-sm font-medium">Última Atualização</p>
-                            <p className="text-sm text-muted-foreground">
-                              {new Date(processesMockData.find(p => p.id === selectedProcess)?.lastUpdate || '').toLocaleDateString('pt-PT')}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="relative">
-                          <div className="absolute -left-[21px] w-4 h-4 rounded-full bg-muted"></div>
-                          <div className="bg-muted/50 rounded-lg p-3">
-                            <p className="text-sm font-medium">Criação do Processo</p>
-                            <p className="text-sm text-muted-foreground">01/01/2023</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Ações */}
-                    <div className="flex gap-2">
-                      <Button className="bg-transparent border border-input hover:bg-accent hover:text-accent-foreground w-full">
-                        Ver Documentos
-                      </Button>
-                      <Button className="bg-transparent border border-input hover:bg-accent hover:text-accent-foreground w-full">
-                        Adicionar Nota
-                      </Button>
                     </div>
                   </div>
-                </CardContent>
+                </div>
               </Card>
-            )}
-
+            ))
+          )}
         </div>
-      </DashboardLayout>
-    </PageTransition>
+      </div>
+    </DashboardLayout>
   );
 };
 
