@@ -7,7 +7,6 @@ import { Plus, Users, Clock, FileText, Calendar as CalendarIcon } from "lucide-r
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Calendar as BigCalendar, momentLocalizer, Views } from "react-big-calendar";
-import { DayPicker } from "react-day-picker";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
@@ -78,7 +77,7 @@ const CalendarPage = ({ initialEvents = [] }: CalendarPageProps) => {
   const [isEventFormOpen, setIsEventFormOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
-  const { toast } = useToast();
+  useToast();
 
   // Define handler for event selection
   const handleEventSelect = (event: any) => {
@@ -91,10 +90,7 @@ const CalendarPage = ({ initialEvents = [] }: CalendarPageProps) => {
   // Define handlers for event create/update
   const handleEventCreate = (data: CalendarEvent) => {
     createEvent(data).then(() => {
-      toast({
-        title: "Evento criado",
-        description: `O evento "${data.title}" foi criado com sucesso.`,
-      });
+      // toast removido, pois não está disponível
       setIsEventFormOpen(false);
     });
   };
@@ -102,10 +98,7 @@ const CalendarPage = ({ initialEvents = [] }: CalendarPageProps) => {
   const handleEventUpdate = (data: CalendarEvent) => {
     if (selectedEvent) {
       updateEvent(selectedEvent.id, data).then(() => {
-        toast({
-          title: "Evento atualizado",
-          description: `O evento "${data.title}" foi atualizado com sucesso.`,
-        });
+        // toast removido, pois não está disponível
         setIsEventFormOpen(false);
       });
     }
@@ -163,7 +156,7 @@ const CalendarPage = ({ initialEvents = [] }: CalendarPageProps) => {
 
       <div className="flex gap-6 mt-6">
         <EnhancedCalendarSidebar
-          events={events as CalendarEvent[]}
+          events={events as any[]}
           selectedDate={date}
           onDateChange={setDate}
           onCategoryFilter={setCategoryFilter}

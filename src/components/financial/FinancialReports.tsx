@@ -14,10 +14,12 @@ const MOCK_TRANSACTIONS: FinancialTransaction[] = [
     id: '1',
     amount: 1500.00,
     description: 'Honorários - Processo Judicial 123/2023',
-    status: 'paid',
+    status: 'completed',
     type: 'income',
-    client: 'João Silva',
-    process: '123/2023',
+    clientId: 'c1',
+    clientName: 'João Silva',
+    processId: 'p123',
+    processName: 'Processo Judicial 123/2023',
     date: '2023-10-15T10:30:00Z',
     createdAt: '2023-10-15T10:30:00Z'
   },
@@ -27,7 +29,8 @@ const MOCK_TRANSACTIONS: FinancialTransaction[] = [
     description: 'Despesas de Deslocação - Tribunal',
     status: 'completed',
     type: 'expense',
-    process: '123/2023',
+    processId: 'p123',
+    processName: 'Processo Judicial 123/2023',
     date: '2023-10-14T14:45:00Z',
     createdAt: '2023-10-14T14:45:00Z'
   },
@@ -37,7 +40,8 @@ const MOCK_TRANSACTIONS: FinancialTransaction[] = [
     description: 'Honorários - Consultoria Empresarial',
     status: 'pending',
     type: 'income',
-    client: 'Empresa ABC, Lda.',
+    clientId: 'c2',
+    clientName: 'Empresa ABC, Lda.',
     date: '2023-10-13T09:15:00Z',
     createdAt: '2023-10-13T09:15:00Z'
   },
@@ -56,7 +60,8 @@ const MOCK_TRANSACTIONS: FinancialTransaction[] = [
     description: 'Avaliação de Contratos',
     status: 'pending',
     type: 'income',
-    client: 'Maria Oliveira',
+    clientId: 'c3',
+    clientName: 'Maria Oliveira',
     date: '2023-10-08T11:00:00Z',
     createdAt: '2023-10-08T11:00:00Z'
   }

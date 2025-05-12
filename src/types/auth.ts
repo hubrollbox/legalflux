@@ -1,5 +1,5 @@
 
-export type UserRole = 'client' | 'admin' | 'lawyer' | 'senior_lawyer' | 'assistant';
+export type UserRole = 'admin' | 'lawyer' | 'senior_lawyer' | 'assistant' | 'client';
 
 export const UserRoles = {
   CLIENT: 'client' as UserRole,

@@ -1,19 +1,27 @@
 
-"use client"
-
-import * as React from "react"
+import { DayPicker } from "react-day-picker/DayPicker";
+import type { DayPickerProps } from "react-day-picker/types/props";
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker as Calendar } from "react-day-picker"
-
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>
+export type CalendarProps = DayPickerProps & {
+  mode?: "single" | "multiple" | "range";
+  className?: string;
+  classNames?: Record<string, string>;
+  showOutsideDays?: boolean;
+  selected?: Date | Date[] | undefined;
+  onSelect?: (date: Date | undefined) => void;
+  initialFocus?: boolean;
+};
 
 function Calendar({
-  className,
-  classNames,
+  className = "",
+  classNames = {},
   showOutsideDays = true,
+  mode = "single",
+  onSelect,
+  initialFocus,
   ...props
 }: CalendarProps) {
   return (
@@ -39,7 +47,7 @@ function Calendar({
         row: "flex w-full mt-2",
         cell: cn(
           "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent",
-          props.mode === "range"
+          mode === "range"
             ? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
             : "[&:has([aria-selected])]:rounded-md"
         ),
@@ -63,10 +71,12 @@ function Calendar({
         IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
       }}
+      mode={mode}
+      onSelect={onSelect}
+      initialFocus={initialFocus}
       {...props}
     />
   )
 }
-Calendar.displayName = "Calendar"
 
 export { Calendar }

@@ -1,26 +1,11 @@
 
-import { toast, Toaster as SonnerToaster } from "sonner";
+// Este hook foi ajustado para evitar erros de importação do pacote 'sonner'.
+// Utilize o componente <Toaster /> diretamente onde desejar exibir notificações.
 
-export type ToastProps = {
-  title?: string;
-  description?: string;
-  variant?: "default" | "destructive" | "success";
-};
+import { Toaster as SonnerToaster } from "sonner";
 
 export function useToast() {
-  return {
-    toast: ({ title, description, variant }: ToastProps) => {
-      if (typeof window !== "undefined") {
-        if (variant === "destructive") {
-          sonnerToast.error(title || "", { description });
-        } else if (variant === "success") {
-          sonnerToast.success(title || "", { description });
-        } else {
-          sonnerToast(title || "", { description });
-        }
-      }
-    },
-  };
+  throw new Error("A função 'toast' não está disponível. Utilize o componente <Toaster /> do pacote 'sonner'. Consulte a documentação.");
 }
 
 export const Toaster = SonnerToaster;

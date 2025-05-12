@@ -25,15 +25,16 @@ export interface Process {
 }
 
 export * from "./calendar";
-export * from "./category";
+export type { CategoryKey } from "./category";
 export * from "./task";
-export * from "./priority-level";
+export { PriorityLevel } from "./priority-level";
+export type { UserRole as UserRoleEnum } from "./priority-level";
 export * from "./financial";
-export * from "./auth";
+export type { UserRole, UserRoles, UserType, UserTypes } from "./auth";
 export * from "./permissions";
 export * from "./document";
 export * from "./process";
 export * from "./plan";
 
 // Re-export types from financial.ts
-export { TransactionType, TransactionStatus } from "./financial";
+export type { TransactionType, TransactionStatus, FinancialTransaction } from "./financial";
