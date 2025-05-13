@@ -2,24 +2,21 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CloudIcon, Link2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Cloud as CloudIcon, Link2 } from "lucide-react";
+import { Toaster } from "sonner";
 import CustomImage from "@/components/ui/CustomImage";
 
 const CloudIntegration = () => {
-  const { toast } = useToast();
-
   const handleConnect = (service: string) => {
-    toast({
+    window.dispatchEvent(new CustomEvent("sonner:open", { detail: {
       title: "Integração iniciada",
       description: `A conectar ao ${service}...`,
-    });
-    // Simulação de uma conexão bem-sucedida após 2 segundos
+    }}));
     setTimeout(() => {
-      toast({
+      window.dispatchEvent(new CustomEvent("sonner:open", { detail: {
         title: "Conectado com sucesso",
         description: `O LegalFlux está agora integrado com o ${service}.`,
-      });
+      }}));
     }, 2000);
   };
 
@@ -41,7 +38,7 @@ const CloudIntegration = () => {
                     width={24}
                     height={24}
                     className="mr-2"
-                    onError={(e) => {
+                    onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=GD";
                     }}
                   />
@@ -65,7 +62,7 @@ const CloudIntegration = () => {
                     width={24}
                     height={24}
                     className="w-6 h-6 mr-2"
-                    onError={(e) => {
+                    onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=OD";
                     }}
                   />
@@ -89,7 +86,7 @@ const CloudIntegration = () => {
                     width={24}
                     height={24}
                     className="w-6 h-6 mr-2"
-                    onError={(e) => {
+                    onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/24x24?text=DB";
                     }}
                   />
@@ -132,6 +129,7 @@ const CloudIntegration = () => {
                 Configurar Integração
               </Button>
             </div>
+            <Toaster />
           </div>
         </CardContent>
       </Card>

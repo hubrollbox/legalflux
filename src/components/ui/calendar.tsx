@@ -1,9 +1,9 @@
 
+import { DayPicker } from "react-day-picker";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { DayPicker } from "react-day-picker";
 
 export type CalendarProps = {
   mode?: "single" | "multiple" | "range";
