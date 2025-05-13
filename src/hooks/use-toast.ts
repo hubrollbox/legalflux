@@ -1,8 +1,10 @@
 
-import { Toaster } from "sonner";
+import { Toaster as sonnerToast } from "sonner";
 
 export function useToast() {
-  throw new Error("A função 'toast' não está disponível. Utilize a API recomendada do pacote 'sonner'. Consulte a documentação.");
+  return {
+    toast: sonnerToast
+  };
 }
 
-export { Toaster };
+export { Toaster as sonnerToast };
