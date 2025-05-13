@@ -4,12 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileUp, Eye } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "sonner";
 
 const PDFViewer = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const { toast } = useToast();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -18,17 +17,15 @@ const PDFViewer = () => {
         setSelectedFile(file);
         setPreviewUrl(URL.createObjectURL(file));
       } else {
-        toast({
-          title: "Erro de formato",
-          description: "Por favor, selecione um ficheiro PDF válido.",
-          variant: "destructive",
-        });
+        // Exiba uma notificação de erro usando o componente Toaster
+        alert("Por favor, selecione um ficheiro PDF válido.\nErro de formato");
       }
     }
   };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <Toaster />
       <Card>
         <CardHeader>
           <CardTitle>Visualizador de PDF</CardTitle>
