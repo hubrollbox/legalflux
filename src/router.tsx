@@ -2,6 +2,14 @@
 import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
+// Routes configuration
+const router = createBrowserRouter([], {
+  future: {
+    v7_normalizeFormMethod: true,
+    v7_relativeSplatPath: true
+  }
+});
+
 // Layouts
 import AuthLayout from "./components/auth/AuthLayout";
 import DashboardLayout from "./components/layout/DashboardLayout";
@@ -45,7 +53,8 @@ import LandingPage from "./pages/landing/LandingPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { UserRole } from "./types/permissions";
 
-const router = createBrowserRouter([
+// Routes configuration
+const routes = [
   {
     path: "/login",
     element: <Login />,
@@ -104,7 +113,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/gestao-utilizadores",
-    element: <ProtectedRoute allowedRoles={[UserRole.ADMIN]}><UserManagement /></ProtectedRoute>,
+    element: <ProtectedRoute><UserManagement /></ProtectedRoute>,
   },
   {
     path: "/central-de-ajuda/support",
@@ -116,7 +125,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/client-portal",
-    element: <ProtectedRoute allowedRoles={[UserRole.CLIENT]}><ClientPortal /></ProtectedRoute>,
+    element: <ProtectedRoute><ClientPortal /></ProtectedRoute>,
     children: [
       { index: true, element: <Navigate to="/client-portal/processes" replace /> },
       { path: "processes", element: <ProcessesPage /> },
@@ -140,7 +149,7 @@ const router = createBrowserRouter([
   {
     path: "*",
     element: <NotFound />,
-  }
+  },
 ]);
 
 export default router;
