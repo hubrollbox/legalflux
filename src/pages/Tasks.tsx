@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import type { DropResult } from 'react-beautiful-dnd';
 import { format } from 'date-fns';
@@ -199,7 +199,7 @@ const Tasks = () => {
                               )}
                               <span className="flex items-center">
                                 <Calendar className="h-4 w-4 mr-1" />
-                                {format(new Date(task.dueDate), 'dd/MM/yyyy', { locale: pt })}
+                                {format(new Date(task.dueDate), 'dd/MM/yyyy')}
                               </span>
                               <span className="flex items-center">
                                 {task.priority === 'high' ? '🔥 Alta' : task.priority === 'medium' ? '⚠️ Média' : '⬇️ Baixa'}

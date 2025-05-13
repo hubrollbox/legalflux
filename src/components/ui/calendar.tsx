@@ -1,11 +1,12 @@
 
-import DayPicker, { type DateRange } from "react-day-picker";
+import { DateRange } from "react-day-picker";
+import { DayPicker } from "react-day-picker/dist/index";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
-export type CalendarProps = {
+export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
   mode?: "single" | "multiple" | "range";
   className?: string;
   classNames?: Record<string, string>;
@@ -13,7 +14,6 @@ export type CalendarProps = {
   selected?: Date | Date[] | DateRange | undefined;
   onSelect?: ((date: Date | undefined) => void) | ((range: DateRange | undefined) => void);
   initialFocus?: boolean;
-  [key: string]: any;
 };
 
 function Calendar({

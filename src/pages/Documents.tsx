@@ -6,7 +6,7 @@ import { Document, DocumentFilter, DocumentTemplate } from '@/types/document';
 import { mockDocuments } from '@/components/documents/DocumentsData'; // Import mock data
 import { mockTemplates } from '@/components/documents/DocumentsData';
 import PageTransition from '@/components/PageTransition';
-import { useToast } from "@/hooks/use-toast";
+import { Toaster } from "sonner";
 
 const Documents: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -14,7 +14,7 @@ const Documents: React.FC = () => {
   const [documents, setDocuments] = useState<Document[]>(mockDocuments);
   const [templates, setTemplates] = useState<DocumentTemplate[]>(mockTemplates);
   const [filters, setFilters] = useState<DocumentFilter>({ type: "todos", date: undefined, tags: [] });
-  const { toast } = useToast();
+
 
   // Filter documents based on search term and filter options
   const filteredDocuments = useMemo(() => {

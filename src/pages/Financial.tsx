@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { DollarSign, Download, Plus } from 'lucide-react';
-import { toast } from "sonner";
+import { Toaster } from "sonner";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import TransactionList from '@/components/financial/TransactionList';
 import TransactionFilters from '@/components/financial/TransactionFilters';
@@ -19,7 +19,7 @@ const Financial = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
-  // Remover: const { toast } = useToast();
+
 
   const sampleTransactions = [
     {
