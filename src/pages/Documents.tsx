@@ -6,7 +6,7 @@ import { Document, DocumentFilter, DocumentTemplate } from '@/types/document';
 import { mockDocuments } from '@/components/documents/DocumentsData'; // Import mock data
 import { mockTemplates } from '@/components/documents/DocumentsData';
 import PageTransition from '@/components/PageTransition';
-import { Toaster } from "sonner";
+import { toast } from "sonner";
 
 const Documents: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
