@@ -2,7 +2,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
-import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import ClientPortal from '../pages/client-portal/ClientPortal';
@@ -42,9 +41,7 @@ const AppRoutes: React.FC = () => {
       {/* Central de Ajuda */}
       <Route path="/central-de-ajuda/support" element={<Support />} />
       <Route path="/central-de-ajuda/screenshots" element={<Screenshots />} />
-      <Route path="/central-de-ajuda/faqs" element={<Home />} />
-      <Route path="/central-de-ajuda/tutorials" element={<Home />} />
-      <Route path="/central-de-ajuda/docs" element={<Home />} />
+
       
       {/* Rota para página não encontrada */}
       <Route path="*" element={<NotFound />} />
