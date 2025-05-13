@@ -81,4 +81,3 @@ function Calendar({
 }
 
 export { Calendar }
-import { DayPicker } from "react-day-picker";
