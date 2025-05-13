@@ -19,7 +19,7 @@ const Financial = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
-  const { toast } = useToast();
+  // Remover: const { toast } = useToast();
 
   const sampleTransactions = [
     {
