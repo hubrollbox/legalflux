@@ -25,9 +25,7 @@ const config: Config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         highlight: "#9b87f5",
-        gray: {
-          200: "#e5e7eb",
-        },
+
 
         primary: {
           DEFAULT: "hsl(var(--primary))",
