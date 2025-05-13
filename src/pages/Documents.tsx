@@ -2,11 +2,11 @@
 import React, { useState, useMemo } from 'react';
 import DocumentTabs from '@/components/documents/DocumentTabs';
 import DocumentsHeader from '@/components/documents/DocumentsHeader';
-import { Document, DocumentFilter, DocumentTemplate } from '@/types/document';
+import type { Document, DocumentFilter, DocumentTemplate } from '@/types/document';
 import { mockDocuments } from '@/components/documents/DocumentsData'; // Import mock data
 import { mockTemplates } from '@/components/documents/DocumentsData';
 import PageTransition from '@/components/PageTransition';
-import { toast } from "sonner";
+import { Toaster } from "sonner";
 
 const Documents: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -15,6 +15,11 @@ const Documents: React.FC = () => {
   const [templates, setTemplates] = useState<DocumentTemplate[]>(mockTemplates);
   const [filters, setFilters] = useState<DocumentFilter>({ type: "todos", date: undefined, tags: [] });
 
+  return (
+    <>
+      <Toaster position="top-right" richColors />
+    </>
+  );
 
   // Filter documents based on search term and filter options
   const filteredDocuments = useMemo(() => {

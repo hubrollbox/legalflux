@@ -1,7 +1,11 @@
 
 import type { Config } from "tailwindcss";
 
-const config: Config = {
+interface ExtendedConfig extends Config {
+  safelist?: string[];
+}
+
+const config: ExtendedConfig = {
   darkMode: "class",
   content: [
     './pages/**/*.{ts,tsx}',
@@ -143,6 +147,9 @@ const config: Config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
+  safelist: [
+    'border-gray-200'
+  ],
 
 };
 
