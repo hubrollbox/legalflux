@@ -1,5 +1,5 @@
 
-import { DayPicker } from "react-day-picker";
+import DayPicker, { type DateRange } from "react-day-picker";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -10,8 +10,8 @@ export type CalendarProps = {
   className?: string;
   classNames?: Record<string, string>;
   showOutsideDays?: boolean;
-  selected?: Date | Date[] | undefined;
-  onSelect?: (date: Date | undefined) => void;
+  selected?: Date | Date[] | DateRange | undefined;
+  onSelect?: ((date: Date | undefined) => void) | ((range: DateRange | undefined) => void);
   initialFocus?: boolean;
   [key: string]: any;
 };

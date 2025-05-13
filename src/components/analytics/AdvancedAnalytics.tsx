@@ -471,7 +471,7 @@ const AdvancedAnalytics: React.FC<AdvancedAnalyticsProps> = React.memo((props: A
                 mode="range"
                 defaultMonth={dateRange.from || new Date()}
                 selected={dateRange}
-                onSelect={(range: DateRange) => setDateRange(range)}
+                onSelect={(range: DateRange | undefined) => setDateRange(range || { from: undefined, to: undefined })}
                 numberOfMonths={2}
                 required
               />
