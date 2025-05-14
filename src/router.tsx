@@ -3,7 +3,7 @@ import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 // Routes configuration
-const router = createBrowserRouter([], {
+const router = createBrowserRouter(routes, {
   future: {
     v7_normalizeFormMethod: true,
     v7_relativeSplatPath: true,
