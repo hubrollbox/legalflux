@@ -143,13 +143,13 @@ const routes = [
   // Página inicial é a Landing Page
   {
     path: "/",
-    element: <LandingPage />,
+    element: <LandingPage />
   },
   // Rota para 404
   {
     path: "*",
     element: <NotFound />,
   },
-]);
+]); // Add missing comma after routes array
 
 export default router;

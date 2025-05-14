@@ -7,4 +7,4 @@ export function useToast() {
   };
 }
 
-export { Toaster as sonnerToast };
+export { sonnerToast as Toaster };
