@@ -6,7 +6,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 const router = createBrowserRouter([], {
   future: {
     v7_normalizeFormMethod: true,
-    v7_relativeSplatPath: true
+    v7_relativeSplatPath: true,
+    // Remove v7_startTransition as it's not a valid property in the current version
   }
 });
 
