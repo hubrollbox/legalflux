@@ -7,7 +7,7 @@ const router = createBrowserRouter([], {
   future: {
     v7_normalizeFormMethod: true,
     v7_relativeSplatPath: true,
-    // Remove v7_startTransition as it's not a valid property in the current version
+    v7_startTransition: true
   }
 });
 
