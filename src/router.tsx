@@ -125,6 +125,34 @@ const routes = [
     element: <Screenshots />,
   },
   {
+    path: "/central-de-ajuda/docs",
+    element: <Support />,
+  },
+  {
+    path: "/central-de-ajuda/faqs",
+    element: <Support />,
+  },
+  {
+    path: "/central-de-ajuda/tutorials",
+    element: <Support />,
+  },
+  {
+    path: "/about",
+    element: <LandingPage />,
+  },
+  {
+    path: "/contact",
+    element: <LandingPage />,
+  },
+  {
+    path: "/terms",
+    element: <LandingPage />,
+  },
+  {
+    path: "/privacy",
+    element: <LandingPage />,
+  },
+  {
     path: "/client-portal",
     element: <ProtectedRoute><ClientPortal /></ProtectedRoute>,
     children: [
