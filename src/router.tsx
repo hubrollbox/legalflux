@@ -172,7 +172,8 @@ const routes = [
   // Página inicial é a Landing Page
   {
     path: "/",
-    element: <LandingPage />
+    element: <LandingPage />,
+    index: true
   },
   // Rota para 404
   {
