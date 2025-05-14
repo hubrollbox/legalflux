@@ -10,7 +10,8 @@ const router = createBrowserRouter(routes, {
     v7_startTransition: true,
     v7_fetcherPersist: true,
     v7_partialHydration: true
-  }
+  },
+  basename: process.env.NODE_ENV === 'production' ? '/legalflux' : '/'
 });
 
 // Layouts
