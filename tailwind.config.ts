@@ -56,8 +56,7 @@ const config: ExtendedConfig = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
-        },
-        ...require('tailwindcss/colors'),
+        }
       },
     },
   },
