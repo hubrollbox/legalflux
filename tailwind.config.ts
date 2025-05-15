@@ -23,14 +23,12 @@ const config: ExtendedConfig = {
     },
     extend: {
       colors: {
+        highlight: "#9b87f5",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        highlight: "#9b87f5",
-
-
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
