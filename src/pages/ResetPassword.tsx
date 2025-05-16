@@ -7,7 +7,12 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { useAuth } from '../hooks/useAuth';
 import { AlertCircle } from 'lucide-react';
-import { isValidPassword } from '../lib/utils';
+
+// Implementação local da função isValidPassword
+const isValidPassword = (password: string): boolean => {
+  // Exemplo de validação: mínimo 8 caracteres, pelo menos uma letra e um número
+  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
+};
 
 const ResetPassword: React.FC = () => {
   const [password, setPassword] = useState('');
