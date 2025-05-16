@@ -14,7 +14,7 @@ const TestimonialsSection = () => {
           </p>
         </div>
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <div className="bg-white p-8 rounded-xl border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+          <div className="bg-white p-8 rounded-xl border border-gray-300 hover:border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center mb-6">
               <div className="h-12 w-12 rounded-full flex items-center justify-center mr-4 shadow-lg">
                 <Image src={LOGO.LIGHT} alt="LegalFlux" width={40} height={40} className="h-10 w-10" />
@@ -28,7 +28,7 @@ const TestimonialsSection = () => {
               "O LegalFlux revolucionou a forma como faço a gestão dos meus processos. A interface é intuitiva e o sistema de permissões é exatamente o que eu precisava."
             </p>
           </div>
-          <div className="bg-white p-8 rounded-xl border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+          <div className="bg-white p-8 rounded-xl border border-gray-300 hover:border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center mb-6">
               <div className="h-12 w-12 rounded-full flex items-center justify-center mr-4 shadow-lg">
                 <Image src={LOGO.LIGHT} alt="LegalFlux" width={40} height={40} className="h-10 w-10" />
@@ -42,7 +42,7 @@ const TestimonialsSection = () => {
               "Como gestor de um escritório com 8 advogados, o plano Enterprise proporcionou-nos todas as ferramentas necessárias para expandir o nosso negócio."
             </p>
           </div>
-          <div className="bg-white p-8 rounded-xl border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+          <div className="bg-white p-8 rounded-xl border border-gray-300 hover:border-gray-300 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center mb-6">
               <div className="h-12 w-12 rounded-full flex items-center justify-center mr-4 shadow-lg">
                 <Image src={LOGO.LIGHT} alt="LegalFlux" width={40} height={40} className="h-10 w-10" />

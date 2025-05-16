@@ -75,7 +75,7 @@ const EventReminder: React.FC<EventReminderProps> = ({ events, onEventClick }) =
       case 'task':
         return 'bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800';
       default:
-        return 'bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700';
+        return 'bg-gray-50 border-gray-300 dark:bg-gray-800 dark:border-gray-700';
     }
   };
 

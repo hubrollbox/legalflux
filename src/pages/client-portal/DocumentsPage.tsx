@@ -1,8 +1,8 @@
 
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { FileUploader } from './components/FileUploader';
 import DocumentPreviewModal from './components/DocumentPreviewModal';
 import { DocumentsHeader } from './components/DocumentsHeader';
@@ -10,6 +10,7 @@ import { DocumentsTabContent } from './components/DocumentsTabContent';
 import { Document } from './components/DocumentTable';
 
 const DocumentsPage = () => {
+  const { toast } = useToast();
   const [documents, setDocuments] = useState<Document[]>([
     {
       id: '1',
@@ -55,7 +56,6 @@ const DocumentsPage = () => {
 
   const handleFileUpload = useCallback((files: File[]) => {
     setUploading(true);
-    
     setTimeout(() => {
       const newDocuments = files.map((file, index) => ({
         id: `new-${Date.now()}-${index}`,
@@ -66,10 +66,8 @@ const DocumentsPage = () => {
         status: 'pending' as const,
         processNumber: '2023/NOVO'
       }));
-      
-      setDocuments(prev => [...newDocuments, ...prev]);
+      setDocuments((prev: Document[]) => [...newDocuments, ...prev]);
       setUploading(false);
-      
       toast({
         title: 'Documentos carregados com sucesso',
         description: `${files.length} documento(s) carregado(s) e aguardando aprovação.`

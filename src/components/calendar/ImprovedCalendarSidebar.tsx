@@ -37,7 +37,7 @@ const categoryConfig = {
   hearing: { label: "Audiências", color: "bg-purple-100 text-purple-700 border-purple-200", icon: <Gavel className="h-4 w-4" /> },
   trial: { label: "Julgamentos", color: "bg-amber-100 text-amber-700 border-amber-200", icon: <Scale className="h-4 w-4" /> },
   client: { label: "Clientes", color: "bg-indigo-100 text-indigo-700 border-indigo-200", icon: <Briefcase className="h-4 w-4" /> },
-  other: { label: "Outros", color: "bg-gray-100 text-gray-700 border-gray-200", icon: <CalendarIcon className="h-4 w-4" /> }
+  other: { label: "Outros", color: "bg-gray-100 text-gray-700 border-gray-300", icon: <CalendarIcon className="h-4 w-4" /> }
 };
 
 const priorityConfig = {

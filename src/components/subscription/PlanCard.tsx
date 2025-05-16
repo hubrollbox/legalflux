@@ -34,7 +34,7 @@ const PlanCard: React.FC<PlanCardProps> = ({
   return (
     <Card className={cn(
       "flex flex-col border", 
-      plan.highlight ? "border-primary shadow-lg" : "border-gray-200",
+      plan.highlight ? "border-primary shadow-lg" : "border-gray-300",
       isCurrentPlan ? "ring-2 ring-primary" : ""
     )}>
       <CardHeader className={cn(

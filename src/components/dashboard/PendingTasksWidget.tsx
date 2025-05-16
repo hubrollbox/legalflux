@@ -117,7 +117,7 @@ const PendingTasksWidget: React.FC<PendingTasksWidgetProps> = ({
             {filteredTasks.map((task) => (
               <div 
                 key={task.id} 
-                className="flex items-start justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 border border-gray-100 hover:border-gray-200"
+                className="flex items-start justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 border border-gray-100 hover:border-gray-300"
               >
                 <div className="flex items-start space-x-3">
                   {task.dueDate && new Date(task.dueDate) < new Date() ? (

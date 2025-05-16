@@ -61,7 +61,7 @@ export function EventDetailsCard({ event, onEdit, onDelete, onClose }: EventDeta
       case 'client':
         return 'bg-indigo-100 text-indigo-700 border-indigo-200';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'bg-gray-100 text-gray-700 border-gray-300';
     }
   };
 
@@ -75,7 +75,7 @@ export function EventDetailsCard({ event, onEdit, onDelete, onClose }: EventDeta
       case 'low':
         return { color: 'bg-green-100 text-green-700 border-green-200', icon: <AlertTriangle className="h-4 w-4" />, label: 'Baixa' };
       default:
-        return { color: 'bg-gray-100 text-gray-700 border-gray-200', icon: null, label: 'Normal' };
+        return { color: 'bg-gray-100 text-gray-700 border-gray-300', icon: null, label: 'Normal' };
     }
   };
 

@@ -27,7 +27,7 @@ const config: ExtendedConfig = {
   },
   plugins: [require("tailwindcss-animate")],
   safelist: [
-    // 'border-gray-200' removido pois não existe no Tailwind 4.x
+    // Comentário atualizado: 'border-gray-200' removido pois não existe no Tailwind 4.x. Utilizar 'border-gray-300' como alternativa.
   ],
 
 };
