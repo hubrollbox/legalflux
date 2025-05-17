@@ -69,7 +69,7 @@
 
 @layer base {
   * {
-    @apply border-gray-300 !important;
+    @apply border-neutral-300;
   }
   
   body {
